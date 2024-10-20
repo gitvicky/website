@@ -15,7 +15,7 @@ website:
     left: "© Copyright 2024 Vignesh Gopakumar"
 format:
   html:
-    theme: solar
+    theme: flatly
     css: styles.css
     toc: false
     page-layout: full
