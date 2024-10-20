@@ -24,17 +24,19 @@ comments: false
 ***Can AI learn to obey physics?***
 :::
 
-I am an AI Research Scientist at the UK Atomic Energy Authority, where I lead a team developing actionable surrogate models for exascale simulations and data-driven models for plasma control and reactor design. Concurrently, I'm pursuing a PhD in Machine Learning under Dr. Marc Deisenroth at University College London.
+I am a Research Scientist at the UK Atomic Energy Authority, where I lead a team developing "actionable" surrogate models for exascale simulations and data-driven models for the Fusion industry. My research focusses on enhancing machine learning models' performance, robustness and interpretability through physics-based approaches. 
 
-As a visiting AI Researcher at the Rutherford Appleton Laboratory - STFC, I conduct foundational research on enhancing machine learning models' robustness and interpretability through physics-based approaches.
+I am also a visiting researcher at STFC's Rutherford Appleton Laboratory. 
+
+Concurrently, I'm pursuing a PhD in Machine Learning under Dr. Marc Deisenroth at University College London.
 
 
 ### Current Research: 
 
-* Neural Operators
-* Physics Informed Neural Networks
-* Bayesian Optimisation
-* Conformal Prediction
+* Physics-Informed Machine Learning
+* Continuous Dynamics Modelling
+* Uncertainty Quantification
+* Design of Experiments
 
 **Building [simvue.io](https://simvue.io)** : AI-driven, open-source simulation management and tracking dashboard for streamlining engineering workflows. Developed with public funding from the UK Government. Currently in private $\beta$. 
 

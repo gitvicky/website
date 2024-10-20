@@ -47,7 +47,6 @@ format: html
   - TLDR: [Brief summary of the paper]
   - [Link to the paper](https://ieeexplore.ieee.org/abstract/document/10507168)
 
-
 - **Overview of the EUROfusion Tokamak Exploitation programme in support of ITER and DEMO**
   - Authors: Joffrin, Emmanuel Henri; Wischmeier, Marco; Baruzzo, Matteo; Hakola, Antti; Kappatou, Athina; Keeling, David; Labit, Benoit; Tsitrone, Emmanuelle; Vianello, Nicola
   - Published in: Nuclear Fusion, 2023
