@@ -1,0 +1,41 @@
+---
+title: "Vignesh Gopakumar"
+image: IAEA_London.png
+about:
+  template: trestles
+  links:
+    - text: LinkedIn
+      url: "https://www.linkedin.com/in/vignesh-gopakumar/"
+      icon: linkedin
+    - text: Twitter (X)
+      url: "https://x.com/mistervickster"
+      icon: twitter
+    - text: GitHub
+      icon: github
+      url: "https://github.com/gitvicky"
+    - text: Email
+      url: "mailto:vignesh7g@gmail.com"
+      icon: mail
+
+comments: false
+
+---
+::: {.center}
+***Can AI learn to obey physics?***
+:::
+
+I am an AI Research Scientist at the UK Atomic Energy Authority, where I lead a team developing actionable surrogate models for exascale simulations and data-driven models for plasma control and reactor design. Concurrently, I'm pursuing a PhD in Machine Learning under Dr. Marc Deisenroth at University College London.
+
+As a visiting AI Researcher at the Rutherford Appleton Laboratory - STFC, I conduct foundational research on enhancing machine learning models' robustness and interpretability through physics-based approaches.
+
+
+### Current Research: 
+
+* Neural Operators
+* Physics Informed Neural Networks
+* Bayesian Optimisation
+* Conformal Prediction
+
+**Building [simvue.io](https://simvue.io)** : AI-driven, open-source simulation management and tracking dashboard for streamlining engineering workflows. Developed with public funding from the UK Government. Currently in private $\beta$. 
+
+> *"If there is a God, it must be a differential equation"* - Bertrand Russell
