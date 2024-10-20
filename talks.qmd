@@ -4,6 +4,8 @@ title: "Talks"
 
 ***
 
+- **On Surrogate Modelling for Fusion** - PhysicsX (London 2024)
+
 - **FNO for Plasma Modelling (Invited)** - IAEA Workshop on AI for Accelerating Fusion and Plasma Science (Vienna 2023)
 
 - **FNO for Plasma Modelling** - IAEA Fusion Energy Conference (London, 2023)
