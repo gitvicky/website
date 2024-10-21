@@ -18,10 +18,10 @@ title: "Talks"
 
 - **Optimising Physics Informed Neural Networks** - PyTorch Ecosystem Day (Virtual, 2021)
 
-- **Fluid Surrogates using Neural PDEs** - SciML at RAL, STFC (Oxfordshire, 2020)
+- **Fluid Surrogates using Neural PDEs** - SciML at RAL, STFC (Oxford, 2020)
 
-- **Solving Fluid Dynamics with Neural Networks** - FusionEP (Virtual, 2020)
+- **[Solving Fluid Dynamics with Neural Networks](https://www.youtube.com/watch?v=lXeVcMU1D9E)** - FusionEP (Virtual, 2020)
 
 - **Data Driven Modelling of Plasma in Tokamaks** - IOP Physics in the spotlight (London, 2019)
 
-- **Data Driven Modelling and Control of Plasma in Fusion Reactors** - O'Reilly AI London (London, 2019)
+- **[Data Driven Modelling and Control of Plasma in Fusion Reactors](https://youtu.be/25GarkFQh2s)** - O'Reilly AI London (London, 2019)

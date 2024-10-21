@@ -10,6 +10,9 @@ about:
     - text: Twitter (X)
       url: "https://x.com/mistervickster"
       icon: twitter
+    - text: Scholar
+      url:  "https://scholar.google.com/citations?user=NQtqemwAAAAJ&hl=en"
+      icon: google-scholar
     - text: GitHub
       icon: github
       url: "https://github.com/gitvicky"
