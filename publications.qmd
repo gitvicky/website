@@ -4,12 +4,7 @@ format: html
 ---
 
 ***
-
-- **Neural-Parareal: Self-Improving Acceleration of Fusion MHD Simulations Using Time-Parallelisation and Neural Operators**
-  - Authors: Pamela, SJP; Carey, N; Brandstetter, J; Akers, R; Zanisi, L; Buchanan, J; Gopakumar, V; Hoelzl, M; Huijsmans, G; Pentland, K
-  - Published in: Computer Physics Communications, 2024
-  - TLDR: [Brief summary of the paper]
-  - [Paper](https://www.sciencedirect.com/science/article/abs/pii/S001046552400314X) 
+### Main Author 
 
 - **Uncertainty Quantification of Pre-Trained and Fine-Tuned Surrogate Models using Conformal Prediction**
   - Authors: Gopakumar, Vignesh; Gray, Ander; Oskarsson, Joel; Zanisi, Lorenzo; Pamela, Stanislas; Giles, Daniel; Kusner, Matt; Deisenroth, Marc
@@ -23,17 +18,45 @@ format: html
   - TLDR: [Brief summary of the paper]
   - [Paper](https://arxiv.org/abs/2406.14483), [Code](https://github.com/gitvicky/neural-lam-CP)
 
-- **Data efficiency and long term prediction capabilities for neural operator surrogate models of core and edge plasma codes**
-  - Authors: Carey, N; Zanisi, L; Pamela, S; Gopakumar, V; Omotani, J; Buchanan, J; Brandstetter, J
-  - Published in: arXiv preprint arXiv:2402.08561, 2024
-  - TLDR: [Brief summary of the paper]
-  - [Paper](https://arxiv.org/abs/2402.08561)
 
 - **Plasma surrogate modelling using Fourier neural operators**
   - Authors: Gopakumar, Vignesh; Pamela, Stanislas; Zanisi, Lorenzo; Li, Zongyi; Gray, Ander; Brennand, Daniel; Bhatia, Nitesh; Stathopoulos, Gregory; Kusner, Matt; Deisenroth, Marc
   - Published in: Nuclear Fusion, Volume 64, Number 5, 2024
   - TLDR: [Brief summary of the paper]
   - [Paper](https://iopscience.iop.org/article/10.1088/1741-4326/ad313a/meta), [Code](https://github.com/Plasma-FNO)
+
+- **Loss landscape engineering via data regulation on PINNs**
+  - Authors: Gopakumar, Vignesh; Pamela, Stanislas; Samaddar, Debasmita
+  - Published in: Machine Learning with Applications, Volume 12, 2023
+  - TLDR: [Brief summary of the paper]
+  - [Paper](https://www.sciencedirect.com/science/article/pii/S2666827023000178), [Code](https://github.com/gitvicky/Loss_Landscape_PINNs)
+
+- **Fourier-RNNs for modelling noisy physics data**
+  - Authors: Gopakumar, Vignesh; Pamela, Stanislas; Zanisi, Lorenzo
+  - Published in: arXiv preprint arXiv:2302.06534, 2023
+  - TLDR: [Brief summary of the paper]
+  - [Paper](https://arxiv.org/abs/2302.06534)
+
+- **Image mapping the temporal evolution of edge characteristics in tokamaks using neural networks**
+  - Authors: Gopakumar, Vignesh; Samaddar, Debasmita
+  - Published in: Machine Learning: Science and Technology, Volume 1, Number 1, 2020
+  - TLDR: [Brief summary of the paper]
+  - [Paper](https://iopscience.iop.org/article/10.1088/2632-2153/ab5639/meta)
+
+### Co-author
+
+- **Neural-Parareal: Self-Improving Acceleration of Fusion MHD Simulations Using Time-Parallelisation and Neural Operators**
+  - Authors: Pamela, SJP; Carey, N; Brandstetter, J; Akers, R; Zanisi, L; Buchanan, J; Gopakumar, V; Hoelzl, M; Huijsmans, G; Pentland, K
+  - Published in: Computer Physics Communications, 2024
+  - TLDR: [Brief summary of the paper]
+  - [Paper](https://www.sciencedirect.com/science/article/abs/pii/S001046552400314X) 
+
+- **Data efficiency and long term prediction capabilities for neural operator surrogate models of core and edge plasma codes**
+  - Authors: Carey, N; Zanisi, L; Pamela, S; Gopakumar, V; Omotani, J; Buchanan, J; Brandstetter, J
+  - Published in: arXiv preprint arXiv:2402.08561, 2024
+  - TLDR: [Brief summary of the paper]
+  - [Paper](https://arxiv.org/abs/2402.08561)
+
 
 - **Efficient training sets for surrogate models of tokamak turbulence with active deep ensembles**
   - Authors: Zanisi, L; Ho, A; Barr, J; Madula, T; Citrin, J; Pamela, S; Buchanan, J; Casson, FJ; Gopakumar, V; Contributors, JET
@@ -59,23 +82,11 @@ format: html
   - TLDR: [Brief summary of the paper]
   - [Link to the presentation](https://ui.adsabs.harvard.edu/abs/2023APS..DPPJO9015G/abstract)
 
-- **Loss landscape engineering via data regulation on PINNs**
-  - Authors: Gopakumar, Vignesh; Pamela, Stanislas; Samaddar, Debasmita
-  - Published in: Machine Learning with Applications, Volume 12, 2023
-  - TLDR: [Brief summary of the paper]
-  - [Paper](https://www.sciencedirect.com/science/article/pii/S2666827023000178), [Code](https://github.com/gitvicky/Loss_Landscape_PINNs)
-
 - **Fast regression of the tritium breeding ratio in fusion reactors**
   - Authors: Mánek, Petr; Van Goffrier, Graham; Gopakumar, Vignesh; Nikolaou, Nikolaos; Shimwell, Jonathan; Waldmann, Ingo
   - Published in: Machine Learning: Science and Technology, Volume 4, Number 1, 2023
   - TLDR: [Brief summary of the paper]
   - [Paper](https://iopscience.iop.org/article/10.1088/2632-2153/acb2b3/meta)
-
-- **Fourier-RNNs for modelling noisy physics data**
-  - Authors: Gopakumar, Vignesh; Pamela, Stanislas; Zanisi, Lorenzo
-  - Published in: arXiv preprint arXiv:2302.06534, 2023
-  - TLDR: [Brief summary of the paper]
-  - [Paper](https://arxiv.org/abs/2302.06534)
 
 - **Shaping of Magnetic Field Coils in Fusion Reactors using Bayesian Optimisation**
   - Authors: Nunn, Timothy; Authority, UK Atomic Energy; Gopakumar, Vignesh; Kahn, Sebastien
@@ -108,8 +119,3 @@ format: html
   - TLDR: [Brief summary of the paper]
   - [Paper](https://conferences.iaea.org/event/251/)
 
-- **Image mapping the temporal evolution of edge characteristics in tokamaks using neural networks**
-  - Authors: Gopakumar, Vignesh; Samaddar, Debasmita
-  - Published in: Machine Learning: Science and Technology, Volume 1, Number 1, 2020
-  - TLDR: [Brief summary of the paper]
-  - [Paper](https://iopscience.iop.org/article/10.1088/2632-2153/ab5639/meta)
