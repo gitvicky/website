@@ -31,7 +31,8 @@ format: html
 </style>
 
 ***
-### Main Author 
+
+### Highlighted Publications 
 
 - **Uncertainty Quantification of Pre-Trained and Fine-Tuned Surrogate Models using Conformal Prediction**
   - Authors: Gopakumar, Vignesh; Gray, Ander; Oskarsson, Joel; Zanisi, Lorenzo; Pamela, Stanislas; Giles, Daniel; Kusner, Matt; Deisenroth, Marc
@@ -71,7 +72,7 @@ format: html
   - TLDR: [Brief summary of the paper]
   - [<span class="btn btn-paper">Paper</span>](https://iopscience.iop.org/article/10.1088/2632-2153/ab5639/meta) 
 
-### Co-author
+### Other Publications
 
 - **Neural-Parareal: Self-Improving Acceleration of Fusion MHD Simulations Using Time-Parallelisation and Neural Operators**
   - Authors: Pamela, SJP; Carey, N; Brandstetter, J; Akers, R; Zanisi, L; Buchanan, J; Gopakumar, V; Hoelzl, M; Huijsmans, G; Pentland, K

@@ -3,4 +3,9 @@ title: "Blog"
 ---
 ***
 
-I mostly write in [Medium](https://medium.com/@engineoutcompletely) but will soon be writing more material here. 
+<!-- [Neural ODE](/Blog/Neural_ODE.qmd) -->
+
+<!-- [Neural Operators](/Blog/Neural_Operators.qmd) -->
+
+
+You can find some of my earlier writing in [Medium](https://medium.com/@engineoutcompletely).

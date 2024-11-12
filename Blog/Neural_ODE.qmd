@@ -1,0 +1,30 @@
+---
+title: "Neural ODEs"
+format: html
+bibliography: bibliography.bib
+
+---
+***
+
+Neural ODE, introduced in [@chen2019neuralordinarydifferentialequations], represents a class of neural networks capable of performing continuous dynamics modelling. Based on the idea that resnets and recurrent models operate with transformations in the hidden state $$h_{t+1}= h_t + f(h_t, \theta_t), \; \text{as} \; \Delta t \rightarrow 0,$$ the neural network parameterises the continous dynamics of an ODE $$\frac{dh(t)}{dt} = f(h(t), t, \theta)$$. 
+
+The key contributions from this paper are: 
+
+    1. Modelling continous dynamics 
+    2. Obeying an Ordinary Differential Equation (ODE)
+    3. Using the adjoint-method to scale to deeper and more complex networks without memory constraints. 
+
+
+Before we dive into the details of this work. Lets take a look at what it means to have a neural network to obey an ODE.  
+
+
+ODEs are solved as a systems of linear equations
+Here is a Python code cell:
+
+```{python}
+import os
+os.cpu_count()
+```
+
+
+

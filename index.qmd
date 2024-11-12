@@ -1,6 +1,6 @@
 ---
 title: "Vignesh Gopakumar"
-image: IAEA_London.png
+image: Images/IAEA_London.png
 about:
   template: trestles
   links:
@@ -33,6 +33,7 @@ I am also a visiting researcher with the [SciML group at STFC's Rutherford Apple
 
 Concurrently, I'm pursuing a PhD in Machine Learning under [Marc Deisenroth](https://www.deisenroth.cc/) at [University College London](https://www.ucl.ac.uk/ai-centre/).
 
+Current Hot Take: "The world would be so much better if we could just invert these matrices." 
 
 ### Current Research: 
 

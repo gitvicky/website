@@ -4,6 +4,7 @@ project:
 
 website:
   title: "Vignesh Gopakumar"
+  favicon: Images/VG.png
   navbar:
     right:
       - href: index.qmd

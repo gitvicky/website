@@ -4,14 +4,14 @@
     "href": "blog.html",
     "title": "Blog",
     "section": "",
-    "text": "I mostly write in Medium but will soon be writing more material here."
+    "text": "You can find some of my earlier writing in Medium."
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Vignesh Gopakumar",
     "section": "",
-    "text": "Can AI learn to obey physics?\n\nI am a Research Scientist at the UK Atomic Energy Authority (UKAEA), where I lead a team developing “actionable” surrogate models for exascale simulations and data-driven models for the Fusion industry. My research focusses on enhancing machine learning models’ performance, robustness and interpretability through physics-based approaches.\nI am also a visiting researcher with the SciML group at STFC’s Rutherford Appleton Laboratory.\nConcurrently, I’m pursuing a PhD in Machine Learning under Marc Deisenroth at University College London.\n\nCurrent Research:\n\nPhysics-Informed Machine Learning\nContinuous Dynamics Modelling\nUncertainty Quantification\nDesign of Experiments\n\nBuilding simvue.io : AI-driven, open-source simulation management and tracking dashboard for streamlining engineering workflows. Developed with public funding from the UK Government. Currently in private \\(\\beta\\).\n\n“If there is a God, it must be a differential equation” - Bertrand Russell"
+    "text": "Can AI learn to obey physics?\n\nI am a Research Scientist at the UK Atomic Energy Authority (UKAEA), where I lead a team developing “actionable” surrogate models for exascale simulations and data-driven models for the Fusion industry. My research focusses on enhancing machine learning models’ performance, robustness and interpretability through physics-based approaches.\nI am also a visiting researcher with the SciML group at STFC’s Rutherford Appleton Laboratory.\nConcurrently, I’m pursuing a PhD in Machine Learning under Marc Deisenroth at University College London.\nCurrent Hot Take: “The world would be so much better if we could just invert these matrices.”\n\nCurrent Research:\n\nPhysics-Informed Machine Learning\nContinuous Dynamics Modelling\nUncertainty Quantification\nDesign of Experiments\n\nBuilding simvue.io : AI-driven, open-source simulation management and tracking dashboard for streamlining engineering workflows. Developed with public funding from the UK Government. Currently in private \\(\\beta\\).\n\n“If there is a God, it must be a differential equation” - Bertrand Russell"
   },
   {
     "objectID": "talks.html",
@@ -25,6 +25,90 @@
     "href": "publications.html",
     "title": "Publications",
     "section": "",
-    "text": "Main Author\n\nUncertainty Quantification of Pre-Trained and Fine-Tuned Surrogate Models using Conformal Prediction\n\nAuthors: Gopakumar, Vignesh; Gray, Ander; Oskarsson, Joel; Zanisi, Lorenzo; Pamela, Stanislas; Giles, Daniel; Kusner, Matt; Deisenroth, Marc\nPublished in: arXiv preprint arXiv:2408.09881, 2024\nTLDR: [Brief summary of the paper]\nPaper Code\n\nValid Error Bars for Neural Weather Models using Conformal Prediction\n\nAuthors: Gopakumar, Vignesh; Oskarsson, Joel; Gray, Ander; Zanisi, Lorenzo; Pamela, Stanislas; Giles, Daniel; Kusner, Matt; Deisenroth, Marc\nPublished in: arXiv preprint arXiv:2406.14483, 2024\nTLDR: [Brief summary of the paper]\nPaper Code\n\nPlasma surrogate modelling using Fourier neural operators\n\nAuthors: Gopakumar, Vignesh; Pamela, Stanislas; Zanisi, Lorenzo; Li, Zongyi; Gray, Ander; Brennand, Daniel; Bhatia, Nitesh; Stathopoulos, Gregory; Kusner, Matt; Deisenroth, Marc\nPublished in: Nuclear Fusion, Volume 64, Number 5, 2024\nTLDR: [Brief summary of the paper]\nPaper Code\n\nLoss landscape engineering via data regulation on PINNs\n\nAuthors: Gopakumar, Vignesh; Pamela, Stanislas; Samaddar, Debasmita\nPublished in: Machine Learning with Applications, Volume 12, 2023\nTLDR: [Brief summary of the paper]\nPaper Code\n\nFourier-RNNs for modelling noisy physics data\n\nAuthors: Gopakumar, Vignesh; Pamela, Stanislas; Zanisi, Lorenzo\nPublished in: arXiv preprint arXiv:2302.06534, 2023\nTLDR: [Brief summary of the paper]\nPaper\n\nImage mapping the temporal evolution of edge characteristics in tokamaks using neural networks\n\nAuthors: Gopakumar, Vignesh; Samaddar, Debasmita\nPublished in: Machine Learning: Science and Technology, Volume 1, Number 1, 2020\nTLDR: [Brief summary of the paper]\nPaper\n\n\n\n\nCo-author\n\nNeural-Parareal: Self-Improving Acceleration of Fusion MHD Simulations Using Time-Parallelisation and Neural Operators\n\nAuthors: Pamela, SJP; Carey, N; Brandstetter, J; Akers, R; Zanisi, L; Buchanan, J; Gopakumar, V; Hoelzl, M; Huijsmans, G; Pentland, K\nPublished in: Computer Physics Communications, 2024\nTLDR: [Brief summary of the paper]\nPaper\n\nData efficiency and long term prediction capabilities for neural operator surrogate models of core and edge plasma codes\n\nAuthors: Carey, N; Zanisi, L; Pamela, S; Gopakumar, V; Omotani, J; Buchanan, J; Brandstetter, J\nPublished in: arXiv preprint arXiv:2402.08561, 2024\nTLDR: [Brief summary of the paper]\nPaper\n\nEfficient training sets for surrogate models of tokamak turbulence with active deep ensembles\n\nAuthors: Zanisi, L; Ho, A; Barr, J; Madula, T; Citrin, J; Pamela, S; Buchanan, J; Casson, FJ; Gopakumar, V; Contributors, JET\nPublished in: Nuclear Fusion, Volume 64, Number 3, 2024\nTLDR: [Brief summary of the paper]\nPaper\n\nMulti-Objective Bayesian Optimization for Design of Pareto-Optimal Current Drive Profiles in STEP\n\nAuthors: Brown, Theodore; Marsden, Stephen; Gopakumar, Vignesh; Terenin, Alexander; Ge, Hong; Casson, Francis\nPublished in: IEEE Transactions on Plasma Science, 2024\nTLDR: [Brief summary of the paper]\nPaper\n\nOverview of the EUROfusion Tokamak Exploitation programme in support of ITER and DEMO\n\nAuthors: Joffrin, Emmanuel Henri; Wischmeier, Marco; Baruzzo, Matteo; Hakola, Antti; Kappatou, Athina; Keeling, David; Labit, Benoit; Tsitrone, Emmanuelle; Vianello, Nicola\nPublished in: Nuclear Fusion, 2023\nTLDR: [Brief summary of the paper]\nPaper\n\nSpatio-temporal forecasting of plasma turbulence using deep learning\n\nAuthors: Gaur, Rahul; Gopakumar, Vignesh; Barbour, Nathaniel; Jang, Byoungchan; Mandell, Noah; Abel, Ian; Dorland, William; Kolemen, Egemen\nPresented at: APS Division of Plasma Physics Meeting Abstracts, 2023\nTLDR: [Brief summary of the paper]\nLink to the presentation\n\nFast regression of the tritium breeding ratio in fusion reactors\n\nAuthors: Mánek, Petr; Van Goffrier, Graham; Gopakumar, Vignesh; Nikolaou, Nikolaos; Shimwell, Jonathan; Waldmann, Ingo\nPublished in: Machine Learning: Science and Technology, Volume 4, Number 1, 2023\nTLDR: [Brief summary of the paper]\nPaper\n\nShaping of Magnetic Field Coils in Fusion Reactors using Bayesian Optimisation\n\nAuthors: Nunn, Timothy; Authority, UK Atomic Energy; Gopakumar, Vignesh; Kahn, Sebastien\nPublished in: Bayesian Optimisation Workshop @ NeurIPS 2022\nTLDR: [Brief summary of the paper]\nPaper\n\nDevelopment of fusion reactor digital twins in the Metaverse\n\nAuthors: Margetts, Lee; Akers, Rob; Ghosh, Abhijeet; Gopakumar, Vignesh; Hadorn, Patrik; Hummel, Mathias; Messmer, Peter; Omer, Muhammad; Ozturk, Ekin; Pamela, Stanislav\nPublished in: IET Nuclear Engineering for Safety, Control and Security, 2022\nTLDR: [Brief summary of the paper]\nPaper\n\nActive and continual learning of fusion plasma turbulence surrogate models for digital twinning of a tokamak device\n\nAuthors: Barr, Jackson; Madula, Thandikire; Zanisi, Lorenzo; Gopakumar, Vignesh; Ho, Aaron; Citrin, Jonathan; Contributors, and JET\nPresented at: ReALML@ICML, 2022\nTLDR: [Brief summary of the paper]\nPaper\n\n14 MeV neutron irradiation experiments-gamma spectroscopy analysis and validation automation\n\nAuthors: Stainer, Thomas; Gilbert, Mark R; Packer, Lee W; Lilley, Steven; Gopakumar, Vignesh; Wilson, Chris\nPublished in: EPJ Web of Conferences, Volume 247, 2021\nTLDR: [Brief summary of the paper]\nPaper\n\nInformed Sampling of the Plasma Hyperspace for Digital Twinning\n\nAuthors: Bakrania, Mayur; Gopkakumar, Vignesh\nPresented at: IAEA Technical Meeting on Fusion Data Processing, Validation, Analysis, 2021\nTLDR: [Brief summary of the paper]\nPaper"
+    "text": "Highlighted Publications\n\nUncertainty Quantification of Pre-Trained and Fine-Tuned Surrogate Models using Conformal Prediction\n\nAuthors: Gopakumar, Vignesh; Gray, Ander; Oskarsson, Joel; Zanisi, Lorenzo; Pamela, Stanislas; Giles, Daniel; Kusner, Matt; Deisenroth, Marc\nPublished in: arXiv preprint arXiv:2408.09881, 2024\nTLDR: [Brief summary of the paper]\nPaper Code\n\nValid Error Bars for Neural Weather Models using Conformal Prediction\n\nAuthors: Gopakumar, Vignesh; Oskarsson, Joel; Gray, Ander; Zanisi, Lorenzo; Pamela, Stanislas; Giles, Daniel; Kusner, Matt; Deisenroth, Marc\nPublished in: arXiv preprint arXiv:2406.14483, 2024\nTLDR: [Brief summary of the paper]\nPaper Code\n\nPlasma surrogate modelling using Fourier neural operators\n\nAuthors: Gopakumar, Vignesh; Pamela, Stanislas; Zanisi, Lorenzo; Li, Zongyi; Gray, Ander; Brennand, Daniel; Bhatia, Nitesh; Stathopoulos, Gregory; Kusner, Matt; Deisenroth, Marc\nPublished in: Nuclear Fusion, Volume 64, Number 5, 2024\nTLDR: [Brief summary of the paper]\nPaper Code\n\nLoss landscape engineering via data regulation on PINNs\n\nAuthors: Gopakumar, Vignesh; Pamela, Stanislas; Samaddar, Debasmita\nPublished in: Machine Learning with Applications, Volume 12, 2023\nTLDR: [Brief summary of the paper]\nPaper Code\n\nFourier-RNNs for modelling noisy physics data\n\nAuthors: Gopakumar, Vignesh; Pamela, Stanislas; Zanisi, Lorenzo\nPublished in: arXiv preprint arXiv:2302.06534, 2023\nTLDR: [Brief summary of the paper]\nPaper\n\nImage mapping the temporal evolution of edge characteristics in tokamaks using neural networks\n\nAuthors: Gopakumar, Vignesh; Samaddar, Debasmita\nPublished in: Machine Learning: Science and Technology, Volume 1, Number 1, 2020\nTLDR: [Brief summary of the paper]\nPaper\n\n\n\n\nOther Publications\n\nNeural-Parareal: Self-Improving Acceleration of Fusion MHD Simulations Using Time-Parallelisation and Neural Operators\n\nAuthors: Pamela, SJP; Carey, N; Brandstetter, J; Akers, R; Zanisi, L; Buchanan, J; Gopakumar, V; Hoelzl, M; Huijsmans, G; Pentland, K\nPublished in: Computer Physics Communications, 2024\nTLDR: [Brief summary of the paper]\nPaper\n\nData efficiency and long term prediction capabilities for neural operator surrogate models of core and edge plasma codes\n\nAuthors: Carey, N; Zanisi, L; Pamela, S; Gopakumar, V; Omotani, J; Buchanan, J; Brandstetter, J\nPublished in: arXiv preprint arXiv:2402.08561, 2024\nTLDR: [Brief summary of the paper]\nPaper\n\nEfficient training sets for surrogate models of tokamak turbulence with active deep ensembles\n\nAuthors: Zanisi, L; Ho, A; Barr, J; Madula, T; Citrin, J; Pamela, S; Buchanan, J; Casson, FJ; Gopakumar, V; Contributors, JET\nPublished in: Nuclear Fusion, Volume 64, Number 3, 2024\nTLDR: [Brief summary of the paper]\nPaper\n\nMulti-Objective Bayesian Optimization for Design of Pareto-Optimal Current Drive Profiles in STEP\n\nAuthors: Brown, Theodore; Marsden, Stephen; Gopakumar, Vignesh; Terenin, Alexander; Ge, Hong; Casson, Francis\nPublished in: IEEE Transactions on Plasma Science, 2024\nTLDR: [Brief summary of the paper]\nPaper\n\nOverview of the EUROfusion Tokamak Exploitation programme in support of ITER and DEMO\n\nAuthors: Joffrin, Emmanuel Henri; Wischmeier, Marco; Baruzzo, Matteo; Hakola, Antti; Kappatou, Athina; Keeling, David; Labit, Benoit; Tsitrone, Emmanuelle; Vianello, Nicola\nPublished in: Nuclear Fusion, 2023\nTLDR: [Brief summary of the paper]\nPaper\n\nSpatio-temporal forecasting of plasma turbulence using deep learning\n\nAuthors: Gaur, Rahul; Gopakumar, Vignesh; Barbour, Nathaniel; Jang, Byoungchan; Mandell, Noah; Abel, Ian; Dorland, William; Kolemen, Egemen\nPresented at: APS Division of Plasma Physics Meeting Abstracts, 2023\nTLDR: [Brief summary of the paper]\nLink to the presentation\n\nFast regression of the tritium breeding ratio in fusion reactors\n\nAuthors: Mánek, Petr; Van Goffrier, Graham; Gopakumar, Vignesh; Nikolaou, Nikolaos; Shimwell, Jonathan; Waldmann, Ingo\nPublished in: Machine Learning: Science and Technology, Volume 4, Number 1, 2023\nTLDR: [Brief summary of the paper]\nPaper\n\nShaping of Magnetic Field Coils in Fusion Reactors using Bayesian Optimisation\n\nAuthors: Nunn, Timothy; Authority, UK Atomic Energy; Gopakumar, Vignesh; Kahn, Sebastien\nPublished in: Bayesian Optimisation Workshop @ NeurIPS 2022\nTLDR: [Brief summary of the paper]\nPaper\n\nDevelopment of fusion reactor digital twins in the Metaverse\n\nAuthors: Margetts, Lee; Akers, Rob; Ghosh, Abhijeet; Gopakumar, Vignesh; Hadorn, Patrik; Hummel, Mathias; Messmer, Peter; Omer, Muhammad; Ozturk, Ekin; Pamela, Stanislav\nPublished in: IET Nuclear Engineering for Safety, Control and Security, 2022\nTLDR: [Brief summary of the paper]\nPaper\n\nActive and continual learning of fusion plasma turbulence surrogate models for digital twinning of a tokamak device\n\nAuthors: Barr, Jackson; Madula, Thandikire; Zanisi, Lorenzo; Gopakumar, Vignesh; Ho, Aaron; Citrin, Jonathan; Contributors, and JET\nPresented at: ReALML@ICML, 2022\nTLDR: [Brief summary of the paper]\nPaper\n\n14 MeV neutron irradiation experiments-gamma spectroscopy analysis and validation automation\n\nAuthors: Stainer, Thomas; Gilbert, Mark R; Packer, Lee W; Lilley, Steven; Gopakumar, Vignesh; Wilson, Chris\nPublished in: EPJ Web of Conferences, Volume 247, 2021\nTLDR: [Brief summary of the paper]\nPaper\n\nInformed Sampling of the Plasma Hyperspace for Digital Twinning\n\nAuthors: Bakrania, Mayur; Gopkakumar, Vignesh\nPresented at: IAEA Technical Meeting on Fusion Data Processing, Validation, Analysis, 2021\nTLDR: [Brief summary of the paper]\nPaper"
+  },
+  {
+    "objectID": "Neural_ODE.html",
+    "href": "Neural_ODE.html",
+    "title": "Neural ODEs",
+    "section": "",
+    "text": "Markdown is an easy to read and write text format:\n\nIt’s plain text so works well with version control\nIt can be rendered into HTML, PDF, and more\nLearn more at: https://quarto.org/docs/authoring/"
+  },
+  {
+    "objectID": "Neural_ODE.html#markdown",
+    "href": "Neural_ODE.html#markdown",
+    "title": "Neural ODEs",
+    "section": "",
+    "text": "Markdown is an easy to read and write text format:\n\nIt’s plain text so works well with version control\nIt can be rendered into HTML, PDF, and more\nLearn more at: https://quarto.org/docs/authoring/"
+  },
+  {
+    "objectID": "Neural_ODE.html#code-cell",
+    "href": "Neural_ODE.html#code-cell",
+    "title": "Neural ODEs",
+    "section": "Code Cell",
+    "text": "Code Cell\nHere is a Python code cell:\n\nimport os\nos.cpu_count()\n\n12"
+  },
+  {
+    "objectID": "Neural_ODE.html#equation",
+    "href": "Neural_ODE.html#equation",
+    "title": "Neural ODEs",
+    "section": "Equation",
+    "text": "Equation\nUse LaTeX to write equations:\n\\[\n\\Sigma = \\sum_{i=1}^n k_i s_i^2\n\\]"
+  },
+  {
+    "objectID": "blogposts/Neural_ODE.html",
+    "href": "blogposts/Neural_ODE.html",
+    "title": "Neural ODEs",
+    "section": "",
+    "text": "Original Paper\nNeural ODE, introduced in (Chen et al. 2019)\n\n\n\n\n\n\nReferences\n\nChen, Ricky T. Q., Yulia Rubanova, Jesse Bettencourt, and David Duvenaud. 2019. “Neural Ordinary Differential Equations.” https://arxiv.org/abs/1806.07366."
+  },
+  {
+    "objectID": "blogposts/Neural_ODE.html#markdown",
+    "href": "blogposts/Neural_ODE.html#markdown",
+    "title": "Neural ODEs",
+    "section": "",
+    "text": "Markdown is an easy to read and write text format:\n\nIt’s plain text so works well with version control\nIt can be rendered into HTML, PDF, and more\nLearn more at: https://quarto.org/docs/authoring/"
+  },
+  {
+    "objectID": "blogposts/Neural_ODE.html#code-cell",
+    "href": "blogposts/Neural_ODE.html#code-cell",
+    "title": "Neural ODEs",
+    "section": "Code Cell",
+    "text": "Code Cell\nHere is a Python code cell:\n\nimport os\nos.cpu_count()\n\n12"
+  },
+  {
+    "objectID": "blogposts/Neural_ODE.html#equation",
+    "href": "blogposts/Neural_ODE.html#equation",
+    "title": "Neural ODEs",
+    "section": "Equation",
+    "text": "Equation\nUse LaTeX to write equations:\n\\[\n\\Sigma = \\sum_{i=1}^n k_i s_i^2\n\\]"
+  },
+  {
+    "objectID": "blogposts/Neural_ODE.html#original-paper",
+    "href": "blogposts/Neural_ODE.html#original-paper",
+    "title": "Neural ODEs",
+    "section": "",
+    "text": "Markdown is an easy to read and write text format:\n\nIt’s plain text so works well with version control\nIt can be rendered into HTML, PDF, and more\nLearn more at: https://quarto.org/docs/authoring/"
+  },
+  {
+    "objectID": "Blogposts/Neural_ODE.html",
+    "href": "Blogposts/Neural_ODE.html",
+    "title": "Neural ODEs",
+    "section": "",
+    "text": "Original Paper\nNeural ODE, introduced in (Chen et al. 2019),\n\n\n\n\n\n\nReferences\n\nChen, Ricky T. Q., Yulia Rubanova, Jesse Bettencourt, and David Duvenaud. 2019. “Neural Ordinary Differential Equations.” https://arxiv.org/abs/1806.07366."
+  },
+  {
+    "objectID": "Blog/Neural_ODE.html",
+    "href": "Blog/Neural_ODE.html",
+    "title": "Neural ODEs",
+    "section": "",
+    "text": "Neural ODE, introduced in (Chen et al. 2019), represents a class of neural networks capable of performing continuous dynamics modelling. Based on the idea that resnets and recurrent models operate with transformations in the hidden state \\[h_{t+1}= h_t + f(h_t, \\theta_t), \\; \\text{as} \\; \\Delta t \\rightarrow 0,\\] the neural network parameterises the continous dynamics of an ODE \\[\\frac{dh(t)}{dt} = f(h(t), t, \\theta)\\].\nThe key contributions from this paper are:\n1. Modelling continous dynamics \n2. Obeying an Ordinary Differential Equation (ODE)\n3. Using the adjoint-method to scale to deeper and more complex networks without memory constraints. \nBefore we dive into the details of this work. Lets take a look at what it means to have a neural network to obey an ODE.\nODEs are solved as a systems of linear equations Here is a Python code cell:\n\nimport os\nos.cpu_count()\n\n12\n\n\n\n\n\n\nReferences\n\nChen, Ricky T. Q., Yulia Rubanova, Jesse Bettencourt, and David Duvenaud. 2019. “Neural Ordinary Differential Equations.” https://arxiv.org/abs/1806.07366."
+  },
+  {
+    "objectID": "Blog/Neural_Operators.html",
+    "href": "Blog/Neural_Operators.html",
+    "title": "Neural ODEs",
+    "section": "",
+    "text": "Neural ODE, introduced in (Chen et al. 2019), represents a class of neural networks capable of performing continuous dynamics modelling. Based on the idea that resnets and recurrent models operate with transformations in the hidden state \\[h_{t+1}= h_t + f(h_t, \\theta_t), \\; \\text{as} \\; \\Delta t \\rightarrow 0,\\] the neural network parameterises the continous dynamics of an ODE \\[\\frac{dh(t)}{dt} = f(h(t), t, \\theta)\\].\nThe key contributions from this paper are:\n1. Modelling continous dynamics \n2. Obeying an Ordinary Differential Equation (ODE)\n3. Using the adjoint-method to scale to deeper and more complex networks without memory constraints. \nBefore we dive into the details of this work. Lets take a look at what it means to have a neural network to obey an ODE.\nODEs are solved as a systems of linear equations Here is a Python code cell:\n\nimport os\nos.cpu_count()\n\n12\n\n\n\n\n\n\nReferences\n\nChen, Ricky T. Q., Yulia Rubanova, Jesse Bettencourt, and David Duvenaud. 2019. “Neural Ordinary Differential Equations.” https://arxiv.org/abs/1806.07366."
   }
 ]

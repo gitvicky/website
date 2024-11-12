@@ -16,5 +16,20 @@
   },
   "publications.qmd": {
     "publications.html": "ff1c0571"
+  },
+  "Neural_ODE.qmd": {
+    "Neural_ODE.html": "9378221d"
+  },
+  "blogposts/Neural_ODE.qmd": {
+    "Neural_ODE.html": "4dc2adf2"
+  },
+  "Blogposts/Neural_ODE.qmd": {
+    "Neural_ODE.html": "14826579"
+  },
+  "Blog/Neural_ODE.qmd": {
+    "Neural_ODE.html": "99a3e550"
+  },
+  "Blog/Neural_Operators.qmd": {
+    "Neural_Operators.html": "b4feb59e"
   }
 }
