@@ -6,19 +6,19 @@ about:
   links:
     - text: LinkedIn
       url: "https://www.linkedin.com/in/vignesh-gopakumar/"
-      icon: linkedin
+      # icon: linkedin
     - text: Twitter (X)
       url: "https://x.com/mistervickster"
-      icon: twitter
+      # icon: 
     - text: Scholar
       url:  "https://scholar.google.com/citations?user=NQtqemwAAAAJ&hl=en"
       icon: google-scholar
     - text: GitHub
-      icon: github
+      # icon: github
       url: "https://github.com/gitvicky"
     - text: Email
       url: "mailto:vignesh7g@gmail.com"
-      icon: mail
+      # icon: mail
 
 comments: false
 
@@ -33,7 +33,7 @@ I am also a visiting researcher with the [SciML group at STFC's Rutherford Apple
 
 Concurrently, I'm pursuing a PhD in Machine Learning under [Marc Deisenroth](https://www.deisenroth.cc/) at [University College London](https://www.ucl.ac.uk/ai-centre/).
 
-Current Hot Take: "The world would be so much better if we could just invert these matrices." 
+<!-- Current Hot Take: "The world would be so much better if we could just invert these matrices."  -->
 
 ### Current Research: 
 
