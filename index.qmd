@@ -23,9 +23,9 @@ about:
 comments: false
 
 ---
-::: {.center}
+<!-- ::: {.center}
 ***Can AI learn to obey physics?***
-:::
+::: -->
 
 I am a Research Scientist at the [UK Atomic Energy Authority](https://ccfe.ukaea.uk/) (UKAEA), where I lead a team developing "actionable" surrogate models for exascale simulations and data-driven models for the Fusion industry. My research focusses on enhancing machine learning models' performance, robustness and interpretability through physics-based approaches. 
 
