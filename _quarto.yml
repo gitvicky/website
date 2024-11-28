@@ -4,7 +4,7 @@ project:
 
 website:
   title: "Vignesh Gopakumar"
-  favicon: Images/VG.png
+  favicon: Images/dy_dx.png
   navbar:
     right:
       - href: index.qmd
