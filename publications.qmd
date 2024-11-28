@@ -43,11 +43,11 @@ format: html
 
 
 ::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
-**Uncertainty Quantification of Pre-Trained and Fine-Tuned Surrogate Models using Conformal Prediction**
+**Uncertainty Quantification of surrogate Models using Conformal Prediction**
 
   * Authors: Gopakumar, Vignesh; Gray, Ander; Oskarsson, Joel; Zanisi, Lorenzo; Pamela, Stanislas; Giles, Daniel; Kusner, Matt; Deisenroth, Marc
   * Published in: arXiv preprint arXiv:2408.09881, 2024
-  * TLDR: [Brief summary of the paper]
+  * TLDR: Guaranteed and valid error bars across spatio-temporal domains using conformal prediction. 
   * [<span class="btn btn-paper">Paper</span>](https://arxiv.org/abs/2408.09881) [<span class="btn btn-code">Code</span>](https://github.com/gitvicky/Spatio-Temporal-CP)
 :::
 
@@ -57,17 +57,17 @@ format: html
 
   * Authors: Gopakumar, Vignesh; Oskarsson, Joel; Gray, Ander; Zanisi, Lorenzo; Pamela, Stanislas; Giles, Daniel; Kusner, Matt; Deisenroth, Marc
   * Published in: arXiv preprint arXiv:2406.14483, 2024
-  * TLDR: [Brief summary of the paper]
+  * TLDR: Marginal conformal prediction as a method of guaranteed error bars across neural weather models.  
   * [<span class="btn btn-paper">Paper</span>](https://arxiv.org/abs/2406.14483) [<span class="btn btn-code">Code</span>](https://github.com/gitvicky/neural-lam-CP)
 :::
 
 
 ::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
-**Plasma surrogate modelling using Fourier neural operators**
+**Plasma Surrogate Modelling using Fourier Neural Operators**
 
   * Authors: Gopakumar, Vignesh; Pamela, Stanislas; Zanisi, Lorenzo; Li, Zongyi; Gray, Ander; Brennand, Daniel; Bhatia, Nitesh; Stathopoulos, Gregory; Kusner, Matt; Deisenroth, Marc
   * Published in: Nuclear Fusion, Volume 64, Number 5, 2024
-  * TLDR: [Brief summary of the paper]
+  * TLDR: Multi-variable FNO designed to model the plasma evolution within a Tokamak across both simulations and experiment on the MAST Tokamak. 
   * [<span class="btn btn-paper">Paper</span>](https://iopscience.iop.org/article/10.1088/1741-4326/ad313a/meta) [<span class="btn btn-code">Code</span>](https://github.com/Plasma-FNO)
 :::
 
@@ -78,24 +78,27 @@ format: html
 ### 2023
 </div>
 
+
 ::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
-**Loss landscape engineering via data regulation on PINNs**
+**Fourier-RNNs for Modelling Noisy Physics data**
+
+  - Authors: Gopakumar, Vignesh; Pamela, Stanislas; Zanisi, Lorenzo
+  - Published in: arXiv preprint arXiv:2302.06534, 2023
+  - TLDR: Recurrent Fourier neural operators with hidden state representations for non-markovian physcial modelling. 
+  - [<span class="btn btn-paper">Paper</span>](https://arxiv.org/abs/2302.06534)
+:::
+
+
+::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
+**Loss Landscape Engineering via Data Regulation on PINNs**
 
   * Authors: Gopakumar, Vignesh; Pamela, Stanislas; Samaddar, Debasmita
   * Published in: Machine Learning with Applications, Volume 12, 2023
-  * TLDR: [Brief summary of the paper]
+  * TLDR: Impact Data-Regulation has on smoothening the loss landscape of physics-informed neural networks for better convergence. 
   * [<span class="btn btn-paper">Paper</span>](https://www.sciencedirect.com/science/article/pii/S2666827023000178) [<span class="btn btn-code">Code</span>](https://github.com/gitvicky/Loss_Landscape_PINNs)
 
 :::
 
-::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
-**Fourier-RNNs for modelling noisy physics data**
-
-  - Authors: Gopakumar, Vignesh; Pamela, Stanislas; Zanisi, Lorenzo
-  - Published in: arXiv preprint arXiv:2302.06534, 2023
-  - TLDR: [Brief summary of the paper]
-  - [<span class="btn btn-paper">Paper</span>](https://arxiv.org/abs/2302.06534)
-:::
 
 <br>
 
@@ -104,11 +107,11 @@ format: html
 ### 2022
 </div>
 ::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
-**Image mapping the temporal evolution of edge characteristics in tokamaks using neural networks**
+**Image Mapping the Temporal Evolution of Edge Characteristics in Tokamaks using Neural Networks**
 
   * Authors: Gopakumar, Vignesh; Samaddar, Debasmita
   * Published in: Machine Learning: Science and Technology, Volume 1, Number 1, 2020
-  * TLDR: [Brief summary of the paper]
+  * TLDR: Branched fully convolutional network designed to emulate the plasma at the scrape-off layer with coupled plasma and neutral behaviour. 
   * [<span class="btn btn-paper">Paper</span>](https://iopscience.iop.org/article/10.1088/2632-2153/ab5639/meta) 
 :::
 
