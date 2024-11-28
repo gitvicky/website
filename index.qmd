@@ -4,21 +4,19 @@ image: Images/IMG_1704.png
 about:
   template: trestles
   links:
-    - text: LinkedIn
-      url: "https://www.linkedin.com/in/vignesh-gopakumar/"
-      # icon: linkedin
+    - icon: linkedin
+      text: LinkedIn
+      href: "https://www.linkedin.com/in/vignesh-gopakumar/"
     - text: Twitter (X)
       url: "https://x.com/mistervickster"
-      # icon: 
-    - text: Scholar
-      url:  "https://scholar.google.com/citations?user=NQtqemwAAAAJ&hl=en"
-      icon: google-scholar
+      icon: twitter
+    - text: "{{< ai google-scholar-square >}} Scholar" 
+      href:  "https://scholar.google.com/citations?user=NQtqemwAAAAJ&hl=en"
     - text: GitHub
-      # icon: github
-      url: "https://github.com/gitvicky"
+      icon: github
+      href: "https://github.com/gitvicky"
     - text: Email
-      url: "mailto:vignesh7g@gmail.com"
-      # icon: mail
+      href: "mailto:vignesh7g@gmail.com"
 
 comments: false
 
