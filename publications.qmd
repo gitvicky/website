@@ -20,13 +20,13 @@ format: html
 }
 .btn-paper {
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #002F56;
+  border-color:  #002F56;
 }
 .btn-code {
   color: #fff;
-  background-color: #28a745;
-  border-color: #28a745;
+  background-color: #006F45;
+  border-color: #006F45;
 }
 .btn-presentation {
   color: #fff;
@@ -37,52 +37,83 @@ format: html
 
 ***
 
-### Selected Publications
-
-- **Uncertainty Quantification of Pre-Trained and Fine-Tuned Surrogate Models using Conformal Prediction**
-  - Authors: Gopakumar, Vignesh; Gray, Ander; Oskarsson, Joel; Zanisi, Lorenzo; Pamela, Stanislas; Giles, Daniel; Kusner, Matt; Deisenroth, Marc
-  - Published in: arXiv preprint arXiv:2408.09881, 2024
-  - TLDR: [Brief summary of the paper]
-  - [<span class="btn btn-paper">Paper</span>](https://arxiv.org/abs/2408.09881) [<span class="btn btn-code">Code</span>](https://github.com/gitvicky/Spatio-Temporal-CP)
-
-\vspace{2em}
+<div style="text-align: right;">
+### 2024
+</div>
 
 
-- **Valid Error Bars for Neural Weather Models using Conformal Prediction**
-  - Authors: Gopakumar, Vignesh; Oskarsson, Joel; Gray, Ander; Zanisi, Lorenzo; Pamela, Stanislas; Giles, Daniel; Kusner, Matt; Deisenroth, Marc
-  - Published in: arXiv preprint arXiv:2406.14483, 2024
-  - TLDR: [Brief summary of the paper]
-  - [<span class="btn btn-paper">Paper</span>](https://arxiv.org/abs/2406.14483) [<span class="btn btn-code">Code</span>](https://github.com/gitvicky/neural-lam-CP)
+::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
+**Uncertainty Quantification of Pre-Trained and Fine-Tuned Surrogate Models using Conformal Prediction**
 
-\vspace{2em}
+  * Authors: Gopakumar, Vignesh; Gray, Ander; Oskarsson, Joel; Zanisi, Lorenzo; Pamela, Stanislas; Giles, Daniel; Kusner, Matt; Deisenroth, Marc
+  * Published in: arXiv preprint arXiv:2408.09881, 2024
+  * TLDR: [Brief summary of the paper]
+  * [<span class="btn btn-paper">Paper</span>](https://arxiv.org/abs/2408.09881) [<span class="btn btn-code">Code</span>](https://github.com/gitvicky/Spatio-Temporal-CP)
+:::
 
-- **Plasma surrogate modelling using Fourier neural operators**
-  - Authors: Gopakumar, Vignesh; Pamela, Stanislas; Zanisi, Lorenzo; Li, Zongyi; Gray, Ander; Brennand, Daniel; Bhatia, Nitesh; Stathopoulos, Gregory; Kusner, Matt; Deisenroth, Marc
-  - Published in: Nuclear Fusion, Volume 64, Number 5, 2024
-  - TLDR: [Brief summary of the paper]
-  - [<span class="btn btn-paper">Paper</span>](https://iopscience.iop.org/article/10.1088/1741-4326/ad313a/meta) [<span class="btn btn-code">Code</span>](https://github.com/Plasma-FNO)
 
-\vspace{2em}
+::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
+**Valid Error Bars for Neural Weather Models using Conformal Prediction**
 
-- **Loss landscape engineering via data regulation on PINNs**
-  - Authors: Gopakumar, Vignesh; Pamela, Stanislas; Samaddar, Debasmita
-  - Published in: Machine Learning with Applications, Volume 12, 2023
-  - TLDR: [Brief summary of the paper]
-  - [<span class="btn btn-paper">Paper</span>](https://www.sciencedirect.com/science/article/pii/S2666827023000178) [<span class="btn btn-code">Code</span>](https://github.com/gitvicky/Loss_Landscape_PINNs)
+  * Authors: Gopakumar, Vignesh; Oskarsson, Joel; Gray, Ander; Zanisi, Lorenzo; Pamela, Stanislas; Giles, Daniel; Kusner, Matt; Deisenroth, Marc
+  * Published in: arXiv preprint arXiv:2406.14483, 2024
+  * TLDR: [Brief summary of the paper]
+  * [<span class="btn btn-paper">Paper</span>](https://arxiv.org/abs/2406.14483) [<span class="btn btn-code">Code</span>](https://github.com/gitvicky/neural-lam-CP)
+:::
 
-\vspace{2em}
 
-- **Fourier-RNNs for modelling noisy physics data**
+::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
+**Plasma surrogate modelling using Fourier neural operators**
+
+  * Authors: Gopakumar, Vignesh; Pamela, Stanislas; Zanisi, Lorenzo; Li, Zongyi; Gray, Ander; Brennand, Daniel; Bhatia, Nitesh; Stathopoulos, Gregory; Kusner, Matt; Deisenroth, Marc
+  * Published in: Nuclear Fusion, Volume 64, Number 5, 2024
+  * TLDR: [Brief summary of the paper]
+  * [<span class="btn btn-paper">Paper</span>](https://iopscience.iop.org/article/10.1088/1741-4326/ad313a/meta) [<span class="btn btn-code">Code</span>](https://github.com/Plasma-FNO)
+:::
+
+<br>
+
+
+<div style="text-align: right;">
+### 2023
+</div>
+
+::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
+**Loss landscape engineering via data regulation on PINNs**
+
+  * Authors: Gopakumar, Vignesh; Pamela, Stanislas; Samaddar, Debasmita
+  * Published in: Machine Learning with Applications, Volume 12, 2023
+  * TLDR: [Brief summary of the paper]
+  * [<span class="btn btn-paper">Paper</span>](https://www.sciencedirect.com/science/article/pii/S2666827023000178) [<span class="btn btn-code">Code</span>](https://github.com/gitvicky/Loss_Landscape_PINNs)
+
+:::
+
+::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
+**Fourier-RNNs for modelling noisy physics data**
+
   - Authors: Gopakumar, Vignesh; Pamela, Stanislas; Zanisi, Lorenzo
   - Published in: arXiv preprint arXiv:2302.06534, 2023
   - TLDR: [Brief summary of the paper]
   - [<span class="btn btn-paper">Paper</span>](https://arxiv.org/abs/2302.06534)
+:::
 
-- **Image mapping the temporal evolution of edge characteristics in tokamaks using neural networks**
-  - Authors: Gopakumar, Vignesh; Samaddar, Debasmita
-  - Published in: Machine Learning: Science and Technology, Volume 1, Number 1, 2020
-  - TLDR: [Brief summary of the paper]
-  - [<span class="btn btn-paper">Paper</span>](https://iopscience.iop.org/article/10.1088/2632-2153/ab5639/meta) 
+<br>
+
+
+<div style="text-align: right;">
+### 2022
+</div>
+::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
+**Image mapping the temporal evolution of edge characteristics in tokamaks using neural networks**
+
+  * Authors: Gopakumar, Vignesh; Samaddar, Debasmita
+  * Published in: Machine Learning: Science and Technology, Volume 1, Number 1, 2020
+  * TLDR: [Brief summary of the paper]
+  * [<span class="btn btn-paper">Paper</span>](https://iopscience.iop.org/article/10.1088/2632-2153/ab5639/meta) 
+:::
+
+<br>
+
 
 ***
 

@@ -1,6 +1,6 @@
 ---
 title: "Vignesh Gopakumar"
-image: Images/IAEA_London.png
+image: Images/IMG_1704.png
 about:
   template: trestles
   links:
