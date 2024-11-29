@@ -33,6 +33,7 @@ format: html
   background-color: #FCD12A;
   border-color: #FCD12A;
 }
+
 </style>
 
 
@@ -42,8 +43,9 @@ format: html
 ### 2024
 </div>
 
+::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
+::: {style="flex: 3;"}
 
-::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
 **Uncertainty Quantification of surrogate Models using Conformal Prediction**
 
     Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi, Stanislas Pamela,
@@ -53,10 +55,15 @@ format: html
 
 [<span class="btn btn-paper">Paper</span>](https://arxiv.org/abs/2408.09881) [<span class="btn btn-code">Code</span>](https://github.com/gitvicky/Spatio-Temporal-CP)
 :::
+::: {style="flex: 1; max-width: 200px;"}
+![](Images/heatmap_cp.png){.lightbox style="cursor: pointer;"}
+:::
 
+:::
 
-::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
-**Valid Error Bars for Neural Weather Models using Conformal Prediction**
+::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
+::: {style="flex: 3;"}
+  **Valid Error Bars for Neural Weather Models using Conformal Prediction**
 
     Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi, Stanislas Pamela, 
     Daniel Giles, Matt J. Kusner, Marc Peter Deisenroth
@@ -65,18 +72,29 @@ format: html
 
 [<span class="btn btn-paper">Paper</span>](https://arxiv.org/abs/2406.14483) [<span class="btn btn-code">Code</span>](https://github.com/gitvicky/neural-lam-CP)
 :::
+::: {style="flex: 1; max-width: 200px;"}
+![](Images/weather_cp.png){.lightbox style="cursor: pointer;"}
+:::
 
+:::
 
-::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
+::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
+::: {style="flex: 3;"}
 **Plasma Surrogate Modelling using Fourier Neural Operators**
 
     Vignesh Gopakumar, Stanislas Pamela, Lorenzo Zanisi, Zongyi Li, Ander Gray, 
     Daniel Brennand, Nitesh Bhatia, Gregory Stathopoulos, Matt Kusner, 
     Marc Peter Deisenroth, Anima Anandkumar, JOREK Team, MAST Team
     Nuclear Fusion, Volume 64, Number 5, 2024
-  `TLDR: Multi-variable FNO designed to model the plasma evolution within a Tokamak across both simulations and experiment on the MAST Tokamak.` \ 
+  `TLDR: Multi-variable FNO designed to model the plasma evolution within a Tokamak across both simulations and experiment on the MAST Tokamak.` \
 
 [<span class="btn btn-paper">Paper</span>](https://iopscience.iop.org/article/10.1088/1741-4326/ad313a/meta) [<span class="btn btn-code">Code</span>](https://github.com/Plasma-FNO)
+:::
+
+::: {style="flex: 1; max-width: 200px;"}
+![](Images/fno_plasma.png){.lightbox style="cursor: pointer;"}
+:::
+
 :::
 
 <br>
@@ -87,7 +105,8 @@ format: html
 </div>
 
 
-::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
+::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
+::: {style="flex: 3;"}
 **Fourier-RNNs for Modelling Noisy Physics data**
 
     Vignesh Gopakumar, Lorenzo Zanisi, Stanislas Pamela
@@ -97,8 +116,15 @@ format: html
 [<span class="btn btn-paper">Paper</span>](https://arxiv.org/abs/2302.06534)
 :::
 
+::: {style="flex: 1; max-width: 200px;"}
+![](Images/F_RNNs.png){.lightbox style="cursor: pointer;"}
+:::
 
-::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
+:::
+
+
+::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
+::: {style="flex: 3;"}
 **Loss Landscape Engineering via Data Regulation on PINNs**
 
     Vignesh Gopakumar, Stanislas Pamela, Debasmita Samaddar
@@ -109,6 +135,12 @@ format: html
 
 :::
 
+::: {style="flex: 1; max-width: 200px;"}
+![](Images/loss_landscape.png){.lightbox style="cursor: pointer;"}
+:::
+
+:::
+
 
 <br>
 
@@ -116,7 +148,9 @@ format: html
 <div style="text-align: right;">
 ### 2022
 </div>
-::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;"}
+
+::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
+::: {style="flex: 3;"}
 **Image Mapping the Temporal Evolution of Edge Characteristics in Tokamaks using Neural Networks**
 
     Vignesh Gopakumar, Debasmita Samaddar
@@ -124,6 +158,12 @@ format: html
   `TLDR: Branched fully convolutional network designed to emulate the plasma at the scrape-off layer with coupled plasma and neutral behaviour.` \
 
 [<span class="btn btn-paper">Paper</span>](https://iopscience.iop.org/article/10.1088/2632-2153/ab5639/meta) 
+:::
+
+::: {style="flex: 1; max-width: 200px;"}
+![](Images/solps_cnn.png){.lightbox style="cursor: pointer;"}
+:::
+
 :::
 
 <br>

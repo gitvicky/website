@@ -2,3 +2,10 @@
 .center {
     text-align: center;
   }
+
+  .red-text {
+    color: red;
+  }
+  .blue-text {
+    color: blue;
+  }

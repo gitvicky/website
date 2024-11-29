@@ -40,6 +40,9 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -170,12 +173,14 @@ ul.task-list li input[type="checkbox"] {
   background-color: #FCD12A;
   border-color: #FCD12A;
 }
+
 </style>
 <hr>
 <section id="section" class="level3" style="text-align: right;">
 <h3 class="anchored" data-anchor-id="section">2024</h3>
 </section>
-<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;">
+<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;">
+<div style="flex: 3;">
 <p><strong>Uncertainty Quantification of surrogate Models using Conformal Prediction</strong></p>
 <pre><code>Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi, Stanislas Pamela,
 Daniel Giles, Matt J. Kusner, Marc Peter Deisenroth
@@ -184,7 +189,12 @@ arXiv preprint arXiv:2408.09881, 2024</code></pre>
 </p>
 <p><a href="https://arxiv.org/abs/2408.09881"><span class="btn btn-paper">Paper</span></a> <a href="https://github.com/gitvicky/Spatio-Temporal-CP"><span class="btn btn-code">Code</span></a></p>
 </div>
-<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;">
+<div style="flex: 1; max-width: 200px;">
+<p><a href="Images/heatmap_cp.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="Images/heatmap_cp.png" class="img-fluid" style="cursor: pointer;"></a></p>
+</div>
+</div>
+<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;">
+<div style="flex: 3;">
 <p><strong>Valid Error Bars for Neural Weather Models using Conformal Prediction</strong></p>
 <pre><code>Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi, Stanislas Pamela, 
 Daniel Giles, Matt J. Kusner, Marc Peter Deisenroth
@@ -192,20 +202,31 @@ arXiv preprint arXiv:2406.14483, 2024</code></pre>
 <p><code>TLDR: Marginal conformal prediction as a method of guaranteed error bars across neural weather models.</code> &nbsp;</p>
 <p><a href="https://arxiv.org/abs/2406.14483"><span class="btn btn-paper">Paper</span></a> <a href="https://github.com/gitvicky/neural-lam-CP"><span class="btn btn-code">Code</span></a></p>
 </div>
-<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;">
+<div style="flex: 1; max-width: 200px;">
+<p><a href="Images/weather_cp.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="Images/weather_cp.png" class="img-fluid" style="cursor: pointer;"></a></p>
+</div>
+</div>
+<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;">
+<div style="flex: 3;">
 <p><strong>Plasma Surrogate Modelling using Fourier Neural Operators</strong></p>
 <pre><code>Vignesh Gopakumar, Stanislas Pamela, Lorenzo Zanisi, Zongyi Li, Ander Gray, 
 Daniel Brennand, Nitesh Bhatia, Gregory Stathopoulos, Matt Kusner, 
 Marc Peter Deisenroth, Anima Anandkumar, JOREK Team, MAST Team
 Nuclear Fusion, Volume 64, Number 5, 2024</code></pre>
-<p><code>TLDR: Multi-variable FNO designed to model the plasma evolution within a Tokamak across both simulations and experiment on the MAST Tokamak.</code> &nbsp;</p>
+<p><code>TLDR: Multi-variable FNO designed to model the plasma evolution within a Tokamak across both simulations and experiment on the MAST Tokamak.</code><br>
+</p>
 <p><a href="https://iopscience.iop.org/article/10.1088/1741-4326/ad313a/meta"><span class="btn btn-paper">Paper</span></a> <a href="https://github.com/Plasma-FNO"><span class="btn btn-code">Code</span></a></p>
+</div>
+<div style="flex: 1; max-width: 200px;">
+<p><a href="Images/fno_plasma.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="Images/fno_plasma.png" class="img-fluid" style="cursor: pointer;"></a></p>
+</div>
 </div>
 <p><br></p>
 <section id="section-1" class="level3" style="text-align: right;">
 <h3 class="anchored" data-anchor-id="section-1">2023</h3>
 </section>
-<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;">
+<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;">
+<div style="flex: 3;">
 <p><strong>Fourier-RNNs for Modelling Noisy Physics data</strong></p>
 <pre><code>Vignesh Gopakumar, Lorenzo Zanisi, Stanislas Pamela
 arXiv preprint arXiv:2302.06534, 2023</code></pre>
@@ -213,24 +234,38 @@ arXiv preprint arXiv:2302.06534, 2023</code></pre>
 </p>
 <p><a href="https://arxiv.org/abs/2302.06534"><span class="btn btn-paper">Paper</span></a></p>
 </div>
-<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;">
+<div style="flex: 1; max-width: 200px;">
+<p><a href="Images/F_RNNs.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="Images/F_RNNs.png" class="img-fluid" style="cursor: pointer;"></a></p>
+</div>
+</div>
+<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;">
+<div style="flex: 3;">
 <p><strong>Loss Landscape Engineering via Data Regulation on PINNs</strong></p>
 <pre><code>Vignesh Gopakumar, Stanislas Pamela, Debasmita Samaddar
 Machine Learning with Applications, Volume 12, 2023</code></pre>
 <p><code>TLDR: Impact Data-Regulation has on smoothening the loss landscape of physics-informed neural networks for better convergence.</code></p>
 <p><a href="https://www.sciencedirect.com/science/article/pii/S2666827023000178"><span class="btn btn-paper">Paper</span></a> <a href="https://github.com/gitvicky/Loss_Landscape_PINNs"><span class="btn btn-code">Code</span></a></p>
 </div>
+<div style="flex: 1; max-width: 200px;">
+<p><a href="Images/loss_landscape.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="Images/loss_landscape.png" class="img-fluid" style="cursor: pointer;"></a></p>
+</div>
+</div>
 <p><br></p>
 <section id="section-2" class="level3" style="text-align: right;">
 <h3 class="anchored" data-anchor-id="section-2">2022</h3>
 </section>
-<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0;">
+<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;">
+<div style="flex: 3;">
 <p><strong>Image Mapping the Temporal Evolution of Edge Characteristics in Tokamaks using Neural Networks</strong></p>
 <pre><code>Vignesh Gopakumar, Debasmita Samaddar
 Machine Learning: Science and Technology, Volume 1, Number 1, 2020</code></pre>
 <p><code>TLDR: Branched fully convolutional network designed to emulate the plasma at the scrape-off layer with coupled plasma and neutral behaviour.</code><br>
 </p>
 <p><a href="https://iopscience.iop.org/article/10.1088/2632-2153/ab5639/meta"><span class="btn btn-paper">Paper</span></a></p>
+</div>
+<div style="flex: 1; max-width: 200px;">
+<p><a href="Images/solps_cnn.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="Images/solps_cnn.png" class="img-fluid" style="cursor: pointer;"></a></p>
+</div>
 </div>
 <p><br></p>
 <hr>
@@ -673,6 +708,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","descPosition":"bottom","selector":".lightbox","loop":false,"closeEffect":"zoom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 
