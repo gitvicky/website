@@ -46,7 +46,7 @@ format: html
 ::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
 ::: {style="flex: 3;"}
 
-**Uncertainty Quantification of surrogate Models using Conformal Prediction**
+**Uncertainty Quantification of Surrogate Models using Conformal Prediction**
 
     Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi, Stanislas Pamela,
     Daniel Giles, Matt J. Kusner, Marc Peter Deisenroth
