@@ -3,9 +3,11 @@ title: "Blog"
 ---
 ***
 
-<!-- [Neural ODE](/Blog/Neural_ODE.qmd) -->
+[Neural ODE](/Blog/Neural_ODE.qmd)
+
+[Geometry for Neural PDEs](/Blog/geometry.qmd)
 
 <!-- [Neural Operators](/Blog/Neural_Operators.qmd) -->
 
 
-You can find some of my earlier writing in [Medium](https://medium.com/@engineoutcompletely).
+Some of these blogposts are rather crude and written more as a note to myself. You can find some of my earlier writing in [Medium](https://medium.com/@engineoutcompletely).

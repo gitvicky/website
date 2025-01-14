@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Neural ODEs – Vignesh Gopakumar</title>
+<title>Research – Vignesh Gopakumar</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,80 +20,29 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="../Images/dy_dx.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Images/dy_dx.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -122,37 +71,8 @@ div.csl-indent {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -162,7 +82,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Vignesh Gopakumar</span>
     </a>
   </div>
@@ -173,19 +93,19 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../research.html"> 
+    <a class="nav-link active" href="./research.html" aria-current="page"> 
 <span class="menu-text">Research</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../talks.html"> 
+    <a class="nav-link" href="./talks.html"> 
 <span class="menu-text">Talks</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../blog.html"> 
+    <a class="nav-link" href="./blog.html"> 
 <span class="menu-text">Blog</span></a>
   </li>  
 </ul>
@@ -205,7 +125,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Neural ODEs</h1>
+<h1 class="title">Research</h1>
 </div>
 
 
@@ -222,30 +142,138 @@ window.Quarto = {
 </header>
 
 
+<style>
+.btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  text-decoration: none;
+}
+.btn-paper {
+  color: #fff;
+  background-color: #002F56;
+  border-color:  #002F56;
+}
+.btn-code {
+  color: #fff;
+  background-color: #006F45;
+  border-color: #006F45;
+}
+.btn-presentation {
+  color: #fff;
+  background-color: #FCD12A;
+  border-color: #FCD12A;
+}
+
+</style>
 <hr>
-<p>Neural ODE, introduced in <span class="citation" data-cites="chen2019neuralordinarydifferentialequations">(<a href="#ref-chen2019neuralordinarydifferentialequations" role="doc-biblioref">Chen et al. 2019</a>)</span>, represents a class of neural networks capable of performing continuous dynamics modelling. Based on the idea that resnets and recurrent models operate with transformations in the hidden state <span class="math display">\[h_{t+1}= h_t + f(h_t, \theta_t), \; \text{as} \; \Delta t \rightarrow 0,\]</span> the neural network parameterises the continous dynamics of an ODE <span class="math display">\[\frac{dh(t)}{dt} = f(h(t), t, \theta)\]</span>.</p>
-<p>The key contributions from this paper are:</p>
-<pre><code>1. Modelling continous dynamics 
-2. Obeying an Ordinary Differential Equation (ODE)
-3. Using the adjoint-method to scale to deeper and more complex networks without memory constraints. </code></pre>
-<p>Before we dive into the details of this work. Lets take a look at what it means to have a neural network to obey an ODE.</p>
-<p>ODEs are solved as a systems of linear equations Here is a Python code cell:</p>
-<div id="875321c8" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>os.cpu_count()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>12</code></pre>
+<section id="section" class="level3" style="text-align: right;">
+<h3 class="anchored" data-anchor-id="section">2024</h3>
+</section>
+<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;">
+<div style="flex: 3;">
+<p><strong>Uncertainty Quantification of Surrogate Models using Conformal Prediction</strong></p>
+<pre><code>Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi, Stanislas Pamela,
+Daniel Giles, Matt J. Kusner, Marc Peter Deisenroth
+arXiv preprint arXiv:2408.09881, 2024</code></pre>
+<p><code>TLDR: Guaranteed and valid error bars across spatio-temporal domains using conformal prediction.</code><br>
+</p>
+<p><a href="https://arxiv.org/abs/2408.09881"><span class="btn btn-paper">Paper</span></a> <a href="https://github.com/gitvicky/Spatio-Temporal-CP"><span class="btn btn-code">Code</span></a></p>
+</div>
+<div style="flex: 1; max-width: 200px;">
+<p><a href="Images/heatmap_cp.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="Images/heatmap_cp.png" class="img-fluid" style="cursor: pointer;"></a></p>
 </div>
 </div>
-
-
-
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-chen2019neuralordinarydifferentialequations" class="csl-entry" role="listitem">
-Chen, Ricky T. Q., Yulia Rubanova, Jesse Bettencourt, and David Duvenaud. 2019. <span>“Neural Ordinary Differential Equations.”</span> <a href="https://arxiv.org/abs/1806.07366">https://arxiv.org/abs/1806.07366</a>.
+<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;">
+<div style="flex: 3;">
+<p><strong>Valid Error Bars for Neural Weather Models using Conformal Prediction</strong></p>
+<pre><code>Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi, Stanislas Pamela, 
+Daniel Giles, Matt J. Kusner, Marc Peter Deisenroth
+arXiv preprint arXiv:2406.14483, 2024</code></pre>
+<p><code>TLDR: Marginal conformal prediction as a method of guaranteed error bars across neural weather models.</code> &nbsp;</p>
+<p><a href="https://arxiv.org/abs/2406.14483"><span class="btn btn-paper">Paper</span></a> <a href="https://github.com/gitvicky/neural-lam-CP"><span class="btn btn-code">Code</span></a></p>
 </div>
-</div></section></div></main> <!-- /main -->
+<div style="flex: 1; max-width: 200px;">
+<p><a href="Images/weather_cp.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="Images/weather_cp.png" class="img-fluid" style="cursor: pointer;"></a></p>
+</div>
+</div>
+<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;">
+<div style="flex: 3;">
+<p><strong>Plasma Surrogate Modelling using Fourier Neural Operators</strong></p>
+<pre><code>Vignesh Gopakumar, Stanislas Pamela, Lorenzo Zanisi, Zongyi Li, Ander Gray, 
+Daniel Brennand, Nitesh Bhatia, Gregory Stathopoulos, Matt Kusner, 
+Marc Peter Deisenroth, Anima Anandkumar, JOREK Team, MAST Team
+Nuclear Fusion, Volume 64, Number 5, 2024</code></pre>
+<p><code>TLDR: Multi-variable FNO designed to model the plasma evolution within a Tokamak across both simulations and experiment on the MAST Tokamak.</code><br>
+</p>
+<p><a href="https://iopscience.iop.org/article/10.1088/1741-4326/ad313a/meta"><span class="btn btn-paper">Paper</span></a> <a href="https://github.com/Plasma-FNO"><span class="btn btn-code">Code</span></a></p>
+</div>
+<div style="flex: 1; max-width: 200px;">
+<p><a href="Images/fno_plasma.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="Images/fno_plasma.png" class="img-fluid" style="cursor: pointer;"></a></p>
+</div>
+</div>
+<p><br></p>
+<section id="section-1" class="level3" style="text-align: right;">
+<h3 class="anchored" data-anchor-id="section-1">2023</h3>
+</section>
+<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;">
+<div style="flex: 3;">
+<p><strong>Fourier-RNNs for Modelling Noisy Physics data</strong></p>
+<pre><code>Vignesh Gopakumar, Lorenzo Zanisi, Stanislas Pamela
+arXiv preprint arXiv:2302.06534, 2023</code></pre>
+<p><code>TLDR: Recurrent Fourier neural operators with hidden state representations for non-markovian physcial modelling.</code><br>
+</p>
+<p><a href="https://arxiv.org/abs/2302.06534"><span class="btn btn-paper">Paper</span></a></p>
+</div>
+<div style="flex: 1; max-width: 200px;">
+<p><a href="Images/F_RNNs.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="Images/F_RNNs.png" class="img-fluid" style="cursor: pointer;"></a></p>
+</div>
+</div>
+<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;">
+<div style="flex: 3;">
+<p><strong>Loss Landscape Engineering via Data Regulation on PINNs</strong></p>
+<pre><code>Vignesh Gopakumar, Stanislas Pamela, Debasmita Samaddar
+Machine Learning with Applications, Volume 12, 2023</code></pre>
+<p><code>TLDR: Impact Data-Regulation has on smoothening the loss landscape of physics-informed neural networks for better convergence.</code></p>
+<p><a href="https://www.sciencedirect.com/science/article/pii/S2666827023000178"><span class="btn btn-paper">Paper</span></a> <a href="https://github.com/gitvicky/Loss_Landscape_PINNs"><span class="btn btn-code">Code</span></a></p>
+</div>
+<div style="flex: 1; max-width: 200px;">
+<p><a href="Images/loss_landscape.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="Images/loss_landscape.png" class="img-fluid" style="cursor: pointer;"></a></p>
+</div>
+</div>
+<p><br></p>
+<section id="section-2" class="level3" style="text-align: right;">
+<h3 class="anchored" data-anchor-id="section-2">2022</h3>
+</section>
+<div style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;">
+<div style="flex: 3;">
+<p><strong>Image Mapping the Temporal Evolution of Edge Characteristics in Tokamaks using Neural Networks</strong></p>
+<pre><code>Vignesh Gopakumar, Debasmita Samaddar
+Machine Learning: Science and Technology, Volume 1, Number 1, 2020</code></pre>
+<p><code>TLDR: Branched fully convolutional network designed to emulate the plasma at the scrape-off layer with coupled plasma and neutral behaviour.</code><br>
+</p>
+<p><a href="https://iopscience.iop.org/article/10.1088/2632-2153/ab5639/meta"><span class="btn btn-paper">Paper</span></a></p>
+</div>
+<div style="flex: 1; max-width: 200px;">
+<p><a href="Images/solps_cnn.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="Images/solps_cnn.png" class="img-fluid" style="cursor: pointer;"></a></p>
+</div>
+</div>
+<p><br></p>
+<hr>
+<p>You can find the latest list of publications in my <a href="https://scholar.google.com/citations?user=NQtqemwAAAAJ&amp;hl=en">google scholar page.</a></p>
+
+
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -680,6 +708,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","loop":false,"descPosition":"bottom","closeEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

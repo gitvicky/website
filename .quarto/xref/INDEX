@@ -31,5 +31,11 @@
   },
   "Blog/Neural_Operators.qmd": {
     "Neural_Operators.html": "b4feb59e"
+  },
+  "research.qmd": {
+    "research.html": "597cb292"
+  },
+  "Blog/geometry.qmd": {
+    "geometry.html": "24bb957b"
   }
 }
