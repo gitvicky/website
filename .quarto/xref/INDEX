@@ -40,5 +40,11 @@
   },
   "Blog/Geometry.qmd": {
     "Geometry.html": "656b44d4"
+  },
+  "Personal/personal.qmd": {
+    "personal.html": "bf6c590f"
+  },
+  "Personal/best_and_worst.qmd": {
+    "best_and_worst.html": "2d5da3b1"
   }
 }
