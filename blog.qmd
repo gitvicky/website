@@ -5,7 +5,7 @@ title: "Blog"
 
 [Neural ODE](/Blog/Neural_ODE.qmd)
 
-[Geometry for Neural PDEs](/Blog/geometry.qmd)
+[Geometry for Neural PDEs](/Blog/Geometry.qmd)
 
 <!-- [Neural Operators](/Blog/Neural_Operators.qmd) -->
 

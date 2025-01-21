@@ -33,6 +33,6 @@ flowchart LR
   B --> C(Decoder)
 ```
 
-The layout breaks down the modelling task into three parts. The encoder works within the spatial domain to deconstruct the initial conditions of the fields and the inherent geometry of the problem into a latent, more structured space. The processor learns to map the temporal evolution of the PDE within that klatent space. The choice of the processor is often taken to be NN architecture that is quick to evaluate and could be setup as a Neural ODE. The decoder maps the final solution from the latent space to the actual unstructured grid that we are interested in. 
+The layout breaks down the modelling task into three parts. The encoder works within the spatial domain to deconstruct the initial conditions of the fields and the inherent geometry of the problem into a latent, more structured space. The processor learns to map the temporal evolution of the PDE within that latent space. The choice of the processor is often taken to be NN architecture that is quick to evaluate and could be setup as a Neural ODE. The decoder maps the final solution from the latent space to the actual unstructured grid that we are interested in. 
 
 These seems to be adjacent to the kind of structure that we are looking at with a division of power and responsibilities, with specific networks and models learning differnet parts of the task. 
