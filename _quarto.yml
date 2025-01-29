@@ -11,7 +11,7 @@ website:
         text: Home
       - research.qmd
       - talks.qmd
-      - blog.qmd
+      - Blog/blog.qmd
   page-footer:
     left: "© Copyright 2025 Vignesh Gopakumar"
 format:

@@ -3,11 +3,11 @@ title: "Blog"
 ---
 ***
 
-[Neural ODE](/Blog/Neural_ODE.qmd)
+<!-- [Neural ODE](/Blog/Neural_ODE.qmd) -->
 
 [Geometry for Neural PDEs](/Blog/Geometry.qmd)
 
-[Universal Physics Engine](/Blog/UPE.qmd)
+<!-- [Universal Physics Engine](/Blog/UPE.qmd) -->
 
 <!-- [Neural Operators](/Blog/Neural_Operators.qmd) -->
 

@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-01-15">
 
-<title>Geometry for Neural-PDE surrogates – Vignesh Gopakumar</title>
+<title>Blog – Vignesh Gopakumar</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,26 +20,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -87,9 +67,6 @@ div.csl-indent {
     "search-label": "Search"
   }
 }</script>
-<script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
-<script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
-<link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="../styles.css">
@@ -125,7 +102,7 @@ div.csl-indent {
 <span class="menu-text">Talks</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../Blog/blog.html"> 
+    <a class="nav-link active" href="../Blog/blog.html" aria-current="page"> 
 <span class="menu-text">Blog</span></a>
   </li>  
 </ul>
@@ -145,7 +122,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Geometry for Neural-PDE surrogates</h1>
+<h1 class="title">Blog</h1>
 </div>
 
 
@@ -153,12 +130,6 @@ div.csl-indent {
 <div class="quarto-title-meta column-page">
 
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">January 15, 2025</p>
-    </div>
-  </div>
   
     
   </div>
@@ -169,93 +140,15 @@ div.csl-indent {
 
 
 <hr>
-<p>Most neural PDE solvers within the research ecosystem are built looking at regular geometry with structured uniform grids. Though this conjures up a great starting point to look at solving complex phenomena, it is only mildly representative of the computational physics cases that we are interested in practice. Regular grids have been a beneficial starting point as it is easy to port the wealth of research done within computer vision with its clear 3D vioxel structure to more scientific applications. Though there are certain areas where regular geometry finds application, before we can move this research to product, we will need to address for irregular unstructured grids at vast scales (~ millions of cells).</p>
-<p>This has been a large area of interest in the recent years and the work at modelling spatio-temporal data across irregular geometries can be split into the following categories:</p>
-<ul>
-<li><strong>Graph-based Methods</strong> : GNNs, GCN, GINOs. Involves message passing to emphasise the geometric structure. <span class="citation" data-cites="li2023geometryinformed li2020GNO brandstetter2022message Li2024FVGNN">[<a href="#ref-li2023geometryinformed" role="doc-biblioref">1</a>–<a href="#ref-Li2024FVGNN" role="doc-biblioref">4</a>]</span></li>
-<li><strong>Point Cloud Approaches</strong> : Coordinate based-MLPs, Neural Fields, INRs. No emphasis on graph structure apart from coordinates and perhaps the associated SDF <span class="citation" data-cites="Siren2020 serrano2023coral yin2023dino">[<a href="#ref-Siren2020" role="doc-biblioref">5</a>–<a href="#ref-yin2023dino" role="doc-biblioref">7</a>]</span>.<br>
-</li>
-<li><strong>Kernel-based Methods</strong> : GPs. Function fitting and infering the field values at specific geometric positions. <span class="citation" data-cites="Chen2021GPPDE">[<a href="#ref-Chen2021GPPDE" role="doc-biblioref">8</a>]</span></li>
-</ul>
-<p>The table below outlines a structured comparison table of machine learning methods for handling irregular geometries:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 24%">
-<col style="width: 36%">
-<col style="width: 39%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Method</th>
-<th>Advantages</th>
-<th>Limitations</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Graph based Methods</td>
-<td>- Natural handling of irregular spatial relationships through message passing<br>- Excellent capture of local geometric features<br>- Works with varying numbers of spatial points<br>- Maintains permutation invariance<br>- Easy incorporation of additional features at spatial locations</td>
-<td>- Struggles with global geometric patterns<br>- Computationally expensive for dense graphs<br>- Performance depends heavily on graph construction<br>- Training stability issues in deep architectures<br>- Message passing can be inefficient for long-range dependencies</td>
-</tr>
-<tr class="even">
-<td>Point Cloud Approaches</td>
-<td>- Direct processing of unstructured data without connectivity information<br>- Effective for 3D data representation<br>- Handles varying point densities<br>- Natural permutation invariance<br>- Flexible with varying point cloud sizes</td>
-<td>- Difficulty capturing fine geometric details<br>- Sensitive to point density variations<br>- Requires careful input data preprocessing<br>- Poor scaling of memory requirements with point count<br>- May miss local spatial relationships</td>
-</tr>
-<tr class="odd">
-<td>Kernel-Based Methods</td>
-<td>- Natural uncertainty quantification<br>- Effective handling of irregular sampling<br>- Works well with limited data<br>- Incorporates prior knowledge via kernel design<br>- Provides smooth interpolation</td>
-<td>- Poor scaling with dataset size<br>- Sensitive to kernel choice<br>- Hyperparameter selection challenges<br>- Struggles with discontinuities<br>- Difficulty capturing sharp geometric features</td>
-</tr>
-</tbody>
-</table>
-<p>But for large scale neural PDE models modelling complex spatio-temporal domain with large context lengths, the modelling task is split into a encoder-processor-decoder architecture.</p>
-<div class="cell" data-fig-width="6.5" data-layout-align="center">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart LR
-  A(Encoder) --&gt; B(Processor)
-  B --&gt; C(Decoder)
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-<p>The layout breaks down the modelling task into three parts. The encoder works within the spatial domain to deconstruct the initial conditions of the fields and the inherent geometry of the problem into a latent, more structured space. The processor learns to map the temporal evolution of the PDE within that latent space. The choice of the processor is often taken to be NN architecture that is quick to evaluate and could be setup as a Neural ODE. The decoder maps the final solution from the latent space to the actual unstructured grid that we are interested in.</p>
-<!-- These seems to be adjacent to the kind of structure that we are looking at with a division of power and responsibilities, with specific networks and models learning differnet parts of the task.  -->
+<p><a href="../Blog/Neural_ODE.html">Neural ODE</a></p>
+<p><a href="../Blog/Geometry.html">Geometry for Neural PDEs</a></p>
+<!-- [Universal Physics Engine](/Blog/UPE.qmd) -->
+<!-- [Neural Operators](/Blog/Neural_Operators.qmd) -->
+<p>Some of these blogposts might seem rather crude as they maybe written as notes to self. You can find some of my earlier writing in <a href="https://medium.com/@engineoutcompletely">Medium</a>.</p>
 
 
 
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body" role="list">
-<div id="ref-li2023geometryinformed" class="csl-entry" role="listitem">
-<div class="csl-left-margin">1. </div><div class="csl-right-inline">Li Z, Kovachki NB, Choy C, et al (2023) <a href="https://openreview.net/forum?id=86dXbqT5Ua">Geometry-informed neural operator for large-scale 3D <span>PDE</span>s</a>. In: Thirty-seventh conference on neural information processing systems</div>
-</div>
-<div id="ref-li2020GNO" class="csl-entry" role="listitem">
-<div class="csl-left-margin">2. </div><div class="csl-right-inline">Li Z, Kovachki N, Azizzadenesheli K, et al (2020) <a href="https://proceedings.neurips.cc/paper_files/paper/2020/file/4b21cf96d4cf612f239a6c322b10c8fe-Paper.pdf">Multipole graph neural operator for parametric partial differential equations</a>. In: Larochelle H, Ranzato M, Hadsell R, Balcan MF, Lin H (eds) Advances in neural information processing systems. Curran Associates, Inc., pp 6755–6766</div>
-</div>
-<div id="ref-brandstetter2022message" class="csl-entry" role="listitem">
-<div class="csl-left-margin">3. </div><div class="csl-right-inline">Brandstetter J, Worrall DE, Welling M (2022) <a href="https://openreview.net/forum?id=vSix3HPYKSU">Message passing neural <span>PDE</span> solvers</a>. In: International conference on learning representations</div>
-</div>
-<div id="ref-Li2024FVGNN" class="csl-entry" role="listitem">
-<div class="csl-left-margin">4. </div><div class="csl-right-inline">Li T, Zou S, Chang X, Zhang L, Deng X (2024) Predicting unsteady incompressible fluid dynamics with finite volume informed neural network. Physics of Fluids 36(4). <a href="https://doi.org/10.1063/5.0197425">https://doi.org/10.1063/5.0197425</a></div>
-</div>
-<div id="ref-Siren2020" class="csl-entry" role="listitem">
-<div class="csl-left-margin">5. </div><div class="csl-right-inline">Sitzmann V, Martel J, Bergman A, Lindell D, Wetzstein G (2020) <a href="https://proceedings.neurips.cc/paper_files/paper/2020/file/53c04118df112c13a8c34b38343b9c10-Paper.pdf">Implicit neural representations with periodic activation functions</a>. In: Larochelle H, Ranzato M, Hadsell R, Balcan MF, Lin H (eds) Advances in neural information processing systems. Curran Associates, Inc., pp 7462–7473</div>
-</div>
-<div id="ref-serrano2023coral" class="csl-entry" role="listitem">
-<div class="csl-left-margin">6. </div><div class="csl-right-inline">Serrano L, Boudec LL, Koupaı̈ AK, et al (2023) <a href="https://openreview.net/forum?id=4jEjq5nhg1">Operator learning with neural fields: Tackling <span>PDE</span>s on general geometries</a>. In: Thirty-seventh conference on neural information processing systems</div>
-</div>
-<div id="ref-yin2023dino" class="csl-entry" role="listitem">
-<div class="csl-left-margin">7. </div><div class="csl-right-inline">Yin Y, Kirchmeyer M, Franceschi J-Y, Rakotomamonjy A, gallinari patrick (2023) <a href="https://openreview.net/forum?id=B73niNjbPs">Continuous <span>PDE</span> dynamics forecasting with implicit neural representations</a>. In: The eleventh international conference on learning representations</div>
-</div>
-<div id="ref-Chen2021GPPDE" class="csl-entry" role="listitem">
-<div class="csl-left-margin">8. </div><div class="csl-right-inline">Chen Y, Hosseini B, Owhadi H, Stuart AM (2021) Solving and learning nonlinear PDEs with gaussian processes. Journal of Computational Physics 447:110668. https://doi.org/<a href="https://doi.org/10.1016/j.jcp.2021.110668">https://doi.org/10.1016/j.jcp.2021.110668</a></div>
-</div>
-</div></section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

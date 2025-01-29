@@ -2332,3 +2332,62 @@ note={}
  volume = {33},
  year = {2020}
 }
+
+@article{Li2024FVGNN,
+   title={Predicting unsteady incompressible fluid dynamics with finite volume informed neural network},
+   volume={36},
+   ISSN={1089-7666},
+   url={http://dx.doi.org/10.1063/5.0197425},
+   DOI={10.1063/5.0197425},
+   number={4},
+   journal={Physics of Fluids},
+   publisher={AIP Publishing},
+   author={Li, Tianyu and Zou, Shufan and Chang, Xinghua and Zhang, Laiping and Deng, Xiaogang},
+   year={2024},
+}
+
+@inproceedings{Siren2020,
+ author = {Sitzmann, Vincent and Martel, Julien and Bergman, Alexander and Lindell, David and Wetzstein, Gordon},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {H. Larochelle and M. Ranzato and R. Hadsell and M.F. Balcan and H. Lin},
+ pages = {7462--7473},
+ publisher = {Curran Associates, Inc.},
+ title = {Implicit Neural Representations with Periodic Activation Functions},
+ url = {https://proceedings.neurips.cc/paper_files/paper/2020/file/53c04118df112c13a8c34b38343b9c10-Paper.pdf},
+ volume = {33},
+ year = {2020}
+}
+
+
+@inproceedings{
+serrano2023coral,
+title={Operator Learning with Neural Fields: Tackling {PDE}s on General Geometries},
+author={Louis Serrano and Lise Le Boudec and Armand Kassa{\"\i} Koupa{\"\i} and Thomas X Wang and Yuan Yin and Jean-No{\"e}l Vittaut and patrick gallinari},
+booktitle={Thirty-seventh Conference on Neural Information Processing Systems},
+year={2023},
+url={https://openreview.net/forum?id=4jEjq5nhg1}
+}
+
+
+@inproceedings{
+yin2023dino,
+title={Continuous {PDE} Dynamics Forecasting with Implicit Neural Representations},
+author={Yuan Yin and Matthieu Kirchmeyer and Jean-Yves Franceschi and Alain Rakotomamonjy and patrick gallinari},
+booktitle={The Eleventh International Conference on Learning Representations },
+year={2023},
+url={https://openreview.net/forum?id=B73niNjbPs}
+}
+
+@article{Chen2021GPPDE,
+title = {Solving and learning nonlinear PDEs with Gaussian processes},
+journal = {Journal of Computational Physics},
+volume = {447},
+pages = {110668},
+year = {2021},
+issn = {0021-9991},
+doi = {https://doi.org/10.1016/j.jcp.2021.110668},
+url = {https://www.sciencedirect.com/science/article/pii/S0021999121005635},
+author = {Yifan Chen and Bamdad Hosseini and Houman Owhadi and Andrew M. Stuart},
+keywords = {Kernel methods, Gaussian processes, Nonlinear partial differential equations, Inverse problems, Optimal recovery},
+abstract = {We introduce a simple, rigorous, and unified framework for solving nonlinear partial differential equations (PDEs), and for solving inverse problems (IPs) involving the identification of parameters in PDEs, using the framework of Gaussian processes. The proposed approach: (1) provides a natural generalization of collocation kernel methods to nonlinear PDEs and IPs; (2) has guaranteed convergence for a very general class of PDEs, and comes equipped with a path to compute error bounds for specific PDE approximations; (3) inherits the state-of-the-art computational complexity of linear solvers for dense kernel matrices. The main idea of our method is to approximate the solution of a given PDE as the maximum a posteriori (MAP) estimator of a Gaussian process conditioned on solving the PDE at a finite number of collocation points. Although this optimization problem is infinite-dimensional, it can be reduced to a finite-dimensional one by introducing additional variables corresponding to the values of the derivatives of the solution at collocation points; this generalizes the representer theorem arising in Gaussian process regression. The reduced optimization problem has the form of a quadratic objective function subject to nonlinear constraints; it is solved with a variant of the Gauss–Newton method. The resulting algorithm (a) can be interpreted as solving successive linearizations of the nonlinear PDE, and (b) in practice is found to converge in a small number of iterations (2 to 10), for a wide range of PDEs. Most traditional approaches to IPs interleave parameter updates with numerical solution of the PDE; our algorithm solves for both parameter and PDE solution simultaneously. Experiments on nonlinear elliptic PDEs, Burgers' equation, a regularized Eikonal equation, and an IP for permeability identification in Darcy flow illustrate the efficacy and scope of our framework.}
+}
