@@ -4,21 +4,21 @@
     "href": "blog.html",
     "title": "Blog",
     "section": "",
-    "text": "Neural ODE\nGeometry for Neural PDEs\n\nSome of these blogposts are rather crude and written more as a note to myself. You can find some of my earlier writing in Medium."
+    "text": "Neural ODE\nGeometry for Neural PDEs\nUniversal Physics Engine\n\nSome of these blogposts might seem rather crude as they maybe written as notes to self. You can find some of my earlier writing in Medium."
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Vignesh Gopakumar",
     "section": "",
-    "text": "I am a Research Scientist at the UK Atomic Energy Authority (UKAEA), where I lead a team developing “actionable” surrogate models for exascale simulations and data-driven models for the Fusion industry. My research focusses on enhancing machine learning models’ performance, robustness and interpretability through physics-based approaches.\nI am also a visiting researcher with the SciML group at STFC’s Rutherford Appleton Laboratory.\nConcurrently, I’m pursuing a PhD in Machine Learning under Marc Deisenroth at University College London.\n\n\nCurrent Research:\n\nPhysics-Informed Machine Learning\nContinuous Dynamics Modelling\nUncertainty Quantification\nDesign of Experiments\n\nBuilding simvue.io : AI-driven, open-source simulation management and tracking dashboard for streamlining engineering workflows. Developed with public funding from the UK Government. Currently in private \\(\\beta\\).\n\n“If there is a God, it must be a differential equation” - Bertrand Russell"
+    "text": "I am a Research Scientist at the UK Atomic Energy Authority (UKAEA), where I lead a team developing “actionable” surrogate models for exascale simulations and data-driven models for the Fusion industry. My research focusses on enhancing machine learning models’ performance, robustness and interpretability through physics-based approaches.\nI am also a visiting researcher with the SciML group at STFC’s Rutherford Appleton Laboratory.\nConcurrently, I’m pursuing a PhD in Machine Learning under Marc Deisenroth at University College London.\n\n\nCurrent Research:\n\nPhysics-Informed Machine Learning\nContinuous Dynamics Modelling\nUncertainty Quantification\nDesign of Experiments\n\nBuilding simvue.io : AI-driven, open-source simulation management and tracking dashboard for streamlining engineering workflows. Developed with public funding from the UK Government. Currently in private \\(\\beta\\). \n\n“If there is a God, it must be a differential equation” - Bertrand Russell"
   },
   {
     "objectID": "talks.html",
     "href": "talks.html",
     "title": "Talks",
     "section": "",
-    "text": "On Surrogate Modelling for Fusion - PhysicsX (London 2024)\nFNO for Plasma Modelling (Invited) - IAEA Workshop on AI for Accelerating Fusion and Plasma Science (Vienna 2023)\nFNO for Plasma Modelling - IAEA Fusion Energy Conference (London, 2023)\nFNO for Plasma Modelling - AI for sustainability workshop @ UCL (London, 2023)\nFourier RNNs for modelling noisy physics data - IEEE ICMLA (Bahamas, 2022)\nInformed Sampling of the Plasma Hyperspace for Digital Twinning - IAEA Fusion Data Processing, Validation, Analysis (Chengdu, 2021)\nOptimising Physics Informed Neural Networks - PyTorch Ecosystem Day (Virtual, 2021)\nFluid Surrogates using Neural PDEs - SciML at RAL, STFC (Oxford, 2020)\nSolving Fluid Dynamics with Neural Networks - FusionEP (Virtual, 2020)\nData Driven Modelling of Plasma in Tokamaks - IOP Physics in the spotlight (London, 2019)\nData Driven Modelling and Control of Plasma in Fusion Reactors - O’Reilly AI London (London, 2019)"
+    "text": "On Surrogate Modelling for Fusion - PhysicsX (London 2024)\nFNO for Plasma Modelling - IAEA Workshop on AI for Accelerating Fusion and Plasma Science (Vienna 2023) [Slides]\nFNO for Plasma Modelling - IAEA Fusion Energy Conference (London, 2023)\nFNO for Plasma Modelling - AI for sustainability workshop @ UCL (London, 2023)\nFourier RNNs for modelling noisy physics data - IEEE ICMLA (Bahamas, 2022)\nInformed Sampling of the Plasma Hyperspace for Digital Twinning - IAEA Fusion Data Processing, Validation, Analysis (Chengdu, 2021)\nOptimising Physics Informed Neural Networks - PyTorch Ecosystem Day (Virtual, 2021)\nFluid Surrogates using Neural PDEs - SciML at RAL, STFC (Oxford, 2020)\nSolving Fluid Dynamics with Neural Networks - FusionEP (Virtual, 2020) [Video]\nData Driven Modelling of Plasma in Tokamaks - IOP Physics in the spotlight (London, 2019)\nData Driven Modelling and Control of Plasma in Fusion Reactors - O’Reilly AI London (London, 2019) [Video]"
   },
   {
     "objectID": "publications.html",
@@ -145,5 +145,26 @@
     "title": "The Best and the Worst",
     "section": "",
     "text": "There’s a big conundrum where I am torn between feeling that the best is yet to come and that it’s already over."
+  },
+  {
+    "objectID": "Blog/UPE.html",
+    "href": "Blog/UPE.html",
+    "title": "Universal Physics Engine",
+    "section": "",
+    "text": "Can AI serve as a Universal Physics Engine ?\n\n\nNeed to a background on the different kind of approaches being taken:\n\nSurrogate Models of all kinds.\nFoundation Models for Physics\nGenerative Enginering - PhysicsX, Zoo.dev and the varioud likes of those.\nMath proofing approaches\nText-Code is all you need with the right software - Bring in the Karpathy tweet.\n\n\n\n\n\n\n\n\n\n\n\nAspect\nCurrent Limitations\nPotential AI Capabilities\nNovel Solutions\nChallenges\n\n\n\n\nMathematical Framework\nLimited to specific classes of PDEs; Separate frameworks for different physics domains\nUnified mathematical framework spanning quantum to classical physics; Automatic detection of symmetries and conservation laws; Dynamic generation of problem-specific basis functions\nDevelopment of new mathematical structures beyond tensors and operators; Creation of hybrid symbolic-numerical methods; Discovery of new transformations between problem domains\nEnsuring mathematical consistency across scales; Proving convergence for new methods; Handling mathematical singularities\n\n\nGeometric Processing\nPre-defined mesh types; Manual domain decomposition; Limited handling of complex boundaries\nAutomated optimal mesh generation for arbitrary geometries; Intelligent boundary condition handling; Adaptive multi-resolution techniques\nSelf-designing coordinate systems; Topology-aware discretization; Geometry-informed basis functions\nDealing with moving boundaries; Handling topological changes; Ensuring mesh quality\n\n\nMulti-physics Coupling\nManual coupling between different physics models; Limited cross-scale interactions\nAutomated detection of relevant physics; Seamless coupling across scales; Self-adaptive model selection\nCreation of unified multi-physics formulations; Development of scale-bridging operators; Automatic derivation of reduced-order models\nMaintaining conservation properties; Handling disparate time scales; Managing computational complexity\n\n\nError Control & Stability\nFixed error estimators; Predefined stability criteria; Manual parameter tuning\nReal-time error prediction; Adaptive stability preservation; Automated parameter optimization\nDevelopment of new error metrics; Creation of self-stabilizing schemes; Learning-based error estimation\nGuaranteeing global stability; Balancing accuracy vs. efficiency; Handling chaos and sensitivity\n\n\nComputational Methods\nFixed numerical schemes; Limited parallelization; Domain-specific optimizations\nDynamic algorithm selection; Automated parallelization strategies; Problem-specific method synthesis\nCreation of new numerical algorithms; Development of quantum-inspired methods; Adaptive hybrid schemes\nScaling to large problems; Managing memory hierarchy; Ensuring reproducibility\n\n\nUser Interaction\nLimited feedback on solution quality; Fixed visualization options; Preset parameter ranges\nInteractive problem refinement; Adaptive visualization; Automated parameter exploration\nDevelopment of intuitive interfaces; Creation of explanation systems; Generation of physical insights\nCommunicating complex concepts; Handling ambiguous specifications; Providing meaningful feedback\n\n\nPhysical Consistency\nManual enforcement of conservation laws; Fixed constitutive relations; Predefined material models\nAutomatic constraint preservation; Learning-based constitutive relations; Adaptive material modeling\nDiscovery of new conservation principles; Creation of physics-informed neural operators; Development of universal material models\nEnsuring physical realizability; Handling unknown physics; Maintaining causality\n\n\nData Integration\nLimited use of experimental data; Fixed model parameters; Separate calibration steps\nReal-time data assimilation; Automated model calibration; Dynamic parameter updating\nDevelopment of physics-data hybrid methods; Creation of adaptive measurement operators; Automated experiment design\nHandling noisy data; Dealing with sparse measurements; Ensuring model validity"
+  },
+  {
+    "objectID": "Slides/slides.html",
+    "href": "Slides/slides.html",
+    "title": "Slides",
+    "section": "",
+    "text": "Plasma Surrogate Modelling using FNO - IAEA Workshop on AI in Fusion (December 2023)"
+  },
+  {
+    "objectID": "Personal/visual_art_portfoilo.html",
+    "href": "Personal/visual_art_portfoilo.html",
+    "title": "Visual Art",
+    "section": "",
+    "text": "Kovalam December 2024"
   }
 ]

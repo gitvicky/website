@@ -40,6 +40,7 @@ Concurrently, I'm pursuing a PhD in Machine Learning under [Marc Deisenroth](htt
 * Uncertainty Quantification
 * Design of Experiments
 
-**Building [simvue.io](https://simvue.io)** : AI-driven, open-source simulation management and tracking dashboard for streamlining engineering workflows. Developed with public funding from the UK Government. Currently in private $\beta$. 
+**Building [simvue.io](https://simvue.io)** : AI-driven, open-source simulation management and tracking dashboard for streamlining engineering workflows. Developed with public funding from the UK Government. Currently in private $\beta$.
+<!-- Simvue: The Scientific Data Company -->
 
 > *"If there is a God, it must be a differential equation"* - Bertrand Russell

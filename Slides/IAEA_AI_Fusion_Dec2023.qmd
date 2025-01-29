@@ -1,0 +1,10 @@
+---
+title: "IAEA Workshop on AI for accelerating Fusion and Plasma Science"
+date: 01/12/2023 #MM/DD/YYYY
+
+---
+
+***
+
+![](IAEA_Workshop_AI_Fusion_upload.pdf){width=100% height=500}
+

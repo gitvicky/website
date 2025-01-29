@@ -46,5 +46,20 @@
   },
   "Personal/best_and_worst.qmd": {
     "best_and_worst.html": "2d5da3b1"
+  },
+  "Blog/UPE.qmd": {
+    "UPE.html": "fb7ff14f"
+  },
+  "Slides/slides.qmd": {
+    "slides.html": "019ec6ea"
+  },
+  "Slides/SMLResearchDay_June2024.qmd": {
+    "SMLResearchDay_June2024.html": "f2ee85a6"
+  },
+  "Slides/IAEA_AI_Fusion_Dec2023.qmd": {
+    "IAEA_AI_Fusion_Dec2023.html": "29d8aa1c"
+  },
+  "Personal/visual_art_portfoilo.qmd": {
+    "visual_art_portfoilo.html": "3332547b"
   }
 }

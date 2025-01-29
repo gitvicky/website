@@ -1,0 +1,10 @@
+---
+title: "SML Research Day"
+date: 06/27/2024 #MM/DD/YYYY
+
+---
+
+***
+
+![](sml_research_day_june_24.pdf){width=100% height=500}
+

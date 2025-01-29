@@ -6,7 +6,7 @@ title: "Talks"
 
 - **On Surrogate Modelling for Fusion** - PhysicsX (London 2024)
 
-- **FNO for Plasma Modelling (Invited)** - IAEA Workshop on AI for Accelerating Fusion and Plasma Science (Vienna 2023)
+- **FNO for Plasma Modelling** - IAEA Workshop on AI for Accelerating Fusion and Plasma Science (Vienna 2023) <code style="text-align: left">[<a href="Slides/IAEA_AI_Fusion_Dec2023.qmd" target="_blank">Slides</a>]</code>
 
 - **FNO for Plasma Modelling** - IAEA Fusion Energy Conference (London, 2023)
 
@@ -20,8 +20,9 @@ title: "Talks"
 
 - **Fluid Surrogates using Neural PDEs** - SciML at RAL, STFC (Oxford, 2020)
 
-- **[Solving Fluid Dynamics with Neural Networks](https://www.youtube.com/watch?v=lXeVcMU1D9E)** - FusionEP (Virtual, 2020)
+- **Solving Fluid Dynamics with Neural Networks** - FusionEP (Virtual, 2020)  <code style="text-align: left; color: violet">[<a href="https://www.youtube.com/watch?v=lXeVcMU1D9E" target="_blank">Video</a>]</code>
 
 - **Data Driven Modelling of Plasma in Tokamaks** - IOP Physics in the spotlight (London, 2019)
 
-- **[Data Driven Modelling and Control of Plasma in Fusion Reactors](https://youtu.be/25GarkFQh2s)** - O'Reilly AI London (London, 2019)
+- **Data Driven Modelling and Control of Plasma in Fusion Reactors** - O'Reilly AI London (London, 2019) <code style="text-align: left; color: violet">[<a href="https://youtu.be/25GarkFQh2s" target="_blank">Video</a>]</code>
+
