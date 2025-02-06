@@ -24,16 +24,34 @@ The table below outlines a structured comparison table of machine learning metho
 | Kernel-Based Methods | - Natural uncertainty quantification<br>- Effective handling of irregular sampling<br>- Works well with limited data<br>- Incorporates prior knowledge via kernel design<br>- Provides smooth interpolation | - Poor scaling with dataset size<br>- Sensitive to kernel choice<br>- Hyperparameter selection challenges<br>- Struggles with discontinuities<br>- Difficulty capturing sharp geometric features |
 
 
-But for large scale neural PDE models modelling complex spatio-temporal domain with large context lengths, the modelling task is split into a encoder-processor-decoder architecture. 
+But for large scale neural PDE models modelling complex spatio-temporal domain with large context lengths, the modelling task is split into a encoder-processor-decoder architecture as shown below. 
 
 ```{mermaid}
 %%| fig-width: 6.5
 %%|fig-align: center
 flowchart LR
   A(Encoder) --> B(Processor)
+  B --> B
   B --> C(Decoder)
 ```
 
-The layout breaks down the modelling task into three parts. The encoder works within the spatial domain to deconstruct the initial conditions of the fields and the inherent geometry of the problem into a latent, more structured space. The processor learns to map the temporal evolution of the PDE within that latent space. The choice of the processor is often taken to be NN architecture that is quick to evaluate and could be setup as a Neural ODE. The decoder maps the final solution from the latent space to the actual unstructured grid that we are interested in. 
+The layout breaks down the modelling task into three parts. The encoder works within the spatial domain to deconstruct the initial conditions of the fields and the inherent geometry of the problem into a latent, more structured space. The processor learns to map the temporal evolution of the PDE within that latent space. The choice of the processor is often taken to be NN architecture that is quick to evaluate and could be setup as a Neural ODE. The decoder maps the final solution from the latent space to the actual unstructured grid that we are interested in.
 
-<!-- These seems to be adjacent to the kind of structure that we are looking at with a division of power and responsibilities, with specific networks and models learning differnet parts of the task.  -->
+Using a structured NO such as the FNO, that has inductive bias, quick to evaluate has found to be rather beneficial, but the open questions still lie within the choice of the encoder-decoder. Papers such as [@li2023geometryinformed; @brandstetter2022message] utilise graph neural networks as the encoder-decoder, but however they have significant computational and memory requirements. 
+
+I am currently exploring the idea of maybe using coordinate-based MLPs for the encoder and a GP as the decoder, with a neural operator deployed as a neural ODE with operator-splitting as the processor (neural-UDE):
+
+```{mermaid}
+%%| fig-width: 6.5
+%%|fig-align: center
+flowchart LR
+  A(NeRF) --> B(Neural-UDE)
+  B --> B
+  B --> C(GP)
+```
+
+The challenge with the NeRF is that though allow for continuous space representations, they are terrible at enforcing strict boundaries within the domain and have soft gradients across them. These leads to losing strutcures with significant gradients being lost in the initial condition and geometry. The advantages could be that the IC might not have sharp enough gradients so representative capacity might not be that much of a concern. The other advantage is that they are small, light models, based on simple MLPs. 
+
+As for the GP, the challenges remain the same as always, whether they can be scaled to handle the dimension and size as we might need. Might have to train multiple GPs or Mixture of GPs? The advantage is that we can get UQ built into the models. 
+
+*This approach brings in a division of labour, having models learn a specific task and then connected together in an approach similar to integrated modelling. Is this a kind of Mixture of Experts ? *

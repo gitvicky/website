@@ -209,7 +209,7 @@ div.csl-indent {
 </tr>
 </tbody>
 </table>
-<p>But for large scale neural PDE models modelling complex spatio-temporal domain with large context lengths, the modelling task is split into a encoder-processor-decoder architecture.</p>
+<p>But for large scale neural PDE models modelling complex spatio-temporal domain with large context lengths, the modelling task is split into a encoder-processor-decoder architecture as shown below.</p>
 <div class="cell" data-fig-width="6.5" data-layout-align="center">
 <div class="cell-output-display">
 <div>
@@ -217,6 +217,7 @@ div.csl-indent {
 <div>
 <pre class="mermaid mermaid-js">flowchart LR
   A(Encoder) --&gt; B(Processor)
+  B --&gt; B
   B --&gt; C(Decoder)
 </pre>
 </div>
@@ -225,7 +226,26 @@ div.csl-indent {
 </div>
 </div>
 <p>The layout breaks down the modelling task into three parts. The encoder works within the spatial domain to deconstruct the initial conditions of the fields and the inherent geometry of the problem into a latent, more structured space. The processor learns to map the temporal evolution of the PDE within that latent space. The choice of the processor is often taken to be NN architecture that is quick to evaluate and could be setup as a Neural ODE. The decoder maps the final solution from the latent space to the actual unstructured grid that we are interested in.</p>
-<!-- These seems to be adjacent to the kind of structure that we are looking at with a division of power and responsibilities, with specific networks and models learning differnet parts of the task.  -->
+<p>Using a structured NO such as the FNO, that has inductive bias, quick to evaluate has found to be rather beneficial, but the open questions still lie within the choice of the encoder-decoder. Papers such as <span class="citation" data-cites="li2023geometryinformed brandstetter2022message">[<a href="#ref-li2023geometryinformed" role="doc-biblioref">1</a>, <a href="#ref-brandstetter2022message" role="doc-biblioref">3</a>]</span> utilise graph neural networks as the encoder-decoder, but however they have significant computational and memory requirements.</p>
+<p>I am currently exploring the idea of maybe using coordinate-based MLPs for the encoder and a GP as the decoder, with a neural operator deployed as a neural ODE with operator-splitting as the processor (neural-UDE):</p>
+<div class="cell" data-fig-width="6.5" data-layout-align="center">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A(NeRF) --&gt; B(Neural-UDE)
+  B --&gt; B
+  B --&gt; C(GP)
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>The challenge with the NeRF is that though allow for continuous space representations, they are terrible at enforcing strict boundaries within the domain and have soft gradients across them. These leads to losing strutcures with significant gradients being lost in the initial condition and geometry. The advantages could be that the IC might not have sharp enough gradients so representative capacity might not be that much of a concern. The other advantage is that they are small, light models, based on simple MLPs.</p>
+<p>As for the GP, the challenges remain the same as always, whether they can be scaled to handle the dimension and size as we might need. Might have to train multiple GPs or Mixture of GPs? The advantage is that we can get UQ built into the models.</p>
+<p><em>This approach brings in a division of labour, having models learn a specific task and then connected together in an approach similar to integrated modelling. Is this a kind of Mixture of Experts ? </em></p>
 
 
 
