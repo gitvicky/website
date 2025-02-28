@@ -246,9 +246,19 @@ div.csl-indent {
 <p>The challenge with the NeRF is that though allow for continuous space representations, they are terrible at enforcing strict boundaries within the domain and have soft gradients across them. These leads to losing strutcures with significant gradients being lost in the initial condition and geometry. The advantages could be that the IC might not have sharp enough gradients so representative capacity might not be that much of a concern. The other advantage is that they are small, light models, based on simple MLPs.</p>
 <p>As for the GP, the challenges remain the same as always, whether they can be scaled to handle the dimension and size as we might need. Might have to train multiple GPs or Mixture of GPs? The advantage is that we can get UQ built into the models.</p>
 <p><em>This approach brings in a division of labour, having models learn a specific task and then connected together in an approach similar to integrated modelling. Is this a kind of Mixture of Experts ? </em></p>
+<section id="exploring-kernel-methods" class="level3">
+<h3 class="anchored" data-anchor-id="exploring-kernel-methods">Exploring Kernel Methods</h3>
+<section id="consverative-remapping" class="level5">
+<h5 class="anchored" data-anchor-id="consverative-remapping">Consverative Remapping</h5>
+</section>
+<section id="non-uniform-fft" class="level5">
+<h5 class="anchored" data-anchor-id="non-uniform-fft">Non-Uniform FFT</h5>
+<p>FFT over non-uniform grids (nuFFT) as demonstrated within this <a href="https://github.com/mmuckley/torchkbnufft">pytorch repository</a>, where the grids are structured using a Kaisser-Bessel window functions as interpolation kernels. Essentially we are using a weighted kernel approach to move from unstructured grids to structured grids.</p>
 
 
 
+</section>
+</section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body" role="list">
 <div id="ref-li2023geometryinformed" class="csl-entry" role="listitem">

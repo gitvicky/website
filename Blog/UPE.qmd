@@ -13,6 +13,22 @@ bibliography: bibliography.bib
 
 ***
 
+In Stephen Wolfram's (one of the legends in the field of computational physics and mathematics) [latest writing](https://writings.stephenwolfram.com/2024/03/can-ai-solve-science/), he explores ideas on the fields and methods with which he thinks AI will impact scientific disciplines. He starts the blog with:
+
+***"To the ultimate question of whether AI can solve Science, we’re going to see that the answer is inevitably and firmly no."***
+
+So probably there is not much of a reason for me to explore the idea of building a universal physics engine using AI, but hey I love attempting the impossible (why do you think I ended up doing Fusion !!!).
+
+
+Science can be broadly defined to fall under three categories:
+```{mermaid}
+%%| fig-width: 6.5
+%%|fig-align: center
+flowchart LR
+  A(Prediction)
+  B(Discovery)
+  C(Explanation)
+```
 
 Need to a background on the different kind of approaches being taken:
 

@@ -55,3 +55,11 @@ The challenge with the NeRF is that though allow for continuous space representa
 As for the GP, the challenges remain the same as always, whether they can be scaled to handle the dimension and size as we might need. Might have to train multiple GPs or Mixture of GPs? The advantage is that we can get UQ built into the models. 
 
 *This approach brings in a division of labour, having models learn a specific task and then connected together in an approach similar to integrated modelling. Is this a kind of Mixture of Experts ? *
+
+### Exploring Kernel Methods
+##### Consverative Remapping 
+
+
+##### Non-Uniform FFT
+FFT over non-uniform grids (nuFFT) as demonstrated within this [pytorch repository](https://github.com/mmuckley/torchkbnufft), where the grids are structured using a Kaisser-Bessel window functions as interpolation kernels. Essentially we are using a weighted kernel approach to move from unstructured grids to structured grids. 
+

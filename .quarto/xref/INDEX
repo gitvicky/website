@@ -67,5 +67,8 @@
   },
   "Blog/blog.qmd": {
     "blog.html": "d38c9f18"
+  },
+  "Blog/Inverse_kernel.qmd": {
+    "Inverse_kernel.html": "474e980a"
   }
 }
