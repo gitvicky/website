@@ -10,8 +10,6 @@ csl: diabetologia.csl
 
 # Mathematical Understanding of Regularized Inverse Convolution
 
-Let me explain more rigorously how epsilon provides an approximation for the inverse convolution operation, and then explore alternative approaches for signal recovery – particularly for integration when we have applied a differential kernel.
-
 ## The Mathematical Foundation of Regularized Inversion
 
 When we have a signal $y$ that results from the convolution of an unknown signal $f$ with a known kernel $g$:
@@ -221,4 +219,3 @@ For the specific case of recovering a signal after applying a differential kerne
 
 The most effective approach often combines multiple methods, using the strengths of each to compensate for the weaknesses of others. This hybrid approach can provide more reliable signal recovery across a wide range of practical scenarios.
 
-Would you like me to develop any of these alternative approaches further, or perhaps demonstrate their performance on your sine wave example?
