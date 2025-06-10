@@ -4,6 +4,8 @@ title: "Talks"
 
 ***
 
+- **Calibrated Physics-Informed Uncertainty Quantification** - Workshop on Calibrating Uncertainties, University of Cambridge (Cambridge 2025) <code style="text-align: left">[<a href="Slides/Cal_PIUQ.qmd" target="_blank">Slides</a>]</code>
+
 - **On Surrogate Modelling for Fusion** - PhysicsX (London 2024)
 
 - **FNO for Plasma Modelling** - IAEA Workshop on AI for Accelerating Fusion and Plasma Science (Vienna 2023) <code style="text-align: left">[<a href="Slides/IAEA_AI_Fusion_Dec2023.qmd" target="_blank">Slides</a>]</code>
@@ -12,7 +14,7 @@ title: "Talks"
 
 - **FNO for Plasma Modelling** - AI for sustainability workshop @ UCL (London, 2023)
 
-- **Fourier RNNs for modelling noisy physics data** - IEEE ICMLA (Bahamas, 2022)
+- **Fourier RNNs for modelling noisy physics data** - IEEE ICMLA (Bahamas, 2022) <code style="text-align: left">[<a href="Slides/F_RNNS.qmd" target="_blank">Slides</a>]</code>
 
 - **Informed Sampling of the Plasma Hyperspace for Digital Twinning** - IAEA Fusion Data Processing, Validation, Analysis (Chengdu, 2021)
 
@@ -20,9 +22,9 @@ title: "Talks"
 
 - **Fluid Surrogates using Neural PDEs** - SciML at RAL, STFC (Oxford, 2020)
 
-- **Solving Fluid Dynamics with Neural Networks** - FusionEP (Virtual, 2020)  <code style="text-align: left; color: violet">[<a href="https://www.youtube.com/watch?v=lXeVcMU1D9E" target="_blank">Video</a>]</code>
+- **Solving Fluid Dynamics with Neural Networks** - FusionEP (Virtual, 2020)  <code style="text-align: left; color: violet">[<a href="https://www.youtube.com/watch?v=lXeVcMU1D9E" target="_blank">Video</a>]</code> <code style="text-align: left">[<a href="Slides/solving_fluids_neural_nets.qmd" target="_blank">Slides</a>]</code>
 
-- **Data Driven Modelling of Plasma in Tokamaks** - IOP Physics in the spotlight (London, 2019)
+- **Data Driven Modelling of Plasma in Tokamaks** - IOP Physics in the spotlight (London, 2019) <code style="text-align: left">[<a href="Slides/IOP_forum.qmd" target="_blank">Slides</a>]</code>
 
 - **Data Driven Modelling and Control of Plasma in Fusion Reactors** - O'Reilly AI London (London, 2019) <code style="text-align: left; color: violet">[<a href="https://youtu.be/25GarkFQh2s" target="_blank">Video</a>]</code>
 

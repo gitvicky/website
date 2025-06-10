@@ -1,0 +1,10 @@
+---
+title: "Fourier RNNs"
+date: 18/12/2022 #MM/DD/YYYY
+
+---
+
+***
+
+![](F_RNNs_IEEE_ICMLA.pdf){width=100% height=500}
+

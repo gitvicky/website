@@ -1,0 +1,10 @@
+---
+title: "Solving Fluid Dynamics with Neural Networks"
+date: 28/05/2020 #MM/DD/YYYY
+
+---
+
+***
+
+![](Neural_PDEs_Fusion_EP_Talks.pdf){width=100% height=500}
+

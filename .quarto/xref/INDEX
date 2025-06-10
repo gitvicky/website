@@ -70,5 +70,17 @@
   },
   "Blog/Inverse_kernel.qmd": {
     "Inverse_kernel.html": "474e980a"
+  },
+  "Slides/Cal_PIUQ.qmd": {
+    "Cal_PIUQ.html": "6daa5750"
+  },
+  "Slides/F_RNNS.qmd": {
+    "F_RNNS.html": "f85f8e4d"
+  },
+  "Slides/IOP_forum.qmd": {
+    "IOP_forum.html": "e72565e1"
+  },
+  "Slides/solving_fluids_neural_nets.qmd": {
+    "solving_fluids_neural_nets.html": "bae2010f"
   }
 }
