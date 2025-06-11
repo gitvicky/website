@@ -6,21 +6,21 @@ title: "Talks"
 
 - **Calibrated Physics-Informed Uncertainty Quantification** - Workshop on Calibrating Uncertainties, University of Cambridge (Cambridge 2025) <code style="text-align: left">[<a href="Slides/Cal_PIUQ.qmd" target="_blank">Slides</a>]</code>
 
-- **On Surrogate Modelling for Fusion** - PhysicsX (London 2024)
+- **On Surrogate Modelling for Fusion** - PhysicsX (London 2024)  <code style="text-align: left">[<a href="Slides/PhysicsX.qmd" target="_blank">Slides</a>]</code>
 
 - **FNO for Plasma Modelling** - IAEA Workshop on AI for Accelerating Fusion and Plasma Science (Vienna 2023) <code style="text-align: left">[<a href="Slides/IAEA_AI_Fusion_Dec2023.qmd" target="_blank">Slides</a>]</code>
 
-- **FNO for Plasma Modelling** - IAEA Fusion Energy Conference (London, 2023)
+- **FNO for Plasma Modelling** - IAEA Fusion Energy Conference (London, 2023) <code style="text-align: left">[<a href="Slides/IAEA_AI_Fusion_Dec2023.qmd" target="_blank">Slides</a>]</code>
 
 - **FNO for Plasma Modelling** - AI for sustainability workshop @ UCL (London, 2023)
 
 - **Fourier RNNs for modelling noisy physics data** - IEEE ICMLA (Bahamas, 2022) <code style="text-align: left">[<a href="Slides/F_RNNS.qmd" target="_blank">Slides</a>]</code>
 
-- **Informed Sampling of the Plasma Hyperspace for Digital Twinning** - IAEA Fusion Data Processing, Validation, Analysis (Chengdu, 2021)
+- **Informed Sampling of the Plasma Hyperspace for Digital Twinning** - IAEA Fusion Data Processing, Validation, Analysis (Chengdu, 2021) <code style="text-align: left">[<a href="Slides/IAEA_FDPVA.qmd" target="_blank">Slides</a>]</code>
 
-- **Optimising Physics Informed Neural Networks** - PyTorch Ecosystem Day (Virtual, 2021)
+- **Optimising Physics Informed Neural Networks** - PyTorch Ecosystem Day (Virtual, 2021)<code style="text-align: left; color: red">[<a href="https://medium.com/@engineoutcompletely/pytorch-ecosystem-day-poster-9ced784da13b" target="_blank">Poster</a>]</code>
 
-- **Fluid Surrogates using Neural PDEs** - SciML at RAL, STFC (Oxford, 2020)
+- **Fluid Surrogates using Neural PDEs** - SciML at RAL, STFC (Oxford, 2020) <code style="text-align: left">[<a href="Slides/NPDE_SciML.qmd" target="_blank">Slides</a>]</code>
 
 - **Solving Fluid Dynamics with Neural Networks** - FusionEP (Virtual, 2020)  <code style="text-align: left; color: violet">[<a href="https://www.youtube.com/watch?v=lXeVcMU1D9E" target="_blank">Video</a>]</code> <code style="text-align: left">[<a href="Slides/solving_fluids_neural_nets.qmd" target="_blank">Slides</a>]</code>
 

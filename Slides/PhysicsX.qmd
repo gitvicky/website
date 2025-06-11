@@ -1,0 +1,10 @@
+---
+title: "PhysicsX"
+date: 07/19/2024 #MM/DD/YYYY
+
+---
+
+***
+
+![](PhysicsX_Surrogate_Modelling_for_Fusion.pdf){width=100% height=500}
+

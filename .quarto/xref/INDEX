@@ -82,5 +82,14 @@
   },
   "Slides/solving_fluids_neural_nets.qmd": {
     "solving_fluids_neural_nets.html": "bae2010f"
+  },
+  "Slides/IAEA_FDPVA.qmd": {
+    "IAEA_FDPVA.html": "77f6c432"
+  },
+  "Slides/NPDE_SciML.qmd": {
+    "NPDE_SciML.html": "5c75f85e"
+  },
+  "Slides/PhysicsX.qmd": {
+    "PhysicsX.html": "24bfb34f"
   }
 }
