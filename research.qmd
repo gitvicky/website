@@ -46,10 +46,27 @@ format: html
 ::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
 ::: {style="flex: 3;"}
 
+**Calibrated Physics-Informed Uncertainty Quantification**
+
+    Vignesh Gopakumar, Ander Gray, Lorenzo Zanisi, Timorthy Nunn,
+    Daniel Giles, Matt J. Kusner, Stanislas Pamela, Marc Peter Deisenroth
+    ICML, 2025
+  `TLDR: Calibrated uncertainty quantification of neural PDE solvers using physics residual errors as non-conformity scores for data-free conformal prediction.` \
+
+[<span class="btn btn-paper">Paper</span>](https://openreview.net/pdf?id=Z2uLBBck2X) [<span class="btn btn-code">Code</span>](https://github.com/gitvicky/CP-PRE)
+:::
+::: {style="flex: 1; max-width: 200px;"}
+![](Images/jorek_pre.png){.lightbox style="cursor: pointer;"}
+:::
+:::
+
+::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
+::: {style="flex: 3;"}
+
 **Uncertainty Quantification of Surrogate Models using Conformal Prediction**
 
-    Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi, Stanislas Pamela,
-    Daniel Giles, Matt J. Kusner, Marc Peter Deisenroth
+    Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi,
+    Daniel Giles, Matt J. Kusner, Stanislas Pamela, Marc Peter Deisenroth
     arXiv preprint arXiv:2408.09881, 2024
   `TLDR: Guaranteed and valid error bars across spatio-temporal domains using conformal prediction.` \
 
@@ -58,7 +75,6 @@ format: html
 ::: {style="flex: 1; max-width: 200px;"}
 ![](Images/heatmap_cp.png){.lightbox style="cursor: pointer;"}
 :::
-
 :::
 
 ::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
@@ -75,7 +91,6 @@ format: html
 ::: {style="flex: 1; max-width: 200px;"}
 ![](Images/weather_cp.png){.lightbox style="cursor: pointer;"}
 :::
-
 :::
 
 ::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
@@ -94,7 +109,6 @@ format: html
 ::: {style="flex: 1; max-width: 200px;"}
 ![](Images/fno_plasma.png){.lightbox style="cursor: pointer;"}
 :::
-
 :::
 
 <br>
@@ -138,7 +152,6 @@ format: html
 ::: {style="flex: 1; max-width: 200px;"}
 ![](Images/loss_landscape.png){.lightbox style="cursor: pointer;"}
 :::
-
 :::
 
 
@@ -163,7 +176,6 @@ format: html
 ::: {style="flex: 1; max-width: 200px;"}
 ![](Images/solps_cnn.png){.lightbox style="cursor: pointer;"}
 :::
-
 :::
 
 <br>
