@@ -91,5 +91,8 @@
   },
   "Slides/PhysicsX.qmd": {
     "PhysicsX.html": "24bfb34f"
+  },
+  "Blog/iterative_solvers.qmd": {
+    "iterative_solvers.html": "210d1431"
   }
 }

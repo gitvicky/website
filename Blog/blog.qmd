@@ -5,6 +5,10 @@ title: "Blog"
 
 <!-- [Neural ODE](/Blog/Neural_ODE.qmd) -->
 
+[Iterative Solvers for Linear Systems](/Blog/iterative_solvers.qmd)
+
+[Convolution as a form of Integration](/Blog/Inverse_kernel.qmd)
+
 [Geometry for Neural PDEs](/Blog/Geometry.qmd)
 
 [Universal Physics Engine](/Blog/UPE.qmd)

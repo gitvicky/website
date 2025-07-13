@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2025-07-13">
+
+<title>Iterative solvers for linear system of equations – Vignesh Gopakumar</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Images/dy_dx.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Vignesh Gopakumar</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../research.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../talks.html"> 
+<span class="menu-text">Talks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../Blog/blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content column-page" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Iterative solvers for linear system of equations</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 13, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<hr>
+<section id="an-exhaustive-report-on-iterative-methods-for-linear-systems-from-krylov-subspaces-to-advanced-preconditioning-for-partial-differential-equations" class="level1">
+<h1>An Exhaustive Report on Iterative Methods for Linear Systems: From Krylov Subspaces to Advanced Preconditioning for Partial Differential Equations</h1>
+<section id="part-i-the-landscape-of-linear-system-solvers" class="level2">
+<h2 class="anchored" data-anchor-id="part-i-the-landscape-of-linear-system-solvers">Part I: The Landscape of Linear System Solvers</h2>
+<section id="section-1-foundational-concepts-direct-vs.-iterative-solvers" class="level3">
+<h3 class="anchored" data-anchor-id="section-1-foundational-concepts-direct-vs.-iterative-solvers">Section 1: Foundational Concepts: Direct vs.&nbsp;Iterative Solvers</h3>
+<p>In computational mathematics, one of the most fundamental and ubiquitous tasks is the solution of a system of linear equations, which can be expressed in the matrix form:</p>
+<p><span class="math display">\[Ax = b\]</span></p>
+<p>Here, <span class="math inline">\(A\)</span> is a known <span class="math inline">\(n \times n\)</span> coefficient matrix, <span class="math inline">\(b\)</span> is a known <span class="math inline">\(n\)</span>-dimensional vector, and <span class="math inline">\(x\)</span> is the <span class="math inline">\(n\)</span>-dimensional solution vector to be found. The methods developed to solve this problem fall into two primary categories: <strong>direct methods</strong> and <strong>iterative methods</strong>.</p>
+<p>The choice between these two families of algorithms is a critical decision in the design of numerical simulations, dictated by the size, structure, and origin of the linear system.</p>
+<section id="direct-methods" class="level4">
+<h4 class="anchored" data-anchor-id="direct-methods">Direct Methods</h4>
+<p>Direct methods are algorithms that, in the absence of round-off error, compute the exact solution <span class="math inline">\(x\)</span> in a finite and predetermined number of arithmetic operations. The most well-known of these is Gaussian elimination, which systematically transforms the original system into an equivalent upper triangular system that can be easily solved via back substitution. In modern numerical linear algebra, direct methods are almost always implemented through a matrix factorization, such as the LU, Cholesky, or QR decompositions.</p>
+<p>The principal advantages of direct methods are their robustness and generality. They are applicable to a wide range of problems, and their behavior is highly predictable. For a non-singular matrix, a direct solver is guaranteed to produce a solution. This reliability has led to the development of mature, highly optimized, and robust software libraries like LAPACK, which are a cornerstone of scientific computing.</p>
+<p>However, the primary challenge and ultimate limitation of direct methods is their scaling behavior with respect to problem size, <span class="math inline">\(n\)</span>. When the matrix <span class="math inline">\(A\)</span> is dense (i.e., has few zero entries), forming its LU factorization requires approximately <span class="math inline">\(2n^3/3\)</span> arithmetic operations, with storage requirements of <span class="math inline">\(O(n^2)\)</span>. While formidable, this is often acceptable for problems of moderate size.</p>
+<p>The true difficulty arises when dealing with the large, sparse matrices that are characteristic of many scientific and engineering applications, particularly those originating from the discretization of partial differential equations (PDEs). The factorization process for a sparse matrix introduces new non-zero elements in positions that were originally zero in the factors <span class="math inline">\(L\)</span> and <span class="math inline">\(U\)</span>. This phenomenon, known as <strong>fill-in</strong>, can be catastrophic. For a sparse matrix arising from a 2D PDE discretization, where the number of non-zeros is proportional to <span class="math inline">\(N\)</span>, the storage required for the LU factors can grow to <span class="math inline">\(O(N^{3/2})\)</span> and the computational work to <span class="math inline">\(O(N^2)\)</span>. For 3D problems, the situation is even more dire, with storage scaling as <span class="math inline">\(O(N^{5/3})\)</span> and work as <span class="math inline">\(O(N^{7/3})\)</span>. For the million-variable systems common in modern simulations, storing the dense factors would require terabytes of memory, rendering direct methods completely impractical.</p>
+</section>
+<section id="iterative-methods" class="level4">
+<h4 class="anchored" data-anchor-id="iterative-methods">Iterative Methods</h4>
+<p>In stark contrast to direct methods, iterative methods do not compute the exact solution in a fixed number of steps. Instead, they begin with an initial guess for the solution, denoted <span class="math inline">\(x^{(0)}\)</span> (often a vector of zeros), and progressively generate a sequence of improved approximations, <span class="math inline">\(x^{(1)}, x^{(2)}, x^{(3)}, \ldots\)</span>, that ideally converge to the true solution <span class="math inline">\(x\)</span>. At each step <span class="math inline">\(k\)</span>, the quality of the approximation is typically measured by the norm of the residual vector, <span class="math inline">\(r^{(k)} = b - Ax^{(k)}\)</span>. The iteration continues until this residual is smaller than a user-specified tolerance, or a maximum number of iterations is reached.</p>
+<p>The primary advantages of iterative methods directly address the shortcomings of direct solvers for large-scale problems:</p>
+<p><strong>Memory Efficiency</strong>: Iterative methods typically only require the storage of the non-zero elements of the matrix <span class="math inline">\(A\)</span> along with a handful of auxiliary vectors. For a sparse matrix with an average of <span class="math inline">\(k\)</span> non-zeros per row, the memory footprint is <span class="math inline">\(O(Nk)\)</span>, which is vastly more efficient than the memory required for the dense factors of a direct method.</p>
+<p><strong>Computational Efficiency</strong>: The core computational kernel of most modern iterative methods is the matrix-vector product <span class="math inline">\((A \cdot v)\)</span>. For a sparse matrix, this operation is very cheap, requiring only <span class="math inline">\(O(Nk)\)</span> floating-point operations. If the method converges to a satisfactory solution in <span class="math inline">\(m\)</span> iterations, and if <span class="math inline">\(m \ll N\)</span>, the total computational work, roughly <span class="math inline">\(O(Nkm)\)</span>, can be orders of magnitude lower than that of a direct solve. For certain classes of problems, particularly those from elliptic PDEs, advanced iterative methods can converge in a number of iterations that is nearly independent of the problem size <span class="math inline">\(N\)</span>, achieving so-called linear cost.</p>
+<p><strong>Parallelism</strong>: The fundamental operations of iterative methods—matrix-vector products, inner products, and vector updates (AXPY operations)—are composed of many independent calculations. This structure makes them far easier to implement efficiently on parallel computing architectures compared to the complex data dependencies and communication patterns inherent in parallel matrix factorizations.</p>
+<p><strong>Tunable Precision</strong>: Iterative methods provide the flexibility to trade off computational effort for solution accuracy. In many application contexts, such as the inner loops of a nonlinear solver or a time-dependent simulation, a highly precise solution to the linear system at each step is unnecessary. An approximate solution is often sufficient, and an iterative method can be stopped early, saving significant computation time.</p>
+<p>The main drawback of iterative methods is that their performance is not as predictable as that of direct methods. Convergence is not guaranteed for all linear systems, and the rate of convergence can vary dramatically depending on the properties of the matrix <span class="math inline">\(A\)</span>, most notably its condition number. For many challenging problems, a “naive” iterative method will converge too slowly to be practical, or it may fail to converge at all. Consequently, the successful application of iterative methods often requires careful selection of the algorithm and the use of sophisticated preconditioning techniques, which are designed to transform the problem into one that is more amenable to iterative solution.</p>
+</section>
+<section id="economic-perspective" class="level4">
+<h4 class="anchored" data-anchor-id="economic-perspective">Economic Perspective</h4>
+<p>The choice between direct and iterative solvers can be viewed through an economic lens, balancing predictable but potentially prohibitive costs against lower per-unit costs with uncertain total effort. A direct solver is akin to purchasing a custom manufacturing machine: the upfront cost (factorization) is high and determined by the problem size, but once paid, it can produce solutions (for different right-hand sides, <span class="math inline">\(b\)</span>) relatively cheaply and in a known amount of time. An iterative solver is more like hiring a worker on an hourly basis: the rate per hour (cost per iteration) is low and predictable, but the total time required to complete the job (number of iterations) is not known in advance and depends on the difficulty of the task (the condition of the matrix). For small, simple jobs (small, dense matrices), the certainty of the machine is preferable. For massive, complex projects (large, sparse matrices), the lower hourly rate is the only feasible option, and the focus shifts to managing the project efficiently to minimize the total hours worked—a role perfectly analogous to preconditioning in the world of iterative solvers.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 36%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>Direct Methods</th>
+<th>Iterative Methods</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Solution Accuracy</strong></td>
+<td>Exact (in absence of round-off error)</td>
+<td>Approximate, up to a specified tolerance</td>
+</tr>
+<tr class="even">
+<td><strong>Computational Cost (Dense N×N)</strong></td>
+<td>High, typically <span class="math inline">\(O(N^3)\)</span></td>
+<td>Very high, generally not used</td>
+</tr>
+<tr class="odd">
+<td><strong>Computational Cost (Sparse N×N)</strong></td>
+<td>High due to fill-in, e.g., <span class="math inline">\(O(N^2)\)</span> for 2D PDEs</td>
+<td>Low if convergence is fast, <span class="math inline">\(O(Nkm)\)</span> where <span class="math inline">\(m \ll N\)</span></td>
+</tr>
+<tr class="even">
+<td><strong>Memory Usage (Sparse)</strong></td>
+<td>High due to fill-in, e.g., <span class="math inline">\(O(N^{3/2})\)</span> for 2D PDEs</td>
+<td>Low, typically <span class="math inline">\(O(Nk)\)</span></td>
+</tr>
+<tr class="odd">
+<td><strong>Applicability</strong></td>
+<td>General-purpose for any non-singular matrix</td>
+<td>Method choice depends on matrix properties (e.g., symmetry)</td>
+</tr>
+<tr class="even">
+<td><strong>Robustness</strong></td>
+<td>Very high; predictable behavior</td>
+<td>Convergence is not guaranteed; can be slow or fail</td>
+</tr>
+<tr class="odd">
+<td><strong>Parallelism</strong></td>
+<td>Difficult to parallelize efficiently due to data dependencies</td>
+<td>Core operations are highly parallelizable</td>
+</tr>
+<tr class="even">
+<td><strong>Key Challenge</strong></td>
+<td>Managing fill-in and the associated high memory/computational cost</td>
+<td>Ensuring and accelerating convergence</td>
+</tr>
+</tbody>
+</table>
+<p><em>Table 1: Comparison of Direct vs.&nbsp;Iterative Solvers</em></p>
+</section>
+</section>
+</section>
+<section id="part-ii-a-deep-dive-into-modern-krylov-subspace-methods" class="level2">
+<h2 class="anchored" data-anchor-id="part-ii-a-deep-dive-into-modern-krylov-subspace-methods">Part II: A Deep Dive into Modern Krylov Subspace Methods</h2>
+<p>The most powerful and widely used iterative techniques today belong to the family of <strong>Krylov subspace methods</strong>. These methods work by generating an optimal approximate solution from a special subspace—the Krylov subspace—which is built using successive applications of the matrix <span class="math inline">\(A\)</span> to an initial vector, typically the initial residual <span class="math inline">\(r_0\)</span>. The Krylov subspace of order <span class="math inline">\(m\)</span> is defined as:</p>
+<p><span class="math display">\[\mathcal{K}_m(A, r_0) = \text{span}\{r_0, Ar_0, A^2r_0, \ldots, A^{m-1}r_0\}\]</span></p>
+<p>By searching for a solution within this subspace, these methods implicitly construct a polynomial in the matrix <span class="math inline">\(A\)</span> that approximates <span class="math inline">\(A^{-1}\)</span>. This section delves into the two most important Krylov subspace methods: the Conjugate Gradient method for symmetric positive-definite systems and the Generalized Minimal Residual method for general non-symmetric systems.</p>
+<section id="section-2-the-conjugate-gradient-cg-method-the-workhorse-for-symmetric-positive-definite-systems" class="level3">
+<h3 class="anchored" data-anchor-id="section-2-the-conjugate-gradient-cg-method-the-workhorse-for-symmetric-positive-definite-systems">Section 2: The Conjugate Gradient (CG) Method: The Workhorse for Symmetric Positive-Definite Systems</h3>
+<p>The Conjugate Gradient (CG) method, developed by Magnus Hestenes and Eduard Stiefel in 1952, is arguably the most important iterative method ever devised. It is the algorithm of choice for solving large, sparse linear systems where the coefficient matrix <span class="math inline">\(A\)</span> is symmetric and positive-definite (SPD). An SPD matrix is a symmetric matrix for which <span class="math inline">\(x^T Ax &gt; 0\)</span> for any non-zero vector <span class="math inline">\(x\)</span>, or equivalently, all its eigenvalues are positive.</p>
+<section id="mathematical-foundation-an-optimization-perspective" class="level4">
+<h4 class="anchored" data-anchor-id="mathematical-foundation-an-optimization-perspective">Mathematical Foundation: An Optimization Perspective</h4>
+<p>The power and elegance of the CG method stem from its deep connection to optimization. For an SPD matrix <span class="math inline">\(A\)</span>, solving the linear system <span class="math inline">\(Ax = b\)</span> is mathematically equivalent to finding the unique vector <span class="math inline">\(x\)</span> that minimizes the quadratic function (often called a quadratic form or energy functional):</p>
+<p><span class="math display">\[\phi(x) = \frac{1}{2}x^T Ax - b^T x\]</span></p>
+<p>This equivalence is established by examining the gradient of <span class="math inline">\(\phi(x)\)</span>. The gradient is given by <span class="math inline">\(\nabla \phi(x) = Ax - b\)</span>. The minimum of the convex function <span class="math inline">\(\phi(x)\)</span> occurs where its gradient is zero, which means <span class="math inline">\(Ax - b = 0\)</span>, or <span class="math inline">\(Ax = b\)</span>. Thus, the linear system solution is the minimizer of the quadratic form.</p>
+<p>This reframing allows us to approach the linear algebra problem using optimization techniques. A simple starting point is the method of steepest descent, where one iteratively takes steps in the direction of the negative gradient, which is the direction of the fastest local decrease of <span class="math inline">\(\phi(x)\)</span>. The search direction at step <span class="math inline">\(k\)</span> is simply <span class="math inline">\(p_k = r_k = b - Ax_k\)</span>. While intuitive, steepest descent often converges very slowly, as the search directions can become nearly orthogonal in successive steps, leading to a characteristic zig-zagging path toward the minimum.</p>
+<p>The breakthrough of the CG method lies in its choice of search directions. Instead of using the steepest descent directions, it constructs a set of search directions <span class="math inline">\(\{p_0, p_1, \ldots, p_{n-1}\}\)</span> that are <strong>A-conjugate</strong> (or A-orthogonal). This property is defined as:</p>
+<p><span class="math display">\[p_i^T A p_j = 0 \quad \text{for all } i \neq j\]</span></p>
+<p>This condition is a generalization of standard orthogonality; if <span class="math inline">\(A = I\)</span>, it reduces to the familiar dot product being zero. The set of <span class="math inline">\(n\)</span> A-conjugate vectors forms a basis for <span class="math inline">\(\mathbb{R}^n\)</span>. The profound consequence of A-conjugacy is that when we perform a line search to minimize <span class="math inline">\(\phi(x)\)</span> along a new direction <span class="math inline">\(p_k\)</span>, this minimization does not interfere with the minimization already achieved in the previous directions <span class="math inline">\(\{p_0, \ldots, p_{k-1}\}\)</span>. This allows the method to converge to the exact solution in at most <span class="math inline">\(n\)</span> iterations (in exact arithmetic), since it effectively performs <span class="math inline">\(n\)</span> independent one-dimensional minimizations along the basis directions.</p>
+</section>
+<section id="the-conjugate-gradient-algorithm" class="level4">
+<h4 class="anchored" data-anchor-id="the-conjugate-gradient-algorithm">The Conjugate Gradient Algorithm</h4>
+<p>A remarkable feature of the CG method is that these A-conjugate directions can be generated “on the fly” using a simple and efficient three-term recurrence relation. Each new direction <span class="math inline">\(p_k\)</span> is constructed from the current residual <span class="math inline">\(r_k\)</span> and the previous search direction <span class="math inline">\(p_{k-1}\)</span>, without needing to store all previous vectors. This makes the algorithm computationally inexpensive and require minimal storage (only a few vectors need to be stored at any time).</p>
+<p>The algorithm proceeds as follows:</p>
+<p><strong>Initialization:</strong> 1. Choose an initial guess <span class="math inline">\(x_0\)</span> (e.g., <span class="math inline">\(x_0 = 0\)</span>). 2. Compute the initial residual: <span class="math inline">\(r_0 = b - Ax_0\)</span>. 3. Set the first search direction to be the residual: <span class="math inline">\(p_0 = r_0\)</span>. 4. Compute <span class="math inline">\(\text{rsold} = r_0^T r_0\)</span>.</p>
+<p><strong>Iteration:</strong> For <span class="math inline">\(k = 0, 1, 2, \ldots\)</span> until convergence: 1. Compute the matrix-vector product: <span class="math inline">\(v_k = Ap_k\)</span>. 2. Compute the optimal step size to minimize <span class="math inline">\(\phi\)</span> along <span class="math inline">\(p_k\)</span>: <span class="math inline">\(\alpha_k = \frac{\text{rsold}}{p_k^T v_k}\)</span>. 3. Update the solution: <span class="math inline">\(x_{k+1} = x_k + \alpha_k p_k\)</span>. 4. Update the residual: <span class="math inline">\(r_{k+1} = r_k - \alpha_k v_k\)</span>. 5. Check for convergence: if <span class="math inline">\(||r_{k+1}||_2\)</span> is below a tolerance, stop. 6. Compute <span class="math inline">\(\text{rsnew} = r_{k+1}^T r_{k+1}\)</span>. 7. Update the search direction to be A-conjugate to previous directions: <span class="math inline">\(p_{k+1} = r_{k+1} + \frac{\text{rsnew}}{\text{rsold}} p_k\)</span>. 8. Prepare for the next iteration: <span class="math inline">\(\text{rsold} = \text{rsnew}\)</span>.</p>
+<p>This algorithm requires only one matrix-vector product per iteration, along with a few inner products and vector updates, making it extremely efficient.</p>
+</section>
+<section id="python-implementation" class="level4">
+<h4 class="anchored" data-anchor-id="python-implementation">Python Implementation</h4>
+<p>The following Python code provides a basic, self-contained implementation of the Conjugate Gradient algorithm, illustrating its structure:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> conjugate_gradient(A, b, x0<span class="op">=</span><span class="va">None</span>, tol<span class="op">=</span><span class="fl">1e-6</span>, max_iter<span class="op">=</span><span class="dv">1000</span>):</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Solves the system Ax=b for an SPD matrix A using the Conjugate Gradient method.</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">        A (np.ndarray): The symmetric positive-definite coefficient matrix.</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">        b (np.ndarray): The right-hand side vector.</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">        x0 (np.ndarray, optional): Initial guess. Defaults to a zero vector.</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">        tol (float, optional): The tolerance for convergence. Defaults to 1e-6.</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">        max_iter (int, optional): Maximum number of iterations. Defaults to 1000.</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">        tuple: A tuple containing the solution vector x and the number of iterations.</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">len</span>(b)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> x0 <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> np.zeros(n)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x0.copy()</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> b <span class="op">-</span> A <span class="op">@</span> x</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> r.copy()</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    rs_old <span class="op">=</span> r <span class="op">@</span> r</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> np.sqrt(rs_old) <span class="op">&lt;</span> tol:</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x, <span class="dv">0</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(max_iter):</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        Ap <span class="op">=</span> A <span class="op">@</span> p</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        alpha <span class="op">=</span> rs_old <span class="op">/</span> (p <span class="op">@</span> Ap)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>        x <span class="op">+=</span> alpha <span class="op">*</span> p</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>        r <span class="op">-=</span> alpha <span class="op">*</span> Ap</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>        rs_new <span class="op">=</span> r <span class="op">@</span> r</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> np.sqrt(rs_new) <span class="op">&lt;</span> tol:</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> r <span class="op">+</span> (rs_new <span class="op">/</span> rs_old) <span class="op">*</span> p</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>        rs_old <span class="op">=</span> rs_new</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x, i <span class="op">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="the-dual-nature-of-conjugate-gradient" class="level4">
+<h4 class="anchored" data-anchor-id="the-dual-nature-of-conjugate-gradient">The Dual Nature of Conjugate Gradient</h4>
+<p>The CG method occupies a unique position, blurring the line between direct and iterative solvers. Its theoretical foundation guarantees that for an <span class="math inline">\(N \times N\)</span> system, it will find the exact solution in at most <span class="math inline">\(N\)</span> steps, a property characteristic of a direct method. This finite termination property is a direct consequence of constructing <span class="math inline">\(N\)</span> A-orthogonal search directions that span the entire solution space <span class="math inline">\(\mathbb{R}^N\)</span>.</p>
+<p>However, the true power of CG lies not in this finite termination property, but in its performance as an iterative method. For the very large systems where CG is applied (with <span class="math inline">\(N\)</span> in the millions), performing <span class="math inline">\(N\)</span> iterations is computationally infeasible and would be slower than a direct solve. The practical utility of CG comes from its optimality property: at each iteration <span class="math inline">\(k\)</span>, the CG algorithm finds the approximation <span class="math inline">\(x_k\)</span> in the Krylov subspace <span class="math inline">\(\mathcal{K}_k(A, r_0)\)</span> that minimizes the A-norm of the error, <span class="math inline">\(||x - x_k||_A = \sqrt{(x - x_k)^T A (x - x_k)}\)</span>.</p>
+<p>This optimality ensures that CG makes the best possible progress toward the solution at every step, given the information available in the Krylov subspace. As a result, it often produces an excellent approximation to the solution in a number of iterations <span class="math inline">\(k\)</span> that is much smaller than the matrix dimension <span class="math inline">\(N\)</span>, i.e., <span class="math inline">\(k \ll N\)</span>. The rate of this convergence is closely tied to the distribution of the eigenvalues of <span class="math inline">\(A\)</span>. If the eigenvalues are clustered together, or if the condition number <span class="math inline">\(\kappa(A) = \lambda_{\max}/\lambda_{\min}\)</span> is small, convergence is very rapid. Therefore, while its theoretical underpinnings classify it as a direct method, its practical application and value are entirely as a fast iterative method. This dual identity resolves the apparent contradiction in its common descriptions and highlights its exceptional nature among numerical algorithms.</p>
+</section>
+</section>
+<section id="section-3-the-generalized-minimal-residual-gmres-method-tackling-non-symmetric-systems" class="level3">
+<h3 class="anchored" data-anchor-id="section-3-the-generalized-minimal-residual-gmres-method-tackling-non-symmetric-systems">Section 3: The Generalized Minimal Residual (GMRES) Method: Tackling Non-Symmetric Systems</h3>
+<p>When the coefficient matrix <span class="math inline">\(A\)</span> is not symmetric, or not positive-definite, the optimization framework of the CG method is no longer applicable. For these more general cases, the Generalized Minimal Residual (GMRES) method is the standard and most robust Krylov subspace technique. Developed by Youcef Saad and Martin Schultz in 1986, GMRES is designed to solve any non-singular linear system <span class="math inline">\(Ax = b\)</span>.</p>
+<section id="mathematical-foundation-a-least-squares-perspective" class="level4">
+<h4 class="anchored" data-anchor-id="mathematical-foundation-a-least-squares-perspective">Mathematical Foundation: A Least-Squares Perspective</h4>
+<p>The core principle of GMRES is fundamentally different from that of CG. Instead of minimizing an energy functional, GMRES directly tackles the residual. At each iteration <span class="math inline">\(m\)</span>, GMRES finds the vector <span class="math inline">\(x_m\)</span> in the affine Krylov subspace <span class="math inline">\(x_0 + \mathcal{K}_m(A, r_0)\)</span> that minimizes the 2-norm (Euclidean norm) of the corresponding residual vector. That is, it solves the minimization problem:</p>
+<p><span class="math display">\[x_m = \arg\min_{z \in x_0 + \mathcal{K}_m(A, r_0)} ||b - Az||_2\]</span></p>
+<p>To solve this problem efficiently and in a numerically stable manner, GMRES employs the <strong>Arnoldi iteration</strong>. The Arnoldi process is an algorithm that constructs an orthonormal basis <span class="math inline">\(\{v_1, v_2, \ldots, v_m\}\)</span> for the Krylov subspace <span class="math inline">\(\mathcal{K}_m(A, r_0)\)</span>. After <span class="math inline">\(m\)</span> steps, the Arnoldi process yields two crucial outputs:</p>
+<ol type="1">
+<li>A matrix <span class="math inline">\(V_{m+1} = [v_1, v_2, \ldots, v_{m+1}]\)</span> whose columns form an orthonormal basis for <span class="math inline">\(\mathcal{K}_{m+1}(A, r_0)\)</span>.</li>
+<li>An <span class="math inline">\((m+1) \times m\)</span> upper-Hessenberg matrix <span class="math inline">\(\tilde{H}_m\)</span> (a matrix with zeros below the first subdiagonal).</li>
+</ol>
+<p>These matrices are related by the fundamental Arnoldi relation: <span class="math inline">\(AV_m = V_{m+1}\tilde{H}_m\)</span>. This relation is the key to making GMRES practical. Any vector <span class="math inline">\(z\)</span> in the search space can be written as <span class="math inline">\(z = x_0 + V_m y\)</span> for some vector <span class="math inline">\(y \in \mathbb{R}^m\)</span>. Substituting this into the residual minimization problem gives:</p>
+<p><span class="math display">\[\min_{y \in \mathbb{R}^m} ||b - A(x_0 + V_m y)||_2 = \min_{y \in \mathbb{R}^m} ||r_0 - AV_m y||_2\]</span></p>
+<p>Using the Arnoldi relation and the fact that <span class="math inline">\(v_1 = r_0/||r_0||_2\)</span>, this becomes:</p>
+<p><span class="math display">\[\min_{y \in \mathbb{R}^m} ||r_0||_2 v_1 - V_{m+1}\tilde{H}_m y||_2\]</span></p>
+<p>Since the columns of <span class="math inline">\(V_{m+1}\)</span> are orthonormal, multiplying by <span class="math inline">\(V_{m+1}^T\)</span> does not change the 2-norm. This transforms the original large, <span class="math inline">\(N\)</span>-dimensional minimization problem into a small, <span class="math inline">\((m+1) \times m\)</span> linear least-squares problem that is cheap to solve:</p>
+<p><span class="math display">\[\min_{y \in \mathbb{R}^m} ||||r_0||_2 e_1 - \tilde{H}_m y||_2\]</span></p>
+<p>where <span class="math inline">\(e_1\)</span> is the first standard basis vector. This small least-squares problem is typically solved using a QR factorization of <span class="math inline">\(\tilde{H}_m\)</span>, which can be updated efficiently at each step using Givens rotations.</p>
+</section>
+<section id="the-gmres-algorithm-and-its-practical-costs" class="level4">
+<h4 class="anchored" data-anchor-id="the-gmres-algorithm-and-its-practical-costs">The GMRES Algorithm and its Practical Costs</h4>
+<p>The full GMRES algorithm involves an outer loop over the iteration count <span class="math inline">\(m\)</span>. Inside the loop, one step of the Arnoldi process is performed to generate the new basis vector <span class="math inline">\(v_{m+1}\)</span> and the <span class="math inline">\(m\)</span>-th column of the Hessenberg matrix <span class="math inline">\(\tilde{H}_m\)</span>. Then, the small least-squares problem is solved to find the coefficients <span class="math inline">\(y\)</span>, and the approximate solution <span class="math inline">\(x_m\)</span> is formed.</p>
+<p>A critical drawback of this process becomes apparent when compared to CG. The Arnoldi iteration is a “long-term” recurrence. To ensure the new vector <span class="math inline">\(v_{m+1}\)</span> is orthogonal to all previous basis vectors, it must be explicitly orthogonalized against every one of them <span class="math inline">\((v_1, \ldots, v_m)\)</span> using a Gram-Schmidt process. This means that both the computational work and the storage required per iteration grow linearly with the iteration count <span class="math inline">\(m\)</span>. The storage cost is <span class="math inline">\(O(Nm)\)</span> and the work per iteration is <span class="math inline">\(O(Nm)\)</span> for the orthogonalization, plus the cost of the matrix-vector product. For problems that converge slowly, requiring a large <span class="math inline">\(m\)</span>, this becomes prohibitively expensive.</p>
+<p>The standard solution to this practical limitation is <strong>restarted GMRES</strong>, denoted GMRES(k). In this variant, the algorithm is run for a fixed number of <span class="math inline">\(k\)</span> iterations (where <span class="math inline">\(k\)</span> is the restart parameter, typically a small number like 20 or 50). After <span class="math inline">\(k\)</span> steps, the accumulated Krylov basis is discarded, an updated solution <span class="math inline">\(x_k\)</span> is computed, and the entire process is restarted using <span class="math inline">\(x_k\)</span> as the new initial guess. This strategy keeps the memory and computational costs bounded and manageable. However, this practicality comes at a price: by discarding the Krylov subspace, the algorithm loses its optimality and monotonic convergence properties. The residual norm is no longer guaranteed to decrease at every outer iteration, and the method can stagnate, especially for difficult problems.</p>
+</section>
+<section id="python-implementation-1" class="level4">
+<h4 class="anchored" data-anchor-id="python-implementation-1">Python Implementation</h4>
+<p>Implementing GMRES from scratch is considerably more involved than CG due to the Arnoldi process and the least-squares solve. Therefore, it is almost always used via a library function like <code>scipy.sparse.linalg.gmres</code>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.sparse <span class="im">import</span> csc_matrix</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.sparse.linalg <span class="im">import</span> gmres</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a non-symmetric matrix A and a right-hand side b</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> csc_matrix([[<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>]], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> np.array([<span class="dv">2</span>, <span class="dv">4</span>, <span class="op">-</span><span class="dv">1</span>], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Set an initial guess</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>x0 <span class="op">=</span> np.zeros(A.shape[<span class="dv">0</span>])</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve the system using GMRES with a restart parameter of 20</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># and a tolerance of 1e-8.</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>x, exit_code <span class="op">=</span> gmres(A, b, x0<span class="op">=</span>x0, restart<span class="op">=</span><span class="dv">20</span>, tol<span class="op">=</span><span class="fl">1e-8</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> exit_code <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"GMRES converged to a solution."</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Solution x: </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Residual norm: </span><span class="sc">{</span>np<span class="sc">.</span>linalg<span class="sc">.</span>norm(b <span class="op">-</span> A <span class="op">@</span> x)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"GMRES did not converge. Exit code: </span><span class="sc">{</span>exit_code<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="the-optimality-vs.-practicality-dilemma" class="level4">
+<h4 class="anchored" data-anchor-id="the-optimality-vs.-practicality-dilemma">The Optimality vs.&nbsp;Practicality Dilemma</h4>
+<p>The design of GMRES and its common restarted variant perfectly encapsulates a central trade-off in numerical algorithm design: the tension between theoretical optimality and practical feasibility. Full GMRES is “optimal” in the sense that it finds the approximation with the smallest possible residual norm within the ever-expanding Krylov subspace at each step. This guarantees that the residual norm decreases monotonically, a very desirable property.</p>
+<p>This optimality, however, is built on the long-term recurrence of the Arnoldi process. To maintain the orthonormal basis, each new vector must be compared against all previous ones, leading to work and storage costs that grow with each iteration. The reason CG avoids this fate is the profound consequence of symmetry. For an SPD matrix, the Arnoldi process simplifies to the Lanczos process, which has a short three-term recurrence. This allows CG to generate its A-orthogonal basis with constant work and storage per iteration. This is a luxury not afforded to general non-symmetric matrices.</p>
+<p>GMRES(k) is the pragmatic compromise. It sacrifices the powerful optimality and guaranteed monotonic convergence of the full method to gain an algorithm with fixed, manageable memory and computational costs per cycle of <span class="math inline">\(k\)</span> iterations. The choice of the restart parameter <span class="math inline">\(k\)</span> is a heuristic balancing act: if <span class="math inline">\(k\)</span> is too small, the algorithm may lose too much information from the Krylov subspace at each restart and converge very slowly or stagnate; if <span class="math inline">\(k\)</span> is too large, the cost of the inner iterations becomes excessive. This illustrates that for the general class of non-symmetric problems, we must often accept less elegant and more heuristic solutions than those available for the highly structured SPD case.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 34%">
+<col style="width: 53%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>Conjugate Gradient (CG)</th>
+<th>Generalized Minimal Residual (GMRES)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Applicable Matrix Type</strong></td>
+<td>Symmetric Positive-Definite (SPD)</td>
+<td>General, Non-singular</td>
+</tr>
+<tr class="even">
+<td><strong>Underlying Principle</strong></td>
+<td>Minimization of a quadratic form <span class="math inline">\(\phi(x)\)</span></td>
+<td>Minimization of the residual norm <span class="math inline">\(||r||_2\)</span></td>
+</tr>
+<tr class="odd">
+<td><strong>Optimality Criterion</strong></td>
+<td>Minimizes <span class="math inline">\(||x - x_k||_A\)</span> in <span class="math inline">\(\mathcal{K}_k\)</span></td>
+<td>Minimizes <span class="math inline">\(||r_k||_2\)</span> in <span class="math inline">\(x_0 + \mathcal{K}_k\)</span></td>
+</tr>
+<tr class="even">
+<td><strong>Recurrence Length</strong></td>
+<td>Short (3-term recurrence)</td>
+<td>Long (depends on all previous vectors)</td>
+</tr>
+<tr class="odd">
+<td><strong>Work per Iteration</strong></td>
+<td>Constant, <span class="math inline">\(O(Nk)\)</span></td>
+<td>Grows with iteration <span class="math inline">\(m\)</span>, <span class="math inline">\(O(Nm)\)</span></td>
+</tr>
+<tr class="even">
+<td><strong>Storage per Iteration</strong></td>
+<td>Constant (a few vectors)</td>
+<td>Grows with iteration <span class="math inline">\(m\)</span>, <span class="math inline">\(O(Nm)\)</span></td>
+</tr>
+<tr class="odd">
+<td><strong>Convergence Guarantee</strong></td>
+<td>Guaranteed for SPD matrices</td>
+<td>Monotonic residual reduction (full GMRES)</td>
+</tr>
+<tr class="even">
+<td><strong>Common Variant</strong></td>
+<td>Preconditioned CG (PCG)</td>
+<td>Restarted GMRES (GMRES(k))</td>
+</tr>
+</tbody>
+</table>
+<p><em>Table 2: Summary of Key Krylov Subspace Methods (CG and GMRES)</em></p>
+</section>
+</section>
+</section>
+<section id="part-iii-the-primary-application-solving-partial-differential-equations" class="level2">
+<h2 class="anchored" data-anchor-id="part-iii-the-primary-application-solving-partial-differential-equations">Part III: The Primary Application: Solving Partial Differential Equations</h2>
+<p>While the study of iterative solvers is a rich subfield of numerical linear algebra, their development is not an abstract exercise. The primary motivation for creating and refining these algorithms is their application to solving problems from science and engineering. Overwhelmingly, this means solving the massive linear systems that arise from the numerical approximation of Partial Differential Equations (PDEs). This part of the report will bridge the gap between the algebraic methods described previously and their principal domain of application.</p>
+<section id="section-4-how-pdes-generate-large-linear-systems" class="level3">
+<h3 class="anchored" data-anchor-id="section-4-how-pdes-generate-large-linear-systems">Section 4: How PDEs Generate Large Linear Systems</h3>
+<p>PDEs are mathematical equations that describe physical phenomena involving rates of change with respect to multiple independent variables, such as space and time. They are the language of physics, modeling everything from heat conduction and fluid dynamics to structural mechanics and electromagnetism. Except in very simple cases, these equations cannot be solved analytically. Instead, we must turn to computational methods, which requires transforming the continuous problem into a discrete one that a computer can handle. This process is known as <strong>discretization</strong>.</p>
+<section id="discretization-from-continuous-to-discrete" class="level4">
+<h4 class="anchored" data-anchor-id="discretization-from-continuous-to-discrete">Discretization: From Continuous to Discrete</h4>
+<p>The core idea of discretization is to replace the continuous domain of the PDE with a finite set of points or volumes and to approximate the derivatives in the PDE with algebraic expressions involving the solution values at these discrete locations. Two of the most common discretization techniques are the Finite Difference Method and the Finite Element Method.</p>
+<p><strong>Finite Difference Method (FDM)</strong>: This is the most direct approach to discretization. The problem domain is overlaid with a regular grid of points. At each grid point, the partial derivatives in the PDE are replaced by finite difference approximations, which are derived from Taylor series expansions. For example, the second partial derivative of a function <span class="math inline">\(u(x,y)\)</span> with respect to <span class="math inline">\(x\)</span> at a grid point <span class="math inline">\((i,j)\)</span> can be approximated by a centered difference:</p>
+<p><span class="math display">\[\frac{\partial^2 u}{\partial x^2}\bigg|_{(x_i, y_j)} \approx \frac{u_{i+1,j} - 2u_{i,j} + u_{i-1,j}}{h^2}\]</span></p>
+<p>where <span class="math inline">\(h\)</span> is the spacing between grid points and <span class="math inline">\(u_{i,j}\)</span> is the approximate solution at <span class="math inline">\((x_i, y_j)\)</span>. By substituting these algebraic approximations for all derivatives in the PDE at every interior grid point, the differential equation is transformed into a large system of coupled linear equations. The unknowns in this system are the values of the solution at each grid point.</p>
+<p><strong>Finite Element Method (FEM)</strong>: FEM is a more versatile and powerful technique, particularly for problems with complex geometries or varying material properties. In this method, the continuous domain is partitioned into a mesh of smaller, simpler geometric shapes called “finite elements” (e.g., triangles in 2D, tetrahedra in 3D). Within each element, the unknown solution is approximated by a simple function, typically a polynomial, defined in terms of its values at the element’s nodes. The PDE is then reformulated into an equivalent integral or “weak” form. By requiring this integral form to hold over the collection of finite elements, a system of linear algebraic equations is generated, where the unknowns are the solution values at the nodes of the mesh.</p>
+</section>
+<section id="properties-of-the-resulting-matrix-a" class="level4">
+<h4 class="anchored" data-anchor-id="properties-of-the-resulting-matrix-a">Properties of the Resulting Matrix A</h4>
+<p>Regardless of the specific method used (FDM or FEM), the discretization of a PDE results in a linear system <span class="math inline">\(Ax = b\)</span> with several defining characteristics:</p>
+<p><strong>Large-Scale</strong>: The number of equations and unknowns, <span class="math inline">\(N\)</span>, is equal to the number of degrees of freedom in the discrete model (e.g., the number of grid points in FDM). To achieve high accuracy, especially in three dimensions, the mesh must be very fine. It is common for <span class="math inline">\(N\)</span> to be in the millions or even billions, making the system enormous.</p>
+<p><strong>Sparsity</strong>: A crucial feature of these systems is that they are sparse. The equation corresponding to a particular node or element only involves its immediate neighbors in the mesh. For instance, a standard 5-point finite difference stencil for the 2D Laplacian results in an equation at grid point <span class="math inline">\((i,j)\)</span> that only involves values at <span class="math inline">\((i,j)\)</span>, <span class="math inline">\((i±1,j)\)</span>, and <span class="math inline">\((i,j±1)\)</span>. Consequently, the corresponding row in the matrix <span class="math inline">\(A\)</span> will have at most five non-zero entries, regardless of how large <span class="math inline">\(N\)</span> is. This inherent sparsity is what makes the use of iterative methods both possible and necessary.</p>
+<p><strong>Structure</strong>: The matrices are not only sparse but often highly structured. For problems on regular grids, the non-zero entries form distinct patterns, such as bands along the main diagonal (e.g., a tridiagonal or block-tridiagonal structure). This structure can sometimes be exploited by specialized solvers.</p>
+</section>
+</section>
+<section id="section-5-matching-solvers-to-pde-types" class="level3">
+<h3 class="anchored" data-anchor-id="section-5-matching-solvers-to-pde-types">Section 5: Matching Solvers to PDE Types</h3>
+<p>The mathematical classification of a second-order PDE is not merely an abstract label; it reflects the fundamental physics of the problem it models. This classification, in turn, directly determines the mathematical properties of the matrix <span class="math inline">\(A\)</span> that arises from its discretization, and this is the critical link that guides the selection of an appropriate iterative solver.</p>
+<section id="elliptic-pdes" class="level4">
+<h4 class="anchored" data-anchor-id="elliptic-pdes">Elliptic PDEs</h4>
+<p><strong>Prototype and Physics</strong>: The canonical elliptic PDE is the Laplace equation (<span class="math inline">\(\nabla^2 u = 0\)</span>) or the Poisson equation (<span class="math inline">\(\nabla^2 u = f\)</span>). These equations model steady-state phenomena where the system has reached equilibrium and there is no time evolution. Physical examples include steady-state heat conduction, electrostatics, potential fluid flow, and stress analysis in solid mechanics.</p>
+<p><strong>Resulting Matrix Properties</strong>: When a self-adjoint elliptic operator like the Laplacian is discretized using standard methods such as centered finite differences or the Galerkin finite element method, the resulting matrix <span class="math inline">\(A\)</span> is almost always Symmetric and Positive-Definite (SPD). The symmetry of <span class="math inline">\(A\)</span> is a direct reflection of the self-adjoint property of the continuous operator. The positive-definiteness is linked to the dissipative or energy-minimizing nature of the underlying physics; for example, in heat transfer, the system seeks to minimize thermal energy.</p>
+<p><strong>Recommended Solver</strong>: The SPD nature of the matrix makes the Conjugate Gradient (CG) method the ideal and most efficient iterative solver for these systems. Its convergence is guaranteed, and its performance is optimal for this class of matrices.</p>
+</section>
+<section id="parabolic-pdes" class="level4">
+<h4 class="anchored" data-anchor-id="parabolic-pdes">Parabolic PDEs</h4>
+<p><strong>Prototype and Physics</strong>: The classic parabolic PDE is the heat equation, <span class="math inline">\(\frac{\partial u}{\partial t} = \alpha \nabla^2 u\)</span>. These equations model time-dependent diffusion processes, where a quantity like heat or a chemical concentration spreads and smooths out over time.</p>
+<p><strong>Resulting Matrix Properties</strong>: The properties of the matrix for a parabolic problem depend on how the time derivative is discretized. Using the method of lines, one discretizes in space first, yielding a system of ordinary differential equations (ODEs): <span class="math inline">\(\frac{du}{dt} = -A_s u + f\)</span>, where <span class="math inline">\(A_s\)</span> is the spatial discretization matrix. Applying a time-stepping scheme to solve this ODE system leads to a linear system at each time step.</p>
+<p>For an implicit time-stepping scheme like Backward Euler, the system to be solved at each step is of the form <span class="math inline">\((I + \Delta t \alpha A_s)u^{n+1} = u^n\)</span>. If the spatial operator <span class="math inline">\(A_s\)</span> (from the elliptic part <span class="math inline">\(\nabla^2 u\)</span>) is SPD, then the full system matrix <span class="math inline">\(A = (I + \Delta t \alpha A_s)\)</span> is also SPD.</p>
+<p>However, if the problem includes a convection (or advection) term, such as in the convection-diffusion equation (<span class="math inline">\(\frac{\partial u}{\partial t} + v \cdot \nabla u = \alpha \nabla^2 u\)</span>), the first-order spatial derivative <span class="math inline">\(\nabla u\)</span> introduces a non-symmetric component into the spatial operator. The resulting system matrix <span class="math inline">\(A\)</span> will be non-symmetric.</p>
+<p><strong>Recommended Solver</strong>: For pure diffusion problems solved with implicit schemes, the resulting SPD system is well-suited for CG. When a convection term is present and significant, the matrix becomes non-symmetric, and GMRES becomes the necessary choice.</p>
+</section>
+<section id="hyperbolic-pdes" class="level4">
+<h4 class="anchored" data-anchor-id="hyperbolic-pdes">Hyperbolic PDEs</h4>
+<p><strong>Prototype and Physics</strong>: The quintessential hyperbolic PDE is the wave equation, <span class="math inline">\(\frac{\partial^2 u}{\partial t^2} = c^2 \nabla^2 u\)</span>. These equations describe transport and wave propagation phenomena, such as acoustics, electromagnetics, and fluid dynamics with shocks.</p>
+<p><strong>Resulting Matrix Properties</strong>: The discretization of hyperbolic equations, especially when written as a first-order system or when dominated by advection terms, almost invariably leads to non-symmetric matrices. These matrices can also be indefinite (having both positive and negative eigenvalues) and are often more ill-conditioned than those from elliptic problems.</p>
+<p><strong>Recommended Solver</strong>: Due to the non-symmetric and often indefinite nature of the system matrix, GMRES is the standard iterative solver for discretized hyperbolic PDEs. CG is fundamentally inapplicable in this context.</p>
+<p>While this mapping from PDE class to solver choice is a powerful and generally reliable guide, it is essential to recognize that the properties of the matrix <span class="math inline">\(A\)</span> are a function of both the continuous PDE operator and the specific numerical discretization scheme chosen: <span class="math inline">\(A = \text{Discretize}(\text{Operator}_{\text{PDE}})\)</span>. For example, while the Laplacian is an elliptic operator, discretizing it with certain non-standard finite difference stencils or mixed finite element methods can lead to non-symmetric or indefinite saddle-point systems. An expert practitioner must therefore consider the details of the numerical method when selecting a solver, not just the broad classification of the PDE. This understanding underscores why robust numerical libraries often query the properties of the matrix itself (e.g., by testing for symmetry) rather than relying solely on user-provided metadata about the problem’s physical origin.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 13%">
+<col style="width: 40%">
+<col style="width: 20%">
+<col style="width: 17%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>PDE Class</th>
+<th>Physical Example</th>
+<th>Typical Matrix Properties from Standard Discretization</th>
+<th>Recommended Iterative Solver</th>
+<th>Common Preconditioners</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Elliptic</strong></td>
+<td>Steady-State Heat Conduction, Electrostatics</td>
+<td>Symmetric Positive-Definite (SPD)</td>
+<td>Conjugate Gradient (CG)</td>
+<td>Incomplete Cholesky (IC), Multigrid</td>
+</tr>
+<tr class="even">
+<td><strong>Parabolic (Diffusion)</strong></td>
+<td>Transient Heat Transfer</td>
+<td>Symmetric Positive-Definite (SPD) (with implicit schemes)</td>
+<td>Conjugate Gradient (CG)</td>
+<td>Incomplete Cholesky (IC), SSOR</td>
+</tr>
+<tr class="odd">
+<td><strong>Parabolic (Convection)</strong></td>
+<td>Pollutant Transport</td>
+<td>Non-symmetric</td>
+<td>GMRES</td>
+<td>Incomplete LU (ILU)</td>
+</tr>
+<tr class="even">
+<td><strong>Hyperbolic</strong></td>
+<td>Acoustics, Wave Propagation</td>
+<td>Non-symmetric, often indefinite and ill-conditioned</td>
+<td>GMRES</td>
+<td>Incomplete LU (ILU), Domain Decomposition</td>
+</tr>
+</tbody>
+</table>
+<p><em>Table 3: PDE Characteristics and Recommended Solver/Preconditioner Pairings</em></p>
+</section>
+</section>
+</section>
+<section id="part-iv-the-crucial-enhancement-preconditioning" class="level2">
+<h2 class="anchored" data-anchor-id="part-iv-the-crucial-enhancement-preconditioning">Part IV: The Crucial Enhancement: Preconditioning</h2>
+<p>The successful application of iterative methods to the large, complex linear systems arising from PDEs is rarely a simple matter of choosing a solver and running it. More often than not, the raw performance of a method like CG or GMRES is insufficient for practical use. The convergence can be painfully slow, or it may fail altogether. This section addresses this critical challenge and introduces <strong>preconditioning</strong>, the single most important family of techniques for making iterative solvers robust, efficient, and truly powerful.</p>
+<section id="section-6-the-why-of-preconditioning-battling-the-condition-number" class="level3">
+<h3 class="anchored" data-anchor-id="section-6-the-why-of-preconditioning-battling-the-condition-number">Section 6: The “Why” of Preconditioning: Battling the Condition Number</h3>
+<p>The convergence rate of Krylov subspace methods is intimately linked to the spectral properties of the coefficient matrix <span class="math inline">\(A\)</span>. For a problem to be “easy” for an iterative solver, the matrix must be “well-conditioned.”</p>
+<section id="the-problem-ill-conditioning-and-the-condition-number" class="level4">
+<h4 class="anchored" data-anchor-id="the-problem-ill-conditioning-and-the-condition-number">The Problem: Ill-Conditioning and the Condition Number</h4>
+<p>The metric that quantifies the “difficulty” of a linear system is the <strong>condition number</strong>, denoted <span class="math inline">\(\kappa(A)\)</span>. Formally, it is defined as <span class="math inline">\(\kappa(A) = ||A|| \cdot ||A^{-1}||\)</span>, where <span class="math inline">\(||\cdot||\)</span> is some matrix norm. For the SPD matrices relevant to CG, the 2-norm condition number has a simple and intuitive interpretation: it is the ratio of the largest eigenvalue to the smallest eigenvalue of the matrix, <span class="math inline">\(\kappa(A) = \lambda_{\max}/\lambda_{\min}\)</span>.</p>
+<p>A small condition number (close to 1) indicates a well-conditioned problem. A very large condition number signifies an ill-conditioned problem, meaning the matrix is close to being singular (non-invertible). The effect of the condition number on iterative solver performance is dramatic:</p>
+<ul>
+<li>For the Conjugate Gradient method, the number of iterations required to reach a certain tolerance is approximately proportional to the square root of the condition number, i.e., iterations <span class="math inline">\(\propto \sqrt{\kappa(A)}\)</span>.</li>
+<li>For GMRES, the relationship is more complex and depends on the full distribution of eigenvalues in the complex plane, but its convergence is also severely hampered by a large condition number.</li>
+</ul>
+<p>A major source of ill-conditioned systems is the discretization of PDEs. As the discretization mesh is refined to achieve higher physical accuracy (i.e., the mesh spacing <span class="math inline">\(h\)</span> goes to zero), the condition number of the resulting matrix <span class="math inline">\(A\)</span> typically blows up. For a second-order elliptic problem, <span class="math inline">\(\kappa(A)\)</span> grows like <span class="math inline">\(O(h^{-2})\)</span>. This creates a vicious cycle: the very act of improving the physical model’s accuracy makes the resulting algebraic problem exponentially harder to solve.</p>
+</section>
+<section id="the-solution-preconditioning" class="level4">
+<h4 class="anchored" data-anchor-id="the-solution-preconditioning">The Solution: Preconditioning</h4>
+<p>Preconditioning is a strategy to combat this ill-conditioning. The core idea is not to solve the original system <span class="math inline">\(Ax = b\)</span>, but to solve a mathematically equivalent system that has more favorable spectral properties. This is achieved by introducing a <strong>preconditioner</strong>, which is a matrix <span class="math inline">\(M\)</span> that is, in some sense, a cheap and simple approximation of <span class="math inline">\(A\)</span>. The preconditioned system can be formed in several ways:</p>
+<p><strong>Left Preconditioning</strong>: The system is transformed to <span class="math inline">\((M^{-1}A)x = M^{-1}b\)</span>. The iterative solver is then applied to the matrix <span class="math inline">\(M^{-1}A\)</span> and the right-hand side <span class="math inline">\(M^{-1}b\)</span>.</p>
+<p><strong>Right Preconditioning</strong>: The system is transformed to <span class="math inline">\((AM^{-1})y = b\)</span>, where the original solution is recovered via <span class="math inline">\(x = M^{-1}y\)</span>. Here, the solver is applied to the matrix <span class="math inline">\(AM^{-1}\)</span>. A key advantage of this approach is that the original residual <span class="math inline">\(r = b - Ax\)</span> can still be monitored for convergence, which is often desirable.</p>
+<p><strong>Symmetric Preconditioning</strong>: When <span class="math inline">\(A\)</span> is SPD and we wish to use CG, it is crucial that the preconditioned matrix also be SPD. This is achieved with a preconditioner of the form <span class="math inline">\(M = CC^T\)</span>, where <span class="math inline">\(C\)</span> is non-singular. The system becomes <span class="math inline">\((C^{-1}AC^{-T})y = C^{-1}b\)</span>, with <span class="math inline">\(x = C^{-T}y\)</span>. The matrix <span class="math inline">\(C^{-1}AC^{-T}\)</span> is guaranteed to be SPD.</p>
+<p>The ideal preconditioner <span class="math inline">\(M\)</span> must satisfy two competing objectives:</p>
+<p><strong>Effectiveness</strong>: <span class="math inline">\(M\)</span> must be a good approximation of <span class="math inline">\(A\)</span>, such that the preconditioned matrix (<span class="math inline">\(M^{-1}A\)</span> or <span class="math inline">\(AM^{-1}\)</span>) is close to the identity matrix. This ensures that its condition number is close to 1, leading to rapid convergence.</p>
+<p><strong>Efficiency</strong>: The action of the preconditioner, which involves solving a system of the form <span class="math inline">\(Mz = r\)</span> for <span class="math inline">\(z\)</span>, must be computationally very cheap to perform at every iteration of the solver.</p>
+<p>This duality defines the central challenge of preconditioning. The perfect preconditioner is <span class="math inline">\(M = A\)</span>, which makes <span class="math inline">\(\kappa(M^{-1}A) = \kappa(I) = 1\)</span> and leads to convergence in one iteration. However, solving <span class="math inline">\(Mz = r\)</span> is then equivalent to solving the original hard problem, making it useless. Conversely, the cheapest preconditioner is <span class="math inline">\(M = I\)</span>. Solving <span class="math inline">\(Iz = r\)</span> is trivial, but it does nothing to improve the condition number. All practical preconditioners are therefore sophisticated compromises that lie on a spectrum between these two extremes. They are designed to capture the essential features of <span class="math inline">\(A\)</span> that cause ill-conditioning while remaining simple enough to be inverted efficiently.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 10%">
+<col style="width: 29%">
+<col style="width: 20%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Preconditioner Family</th>
+<th>Core Idea</th>
+<th>Cost to Apply (per iteration)</th>
+<th>Quality/Effectiveness</th>
+<th>Typical Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Simple/Stationary (Jacobi, GS, SOR)</strong></td>
+<td>Use a simple part of <span class="math inline">\(A\)</span> (e.g., diagonal) as the preconditioner.</td>
+<td>Very Low, <span class="math inline">\(O(N)\)</span></td>
+<td>Low to Moderate. Effective for diagonally dominant matrices.</td>
+<td>General-purpose first attempt; smoothers in Multigrid.</td>
+</tr>
+<tr class="even">
+<td><strong>Factorization-based (ILU/IC)</strong></td>
+<td>Compute a sparse, approximate factorization <span class="math inline">\(A \approx \tilde{L}\tilde{U}\)</span>.</td>
+<td>Low, cost of sparse triangular solves.</td>
+<td>Moderate to High. A powerful “black-box” technique.</td>
+<td>General-purpose preconditioning for sparse systems from PDEs.</td>
+</tr>
+<tr class="odd">
+<td><strong>Problem-Specific (Multigrid, DD)</strong></td>
+<td>Exploit the underlying geometry and physics of the PDE.</td>
+<td>Low to Moderate, but with higher setup cost.</td>
+<td>Very High, often “optimal” (<span class="math inline">\(O(N)\)</span> solvers).</td>
+<td>Large-scale PDE problems, especially elliptic, on serial or parallel machines.</td>
+</tr>
+</tbody>
+</table>
+<p><em>Table 4: A Comparative Overview of Preconditioning Techniques</em></p>
+</section>
+</section>
+<section id="section-7-a-catalogue-of-preconditioning-techniques" class="level3">
+<h3 class="anchored" data-anchor-id="section-7-a-catalogue-of-preconditioning-techniques">Section 7: A Catalogue of Preconditioning Techniques</h3>
+<p>This section provides a detailed examination of common “black-box” or general-purpose preconditioning techniques. These are often the first methods to try when the specific structure of a problem is either unknown or not easily exploitable. They form the foundation of many preconditioning strategies.</p>
+<section id="classical-stationary-methods-as-preconditioners" class="level4">
+<h4 class="anchored" data-anchor-id="classical-stationary-methods-as-preconditioners">7.1 Classical Stationary Methods as Preconditioners</h4>
+<p>The classical iterative methods—Jacobi, Gauss-Seidel, and Successive Over-Relaxation (SOR)—can be repurposed as simple and computationally inexpensive preconditioners. Their structure is derived from a splitting of the matrix <span class="math inline">\(A\)</span> into its diagonal (<span class="math inline">\(D\)</span>), strictly lower triangular (<span class="math inline">\(-L\)</span>), and strictly upper triangular (<span class="math inline">\(-U\)</span>) parts, such that <span class="math inline">\(A = D - L - U\)</span>.</p>
+<p><strong>Jacobi Preconditioner:</strong></p>
+<p><em>Mathematical Structure</em>: The Jacobi preconditioner is the simplest possible choice: it uses only the diagonal of the matrix <span class="math inline">\(A\)</span>. The preconditioner is defined as <span class="math inline">\(M_J = D\)</span>.</p>
+<p><em>Rationale</em>: The action of this preconditioner, solving <span class="math inline">\(Mz = r\)</span>, reduces to a simple, perfectly parallelizable vector scaling operation: <span class="math inline">\(z = D^{-1}r\)</span>, where <span class="math inline">\(D^{-1}\)</span> is a diagonal matrix whose entries are the reciprocals of the diagonal entries of <span class="math inline">\(A\)</span>. This is extremely cheap to compute. The Jacobi preconditioner is effective only when the matrix <span class="math inline">\(A\)</span> is strongly diagonally dominant, meaning the magnitude of each diagonal entry is large compared to the sum of the magnitudes of the off-diagonal entries in its row.</p>
+<p><em>Python Snippet (for GMRES)</em>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.sparse <span class="im">import</span> diags</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.sparse.linalg <span class="im">import</span> gmres, LinearOperator</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.sparse <span class="im">import</span> csc_matrix</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Assume A (a sparse matrix) and b are defined</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># A = csc_matrix(...)</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># b = np.array(...)</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the Jacobi preconditioner M_inv = D^-1</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>diagonal_of_A <span class="op">=</span> A.diagonal()</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> np.<span class="bu">any</span>(diagonal_of_A <span class="op">==</span> <span class="dv">0</span>):</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"Matrix has zero on diagonal, Jacobi is not applicable."</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>M_inv <span class="op">=</span> diags(<span class="fl">1.0</span> <span class="op">/</span> diagonal_of_A)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># The preconditioner M is defined by its action M_inv * r</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply_jacobi_precond(r):</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> M_inv <span class="op">@</span> r</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> LinearOperator(A.shape, matvec<span class="op">=</span>apply_jacobi_precond)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve the preconditioned system</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>x, exit_code <span class="op">=</span> gmres(A, b, M<span class="op">=</span>M, tol<span class="op">=</span><span class="fl">1e-8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Gauss-Seidel (GS) and Successive Over-Relaxation (SOR) Preconditioners:</strong></p>
+<p><em>Mathematical Structure</em>: The Gauss-Seidel preconditioner uses the lower triangular part of <span class="math inline">\(A\)</span>, including the diagonal: <span class="math inline">\(M_{GS} = D - L\)</span>. Applying this preconditioner requires solving the lower triangular system <span class="math inline">\((D - L)z = r\)</span>, which is done efficiently via forward substitution. The SOR preconditioner is a generalization, defined as <span class="math inline">\(M_{SOR} = \frac{1}{\omega}(D - \omega L)\)</span>, where <span class="math inline">\(\omega \in (0, 2)\)</span> is a relaxation parameter that can accelerate convergence.</p>
+<p><em>Rationale</em>: By incorporating the lower triangular part of <span class="math inline">\(A\)</span>, GS and SOR preconditioners capture more information about the matrix than the simple Jacobi diagonal, often leading to better convergence. However, the forward substitution process is inherently sequential, making these preconditioners more difficult to parallelize than Jacobi. In the context of advanced methods, these stationary methods are rarely used as standalone preconditioners for Krylov solvers. Instead, their true value lies in their role as smoothers within Multigrid cycles. They are exceptionally good at damping high-frequency (oscillatory) error components, which is precisely the task of the smoother.</p>
+</section>
+<section id="incomplete-factorization-preconditioners-iluic" class="level4">
+<h4 class="anchored" data-anchor-id="incomplete-factorization-preconditioners-iluic">7.2 Incomplete Factorization Preconditioners (ILU/IC)</h4>
+<p>Incomplete factorization preconditioners are among the most powerful and popular general-purpose techniques for matrices arising from PDEs. They are a direct attempt to address the “perfect but useless” nature of a full LU factorization as a preconditioner.</p>
+<p><strong>Mathematical Structure</strong>: The core idea is to compute an approximate LU factorization, <span class="math inline">\(A \approx \tilde{L}\tilde{U}\)</span>, where <span class="math inline">\(\tilde{L}\)</span> and <span class="math inline">\(\tilde{U}\)</span> are sparse lower and upper triangular matrices. The preconditioner is then <span class="math inline">\(M = \tilde{L}\tilde{U}\)</span>. Applying the preconditioner involves solving <span class="math inline">\(Mz = r\)</span>, which is done via a two-step forward and backward substitution: solve <span class="math inline">\(\tilde{L}y = r\)</span> for <span class="math inline">\(y\)</span>, then solve <span class="math inline">\(\tilde{U}z = y\)</span> for <span class="math inline">\(z\)</span>. This is efficient as long as <span class="math inline">\(\tilde{L}\)</span> and <span class="math inline">\(\tilde{U}\)</span> remain sparse. For SPD matrices, the symmetric analogue, Incomplete Cholesky (IC) factorization (<span class="math inline">\(A \approx \tilde{L}\tilde{L}^T\)</span>), is used.</p>
+<p><strong>Rationale - Controlling Fill-in</strong>: The key to these methods is to perform a standard factorization process but to strategically discard entries to prevent excessive fill-in and maintain sparsity. There are several strategies for this:</p>
+<p><em>ILU(0) / IC(0)</em>: This is the simplest variant, where the sparsity pattern of the incomplete factors <span class="math inline">\(\tilde{L}\)</span> and <span class="math inline">\(\tilde{U}\)</span> is constrained to be exactly the same as the sparsity pattern of the original matrix <span class="math inline">\(A\)</span>. No new non-zero entries are allowed. This is computationally cheap and requires minimal extra storage, but its effectiveness can be limited.</p>
+<p><em>ILUT (Incomplete LU with Thresholding)</em>: This is a more robust and flexible approach. During the factorization, fill-in is permitted, but any newly created entry whose magnitude is below a specified drop tolerance (droptol) is discarded. This allows the user to tune the trade-off between the accuracy of the preconditioner and its storage/computational cost. A smaller tolerance results in a denser, more accurate preconditioner that accelerates convergence more but is more expensive to compute and apply.</p>
+<p><em>Python Snippet (ILU Preconditioner with SciPy)</em>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.sparse.linalg <span class="im">import</span> spilu, gmres, LinearOperator</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.sparse <span class="im">import</span> csc_matrix</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Assume A (a sparse matrix) and b are defined</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># A = csc_matrix(...)</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># b = np.array(...)</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the ILUT preconditioner object</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># drop_tol controls dropping of small terms, fill_factor controls memory usage</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>ilu <span class="op">=</span> spilu(A, drop_tol<span class="op">=</span><span class="fl">1e-5</span>, fill_factor<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the action of the preconditioner M^-1</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply_ilu_precond(r):</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ilu.solve(r)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> LinearOperator(A.shape, matvec<span class="op">=</span>apply_ilu_precond)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve the preconditioned system using GMRES</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>x, exit_code <span class="op">=</span> gmres(A, b, M<span class="op">=</span>M, tol<span class="op">=</span><span class="fl">1e-8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The preconditioners discussed in this section represent a spectrum of generality. Jacobi is the most basic and broadly applicable, but often the weakest. ILU is significantly more powerful and serves as a robust black-box choice for a wide array of problems arising from PDEs. However, its construction can be complex, and it may still fail or perform poorly for extremely ill-conditioned or indefinite systems. The failure of these general algebraic methods to adequately solve a problem is often a strong signal that the problem possesses a special structure that is not being exploited. This realization motivates the development of the problem-aware, physics-based preconditioners discussed in the next section, which represent the state of the art for high-performance scientific computing.</p>
+</section>
+</section>
+<section id="section-8-advanced-problem-aware-preconditioners-for-pdes" class="level3">
+<h3 class="anchored" data-anchor-id="section-8-advanced-problem-aware-preconditioners-for-pdes">Section 8: Advanced, Problem-Aware Preconditioners for PDEs</h3>
+<p>When general-purpose algebraic preconditioners are insufficient, the next step is to employ methods that are explicitly designed to exploit the underlying structure of the PDE problem. These advanced techniques, such as Multigrid and Domain Decomposition methods, are not just algebraic manipulations; they are numerical algorithms that incorporate knowledge of the problem’s physics and geometry to construct highly effective, often optimal, preconditioners.</p>
+<section id="multigrid-methods" class="level4">
+<h4 class="anchored" data-anchor-id="multigrid-methods">8.1 Multigrid Methods</h4>
+<p>Multigrid is widely regarded as one of the most efficient solution methods for the linear systems arising from elliptic PDEs, often achieving optimal complexity, meaning the computational cost to solve the system is proportional to the number of unknowns, <span class="math inline">\(O(N)\)</span>.</p>
+<p><strong>Mathematical Structure and Rationale</strong>: The power of multigrid stems from a fundamental insight into the nature of error in iterative methods. Simple iterative methods like Jacobi or Gauss-Seidel, when applied to PDE problems, are very effective at reducing high-frequency (or oscillatory) components of the error but are extremely inefficient at reducing low-frequency (or smooth) error components. Smooth error components change very little between adjacent grid points, so local relaxation operations have little effect on them.</p>
+<p>The genius of multigrid is to recognize that an error component that is smooth on a fine grid will appear more oscillatory on a coarser grid. The method leverages a hierarchy of grids, from the fine grid where the solution is desired down to a very coarse grid. The core idea is to use a simple iterative method to handle the high-frequency error on the fine grid and then transfer the remaining smooth error to a coarser grid, where it can be eliminated efficiently.</p>
+<p>A single multigrid cycle consists of the following steps:</p>
+<ol type="1">
+<li><p><strong>Pre-Smoothing</strong>: On the current (fine) grid, apply a few iterations of a simple relaxation method (e.g., Gauss-Seidel). This step effectively damps the high-frequency error components.</p></li>
+<li><p><strong>Residual Computation</strong>: Calculate the residual of the smoothed approximation: <span class="math inline">\(r_f = b_f - A_f x_f\)</span>.</p></li>
+<li><p><strong>Restriction</strong>: Transfer the fine-grid residual to the next coarser grid: <span class="math inline">\(r_c = R(r_f)\)</span>. The restriction operator <span class="math inline">\(R\)</span> performs a weighted averaging of fine-grid values to produce coarse-grid values.</p></li>
+<li><p><strong>Coarse-Grid Solve</strong>: On the coarse grid, solve the residual equation <span class="math inline">\(A_c e_c = r_c\)</span> to find the error correction <span class="math inline">\(e_c\)</span>. This step is the recursive part of the algorithm: the coarse-grid system is itself solved using a multigrid cycle. This continues until a grid is reached that is so coarse it can be solved cheaply with a direct method.</p></li>
+<li><p><strong>Prolongation (Interpolation)</strong>: Transfer the computed error correction from the coarse grid back to the fine grid: <span class="math inline">\(e_f = P(e_c)\)</span>. The prolongation operator <span class="math inline">\(P\)</span> interpolates the coarse-grid values to produce fine-grid values.</p></li>
+<li><p><strong>Correction</strong>: Update the fine-grid solution with the interpolated correction: <span class="math inline">\(x_f \leftarrow x_f + e_f\)</span>.</p></li>
+<li><p><strong>Post-Smoothing</strong>: Apply a few more relaxation sweeps to smooth out any high-frequency errors introduced by the interpolation process.</p></li>
+</ol>
+<p>The pattern of recursion defines the type of cycle. The V-cycle is the simplest, involving one recursive call. The W-cycle makes two recursive calls at each level, making it more robust but also more expensive per cycle. The F-cycle is an intermediate compromise. When used as a preconditioner for a Krylov method like CG, one multigrid cycle serves as the application of the preconditioner inverse, <span class="math inline">\(M^{-1}\)</span>.</p>
+<p><em>Python Snippet (using PyAMG)</em>: Implementing a multigrid solver from scratch is a significant undertaking. Libraries like PyAMG (Algebraic Multigrid) provide powerful implementations. Algebraic Multigrid (AMG) is a variant that automatically constructs the grid hierarchy and operators based only on the matrix <span class="math inline">\(A\)</span>, without needing explicit geometric information.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyamg</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.sparse <span class="im">import</span> csr_matrix</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.sparse.linalg <span class="im">import</span> cg</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Assume A is a sparse matrix from a discretized elliptic PDE</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># and b is the right-hand side vector.</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># A = csr_matrix(...)</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># b = np.array(...)</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Create the multigrid hierarchy (this is the setup phase)</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#    'smoothed_aggregation_solver' is a common AMG method.</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>ml <span class="op">=</span> pyamg.smoothed_aggregation_solver(A)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Use the multigrid hierarchy as a preconditioner for CG.</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#    The aspreconditioner() method returns a LinearOperator that</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#    applies one V-cycle.</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> ml.aspreconditioner(cycle<span class="op">=</span><span class="st">'V'</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Solve the preconditioned system</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>x, info <span class="op">=</span> cg(A, b, M<span class="op">=</span>M, tol<span class="op">=</span><span class="fl">1e-8</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> info <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"CG with AMG preconditioner converged."</span>)</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"CG with AMG did not converge in </span><span class="sc">{</span>info<span class="sc">}</span><span class="ss"> iterations."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="domain-decomposition-methods" class="level4">
+<h4 class="anchored" data-anchor-id="domain-decomposition-methods">8.2 Domain Decomposition Methods</h4>
+<p>Domain Decomposition (DD) methods are a family of techniques fundamentally designed to enable parallel computing for PDE problems. The guiding principle is “divide and conquer.” The large, global physical domain is partitioned into a set of smaller, simpler subdomains. The original PDE problem is then solved on these subdomains concurrently, with each subdomain typically assigned to a different processor.</p>
+<p><strong>Mathematical Structure and Rationale</strong>: The main challenge in DD methods is to correctly enforce the solution’s continuity and the PDE’s governing laws across the artificial interfaces created between subdomains. The independent subdomain solves are coordinated through an iterative process that exchanges information across these interfaces. Like multigrid, DD methods are most often used as preconditioners for Krylov solvers. The action of the preconditioner, <span class="math inline">\(M^{-1}r\)</span>, involves solving the independent problems on all subdomains in parallel, followed by a communication step to update the interface values.</p>
+<p>There are two main classes of DD methods:</p>
+<p><strong>Overlapping Schwarz Methods</strong>: In these methods, the subdomains are constructed to have a small region of overlap with their neighbors. The iterative process is simple and intuitive: solve the PDE on subdomain <span class="math inline">\(\Omega_i\)</span>, use the resulting solution values in the overlap region as boundary conditions for the solve on the neighboring subdomain <span class="math inline">\(\Omega_j\)</span>, and repeat this process until the solution across all interfaces converges.</p>
+<p><strong>Non-overlapping Methods (Iterative Substructuring)</strong>: Here, the subdomains intersect only at their boundaries (interfaces and corners). These methods are algebraically more complex. They reformulate the global problem into one that explicitly solves for the unknowns on the interfaces, coupled with independent solves in the interior of each subdomain. Prominent examples include the FETI (Finite Element Tearing and Interconnecting) methods, which use Lagrange multipliers to enforce continuity at the interfaces, and primal methods like BDDC (Balancing Domain Decomposition by Constraints).</p>
+<p><em>Python Snippet (Conceptual)</em>: A practical implementation of a DD method requires a parallel computing framework (like MPI) and is highly complex. The following conceptual code illustrates the logic of a two-domain additive Schwarz preconditioner.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conceptual snippet for a two-domain Additive Schwarz preconditioner</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># A_i: matrix for interior of subdomain i</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># B_i: matrix coupling interior of i to interface</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># S: Schur complement matrix for the interface problem</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply_additive_schwarz(r):</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># r is the global residual vector</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1. Restrict residual to each subdomain</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    r1 <span class="op">=</span> R1 <span class="op">@</span> r  <span class="co"># R1 is a restriction operator</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    r2 <span class="op">=</span> R2 <span class="op">@</span> r  <span class="co"># R2 is a restriction operator</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2. Solve local problems on subdomains (in parallel)</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This is the core of the parallel computation</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    z1 <span class="op">=</span> solve_subdomain_1(A1, r1)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    z2 <span class="op">=</span> solve_subdomain_2(A2, r2)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3. Solve a coarse/interface problem to get global correction</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This step requires communication</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    r_interface <span class="op">=</span> R_interface <span class="op">@</span> r</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    z_interface <span class="op">=</span> solve_interface(S, r_interface)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 4. Prolongate local solutions back to global vector</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> P1 <span class="op">@</span> z1 <span class="op">+</span> P2 <span class="op">@</span> z2 <span class="op">+</span> P_interface <span class="op">@</span> z_interface</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> z</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The most powerful preconditioners, like Multigrid and Domain Decomposition, are not merely algebraic constructs. Their success derives from the fact that they create a simplified but physically meaningful approximation of the original problem. An ill-conditioned matrix from a PDE reflects strong coupling across different scales or spatial regions. Multigrid directly addresses the multi-scale nature of elliptic problems by explicitly representing the problem on a hierarchy of grids, handling local physics with the smoother and global physics with the coarse-grid correction. Similarly, Domain Decomposition respects the spatial locality of physical laws by solving the problem exactly within subdomains and then iteratively correcting for the coupling between them. This reveals a deep principle in modern computational science: the most effective algorithms are often those that are “problem-aware.” To achieve true scalability and efficiency, the solver must incorporate knowledge of the physical and geometric problem it is designed to solve.</p>
+</section>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Iterative methods represent a cornerstone of modern scientific computing, providing the only feasible path for solving the vast linear systems that arise from the discretization of partial differential equations. The journey from fundamental concepts to state-of-the-art application reveals a landscape of increasing sophistication, driven by the need to balance computational cost, memory usage, and robustness.</p>
+<p>At the heart of modern techniques lie the Krylov subspace methods, with the Conjugate Gradient (CG) method providing an elegant and optimal solution for symmetric positive-definite systems, and the Generalized Minimal Residual (GMRES) method offering a robust, if more costly, alternative for general non-symmetric problems. The choice between them is dictated by the mathematical properties of the system matrix, which are, in turn, a direct reflection of the underlying PDE’s physical character—elliptic problems typically yield SPD matrices suited for CG, while parabolic and hyperbolic problems often lead to non-symmetric systems requiring GMRES.</p>
+<p>However, the practical power of these solvers is only fully unlocked through preconditioning. The challenge of ill-conditioning, where the difficulty of the algebraic problem increases dramatically with the physical model’s fidelity, necessitates the transformation of the original system into one with more favorable spectral properties. The spectrum of preconditioners—from simple algebraic techniques like Jacobi and Incomplete LU factorization to advanced, problem-aware strategies like Multigrid and Domain Decomposition—highlights a crucial theme: the most powerful numerical methods are those that are not “black boxes” but are intelligently designed to exploit the physical and geometric structure of the problem at hand. Multigrid’s hierarchical approach to error smoothing and Domain Decomposition’s parallel “divide and conquer” strategy are prime examples of this principle.</p>
+<p>For the practitioner, this leads to a clear workflow: identify the PDE class, choose the appropriate Krylov solver (CG or GMRES), and, most critically, select a preconditioner that matches the problem’s complexity and the available computational resources. For the researcher, the field remains vibrant, with ongoing work in developing more robust preconditioners for challenging multi-physics problems, adapting algorithms for emerging computer architectures, and further blurring the lines between algebraic solvers and physical models. Ultimately, the continued advancement in iterative methods is a key enabler for pushing the boundaries of scientific discovery and engineering innovation.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2025 Vignesh Gopakumar</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
