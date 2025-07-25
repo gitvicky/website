@@ -1,0 +1,10 @@
+---
+title: "A review on Surrogate modelling and Uncertainty Quantification for Neural PDE solvers"
+subtitle: "A portion of the PhD Upgrade Viva Document"
+date: 05/01/2025 #MM/DD/YYYY
+format: html
+
+---
+***
+
+![](Upgrade_viva_Review.pdf){width=100% height=500}

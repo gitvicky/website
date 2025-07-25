@@ -13,6 +13,9 @@ title: "Blog"
 
 [Universal Physics Engine](/Blog/UPE.qmd)
 
+[A review on UQ and Surrogate Modelling for Neural PDE solvers](/Blog/upgrade_viva.qmd)
+
+
 <!-- [Neural Operators](/Blog/Neural_Operators.qmd) -->
 
 
