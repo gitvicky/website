@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2025-07-26">
+
+<title>Stochastic PDEs – Vignesh Gopakumar</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Images/dy_dx.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Vignesh Gopakumar</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../research.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../talks.html"> 
+<span class="menu-text">Talks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../Blog/blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content column-page" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Stochastic PDEs</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 26, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<hr>
+<pre><code>This is written as a learning exercise using multiple interactions with claude and gemini. Though I have served as a human-in-the-loop for the mathematical definitions, it is possible that I might have gotten some of it wrong as well. </code></pre>
+<hr>
+<section id="the-physical-origins-of-stochastic-dynamics-the-langevin-equation" class="level1">
+<h1>The Physical Origins of Stochastic Dynamics: The Langevin Equation</h1>
+<p>The mathematical theory of stochastic processes, while abstract, has deep roots in the physical world. Its origins can be traced to the effort to understand and model systems where deterministic laws are insufficient to capture observed behavior. The quintessential example is Brownian motion, and the Langevin equation stands as the first and most intuitive physical model to bridge the gap between microscopic randomness and macroscopic, observable dynamics.</p>
+<section id="the-phenomenon-of-brownian-motion" class="level2">
+<h2 class="anchored" data-anchor-id="the-phenomenon-of-brownian-motion">The Phenomenon of Brownian Motion</h2>
+<p>In 1827, botanist Robert Brown observed the incessant, erratic motion of pollen grains suspended in water. For decades, this phenomenon remained a curiosity until Albert Einstein, in his 1905 annus mirabilis, provided a quantitative theoretical explanation <span class="citation" data-cites="einstein1905">[<a href="#ref-einstein1905" role="doc-biblioref">1</a>]</span>. Einstein’s analysis shifted the focus from the impossible task of tracking a single particle’s trajectory to describing its statistical properties. He predicted that the average squared distance a particle travels from its origin, known as the Mean Squared Displacement (MSD), should grow linearly with time <span class="citation" data-cites="einstein1905">[<a href="#ref-einstein1905" role="doc-biblioref">1</a>]</span>. This relationship, expressed as <span class="math inline">\(\langle x(t)^2 \rangle = 2Dt\)</span>, where <span class="math inline">\(D\)</span> is the diffusion coefficient, became the statistical hallmark of a diffusive process <span class="citation" data-cites="einstein1905">[<a href="#ref-einstein1905" role="doc-biblioref">1</a>]</span>. This macroscopic law demanded a microscopic explanation that could account for both the particle’s gradual slowing and its persistent, random jiggling.</p>
+</section>
+<section id="a-physicists-model-decomposing-forces" class="level2">
+<h2 class="anchored" data-anchor-id="a-physicists-model-decomposing-forces">A Physicist’s Model: Decomposing Forces</h2>
+<p>Several years after Einstein’s work, French physicist Paul Langevin offered an alternative, more direct approach rooted in classical mechanics <span class="citation" data-cites="langevin1908">[<a href="#ref-langevin1908" role="doc-biblioref">2</a>]</span>. He started with Newton’s second law, <span class="math inline">\(m\frac{d^2x}{dt^2} = F_{\text{total}}\)</span>, and proposed a crucial conceptual leap: the total force exerted by the fluid on the much larger Brownian particle could be decomposed into two distinct components <span class="citation" data-cites="langevin1908b">[<a href="#ref-langevin1908b" role="doc-biblioref">3</a>]</span>.</p>
+<section id="a-systematic-deterministic-drag-force" class="level3">
+<h3 class="anchored" data-anchor-id="a-systematic-deterministic-drag-force">A Systematic, Deterministic Drag Force</h3>
+<p>This force, <span class="math inline">\(F_{\text{drag}} = -\gamma v\)</span>, is proportional to the particle’s velocity <span class="math inline">\(v = \frac{dx}{dt}\)</span>. It represents the macroscopic effect of viscosity, a dissipative force that continuously removes kinetic energy from the particle and resists its motion through the fluid <span class="citation" data-cites="langevin1908">[<a href="#ref-langevin1908" role="doc-biblioref">2</a>]</span>. The constant <span class="math inline">\(\gamma\)</span> is the friction coefficient.</p>
+</section>
+<section id="a-rapidly-fluctuating-stochastic-force" class="level3">
+<h3 class="anchored" data-anchor-id="a-rapidly-fluctuating-stochastic-force">A Rapidly Fluctuating, Stochastic Force</h3>
+<p>This force, denoted <span class="math inline">\(f(t)\)</span>, represents the net effect of the immense number of random, high-frequency collisions between the particle and the individual molecules of the surrounding fluid. While each collision is a deterministic event, their collective impact is modeled as a random process that injects energy into the particle, causing its erratic movement <span class="citation" data-cites="einstein1905">[<a href="#ref-einstein1905" role="doc-biblioref">1</a>]</span>.</p>
+<p>This decomposition is a foundational act of physical modeling. It separates the system’s degrees of freedom into a slow, macroscopic variable of interest (the particle’s velocity) and a vast number of fast, microscopic variables (the fluid molecules’ states) whose collective influence is treated statistically <span class="citation" data-cites="gardiner2009">[<a href="#ref-gardiner2009" role="doc-biblioref">4</a>]</span>. This separation of timescales is only valid because the particle is much larger and more massive than the fluid molecules, causing its velocity to change slowly compared to the timescale of individual molecular collisions <span class="citation" data-cites="gardiner2009">[<a href="#ref-gardiner2009" role="doc-biblioref">4</a>]</span>.</p>
+<p>This modeling philosophy, a form of “structured ignorance,” is remarkably modern. Instead of attempting to model an intractably complex system in full detail, it strategically coarse-grains the microscopic dynamics into a statistical term. This same principle underpins contemporary generative models in AI, where the goal is not to parameterize the entire complex manifold of data but to define a simple stochastic process that can navigate to and from it.</p>
+</section>
+</section>
+<section id="the-langevin-equation" class="level2">
+<h2 class="anchored" data-anchor-id="the-langevin-equation">The Langevin Equation</h2>
+<p>By combining these two forces, Langevin formulated his eponymous equation, a first-order differential equation for the velocity <span class="math inline">\(v\)</span> that contains a stochastic term:</p>
+<p><span class="math display">\[m\frac{dv}{dt} = -\gamma v + f(t)\]</span></p>
+<p>This equation is the archetype of a Stochastic Differential Equation (SDE) <span class="citation" data-cites="oksendal2003">[<a href="#ref-oksendal2003" role="doc-biblioref">5</a>]</span>. It describes the evolution of a system subject to both deterministic (dissipative) and fluctuating (random) forces.</p>
+</section>
+<section id="characterizing-the-noise-the-fluctuation-dissipation-theorem" class="level2">
+<h2 class="anchored" data-anchor-id="characterizing-the-noise-the-fluctuation-dissipation-theorem">Characterizing the Noise: The Fluctuation-Dissipation Theorem</h2>
+<p>To make the Langevin equation mathematically useful, the statistical properties of the random force <span class="math inline">\(f(t)\)</span> must be specified. Based on physical reasoning, two key assumptions are made <span class="citation" data-cites="oksendal2003">[<a href="#ref-oksendal2003" role="doc-biblioref">5</a>]</span>:</p>
+<ol type="1">
+<li><p><strong>Zero Mean</strong>: The average of the random force over many realizations is zero, <span class="math inline">\(\langle f(t) \rangle = 0\)</span>. This reflects the fact that collisions are equally likely to push the particle in any direction.</p></li>
+<li><p><strong>Time Uncorrelation</strong>: The forces at two different times, <span class="math inline">\(t_1\)</span> and <span class="math inline">\(t_2\)</span>, are uncorrelated, expressed mathematically as <span class="math inline">\(\langle f(t_1)f(t_2) \rangle = g\delta(t_1 - t_2)\)</span>. The term <span class="math inline">\(\delta(t_1 - t_2)\)</span> is the Dirac delta function, which is zero everywhere except when <span class="math inline">\(t_1 = t_2\)</span>. This idealization, known as white noise, implies that the memory of the collisions is infinitesimally short. This is a reasonable approximation on the timescale of the particle’s motion, which is much longer than the duration of a single molecular collision <span class="citation" data-cites="gardiner2009">[<a href="#ref-gardiner2009" role="doc-biblioref">4</a>]</span>. The constant <span class="math inline">\(g\)</span> represents the strength of the noise.</p></li>
+</ol>
+<p>A profound connection exists between the dissipative drag force and the fluctuating random force. Both originate from the same underlying microscopic interactions with the fluid molecules. For a system in thermal equilibrium at temperature <span class="math inline">\(T\)</span>, the rate of energy dissipation due to friction must be balanced, on average, by the rate of energy injection from random fluctuations <span class="citation" data-cites="fluctuation_dissipation">[<a href="#ref-fluctuation_dissipation" role="doc-biblioref">6</a>]</span>. This balance leads to the <strong>Fluctuation-Dissipation Theorem</strong>, a cornerstone of non-equilibrium statistical mechanics, which relates the noise strength <span class="math inline">\(g\)</span> to the friction coefficient <span class="math inline">\(\gamma\)</span> and the temperature <span class="math inline">\(T\)</span> <span class="citation" data-cites="fluctuation_dissipation">[<a href="#ref-fluctuation_dissipation" role="doc-biblioref">6</a>]</span>:</p>
+<p><span class="math display">\[g = 2\gamma k_B T\]</span></p>
+<p>where <span class="math inline">\(k_B\)</span> is the Boltzmann constant. This theorem is not just a mathematical convenience; it is a physical constraint that ensures the model is thermodynamically consistent and that the particle’s average kinetic energy will eventually settle to the value predicted by the equipartition theorem, <span class="math inline">\(\langle \frac{1}{2}mv^2 \rangle = \frac{1}{2}k_B T\)</span> <span class="citation" data-cites="fluctuation_dissipation">[<a href="#ref-fluctuation_dissipation" role="doc-biblioref">6</a>]</span>.</p>
+</section>
+<section id="overdamped-dynamics" class="level2">
+<h2 class="anchored" data-anchor-id="overdamped-dynamics">Overdamped Dynamics</h2>
+<p>In many physical and biological systems, particularly on long timescales or in highly viscous media, the particle’s acceleration is negligible. The inertial term <span class="math inline">\(m\frac{dv}{dt}\)</span> becomes insignificant compared to the large frictional force <span class="math inline">\(-\gamma v\)</span> <span class="citation" data-cites="gardiner2009">[<a href="#ref-gardiner2009" role="doc-biblioref">4</a>]</span>. In this overdamped limit, the Langevin equation simplifies significantly. If the particle is also subject to an external conservative force derived from a potential <span class="math inline">\(U(x)\)</span>, such that <span class="math inline">\(F_{\text{ext}} = -\nabla U(x)\)</span>, the equation becomes a first-order SDE for the position <span class="math inline">\(x\)</span>:</p>
+<p><span class="math display">\[\gamma \frac{dx}{dt} = -\nabla U(x) + f(t)\]</span></p>
+<p>This overdamped Langevin equation is a foundational model in chemical physics, molecular dynamics, and, as will be seen, serves as a direct inspiration for the dynamics used in modern generative models <span class="citation" data-cites="oksendal2003">[<a href="#ref-oksendal2003" role="doc-biblioref">5</a>]</span>.</p>
+</section>
+</section>
+<section id="the-mathematical-framework-of-stochastic-differential-equations" class="level1">
+<h1>The Mathematical Framework of Stochastic Differential Equations</h1>
+<p>The Langevin equation provides a powerful physical intuition, but its reliance on the ill-defined “white noise” process necessitates a more rigorous mathematical foundation. This foundation is provided by the theory of stochastic calculus, developed primarily by Kiyosi Itô in the 1940s <span class="citation" data-cites="ito1944">[<a href="#ref-ito1944" role="doc-biblioref">7</a>]</span>. This framework replaces the problematic concept of white noise with the well-defined Wiener process and develops a new form of calculus to handle integration with respect to it.</p>
+<section id="from-physical-noise-to-a-mathematical-object-the-wiener-process" class="level2">
+<h2 class="anchored" data-anchor-id="from-physical-noise-to-a-mathematical-object-the-wiener-process">From Physical Noise to a Mathematical Object: The Wiener Process</h2>
+<p>The mathematical formalization of the integral of white noise is the Wiener process, denoted <span class="math inline">\(W(t)\)</span>, also known as mathematical Brownian motion <span class="citation" data-cites="wiener1923">[<a href="#ref-wiener1923" role="doc-biblioref">8</a>]</span>. It is a continuous-time stochastic process defined by three fundamental properties <span class="citation" data-cites="karatzas1991brownian">[<a href="#ref-karatzas1991brownian" role="doc-biblioref">9</a>]</span>:</p>
+<ol type="1">
+<li><strong>Initial Condition</strong>: <span class="math inline">\(W(0) = 0\)</span> with probability one.</li>
+<li><strong>Independent Increments</strong>: For any sequence of times <span class="math inline">\(0 \leq s &lt; t &lt; u &lt; v\)</span>, the increments <span class="math inline">\(W(t) - W(s)\)</span> and <span class="math inline">\(W(v) - W(u)\)</span> are independent random variables.</li>
+<li><strong>Gaussian Increments</strong>: The increment <span class="math inline">\(W(t) - W(s)\)</span> is a Gaussian random variable with mean 0 and variance <span class="math inline">\(t - s\)</span>, i.e., <span class="math inline">\(W(t) - W(s) \sim \mathcal{N}(0, t - s)\)</span>.</li>
+</ol>
+<p>From these properties, it can be shown that the sample paths of <span class="math inline">\(W(t)\)</span> are continuous everywhere but differentiable nowhere <span class="citation" data-cites="karatzas1991brownian">[<a href="#ref-karatzas1991brownian" role="doc-biblioref">9</a>]</span>. This non-differentiability is the central reason why classical Riemann-Stieltjes integration and calculus are inadequate for dealing with stochastic processes driven by Brownian motion.</p>
+</section>
+<section id="the-failure-of-classical-calculus-and-the-rise-of-itô-calculus" class="level2">
+<h2 class="anchored" data-anchor-id="the-failure-of-classical-calculus-and-the-rise-of-itô-calculus">The Failure of Classical Calculus and the Rise of Itô Calculus</h2>
+<p>An ordinary differential equation (ODE) like <span class="math inline">\(\frac{dx}{dt} = b(x(t))\)</span> is formally equivalent to the integral equation <span class="math inline">\(x(t) = x(0) + \int_0^t b(x(s))ds\)</span> <span class="citation" data-cites="protter2005stochastic">[<a href="#ref-protter2005stochastic" role="doc-biblioref">10</a>]</span>. A general SDE is written in a similar differential form:</p>
+<p><span class="math display">\[dX(t) = b(X(t), t)dt + B(X(t), t)dW(t)\]</span></p>
+<p>Here, <span class="math inline">\(b(X(t), t)\)</span> is the drift coefficient, representing the deterministic evolution, and <span class="math inline">\(B(X(t), t)\)</span> is the diffusion coefficient, modulating the magnitude of the random fluctuations <span class="citation" data-cites="karatzas1991brownian">[<a href="#ref-karatzas1991brownian" role="doc-biblioref">9</a>]</span>. The equation is properly interpreted as the integral equation:</p>
+<p><span class="math display">\[X(t) = X(0) + \int_0^t b(X(s), s)ds + \int_0^t B(X(s), s)dW(s)\]</span></p>
+<p>The first integral is a standard Riemann integral. The second, the stochastic integral, is problematic. Due to the unbounded variation of <span class="math inline">\(W(t)\)</span>, the value of a Riemann-Stieltjes-type sum depends on the choice of evaluation points within each subinterval.</p>
+<p>Itô’s key contribution was to provide a consistent definition for this integral. The Itô integral is defined as the mean-square limit of Riemann sums where the integrand is always evaluated at the left endpoint of each time subinterval <span class="citation" data-cites="karatzas1991brownian">[<a href="#ref-karatzas1991brownian" role="doc-biblioref">9</a>]</span>. This specific choice gives the resulting integral the crucial property of being a martingale, which loosely means its expected future value is its current value. This property is essential in many applications, particularly in mathematical finance.</p>
+<p>An alternative definition, the Stratonovich integral, uses the midpoint of the subinterval <span class="citation" data-cites="ito1944">[<a href="#ref-ito1944" role="doc-biblioref">7</a>]</span>. The Stratonovich formulation has the advantage of obeying the standard chain rule of calculus, making it more intuitive for physicists who often view SDEs as the limit of physical processes with a small but non-zero noise correlation time <span class="citation" data-cites="ito1944">[<a href="#ref-ito1944" role="doc-biblioref">7</a>]</span>. For the important case of additive noise, where the diffusion coefficient <span class="math inline">\(B\)</span> is not a function of the state <span class="math inline">\(X\)</span>, the Itô and Stratonovich interpretations are equivalent <span class="citation" data-cites="ito1944">[<a href="#ref-ito1944" role="doc-biblioref">7</a>]</span>.</p>
+</section>
+<section id="the-cornerstone-of-stochastic-calculus-itôs-lemma" class="level2">
+<h2 class="anchored" data-anchor-id="the-cornerstone-of-stochastic-calculus-itôs-lemma">The Cornerstone of Stochastic Calculus: Itô’s Lemma</h2>
+<p>The most important operational tool in stochastic calculus is Itô’s Lemma, which is the stochastic analogue of the chain rule <span class="citation" data-cites="karatzas1991brownian">[<a href="#ref-karatzas1991brownian" role="doc-biblioref">9</a>]</span>. If <span class="math inline">\(Y(t) = u(t, X(t))\)</span> is a function of time and the stochastic process <span class="math inline">\(X(t)\)</span>, its differential <span class="math inline">\(dY(t)\)</span> is not what one would expect from classical calculus. It contains an additional second-order term that arises because the quadratic variation of the Wiener process is non-zero; informally, <span class="math inline">\((dW_t)^2\)</span> is of the order <span class="math inline">\(dt\)</span>, whereas <span class="math inline">\((dt)^2\)</span> and <span class="math inline">\(dt \cdot dW_t\)</span> are of higher order and vanish in the limit <span class="citation" data-cites="karatzas1991brownian">[<a href="#ref-karatzas1991brownian" role="doc-biblioref">9</a>]</span>.</p>
+<p>For a process <span class="math inline">\(dX_t = b(t, X_t)dt + B(t, X_t)dW_t\)</span>, Itô’s Lemma states:</p>
+<p><span class="math display">\[du(t, X_t) = \left(\frac{\partial u}{\partial t} + b\frac{\partial u}{\partial x} + \frac{1}{2}B^2\frac{\partial^2 u}{\partial x^2}\right)dt + B\frac{\partial u}{\partial x}dW_t\]</span></p>
+<p>The presence of the second derivative term <span class="math inline">\(\frac{\partial^2 u}{\partial x^2}\)</span> is the fundamental departure from ordinary calculus and has profound consequences. For example, it is used to solve the SDE for geometric Brownian motion, <span class="math inline">\(dP_t = \mu P_t dt + \sigma P_t dW_t\)</span>, a standard model for stock prices <span class="citation" data-cites="karatzas1991brownian">[<a href="#ref-karatzas1991brownian" role="doc-biblioref">9</a>]</span>. Applying Itô’s Lemma to <span class="math inline">\(u(P) = \log(P)\)</span> yields the solution <span class="math inline">\(P_t = P_0 \exp((\mu - \frac{1}{2}\sigma^2)t + \sigma W_t)\)</span>, where the <span class="math inline">\(-\frac{1}{2}\sigma^2\)</span> term, known as the “Itô correction,” arises directly from the second-derivative term in the lemma <span class="citation" data-cites="geometric_brownian">[<a href="#ref-geometric_brownian" role="doc-biblioref">11</a>]</span>.</p>
+</section>
+<section id="the-macroscopic-view-the-fokker-planck-equation" class="level2">
+<h2 class="anchored" data-anchor-id="the-macroscopic-view-the-fokker-planck-equation">The Macroscopic View: The Fokker-Planck Equation</h2>
+<p>The SDE describes the evolution of individual sample paths or trajectories of a system. However, in many scientific contexts, the primary interest lies in the evolution of the probability distribution of the system’s state, <span class="math inline">\(P(x, t)\)</span> <span class="citation" data-cites="ito1944">[<a href="#ref-ito1944" role="doc-biblioref">7</a>]</span>. The <strong>Fokker-Planck Equation (FPE)</strong> is a deterministic partial differential equation (PDE) that describes how this probability density function evolves over time <span class="citation" data-cites="fokker1914 planck1917">[<a href="#ref-fokker1914" role="doc-biblioref">12</a>, <a href="#ref-planck1917" role="doc-biblioref">13</a>]</span>.</p>
+<p>For an SDE given by <span class="math inline">\(dX_t = b(X_t)dt + B(X_t)dW_t\)</span>, the corresponding FPE for the probability density <span class="math inline">\(P(x, t)\)</span> is:</p>
+<p><span class="math display">\[\frac{\partial P(x, t)}{\partial t} = -\frac{\partial}{\partial x}[b(x)P(x, t)] + \frac{1}{2}\frac{\partial^2}{\partial x^2}[B^2(x)P(x, t)]\]</span></p>
+<p>The FPE can be derived from the SDE using the Chapman-Kolmogorov equation, which describes the evolution of probabilities for a Markov process <span class="citation" data-cites="fokker1914">[<a href="#ref-fokker1914" role="doc-biblioref">12</a>]</span>. The drift term <span class="math inline">\(b(x)\)</span> of the SDE gives rise to a convection (or drift) term in the FPE, while the diffusion term <span class="math inline">\(B(x)\)</span> gives rise to a diffusion term. This equation provides a deterministic description for the evolution of the entire ensemble of possible trajectories. For physical systems in contact with a thermal bath, the stationary solution of the FPE (where <span class="math inline">\(\frac{\partial P}{\partial t} = 0\)</span>) must correspond to the equilibrium Boltzmann distribution, <span class="math inline">\(P_{\text{eq}}(x) \propto \exp(-U(x)/k_B T)\)</span>, which provides a powerful consistency check on the model <span class="citation" data-cites="gardiner2009">[<a href="#ref-gardiner2009" role="doc-biblioref">4</a>]</span>.</p>
+<p>The relationship between the SDE and the FPE represents a powerful duality. The SDE offers a microscopic, Lagrangian, or particle-based perspective, describing the trajectory of a single realization. The FPE offers a macroscopic, Eulerian, or continuum perspective, describing the evolution of the probability density of the entire ensemble. This duality is not merely a mathematical convenience; it is the conceptual engine that drives the application of SDEs in generative modeling. Diffusion models, for instance, operate by defining a forward SDE that acts on individual data points (the path-wise view). This process is then used to learn a score function, a property of the evolving probability distribution. This learned distributional property is then used to define a reverse SDE that guides the generation of new samples, effectively shaping the entire output distribution. The SDE framework thus provides the tools to computationally bridge the path-wise and distributional descriptions of a complex system.</p>
+</section>
+<section id="a-glimpse-into-infinite-dimensions-stochastic-partial-differential-equations-spdes" class="level2">
+<h2 class="anchored" data-anchor-id="a-glimpse-into-infinite-dimensions-stochastic-partial-differential-equations-spdes">A Glimpse into Infinite Dimensions: Stochastic Partial Differential Equations (SPDEs)</h2>
+<p>The SDE framework can be extended to describe systems that have spatial extent, such as a vibrating string or a temperature field, where the state <span class="math inline">\(u(x, t)\)</span> is a function of both space <span class="math inline">\(x\)</span> and time <span class="math inline">\(t\)</span>. The resulting equations are known as <strong>Stochastic Partial Differential Equations (SPDEs)</strong> <span class="citation" data-cites="da_prato2014stochastic">[<a href="#ref-da_prato2014stochastic" role="doc-biblioref">14</a>]</span>. A canonical example is the stochastic heat equation, which models the temperature of a rod subject to random thermal fluctuations along its length <span class="citation" data-cites="stochastic_heat_equation">[<a href="#ref-stochastic_heat_equation" role="doc-biblioref">15</a>]</span>.</p>
+<p>SPDEs introduce significant new mathematical challenges. The driving noise is typically a “space-time white noise,” which is singular in both space and time. Consequently, solutions to SPDEs are often much “rougher” than their SDE counterparts. For instance, the solution to the one-dimensional stochastic heat equation is typically Hölder-continuous with an exponent of nearly 1/4 in time, compared to the nearly 1/2 Hölder continuity of SDE solutions <span class="citation" data-cites="holder_continuity">[<a href="#ref-holder_continuity" role="doc-biblioref">16</a>]</span>. While a rich and active area of research, the theory of SPDEs is considerably more complex and is a step beyond the foundational SDE framework required for the machine learning models discussed in this report.</p>
+</section>
+</section>
+<section id="numerical-simulation-of-stochastic-trajectories" class="level1">
+<h1>Numerical Simulation of Stochastic Trajectories</h1>
+<p>With the exception of a few specific cases (primarily linear SDEs), most stochastic differential equations do not have analytical, closed-form solutions. Therefore, to study the behavior of systems described by SDEs, one must turn to numerical methods. These methods approximate the continuous-time solution with a discrete-time Markov chain that can be simulated on a computer <span class="citation" data-cites="kloeden1992numerical">[<a href="#ref-kloeden1992numerical" role="doc-biblioref">17</a>]</span>.</p>
+<section id="the-need-for-discretization" class="level2">
+<h2 class="anchored" data-anchor-id="the-need-for-discretization">The Need for Discretization</h2>
+<p>The core idea behind numerical SDE solvers is to discretize the time interval of interest, <span class="math inline">\([0, T]\)</span>, into a finite number of steps, <span class="math inline">\(0 = t_0 &lt; t_1 &lt; \cdots &lt; t_N = T\)</span>, each of size <span class="math inline">\(\Delta t = t_{n+1} - t_n\)</span>. The algorithm then generates a sequence of values <span class="math inline">\(Y_0, Y_1, \ldots, Y_N\)</span> where each <span class="math inline">\(Y_n\)</span> is an approximation of the true solution <span class="math inline">\(X(t_n)\)</span>. The key challenge is to correctly approximate the stochastic increment of the Wiener process, <span class="math inline">\(\Delta W_n = W(t_{n+1}) - W(t_n)\)</span>. From the definition of the Wiener process, we know that these increments are independent and identically distributed Gaussian random variables with mean 0 and variance <span class="math inline">\(\Delta t\)</span>. Thus, in a simulation, we can generate them as <span class="math inline">\(\Delta W_n = \sqrt{\Delta t} Z_n\)</span>, where <span class="math inline">\(Z_n\)</span> is a standard normal random variable, <span class="math inline">\(Z_n \sim \mathcal{N}(0, 1)\)</span> <span class="citation" data-cites="higham2001algorithmic">[<a href="#ref-higham2001algorithmic" role="doc-biblioref">18</a>]</span>.</p>
+</section>
+<section id="the-euler-maruyama-method" class="level2">
+<h2 class="anchored" data-anchor-id="the-euler-maruyama-method">The Euler-Maruyama Method</h2>
+<p>The Euler-Maruyama method is the most fundamental and widely used numerical scheme for SDEs. It is a direct extension of the forward Euler method for ODEs <span class="citation" data-cites="euler_maruyama">[<a href="#ref-euler_maruyama" role="doc-biblioref">19</a>]</span>. The derivation begins with the integral form of the SDE:</p>
+<p><span class="math display">\[X(t_{n+1}) = X(t_n) + \int_{t_n}^{t_{n+1}} b(X(s), s)ds + \int_{t_n}^{t_{n+1}} B(X(s), s)dW(s)\]</span></p>
+<p>The simplest approximation is to assume the integrands <span class="math inline">\(b\)</span> and <span class="math inline">\(B\)</span> are constant over the small interval <span class="math inline">\([t_n, t_{n+1}]\)</span> and equal to their values at the start of the interval, <span class="math inline">\(t_n\)</span>. This yields the update rule <span class="citation" data-cites="higham2001algorithmic">[<a href="#ref-higham2001algorithmic" role="doc-biblioref">18</a>]</span>:</p>
+<p><span class="math display">\[Y_{n+1} = Y_n + b(Y_n, t_n)\Delta t + B(Y_n, t_n)\Delta W_n\]</span></p>
+<p>This scheme is simple to implement and forms the basis for many more advanced methods. It is the workhorse for simulating SDEs, especially in the context of diffusion models where it is often used to discretize the reverse-time SDE for sampling <span class="citation" data-cites="score_based_diffusion">[<a href="#ref-score_based_diffusion" role="doc-biblioref">20</a>]</span>.</p>
+</section>
+<section id="the-milstein-method-a-higher-order-approach" class="level2">
+<h2 class="anchored" data-anchor-id="the-milstein-method-a-higher-order-approach">The Milstein Method: A Higher-Order Approach</h2>
+<p>The Euler-Maruyama method’s accuracy can be poor, particularly for SDEs with multiplicative noise, where the diffusion coefficient <span class="math inline">\(B\)</span> depends on the state <span class="math inline">\(X\)</span>. The Milstein method provides a higher-order correction by including an additional term from the Itô-Taylor expansion of the solution <span class="citation" data-cites="milstein1974">[<a href="#ref-milstein1974" role="doc-biblioref">21</a>]</span>. This expansion is analogous to a standard Taylor series but is derived using Itô’s Lemma. The correction term accounts for the interaction between the diffusion coefficient and the noise process itself. For a scalar SDE, the Milstein update rule is <span class="citation" data-cites="higham2001algorithmic">[<a href="#ref-higham2001algorithmic" role="doc-biblioref">18</a>]</span>:</p>
+<p><span class="math display">\[Y_{n+1} = Y_n + b(Y_n)\Delta t + B(Y_n)\Delta W_n + \frac{1}{2}B(Y_n)B'(Y_n)((\Delta W_n)^2 - \Delta t)\]</span></p>
+<p>where <span class="math inline">\(B'(Y_n)\)</span> is the derivative of the diffusion coefficient with respect to the state. The additional term significantly improves the accuracy of the pathwise approximation. Notably, if the noise is additive (<span class="math inline">\(B\)</span> is a constant), then <span class="math inline">\(B' = 0\)</span>, and the Milstein method reduces exactly to the Euler-Maruyama method <span class="citation" data-cites="higham2001algorithmic">[<a href="#ref-higham2001algorithmic" role="doc-biblioref">18</a>]</span>. While powerful, the Milstein scheme can be complex to implement for systems of SDEs, as it requires simulating additional stochastic integrals known as Lévy areas <span class="citation" data-cites="levy_areas">[<a href="#ref-levy_areas" role="doc-biblioref">22</a>]</span>.</p>
+</section>
+<section id="concepts-of-convergence-in-a-stochastic-world" class="level2">
+<h2 class="anchored" data-anchor-id="concepts-of-convergence-in-a-stochastic-world">Concepts of Convergence in a Stochastic World</h2>
+<p>Evaluating the accuracy of a numerical SDE solver is more nuanced than for ODEs. Because the solution is a random process, we cannot simply measure the error of a single trajectory. Instead, convergence is defined in a statistical sense, with two principal modes being most important:</p>
+<section id="strong-convergence" class="level3">
+<h3 class="anchored" data-anchor-id="strong-convergence">Strong Convergence</h3>
+<p>This criterion measures the average error between the approximate and true trajectories at the final time <span class="math inline">\(T\)</span>. A scheme has a strong order of convergence <span class="math inline">\(\alpha\)</span> if the mean absolute error is bounded by a constant times the step size to the power of <span class="math inline">\(\alpha\)</span>: <span class="math inline">\(\mathbb{E}[|X(T) - Y_N|] \leq C(\Delta t)^\alpha\)</span>. Strong convergence is important when the accuracy of individual sample paths is critical. The Euler-Maruyama method has a strong order of <span class="math inline">\(\alpha = 0.5\)</span>, while the Milstein method achieves a strong order of <span class="math inline">\(\alpha = 1.0\)</span> <span class="citation" data-cites="strong_weak_convergence">[<a href="#ref-strong_weak_convergence" role="doc-biblioref">23</a>]</span>.</p>
+</section>
+<section id="weak-convergence" class="level3">
+<h3 class="anchored" data-anchor-id="weak-convergence">Weak Convergence</h3>
+<p>This criterion measures the error in the expected value of functions of the solution. A scheme has a weak order of convergence <span class="math inline">\(\beta\)</span> if, for a suitable class of test functions <span class="math inline">\(f\)</span>, the error in the expectation is bounded: <span class="math inline">\(|\mathbb{E}[f(X(T))] - \mathbb{E}[f(Y_N)]| \leq C(\Delta t)^\beta\)</span>. Weak convergence is sufficient for many applications where only statistical moments or ensemble averages are needed, such as in financial option pricing or statistical physics. Both the Euler-Maruyama and Milstein methods typically have a weak order of <span class="math inline">\(\beta = 1.0\)</span> <span class="citation" data-cites="strong_weak_convergence">[<a href="#ref-strong_weak_convergence" role="doc-biblioref">23</a>]</span>.</p>
+<p>The fact that the strong convergence order for Euler-Maruyama is 0.5 is a direct consequence of the underlying stochastic calculus. The dominant error term in a single step comes from the stochastic part, <span class="math inline">\(B(Y_n)\Delta W_n\)</span>. Since <span class="math inline">\(\Delta W_n\)</span> has a standard deviation of <span class="math inline">\(\sqrt{\Delta t}\)</span>, the error scales with <span class="math inline">\(\sqrt{\Delta t}\)</span>, which is slower than the <span class="math inline">\(\Delta t\)</span> scaling of the drift term’s error <span class="citation" data-cites="strong_weak_convergence">[<a href="#ref-strong_weak_convergence" role="doc-biblioref">23</a>]</span>. The Milstein method achieves strong order 1.0 precisely because its correction term, <span class="math inline">\(\frac{1}{2}BB'((\Delta W_n)^2 - \Delta t)\)</span>, is specifically constructed to cancel this leading-order stochastic error term, demonstrating a deep link between the structure of Itô’s Lemma and the design of accurate numerical schemes <span class="citation" data-cites="milstein_convergence">[<a href="#ref-milstein_convergence" role="doc-biblioref">24</a>]</span>.</p>
+<p>The following table summarizes the key characteristics of these foundational numerical methods:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 45%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>Euler-Maruyama Method</th>
+<th>Milstein Method</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Update Formula (Scalar)</strong></td>
+<td><span class="math inline">\(Y_{n+1} = Y_n + b(Y_n)\Delta t + B(Y_n)\Delta W_n\)</span></td>
+<td><span class="math inline">\(Y_{n+1} = Y_n + b(Y_n)\Delta t + B(Y_n)\Delta W_n + \frac{1}{2}B(Y_n)B'(Y_n)((\Delta W_n)^2 - \Delta t)\)</span></td>
+</tr>
+<tr class="even">
+<td><strong>Strong Order</strong></td>
+<td><span class="math inline">\(O(\Delta t^{0.5})\)</span></td>
+<td><span class="math inline">\(O(\Delta t^{1.0})\)</span></td>
+</tr>
+<tr class="odd">
+<td><strong>Weak Order</strong></td>
+<td><span class="math inline">\(O(\Delta t^{1.0})\)</span></td>
+<td><span class="math inline">\(O(\Delta t^{1.0})\)</span></td>
+</tr>
+<tr class="even">
+<td><strong>Complexity</strong></td>
+<td>Low. Requires evaluation of <span class="math inline">\(b\)</span> and <span class="math inline">\(B\)</span>.</td>
+<td>Higher. Requires evaluation of <span class="math inline">\(b\)</span>, <span class="math inline">\(B\)</span>, and the derivative <span class="math inline">\(B'\)</span>. Can be complex for multi-dimensional systems.</td>
+</tr>
+<tr class="odd">
+<td><strong>Primary Use Case</strong></td>
+<td>Prototyping, SDEs with additive noise, or when weak convergence is the sole concern.</td>
+<td>SDEs with multiplicative noise where pathwise accuracy (strong convergence) is important.</td>
+</tr>
+<tr class="even">
+<td><strong>Key Insight</strong></td>
+<td>The simplest discretization, directly extending the deterministic Euler method.</td>
+<td>Includes the first stochastic correction term from the Itô-Taylor expansion, significantly improving strong convergence for state-dependent noise.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="stochastic-differential-equations-as-a-foundation-for-machine-learning-models" class="level1">
+<h1>Stochastic Differential Equations as a Foundation for Machine Learning Models</h1>
+<p>The mathematical framework of SDEs, originally developed for physics, provides a powerful and increasingly central language for modern machine learning. The connection is most profound in the areas of probabilistic modeling and Bayesian inference, particularly through Gaussian Processes and state-space models, where SDEs offer both a generative perspective and significant computational advantages.</p>
+<section id="gaussian-processes-gps-a-primer" class="level2">
+<h2 class="anchored" data-anchor-id="gaussian-processes-gps-a-primer">Gaussian Processes (GPs): A Primer</h2>
+<p>A Gaussian Process is a non-parametric model that defines a probability distribution over functions <span class="citation" data-cites="rasmussen2006gaussian">[<a href="#ref-rasmussen2006gaussian" role="doc-biblioref">25</a>]</span>. It is a generalization of the multivariate Gaussian distribution to an infinite-dimensional function space. A GP is completely specified by two functions <span class="citation" data-cites="rasmussen2006gaussian">[<a href="#ref-rasmussen2006gaussian" role="doc-biblioref">25</a>]</span>:</p>
+<ul>
+<li><strong>Mean Function</strong> <span class="math inline">\(m(x)\)</span>: The expected value of the function at input <span class="math inline">\(x\)</span>, <span class="math inline">\(m(x) = \mathbb{E}[f(x)]\)</span>.</li>
+<li><strong>Covariance Function (or Kernel)</strong> <span class="math inline">\(k(x, x')\)</span>: The covariance between the function values at inputs <span class="math inline">\(x\)</span> and <span class="math inline">\(x'\)</span>, <span class="math inline">\(k(x, x') = \mathbb{E}[(f(x) - m(x))(f(x') - m(x'))]\)</span>.</li>
+</ul>
+<p>The kernel is the heart of a GP, as it encodes prior beliefs about the function’s properties. For example, a smooth kernel will lead to a distribution over smooth functions. A key property is that for any finite set of inputs <span class="math inline">\(\mathbf{X} = \{x_1, \ldots, x_n\}\)</span>, the corresponding function values <span class="math inline">\(\mathbf{f} = [f(x_1), \ldots, f(x_n)]^T\)</span> are jointly Gaussian with mean <span class="math inline">\(\mathbf{m}\)</span> and covariance matrix <span class="math inline">\(\mathbf{K}\)</span>, where <span class="math inline">\(K_{ij} = k(x_i, x_j)\)</span> <span class="citation" data-cites="sarkka2013bayesian">[<a href="#ref-sarkka2013bayesian" role="doc-biblioref">26</a>]</span>.</p>
+</section>
+<section id="the-fundamental-link-linear-sdes-and-gps" class="level2">
+<h2 class="anchored" data-anchor-id="the-fundamental-link-linear-sdes-and-gps">The Fundamental Link: Linear SDEs and GPs</h2>
+<p>A deep connection exists between GPs and linear SDEs: many commonly used GP kernels are precisely the covariance functions of the stationary solutions to linear time-invariant (LTI) SDEs driven by white noise <span class="citation" data-cites="sde_gp_connection">[<a href="#ref-sde_gp_connection" role="doc-biblioref">27</a>]</span>.</p>
+<p>The canonical example is the Ornstein-Uhlenbeck (OU) process, which describes the velocity of a Brownian particle. It is the solution to the SDE <span class="citation" data-cites="ornstein_uhlenbeck">[<a href="#ref-ornstein_uhlenbeck" role="doc-biblioref">28</a>]</span>:</p>
+<p><span class="math display">\[\frac{df(t)}{dt} = -\lambda f(t) + w(t)\]</span></p>
+<p>where <span class="math inline">\(w(t)\)</span> is white noise. The stationary solution to this SDE is a Gaussian process with zero mean and an exponential covariance kernel:</p>
+<p><span class="math display">\[k(\tau) = \sigma^2 \exp(-\lambda|\tau|)\]</span></p>
+<p>where <span class="math inline">\(\tau = |t - t'|\)</span>. This process is both Gaussian and Markovian, meaning its future state depends only on its present state, not its entire history. This Markov property is a direct consequence of the SDE being first-order.</p>
+<p>This relationship can be generalized: any GP with a rational spectral density (the Fourier transform of its covariance function) can be represented as the solution to an <span class="math inline">\(N\)</span>th-order LTI SDE of the form <span class="citation" data-cites="state_space_gp">[<a href="#ref-state_space_gp" role="doc-biblioref">29</a>]</span>:</p>
+<p><span class="math display">\[\frac{d^N f}{dt^N} + a_{N-1}\frac{d^{N-1} f}{dt^{N-1}} + \cdots + a_0 f = w(t)\]</span></p>
+<p>This reframes the concept of a kernel. The standard GP view sees a kernel as a declarative measure of similarity between points. The SDE perspective provides a generative, causal mechanism: the kernel emerges as a statistical property of a dynamical system evolving through time. This shift is not merely philosophical; it is the key to unlocking massive computational efficiencies.</p>
+</section>
+<section id="the-matérn-kernel-and-its-spde-representation" class="level2">
+<h2 class="anchored" data-anchor-id="the-matérn-kernel-and-its-spde-representation">The Matérn Kernel and its SPDE Representation</h2>
+<p>The Matérn family of kernels is exceptionally popular in machine learning and spatial statistics because it includes a parameter, <span class="math inline">\(\nu\)</span>, that directly controls the smoothness (mean-square differentiability) of the resulting functions <span class="citation" data-cites="matern_kernel">[<a href="#ref-matern_kernel" role="doc-biblioref">30</a>]</span>. The Matérn covariance is given by:</p>
+<p><span class="math display">\[k_\nu(d) = \frac{\sigma^2}{2^{\nu-1}\Gamma(\nu)}\left(\frac{\sqrt{2\nu} d}{\rho}\right)^\nu K_\nu\left(\frac{\sqrt{2\nu} d}{\rho}\right)\]</span></p>
+<p>where <span class="math inline">\(d = |x - x'|\)</span>, <span class="math inline">\(\rho\)</span> is a length-scale parameter, <span class="math inline">\(\Gamma\)</span> is the gamma function, and <span class="math inline">\(K_\nu\)</span> is the modified Bessel function of the second kind <span class="citation" data-cites="matern_kernel">[<a href="#ref-matern_kernel" role="doc-biblioref">30</a>]</span>. As <span class="math inline">\(\nu \to \infty\)</span>, the Matérn kernel converges to the infinitely smooth squared exponential (RBF) kernel <span class="citation" data-cites="squared_exponential">[<a href="#ref-squared_exponential" role="doc-biblioref">31</a>]</span>.</p>
+<p>A landmark result by Whittle (1963) connects the Matérn kernel to an SPDE. A Gaussian process with a Matérn covariance function is the stationary solution to the SPDE <span class="citation" data-cites="whittle1963">[<a href="#ref-whittle1963" role="doc-biblioref">32</a>]</span>:</p>
+<p><span class="math display">\[(\kappa^2 - \Delta)^{\alpha/2} f(x) = \mathcal{W}(x)\]</span></p>
+<p>where <span class="math inline">\(\alpha = \nu + d/2\)</span>, <span class="math inline">\(\Delta\)</span> is the Laplacian operator, and <span class="math inline">\(\mathcal{W}(x)\)</span> is spatial white noise. This result provides a deep link between the smoothness parameter <span class="math inline">\(\nu\)</span> of the kernel and the order of a differential operator.</p>
+</section>
+<section id="computational-advantage-the-state-space-representation" class="level2">
+<h2 class="anchored" data-anchor-id="computational-advantage-the-state-space-representation">Computational Advantage: The State-Space Representation</h2>
+<p>The true power of the SDE-GP connection comes from the ability to cast the model into a state-space representation, which enables highly efficient inference algorithms <span class="citation" data-cites="hartikainen2010kalman">[<a href="#ref-hartikainen2010kalman" role="doc-biblioref">33</a>]</span>. An <span class="math inline">\(N\)</span>th-order SDE can be converted into a system of <span class="math inline">\(N\)</span> first-order SDEs by defining a state vector that includes the function and its first <span class="math inline">\(N-1\)</span> derivatives, <span class="math inline">\(\mathbf{x}(t) = [f(t), f'(t), \ldots, f^{(N-1)}(t)]^T\)</span>. This results in a linear vector SDE <span class="citation" data-cites="sarkka2013bayesian">[<a href="#ref-sarkka2013bayesian" role="doc-biblioref">26</a>]</span>:</p>
+<p><span class="math display">\[d\mathbf{x}(t) = \mathbf{F}\mathbf{x}(t)dt + \mathbf{L}w(t)\]</span></p>
+<p>The function value we care about is simply a linear observation of this state, <span class="math inline">\(y(t) = \mathbf{H}\mathbf{x}(t)\)</span>, where <span class="math inline">\(\mathbf{H} = [1, 0, \ldots, 0]\)</span>. This is a continuous-time linear dynamical system.</p>
+<p>When this system is observed at a discrete set of times <span class="math inline">\(\{t_k\}\)</span>, its solution can be written as a discrete-time linear Gaussian state-space model <span class="citation" data-cites="sarkka2013bayesian">[<a href="#ref-sarkka2013bayesian" role="doc-biblioref">26</a>]</span>:</p>
+<p><span class="math display">\[\begin{align}
+\mathbf{x}_k &amp;= \mathbf{A}_{k-1} \mathbf{x}_{k-1} + \mathbf{q}_{k-1} \quad \text{(State Transition)} \\
+y_k &amp;= \mathbf{H} \mathbf{x}_k + r_k \quad \text{(Measurement)}
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\mathbf{q}_{k-1}\)</span> and <span class="math inline">\(r_k\)</span> are Gaussian noise terms. This structure is precisely the form required by the Kalman filter and the Rauch-Tung-Striebel (RTS) smoother <span class="citation" data-cites="kalman1960 rts_smoother">[<a href="#ref-kalman1960" role="doc-biblioref">34</a>, <a href="#ref-rts_smoother" role="doc-biblioref">35</a>]</span>. These are recursive algorithms that process data sequentially. The Kalman filter propagates the mean and covariance of the state forward in time, and the RTS smoother refines these estimates by propagating information backward <span class="citation" data-cites="sarkka2013bayesian">[<a href="#ref-sarkka2013bayesian" role="doc-biblioref">26</a>]</span>.</p>
+<p>The computational complexity of these algorithms scales linearly with the number of data points, <span class="math inline">\(O(n)\)</span>. This is a dramatic improvement over standard GP regression, which requires constructing and inverting an <span class="math inline">\(n \times n\)</span> covariance matrix, a process with <span class="math inline">\(O(n^3)\)</span> complexity <span class="citation" data-cites="efficient_gp">[<a href="#ref-efficient_gp" role="doc-biblioref">36</a>]</span>. By reformulating the GP as the solution to an SDE, we impose a Markovian structure on a higher-dimensional state space, which is the key that enables this efficient, recursive inference.</p>
+</section>
+</section>
+<section id="the-generative-revolution-sdes-in-modern-ai" class="level1">
+<h1>The Generative Revolution: SDEs in Modern AI</h1>
+<p>In recent years, the SDE framework has moved from a tool for analysis to the core engine of a new class of powerful generative models. This paradigm shift, largely driven by the work on score-based generative models, has unified previous approaches and unlocked new capabilities in generating high-fidelity data such as images, audio, and more.</p>
+<section id="score-based-generative-modeling-with-sdes" class="level2">
+<h2 class="anchored" data-anchor-id="score-based-generative-modeling-with-sdes">Score-Based Generative Modeling with SDEs</h2>
+<p>This framework, developed by Song et al., provides a continuous-time generalization of discrete-time diffusion models like DDPM <span class="citation" data-cites="score_based_diffusion ddpm">[<a href="#ref-score_based_diffusion" role="doc-biblioref">20</a>, <a href="#ref-ddpm" role="doc-biblioref">37</a>]</span>. The process consists of two main parts:</p>
+<section id="the-forward-process-data-to-noise" class="level3">
+<h3 class="anchored" data-anchor-id="the-forward-process-data-to-noise">The Forward Process (Data to Noise)</h3>
+<p>A forward SDE is defined to gradually transform a complex data distribution, <span class="math inline">\(p_0(x)\)</span>, into a simple, known prior distribution, <span class="math inline">\(\pi(x)\)</span> (e.g., a standard Gaussian), over a time interval <span class="math inline">\([0, T]\)</span>. This SDE is of the general form:</p>
+<p><span class="math inline">\(dx = f(x, t)dt + g(t)dw\)</span></p>
+<p>The drift <span class="math inline">\(f(x, t)\)</span> and diffusion <span class="math inline">\(g(t)\)</span> coefficients are pre-specified (not learned) and chosen to ensure that the distribution of <span class="math inline">\(x(T)\)</span> is close to <span class="math inline">\(\pi(x)\)</span>. This process effectively destroys the information in the original data, leaving only noise <span class="citation" data-cites="score_based_diffusion">[<a href="#ref-score_based_diffusion" role="doc-biblioref">20</a>]</span>.</p>
+</section>
+<section id="the-reverse-process-noise-to-data" class="level3">
+<h3 class="anchored" data-anchor-id="the-reverse-process-noise-to-data">The Reverse Process (Noise to Data)</h3>
+<p>The central insight is that this diffusion process can be reversed in time. A remarkable theorem from stochastic calculus states that the reverse trajectory is also the solution to an SDE, which runs from <span class="math inline">\(t = T\)</span> back to <span class="math inline">\(t = 0\)</span> <span class="citation" data-cites="probability_flow_ode">[<a href="#ref-probability_flow_ode" role="doc-biblioref">38</a>]</span>. The reverse SDE is given by:</p>
+<p><span class="math inline">\(dx = [f(x, t) - g(t)^2 \nabla_x \log p_t(x)]dt + g(t)d\bar{w}\)</span></p>
+<p>where <span class="math inline">\(d\bar{w}\)</span> is a standard Wiener process running backward in time.</p>
+<p>This reverse SDE provides a path to generate data from noise. However, it depends on a critical, unknown quantity: <span class="math inline">\(\nabla_x \log p_t(x)\)</span>, which is the <strong>score function</strong> of the perturbed data distribution <span class="math inline">\(p_t(x)\)</span> at time <span class="math inline">\(t\)</span> <span class="citation" data-cites="probability_flow_ode">[<a href="#ref-probability_flow_ode" role="doc-biblioref">38</a>]</span>. The score function points in the direction of increasing data density and contains all the information necessary to guide the noisy samples back toward the original data manifold.</p>
+<p>The learning problem is thus reduced to estimating this time-dependent score function. A neural network, <span class="math inline">\(s_\theta(x, t)\)</span>, is trained to approximate the score using an objective called denoising score matching <span class="citation" data-cites="denoising_score_matching">[<a href="#ref-denoising_score_matching" role="doc-biblioref">39</a>]</span>. Once the network is trained, it is plugged into the reverse SDE, which can then be simulated using numerical solvers like the Euler-Maruyama method to generate new samples by starting with a draw from the prior <span class="math inline">\(x(T) \sim \pi(x)\)</span> and integrating backward to <span class="math inline">\(t = 0\)</span> <span class="citation" data-cites="score_based_diffusion">[<a href="#ref-score_based_diffusion" role="doc-biblioref">20</a>]</span>.</p>
+</section>
+</section>
+<section id="the-probability-flow-ode" class="level2">
+<h2 class="anchored" data-anchor-id="the-probability-flow-ode">The Probability Flow ODE</h2>
+<p>For any SDE, there exists a corresponding deterministic Ordinary Differential Equation (ODE), known as the probability flow ODE, whose trajectories transport the probability density in exactly the same way as the SDE <span class="citation" data-cites="probability_flow_ode">[<a href="#ref-probability_flow_ode" role="doc-biblioref">38</a>]</span>. For the generative process, this ODE is:</p>
+<p><span class="math inline">\(\frac{dx}{dt} = f(x, t) - \frac{1}{2}g(t)^2 \nabla_x \log p_t(x)\)</span></p>
+<p>This deterministic formulation offers several key advantages <span class="citation" data-cites="probability_flow_ode">[<a href="#ref-probability_flow_ode" role="doc-biblioref">38</a>]</span>:</p>
+<ul>
+<li><strong>Efficient Sampling</strong>: It can be solved with highly efficient, adaptive-step-size numerical ODE solvers, often leading to faster and more accurate sample generation than simulating the SDE.</li>
+<li><strong>Exact Likelihood Computation</strong>: The ODE defines an invertible mapping between data and noise, allowing it to be treated as a continuous normalizing flow <span class="citation" data-cites="normalizing_flows">[<a href="#ref-normalizing_flows" role="doc-biblioref">40</a>]</span>. This enables the exact computation of the data log-likelihood, a feature often missing in other generative models like GANs.</li>
+<li><strong>Latent Representation</strong>: It provides a unique, deterministic encoding of any data point into a latent representation in the noise space, which can be used for data manipulation and analysis.</li>
+</ul>
+</section>
+<section id="continuous-time-vaes-with-latent-sdes" class="level2">
+<h2 class="anchored" data-anchor-id="continuous-time-vaes-with-latent-sdes">Continuous-Time VAEs with Latent SDEs</h2>
+<p>The SDE framework has also been integrated into Variational Autoencoders (VAEs) to create powerful generative models for sequential and time-series data <span class="citation" data-cites="latent_sde">[<a href="#ref-latent_sde" role="doc-biblioref">41</a>]</span>. In this architecture, the latent variable is not a static vector but a continuous-time trajectory governed by an SDE.</p>
+<section id="generative-model-prior" class="level3">
+<h3 class="anchored" data-anchor-id="generative-model-prior">Generative Model (Prior)</h3>
+<p>The prior distribution over the latent path <span class="math inline">\(z(t)\)</span> is defined by a neural SDE: <span class="math inline">\(dz = f_\theta(z, t)dt + g_\theta(z, t)dw\)</span>. A decoder network then maps the latent path <span class="math inline">\(z(t)\)</span> to the observed data <span class="math inline">\(x(t)\)</span> <span class="citation" data-cites="neural_sde">[<a href="#ref-neural_sde" role="doc-biblioref">42</a>]</span>.</p>
+</section>
+<section id="inference-model-posterior" class="level3">
+<h3 class="anchored" data-anchor-id="inference-model-posterior">Inference Model (Posterior)</h3>
+<p>An approximate posterior distribution over latent paths, <span class="math inline">\(q_\phi(z(t)|x)\)</span>, is defined by a second neural SDE, whose drift and diffusion coefficients can be conditioned on the observed data sequence <span class="math inline">\(x\)</span> <span class="citation" data-cites="continuous_time_vae">[<a href="#ref-continuous_time_vae" role="doc-biblioref">43</a>]</span>.</p>
+</section>
+<section id="training" class="level3">
+<h3 class="anchored" data-anchor-id="training">Training</h3>
+<p>The model is trained by maximizing a continuous-time version of the Evidence Lower Bound (ELBO). This objective includes a reconstruction term and a KL divergence term between the path measures of the prior and posterior SDEs <span class="citation" data-cites="latent_sde">[<a href="#ref-latent_sde" role="doc-biblioref">41</a>]</span>.</p>
+<p>This latent SDE framework is particularly well-suited for modeling irregularly-sampled and sparse time-series data, as the latent dynamics are defined continuously, allowing for principled inference and generation at any point in time <span class="citation" data-cites="irregular_time_series">[<a href="#ref-irregular_time_series" role="doc-biblioref">44</a>]</span>.</p>
+<p>Across these advanced models, the score function emerges as a unifying concept. In statistical physics, it is related to the forces acting on particles in a potential field. In score-based generative models, it is the learned vector field that reverses diffusion. In variational inference, minimizing the KL divergence is intrinsically related to matching the score of the approximate posterior to that of the true posterior. The success of these modern generative methods is a testament to the power of combining the dynamical scaffolding provided by SDEs with the expressive power of deep neural networks to learn the fundamental, data-dependent score function.</p>
+</section>
+</section>
+</section>
+<section id="conclusions" class="level1">
+<h1>Conclusions</h1>
+<p>The theory of stochastic differential equations provides a remarkably versatile and powerful mathematical language that bridges disparate scientific domains. Originating from the need to describe physical phenomena like Brownian motion, the Langevin equation established a paradigm for modeling complex systems by separating deterministic, dissipative forces from stochastic, fluctuating ones. This physical intuition was formalized by the rigorous mathematics of Itô calculus, which introduced the Wiener process and Itô’s Lemma to handle the non-standard properties of stochastic dynamics.</p>
+<p>The resulting framework offers a dual perspective: the path-wise view of the SDE, which describes individual trajectories, and the distributional view of the Fokker-Planck equation, which governs the evolution of the entire ensemble probability.</p>
+<p>This duality, combined with the development of robust numerical methods like the Euler-Maruyama and Milstein schemes, has laid the groundwork for the application of SDEs in machine learning. The profound connection between linear SDEs and Gaussian Processes allows for a generative, causal interpretation of covariance kernels, leading to highly efficient state-space models and inference algorithms like the Kalman filter.</p>
+<p>Most recently, this framework has catalyzed a revolution in generative AI. Score-based models leverage the time-reversal properties of SDEs to transform noise into data, reducing the complex task of generative modeling to the more tractable problem of learning the score function of the data distribution as it is progressively perturbed by noise. This approach, along with its deterministic counterpart, the probability flow ODE, has achieved state-of-the-art results in data synthesis and offers new capabilities for likelihood estimation and controllable generation.</p>
+<p>Furthermore, the integration of SDEs into the latent space of VAEs has created a new class of continuous-time models adept at handling complex, irregularly-sampled time-series data. From the random walk of a pollen grain to the generation of photorealistic images, the mathematical principles of stochastic differential equations provide a unifying thread, demonstrating their enduring relevance and power as a foundational tool for modeling the uncertain world.</p>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p><em>The references are contained in the accompanying <code>sde_references.bib</code> file. When you render this document with Quarto, the bibliography will be automatically generated at the end.</em></p>
+
+
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body" role="list">
+<div id="ref-einstein1905" class="csl-entry" role="listitem">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Einstein A (1905) Über die von der molekularkinetischen theorie der wärme geforderte bewegung von in ruhenden flüssigkeiten suspendierten teilchen. Annalen der Physik 17(8):549–560</div>
+</div>
+<div id="ref-langevin1908" class="csl-entry" role="listitem">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Langevin P (1908) Sur la théorie du mouvement brownien. Comptes Rendus de l’Académie des Sciences 146:530–533</div>
+</div>
+<div id="ref-langevin1908b" class="csl-entry" role="listitem">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Langevin P (1908) Sur la théorie du mouvement brownien. Comptes Rendus de l’Académie des Sciences 146:530–533</div>
+</div>
+<div id="ref-gardiner2009" class="csl-entry" role="listitem">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Gardiner C (2009) Stochastic methods: A handbook for the natural and social sciences. Springer Science &amp; Business Media</div>
+</div>
+<div id="ref-oksendal2003" class="csl-entry" role="listitem">
+<div class="csl-left-margin">5. </div><div class="csl-right-inline">Øksendal B (2003) Stochastic differential equations: An introduction with applications. Springer Science &amp; Business Media</div>
+</div>
+<div id="ref-fluctuation_dissipation" class="csl-entry" role="listitem">
+<div class="csl-left-margin">6. </div><div class="csl-right-inline">Kubo R (1966) Fluctuation-dissipation theorem. Reports on Progress in Physics 29(1):255</div>
+</div>
+<div id="ref-ito1944" class="csl-entry" role="listitem">
+<div class="csl-left-margin">7. </div><div class="csl-right-inline">Itô K (1944) Stochastic integral. Proceedings of the Imperial Academy 20(8):519–524</div>
+</div>
+<div id="ref-wiener1923" class="csl-entry" role="listitem">
+<div class="csl-left-margin">8. </div><div class="csl-right-inline">Wiener N (1923) Differential space. Journal of Mathematics and Physics 2(1-4):131–174</div>
+</div>
+<div id="ref-karatzas1991brownian" class="csl-entry" role="listitem">
+<div class="csl-left-margin">9. </div><div class="csl-right-inline">Karatzas I, Shreve S (1991) Brownian motion and stochastic calculus. Springer Science &amp; Business Media</div>
+</div>
+<div id="ref-protter2005stochastic" class="csl-entry" role="listitem">
+<div class="csl-left-margin">10. </div><div class="csl-right-inline">Protter PE (2005) Stochastic integration and differential equations. Springer Science &amp; Business Media</div>
+</div>
+<div id="ref-geometric_brownian" class="csl-entry" role="listitem">
+<div class="csl-left-margin">11. </div><div class="csl-right-inline">Merton RC (1973) Theory of rational option pricing. The Bell Journal of Economics and Management Science 141–183</div>
+</div>
+<div id="ref-fokker1914" class="csl-entry" role="listitem">
+<div class="csl-left-margin">12. </div><div class="csl-right-inline">Fokker AD (1914) Die mittlere energie rotierender elektrischer dipole im strahlungsfeld. Annalen der Physik 43(5):810–820</div>
+</div>
+<div id="ref-planck1917" class="csl-entry" role="listitem">
+<div class="csl-left-margin">13. </div><div class="csl-right-inline">Planck M (1917) Über einen satz der statistischen dynamik und seine erweiterung in der quantentheorie. Sitzungsberichte der Preussischen Akademie der Wissenschaften zu Berlin 324–341</div>
+</div>
+<div id="ref-da_prato2014stochastic" class="csl-entry" role="listitem">
+<div class="csl-left-margin">14. </div><div class="csl-right-inline">Da Prato G, Zabczyk J (2014) Stochastic equations in infinite dimensions. Cambridge University Press</div>
+</div>
+<div id="ref-stochastic_heat_equation" class="csl-entry" role="listitem">
+<div class="csl-left-margin">15. </div><div class="csl-right-inline">Bertini L, Cancrini N (1995) The stochastic heat equation: Feynman-kac formula and intermittence. Journal of Statistical Physics 78(5-6):1377–1401</div>
+</div>
+<div id="ref-holder_continuity" class="csl-entry" role="listitem">
+<div class="csl-left-margin">16. </div><div class="csl-right-inline">Hairer M, Mattingly JC (2008) Regularization by noise and stochastic burgers equations. Communications in Mathematical Physics 282(1):1–30</div>
+</div>
+<div id="ref-kloeden1992numerical" class="csl-entry" role="listitem">
+<div class="csl-left-margin">17. </div><div class="csl-right-inline">Kloeden PE, Platen E (1992) Numerical solution of stochastic differential equations. Springer Science &amp; Business Media</div>
+</div>
+<div id="ref-higham2001algorithmic" class="csl-entry" role="listitem">
+<div class="csl-left-margin">18. </div><div class="csl-right-inline">Higham DJ (2001) An algorithmic introduction to numerical simulation of stochastic differential equations. SIAM</div>
+</div>
+<div id="ref-euler_maruyama" class="csl-entry" role="listitem">
+<div class="csl-left-margin">19. </div><div class="csl-right-inline">Maruyama G (1955) Approximate integration of stochastic differential equations. Rendiconti del Circolo Matematico di Palermo 4(1):48–50</div>
+</div>
+<div id="ref-score_based_diffusion" class="csl-entry" role="listitem">
+<div class="csl-left-margin">20. </div><div class="csl-right-inline">Song Y, Sohl-Dickstein J, Kingma DP, Kumar A, Ermon S, Poole B (2020) Score-based generative modeling through stochastic differential equations. arXiv preprint arXiv:201113456</div>
+</div>
+<div id="ref-milstein1974" class="csl-entry" role="listitem">
+<div class="csl-left-margin">21. </div><div class="csl-right-inline">Milstein GN (1975) Approximate integration of stochastic differential equations. Theory of Probability &amp; Its Applications 19(3):557–562</div>
+</div>
+<div id="ref-levy_areas" class="csl-entry" role="listitem">
+<div class="csl-left-margin">22. </div><div class="csl-right-inline">Itô K (1951) Multiple wiener-itô integrals. Journal of the Mathematical Society of Japan 3(1):157–169</div>
+</div>
+<div id="ref-strong_weak_convergence" class="csl-entry" role="listitem">
+<div class="csl-left-margin">23. </div><div class="csl-right-inline">Talay D, Tubaro L (1990) Convergence of numerical schemes for stochastic differential equations. Stochastic Analysis and Applications 8(1):94–123</div>
+</div>
+<div id="ref-milstein_convergence" class="csl-entry" role="listitem">
+<div class="csl-left-margin">24. </div><div class="csl-right-inline">Milstein G (1986) Weak approximation of solutions of systems of stochastic differential equations. Theory of Probability &amp; Its Applications 30(4):750–766</div>
+</div>
+<div id="ref-rasmussen2006gaussian" class="csl-entry" role="listitem">
+<div class="csl-left-margin">25. </div><div class="csl-right-inline">Rasmussen CE, Williams CK (2006) Gaussian processes for machine learning. MIT Press</div>
+</div>
+<div id="ref-sarkka2013bayesian" class="csl-entry" role="listitem">
+<div class="csl-left-margin">26. </div><div class="csl-right-inline">Särkkä S (2013) Bayesian filtering and smoothing. Cambridge University Press</div>
+</div>
+<div id="ref-sde_gp_connection" class="csl-entry" role="listitem">
+<div class="csl-left-margin">27. </div><div class="csl-right-inline">Tronarp F, Kersting H, Särkkä S, Hennig P (2019) Stochastic differential equations as gaussian processes. Proceedings of the 36th International Conference on Machine Learning 6353–6363</div>
+</div>
+<div id="ref-ornstein_uhlenbeck" class="csl-entry" role="listitem">
+<div class="csl-left-margin">28. </div><div class="csl-right-inline">Uhlenbeck GE, Ornstein LS (1930) On the theory of the brownian motion. Physical Review 36(5):823</div>
+</div>
+<div id="ref-state_space_gp" class="csl-entry" role="listitem">
+<div class="csl-left-margin">29. </div><div class="csl-right-inline">Cockayne J, Oates CJ, Sullivan TJ, Girolami M (2019) Linear operators and stochastic partial differential equations as gaussian processes. Journal of Machine Learning Research 20(1):1990–2058</div>
+</div>
+<div id="ref-matern_kernel" class="csl-entry" role="listitem">
+<div class="csl-left-margin">30. </div><div class="csl-right-inline">Stein ML (1999) Mat<span>é</span>rn covariance functions. Interpolation of spatial data: some theory for kriging 31–48</div>
+</div>
+<div id="ref-squared_exponential" class="csl-entry" role="listitem">
+<div class="csl-left-margin">31. </div><div class="csl-right-inline">Duvenaud D (2014) The squared exponential kernel. Automatic model construction with Gaussian processes 9–16</div>
+</div>
+<div id="ref-whittle1963" class="csl-entry" role="listitem">
+<div class="csl-left-margin">32. </div><div class="csl-right-inline">Whittle P (1963) Stochastic processes in several dimensions. Bulletin of the International Statistical Institute 40(2):974–994</div>
+</div>
+<div id="ref-hartikainen2010kalman" class="csl-entry" role="listitem">
+<div class="csl-left-margin">33. </div><div class="csl-right-inline">Hartikainen J, Särkkä S (2010) Kalman filtering and smoothing solutions to temporal gaussian process regression models. Proceedings of the 2010 IEEE International Workshop on Machine Learning for Signal Processing 379–384</div>
+</div>
+<div id="ref-kalman1960" class="csl-entry" role="listitem">
+<div class="csl-left-margin">34. </div><div class="csl-right-inline">Kalman RE (1960) A new approach to linear filtering and prediction problems. Journal of Basic Engineering 82(1):35–45</div>
+</div>
+<div id="ref-rts_smoother" class="csl-entry" role="listitem">
+<div class="csl-left-margin">35. </div><div class="csl-right-inline">Rauch HE, Tung F, Striebel CT (1965) Maximum likelihood estimates of linear dynamic systems. AIAA Journal 3(8):1445–1450</div>
+</div>
+<div id="ref-efficient_gp" class="csl-entry" role="listitem">
+<div class="csl-left-margin">36. </div><div class="csl-right-inline">Lindgren F, Rue H, Lindström J (2011) Efficient gaussian process inference for short-scale spatial variation. Journal of the Royal Statistical Society: Series B (Statistical Methodology) 73(2):183–204</div>
+</div>
+<div id="ref-ddpm" class="csl-entry" role="listitem">
+<div class="csl-left-margin">37. </div><div class="csl-right-inline">Ho J, Jain A, Abbeel P (2020) Denoising diffusion probabilistic models. Advances in Neural Information Processing Systems 33:6840–6851</div>
+</div>
+<div id="ref-probability_flow_ode" class="csl-entry" role="listitem">
+<div class="csl-left-margin">38. </div><div class="csl-right-inline">Song Y, Sohl-Dickstein J, Kingma DP, Kumar A, Ermon S, Poole B (2021) Score-based generative modeling through stochastic differential equations. International Conference on Learning Representations</div>
+</div>
+<div id="ref-denoising_score_matching" class="csl-entry" role="listitem">
+<div class="csl-left-margin">39. </div><div class="csl-right-inline">Hyvärinen A (2005) Estimation of non-normalized statistical models by score matching. Journal of Machine Learning Research 6(4)</div>
+</div>
+<div id="ref-normalizing_flows" class="csl-entry" role="listitem">
+<div class="csl-left-margin">40. </div><div class="csl-right-inline">Papamakarios G, Nalisnick E, Rezende DJ, Mohamed S, Lakshminarayanan B (2021) Normalizing flows for probabilistic modeling and inference. Journal of Machine Learning Research 22(57):1–64</div>
+</div>
+<div id="ref-latent_sde" class="csl-entry" role="listitem">
+<div class="csl-left-margin">41. </div><div class="csl-right-inline">Li X, Wong T-KL, Chen RTQ, Duvenaud D (2020) Latent stochastic differential equations: Learning the generative model from data. International Conference on Learning Representations</div>
+</div>
+<div id="ref-neural_sde" class="csl-entry" role="listitem">
+<div class="csl-left-margin">42. </div><div class="csl-right-inline">Tzen B, Raginsky M (2019) Neural stochastic differential equations: Deep latent gaussian models in the diffusion limit. arXiv preprint arXiv:190509883</div>
+</div>
+<div id="ref-continuous_time_vae" class="csl-entry" role="listitem">
+<div class="csl-left-margin">43. </div><div class="csl-right-inline">Solin A, Särkkä S (2014) Scalable variational gaussian processes via harmonic kernel decomposition. International Conference on Machine Learning 3088–3096</div>
+</div>
+<div id="ref-irregular_time_series" class="csl-entry" role="listitem">
+<div class="csl-left-margin">44. </div><div class="csl-right-inline">Rubanova Y, Chen RTQ, Duvenaud DK (2019) Latent ordinary differential equations for irregularly-sampled time series. Advances in Neural Information Processing Systems 32</div>
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2025 Vignesh Gopakumar</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

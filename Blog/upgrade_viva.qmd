@@ -7,4 +7,9 @@ format: html
 ---
 ***
 
+```
+This document was prepared to serve as the motivation and background research for my PhD upgrade viva. Setting the stage for the research undertakings during the course of the PhD. 
+```
+
+
 ![](Upgrade_viva_Review.pdf){width=100% height=500}
