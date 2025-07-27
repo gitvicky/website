@@ -1,24 +1,30 @@
 ---
 title: "Blog"
 ---
+
 ***
 
-<!-- [Neural ODE](/Blog/Neural_ODE.qmd) -->
+::: {.grid}
 
+::: {.g-col-6}
 [Iterative Solvers for Linear Systems](/Blog/iterative_solvers.qmd)
-
-[Convolution as a form of Integration](/Blog/Inverse_kernel.qmd)
 
 [Geometry for Neural PDEs](/Blog/Geometry.qmd)
 
+[A review on UQ and Surrogate Modelling for Neural PDE solvers](/Blog/upgrade_viva.qmd)
+:::
+
+::: {.g-col-6}
+[Convolution as a form of Integration](/Blog/Inverse_kernel.qmd)
+
 [Universal Physics Engine](/Blog/UPE.qmd)
 
-[A review on UQ and Surrogate Modelling for Neural PDE solvers](/Blog/upgrade_viva.qmd)
-
 [Stochastic PDEs](/Blog/SPDEs.qmd)
+:::
 
+:::
 
+<!-- [Neural ODE](/Blog/Neural_ODE.qmd) -->
 <!-- [Neural Operators](/Blog/Neural_Operators.qmd) -->
-
 
 Some of these blogposts might seem rather crude as they maybe written as notes to self. You can find some of my earlier writing in [Medium](https://medium.com/@engineoutcompletely).

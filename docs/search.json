@@ -172,7 +172,7 @@
     "href": "Blog/blog.html",
     "title": "Blog",
     "section": "",
-    "text": "Iterative Solvers for Linear Systems\nConvolution as a form of Integration\nGeometry for Neural PDEs\nUniversal Physics Engine\nA review on UQ and Surrogate Modelling for Neural PDE solvers\nStochastic PDEs\n\nSome of these blogposts might seem rather crude as they maybe written as notes to self. You can find some of my earlier writing in Medium."
+    "text": "Iterative Solvers for Linear Systems\nGeometry for Neural PDEs\nA review on UQ and Surrogate Modelling for Neural PDE solvers\n\n\nConvolution as a form of Integration\nUniversal Physics Engine\nStochastic PDEs\n\n\n\n\nSome of these blogposts might seem rather crude as they maybe written as notes to self. You can find some of my earlier writing in Medium."
   },
   {
     "objectID": "Blog/Inverse_kernel.html#the-mathematical-foundation-of-regularized-inversion",
