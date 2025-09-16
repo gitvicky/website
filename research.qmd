@@ -39,8 +39,10 @@ format: html
 
 ***
 
+Few selected publications are given below. You can find the latest list of publications in my [google scholar page.](https://scholar.google.com/citations?user=NQtqemwAAAAJ&hl=en)
+
 <div style="text-align: right;">
-### 2024
+### 2025
 </div>
 
 ::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
@@ -59,6 +61,11 @@ format: html
 ![](Images/jorek_pre.png){.lightbox style="cursor: pointer;"}
 :::
 :::
+
+
+<div style="text-align: right;">
+### 2024
+</div>
 
 ::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
 ::: {style="flex: 3;"}
@@ -179,7 +186,3 @@ format: html
 :::
 
 <br>
-
-***
-
-You can find the latest list of publications in my [google scholar page.](https://scholar.google.com/citations?user=NQtqemwAAAAJ&hl=en)
