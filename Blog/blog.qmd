@@ -7,11 +7,12 @@ title: "Blog"
 ::: {.grid}
 
 ::: {.g-col-6}
+[A review on UQ and Surrogate Modelling for Neural PDE solvers](/Blog/upgrade_viva.qmd)
+
 [Iterative Solvers for Linear Systems](/Blog/iterative_solvers.qmd)
 
 [Geometry for Neural PDEs](/Blog/Geometry.qmd)
 
-[A review on UQ and Surrogate Modelling for Neural PDE solvers](/Blog/upgrade_viva.qmd)
 :::
 
 ::: {.g-col-6}

@@ -4,7 +4,10 @@ title: "Talks"
 
 ***
 
-- **Calibrated Physics-Informed Uncertainty Quantification** - Workshop on Calibrating Uncertainties, Isaac Newton Institute for Mathematical Sciences (Cambridge 2025) <code style="text-align: left; color: violet">[<a href="https://www.newton.ac.uk/seminar/46887/" target="_blank">Video</a>]</code> <code style="text-align: left">[<a href="Slides/Cal_PIUQ.qmd" target="_blank">Slides</a>]</code>
+
+- **AI for Fusion: Old Challenges, New Tools** - AI for Science Symposium, Royal Swedish Academy of Sciences (Stockholm  2025) <code style="text-align: left; color: violet">[<a href="https://www.newton.ac.uk/seminar/46887/" target="_blank">Video</a>]</code> <code style="text-align: left">[<a href="Slides/Cal_PIUQ.qmd" target="_blank">Slides</a>]</code>
+
+- **Calibrated Physics-Informed Uncertainty Quantification** - Workshop on Calibrating Uncertainties, Isaac Newton Institute for Mathematical Sciences (Cambridge 2025) <code style="text-align: left; color: violet">[<a href="https://www.newton.ac.uk/seminar/46887/" target="_blank">Video</a>]</code> <code style="text-align: left">[<a href="Slides/AI4Fusion.qmd" target="_blank">Slides</a>]</code>
 
 - **On Surrogate Modelling for Fusion** - PhysicsX (London 2024)  <code style="text-align: left">[<a href="Slides/PhysicsX.qmd" target="_blank">Slides</a>]</code>
 
