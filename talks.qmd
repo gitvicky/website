@@ -7,7 +7,7 @@ title: "Talks"
 
 - **AI for Fusion: Old Challenges, New Tools** - AI for Science Symposium, Royal Swedish Academy of Sciences (Stockholm  2025) <code style="text-align: left; color: violet">[<a href="https://www.youtube.com/watch?v=KMJS0eeIcps&t=207s" target="_blank">Video</a>]</code> <code style="text-align: left">[<a href="Slides/AI4Fusion.qmd" target="_blank">Slides</a>]</code>
 
-- **Calibrated Physics-Informed Uncertainty Quantification** - Workshop on Calibrating Uncertainties, Isaac Newton Institute for Mathematical Sciences (Cambridge 2025) <code style="text-align: left; color: violet">[<a href="https://www.newton.ac.uk/seminar/46887/" target="_blank">Video</a>]</code> <code style="text-align: left">[<a href="Slides/AI4Fusion.qmd" target="_blank">Slides</a>]</code>
+- **Calibrated Physics-Informed Uncertainty Quantification** - Workshop on Calibrating Uncertainties, Isaac Newton Institute for Mathematical Sciences (Cambridge 2025) <code style="text-align: left; color: violet">[<a href="https://www.newton.ac.uk/seminar/46887/" target="_blank">Video</a>]</code> <code style="text-align: left">[<a href="Slides/AI4Fusion.qmd" target="_blank">Slides</a>]</code><code style="text-align: left; color: red">[<a href="Slides/ICML_Poster_Landscape.pdf" target="_blank">Poster</a>]</code>
 
 - **On Surrogate Modelling for Fusion** - PhysicsX (London 2024)  <code style="text-align: left">[<a href="Slides/PhysicsX.qmd" target="_blank">Slides</a>]</code>
 
