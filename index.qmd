@@ -1,46 +1,46 @@
 ---
-title: "Vignesh Gopakumar"
-image: Images/profile_pic.jpg
-about:
-  template: trestles
-  links:
-    - icon: linkedin
-      text: LinkedIn
-      href: "https://www.linkedin.com/in/vignesh-gopakumar/"
-    - text: Twitter (X)
-      url: "https://x.com/mistervickster"
-      icon: twitter
-    - text: "{{< ai google-scholar-square >}} Scholar" 
-      href:  "https://scholar.google.com/citations?user=NQtqemwAAAAJ&hl=en"
-    - text: GitHub
-      icon: github
-      href: "https://github.com/gitvicky"
-    - text: Email
-      href: "mailto:vignesh7g@gmail.com"
-
+title: ""
 comments: false
-
+page-layout: full
+title-block-banner: false
 ---
-<!-- ::: {.center}
-***Can AI learn to obey physics?***
-::: -->
 
-I am a senior research scientist at the [UK Atomic Energy Authority](https://ccfe.ukaea.uk/) (UKAEA), where I lead a team developing "actionable" surrogate models for exascale simulations and data-driven models for the Fusion industry. My research focusses on enhancing machine learning models' performance, robustness and interpretability through physics-based approaches. 
+<div class="hero-section">
+<img src="Images/profile_pic.jpg" class="hero-image" alt="Vignesh Gopakumar">
 
-I am also a visiting researcher with the [SciML group at STFC's Rutherford Appleton Laboratory](https://www.scd.stfc.ac.uk/Pages/Scientific-Machine-Learning.aspx). 
+<div class="hero-name">Vignesh Gopakumar</div>
+<div class="hero-subtitle">Exploring the physics of the universe, one neural network at a time</div>
+
+<div class="social-links">
+<a href="https://www.linkedin.com/in/vignesh-gopakumar/" target="_blank"><i class="bi bi-linkedin"></i> LinkedIn</a>
+<a href="https://x.com/mistervickster" target="_blank"><i class="bi bi-twitter"></i> Twitter</a>
+<a href="https://scholar.google.com/citations?user=NQtqemwAAAAJ&hl=en" target="_blank">{{< ai google-scholar-square >}} Scholar</a>
+<a href="https://github.com/gitvicky" target="_blank"><i class="bi bi-github"></i> GitHub</a>
+<a href="mailto:vignesh7g@gmail.com"><i class="bi bi-envelope"></i> Email</a>
+</div>
+</div>
+
+<div class="bio-card">
+
+I am a senior research scientist at the [UK Atomic Energy Authority](https://ccfe.ukaea.uk/) (UKAEA), where I lead a team developing "actionable" surrogate models for exascale simulations and data-driven models for the Fusion industry. My research focusses on enhancing machine learning models' performance, robustness and interpretability through physics-based approaches.
+
+I am also a visiting researcher with the [SciML group at STFC's Rutherford Appleton Laboratory](https://www.scd.stfc.ac.uk/Pages/Scientific-Machine-Learning.aspx).
 
 Concurrently, I'm pursuing a PhD in Machine Learning under [Marc Deisenroth](https://www.deisenroth.cc/) in the [Sustainability and Machine Learning Group](https://www.sml-group.cc/) at [University College London](https://www.ucl.ac.uk/ai-centre/).
 
-<!-- Current Hot Take: "The world would be so much better if we could just invert these matrices."  -->
+</div>
 
-### Current Research: 
+<div class="research-tags">
+<span class="tag tag-coral">Physics-Informed ML</span>
+<span class="tag tag-sky">Continuous Dynamics</span>
+<span class="tag tag-cactus">Uncertainty Quantification</span>
+<span class="tag tag-heather">Design of Experiments</span>
+</div>
 
-* Physics-Informed Machine Learning
-* Continuous Dynamics Modelling
-* Uncertainty Quantification
-* Design of Experiments
+<div class="simvue-callout">
 
-**Building [simvue.io](https://simvue.io)** : AI-driven, open-source simulation management and tracking dashboard for streamlining engineering workflows. Developed with public funding from the UK Government. Currently in private $\beta$.
-<!-- Simvue: The Scientific Data Company -->
+**Building [simvue.io](https://simvue.io)** — An AI-driven, open-source simulation management and tracking dashboard for streamlining engineering workflows. Developed with public funding from the UK Government. Currently in private $\beta$.
 
-> *"If there is a God, it must be a differential equation"* - Bertrand Russell
+</div>
+
+> *"If there is a God, it must be a differential equation"* — Bertrand Russell

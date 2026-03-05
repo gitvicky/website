@@ -14,9 +14,12 @@ website:
       - Blog/blog.qmd
   page-footer:
     left: "© Copyright 2025 Vignesh Gopakumar"
+
 format:
   html:
-    theme: flatly
+    theme:
+      - cosmo
+      - custom.scss
     css: styles.css
     toc: false
     page-layout: full
