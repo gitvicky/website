@@ -2,187 +2,132 @@
 title: "Research"
 format: html
 ---
-<style>
-.btn {
-  display: inline-block;
-  padding: 6px 12px;
-  margin-bottom: 0;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.42857143;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  cursor: pointer;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  text-decoration: none;
-}
-.btn-paper {
-  color: #fff;
-  background-color: #002F56;
-  border-color:  #002F56;
-}
-.btn-code {
-  color: #fff;
-  background-color: #006F45;
-  border-color: #006F45;
-}
-.btn-presentation {
-  color: #fff;
-  background-color: #FCD12A;
-  border-color: #FCD12A;
-}
 
-</style>
+---
 
+Few selected publications are given below. You can find the latest list of publications in my [Google Scholar page.](https://scholar.google.com/citations?user=NQtqemwAAAAJ&hl=en)
 
-***
+<div class="year-header">2025</div>
 
-Few selected publications are given below. You can find the latest list of publications in my [google scholar page.](https://scholar.google.com/citations?user=NQtqemwAAAAJ&hl=en)
+<div class="pub-card">
+<div class="pub-content">
+<div class="pub-title">Calibrated Physics-Informed Uncertainty Quantification</div>
+<div class="pub-authors">Vignesh Gopakumar, Ander Gray, Lorenzo Zanisi, Timothy Nunn, Daniel Giles, Matt J. Kusner, Stanislas Pamela, Marc Peter Deisenroth — <em>ICML, 2025</em></div>
+<div class="pub-tldr">Calibrated uncertainty quantification of neural PDE solvers using physics residual errors as non-conformity scores for data-free conformal prediction.</div>
+<div class="pub-links">
+<a href="https://openreview.net/pdf?id=Z2uLBBck2X" class="btn-paper" target="_blank">Paper</a>
+<a href="https://github.com/gitvicky/CP-PRE" class="btn-code" target="_blank">Code</a>
+</div>
+</div>
+<div class="pub-image">
 
-<div style="text-align: right;">
-### 2025
+![](Images/jorek_pre.png){.lightbox}
+
+</div>
 </div>
 
-::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
-::: {style="flex: 3;"}
+<div class="year-header">2024</div>
 
-**Calibrated Physics-Informed Uncertainty Quantification**
+<div class="pub-card">
+<div class="pub-content">
+<div class="pub-title">Uncertainty Quantification of Surrogate Models using Conformal Prediction</div>
+<div class="pub-authors">Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi, Daniel Giles, Matt J. Kusner, Stanislas Pamela, Marc Peter Deisenroth — <em>arXiv preprint arXiv:2408.09881, 2024</em></div>
+<div class="pub-tldr">Guaranteed and valid error bars across spatio-temporal domains using conformal prediction.</div>
+<div class="pub-links">
+<a href="https://arxiv.org/abs/2408.09881" class="btn-paper" target="_blank">Paper</a>
+<a href="https://github.com/gitvicky/Spatio-Temporal-CP" class="btn-code" target="_blank">Code</a>
+</div>
+</div>
+<div class="pub-image">
 
-    Vignesh Gopakumar, Ander Gray, Lorenzo Zanisi, Timorthy Nunn,
-    Daniel Giles, Matt J. Kusner, Stanislas Pamela, Marc Peter Deisenroth
-    ICML, 2025
-  `TLDR: Calibrated uncertainty quantification of neural PDE solvers using physics residual errors as non-conformity scores for data-free conformal prediction.` \
+![](Images/heatmap_cp.png){.lightbox}
 
-[<span class="btn btn-paper">Paper</span>](https://openreview.net/pdf?id=Z2uLBBck2X) [<span class="btn btn-code">Code</span>](https://github.com/gitvicky/CP-PRE)
-:::
-::: {style="flex: 1; max-width: 200px;"}
-![](Images/jorek_pre.png){.lightbox style="cursor: pointer;"}
-:::
-:::
-
-
-<div style="text-align: right;">
-### 2024
+</div>
 </div>
 
-::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
-::: {style="flex: 3;"}
+<div class="pub-card">
+<div class="pub-content">
+<div class="pub-title">Valid Error Bars for Neural Weather Models using Conformal Prediction</div>
+<div class="pub-authors">Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi, Stanislas Pamela, Daniel Giles, Matt J. Kusner, Marc Peter Deisenroth — <em>arXiv preprint arXiv:2406.14483, 2024</em></div>
+<div class="pub-tldr">Marginal conformal prediction as a method of guaranteed error bars across neural weather models.</div>
+<div class="pub-links">
+<a href="https://arxiv.org/abs/2406.14483" class="btn-paper" target="_blank">Paper</a>
+<a href="https://github.com/gitvicky/neural-lam-CP" class="btn-code" target="_blank">Code</a>
+</div>
+</div>
+<div class="pub-image">
 
-**Uncertainty Quantification of Surrogate Models using Conformal Prediction**
+![](Images/weather_cp.png){.lightbox}
 
-    Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi,
-    Daniel Giles, Matt J. Kusner, Stanislas Pamela, Marc Peter Deisenroth
-    arXiv preprint arXiv:2408.09881, 2024
-  `TLDR: Guaranteed and valid error bars across spatio-temporal domains using conformal prediction.` \
-
-[<span class="btn btn-paper">Paper</span>](https://arxiv.org/abs/2408.09881) [<span class="btn btn-code">Code</span>](https://github.com/gitvicky/Spatio-Temporal-CP)
-:::
-::: {style="flex: 1; max-width: 200px;"}
-![](Images/heatmap_cp.png){.lightbox style="cursor: pointer;"}
-:::
-:::
-
-::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
-::: {style="flex: 3;"}
-  **Valid Error Bars for Neural Weather Models using Conformal Prediction**
-
-    Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi, Stanislas Pamela, 
-    Daniel Giles, Matt J. Kusner, Marc Peter Deisenroth
-    arXiv preprint arXiv:2406.14483, 2024
-  `TLDR: Marginal conformal prediction as a method of guaranteed error bars across neural weather models.` \ 
-
-[<span class="btn btn-paper">Paper</span>](https://arxiv.org/abs/2406.14483) [<span class="btn btn-code">Code</span>](https://github.com/gitvicky/neural-lam-CP)
-:::
-::: {style="flex: 1; max-width: 200px;"}
-![](Images/weather_cp.png){.lightbox style="cursor: pointer;"}
-:::
-:::
-
-::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
-::: {style="flex: 3;"}
-**Plasma Surrogate Modelling using Fourier Neural Operators**
-
-    Vignesh Gopakumar, Stanislas Pamela, Lorenzo Zanisi, Zongyi Li, Ander Gray, 
-    Daniel Brennand, Nitesh Bhatia, Gregory Stathopoulos, Matt Kusner, 
-    Marc Peter Deisenroth, Anima Anandkumar, JOREK Team, MAST Team
-    Nuclear Fusion, Volume 64, Number 5, 2024
-  `TLDR: Multi-variable FNO designed to model the plasma evolution within a Tokamak across both simulations and experiment on the MAST Tokamak.` \
-
-[<span class="btn btn-paper">Paper</span>](https://iopscience.iop.org/article/10.1088/1741-4326/ad313a/meta) [<span class="btn btn-code">Code</span>](https://github.com/Plasma-FNO)
-:::
-
-::: {style="flex: 1; max-width: 200px;"}
-![](Images/fno_plasma.png){.lightbox style="cursor: pointer;"}
-:::
-:::
-
-<br>
-
-
-<div style="text-align: right;">
-### 2023
+</div>
 </div>
 
+<div class="pub-card">
+<div class="pub-content">
+<div class="pub-title">Plasma Surrogate Modelling using Fourier Neural Operators</div>
+<div class="pub-authors">Vignesh Gopakumar, Stanislas Pamela, Lorenzo Zanisi, Zongyi Li, Ander Gray, Daniel Brennand, Nitesh Bhatia, Gregory Stathopoulos, Matt Kusner, Marc Peter Deisenroth, Anima Anandkumar, JOREK Team, MAST Team — <em>Nuclear Fusion, Volume 64, Number 5, 2024</em></div>
+<div class="pub-tldr">Multi-variable FNO designed to model the plasma evolution within a Tokamak across both simulations and experiment on the MAST Tokamak.</div>
+<div class="pub-links">
+<a href="https://iopscience.iop.org/article/10.1088/1741-4326/ad313a/meta" class="btn-paper" target="_blank">Paper</a>
+<a href="https://github.com/Plasma-FNO" class="btn-code" target="_blank">Code</a>
+</div>
+</div>
+<div class="pub-image">
 
-::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
-::: {style="flex: 3;"}
-**Fourier-RNNs for Modelling Noisy Physics data**
+![](Images/fno_plasma.png){.lightbox}
 
-    Vignesh Gopakumar, Lorenzo Zanisi, Stanislas Pamela
-    arXiv preprint arXiv:2302.06534, 2023
-  `TLDR: Recurrent Fourier neural operators with hidden state representations for non-markovian physcial modelling.` \
-
-[<span class="btn btn-paper">Paper</span>](https://arxiv.org/abs/2302.06534)
-:::
-
-::: {style="flex: 1; max-width: 200px;"}
-![](Images/F_RNNs.png){.lightbox style="cursor: pointer;"}
-:::
-
-:::
-
-
-::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
-::: {style="flex: 3;"}
-**Loss Landscape Engineering via Data Regulation on PINNs**
-
-    Vignesh Gopakumar, Stanislas Pamela, Debasmita Samaddar
-    Machine Learning with Applications, Volume 12, 2023
-  `TLDR: Impact Data-Regulation has on smoothening the loss landscape of physics-informed neural networks for better convergence.` 
-
-[<span class="btn btn-paper">Paper</span>](https://www.sciencedirect.com/science/article/pii/S2666827023000178) [<span class="btn btn-code">Code</span>](https://github.com/gitvicky/Loss_Landscape_PINNs)
-
-:::
-
-::: {style="flex: 1; max-width: 200px;"}
-![](Images/loss_landscape.png){.lightbox style="cursor: pointer;"}
-:::
-:::
-
-
-<br>
-
-
-<div style="text-align: right;">
-### 2022
+</div>
 </div>
 
-::: {style="border: 1px solid white; padding: 1em; background-color: #f0f0f0; display: flex; align-items: center; gap: 2em;"}
-::: {style="flex: 3;"}
-**Image Mapping the Temporal Evolution of Edge Characteristics in Tokamaks using Neural Networks**
+<div class="year-header">2023</div>
 
-    Vignesh Gopakumar, Debasmita Samaddar
-    Machine Learning: Science and Technology, Volume 1, Number 1, 2020
-  `TLDR: Branched fully convolutional network designed to emulate the plasma at the scrape-off layer with coupled plasma and neutral behaviour.` \
+<div class="pub-card">
+<div class="pub-content">
+<div class="pub-title">Fourier-RNNs for Modelling Noisy Physics Data</div>
+<div class="pub-authors">Vignesh Gopakumar, Lorenzo Zanisi, Stanislas Pamela — <em>arXiv preprint arXiv:2302.06534, 2023</em></div>
+<div class="pub-tldr">Recurrent Fourier neural operators with hidden state representations for non-Markovian physical modelling.</div>
+<div class="pub-links">
+<a href="https://arxiv.org/abs/2302.06534" class="btn-paper" target="_blank">Paper</a>
+</div>
+</div>
+<div class="pub-image">
 
-[<span class="btn btn-paper">Paper</span>](https://iopscience.iop.org/article/10.1088/2632-2153/ab5639/meta) 
-:::
+![](Images/F_RNNs.png){.lightbox}
 
-::: {style="flex: 1; max-width: 200px;"}
-![](Images/solps_cnn.png){.lightbox style="cursor: pointer;"}
-:::
-:::
+</div>
+</div>
 
-<br>
+<div class="pub-card">
+<div class="pub-content">
+<div class="pub-title">Loss Landscape Engineering via Data Regulation on PINNs</div>
+<div class="pub-authors">Vignesh Gopakumar, Stanislas Pamela, Debasmita Samaddar — <em>Machine Learning with Applications, Volume 12, 2023</em></div>
+<div class="pub-tldr">Impact Data-Regulation has on smoothening the loss landscape of physics-informed neural networks for better convergence.</div>
+<div class="pub-links">
+<a href="https://www.sciencedirect.com/science/article/pii/S2666827023000178" class="btn-paper" target="_blank">Paper</a>
+<a href="https://github.com/gitvicky/Loss_Landscape_PINNs" class="btn-code" target="_blank">Code</a>
+</div>
+</div>
+<div class="pub-image">
+
+![](Images/loss_landscape.png){.lightbox}
+
+</div>
+</div>
+
+<div class="year-header">2022</div>
+
+<div class="pub-card">
+<div class="pub-content">
+<div class="pub-title">Image Mapping the Temporal Evolution of Edge Characteristics in Tokamaks using Neural Networks</div>
+<div class="pub-authors">Vignesh Gopakumar, Debasmita Samaddar — <em>Machine Learning: Science and Technology, Volume 1, Number 1, 2020</em></div>
+<div class="pub-tldr">Branched fully convolutional network designed to emulate the plasma at the scrape-off layer with coupled plasma and neutral behaviour.</div>
+<div class="pub-links">
+<a href="https://iopscience.iop.org/article/10.1088/2632-2153/ab5639/meta" class="btn-paper" target="_blank">Paper</a>
+</div>
+</div>
+<div class="pub-image">
+
+![](Images/solps_cnn.png){.lightbox}
+
+</div>
+</div>
