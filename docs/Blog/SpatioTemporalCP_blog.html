@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>spatiotemporalcp_blog – Vignesh Gopakumar</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Images/dy_dx.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Vignesh Gopakumar</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../research.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../talks.html"> 
+<span class="menu-text">Talks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../Blog/blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content column-page" id="quarto-document-content">
+
+
+
+
+<section id="uncertainty-quantification-of-surrogate-models-using-conformal-prediction" class="level1">
+<h1>Uncertainty Quantification of Surrogate Models using Conformal Prediction</h1>
+<p><strong>Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi, Daniel Giles, Matt J. Kusner, Stanislas Pamela, Marc Peter Deisenroth</strong></p>
+<p><a href="https://arxiv.org/abs/2407.00123">PDF</a> <a href="https://github.com/gitvicky/Spatio-Temporal-CP/">Code</a></p>
+<hr>
+<p>Machine learning surrogate models have revolutionised scientific computing—from weather forecasting to fusion reactor simulations. But there’s a catch: these models produce predictions without telling us how confident we should be in them. In safety-critical applications like nuclear fusion or extreme weather response, this lack of uncertainty quantification can have severe consequences. In our recent work, we demonstrate how <strong>conformal prediction (CP)</strong> provides statistically guaranteed error bars for surrogate models across diverse scientific domains, with near-zero computational cost.</p>
+<section id="the-problem-with-surrogate-models" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-with-surrogate-models">The Problem with Surrogate Models</h2>
+<p>Data-driven surrogate models offer fast, inexpensive approximations to complex numerical simulations. Neural networks have become ubiquitous for solving partial differential equations (PDEs), weather forecasting, and plasma modelling. However, these models inherit uncertainty from multiple sources: the numerical codes they approximate, the training data distribution, and the model architecture itself.</p>
+<p>The critical issue? Most surrogate models produce point predictions without any measure of confidence. When a weather model predicts a hurricane’s path or a fusion model predicts plasma behaviour, we need to know: <em>how much should we trust this prediction?</em></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../img/blog/cp-surrogate/problem_illustration.png" class="img-fluid figure-img"></p>
+<figcaption>Surrogate models produce point predictions without uncertainty bounds</figcaption>
+</figure>
+</div>
+<p>While Bayesian methods can provide uncertainty estimates, they offer no statistical guarantees and struggle with high-dimensional spatio-temporal problems due to computational costs and dependence on prior specification. Deep ensembles require training multiple models. Monte Carlo dropout often severely underestimates uncertainty.</p>
+</section>
+<section id="conformal-prediction-statistical-guarantees-for-any-model" class="level2">
+<h2 class="anchored" data-anchor-id="conformal-prediction-statistical-guarantees-for-any-model">Conformal Prediction: Statistical Guarantees for Any Model</h2>
+<p>Conformal prediction offers an elegant solution. Given any pre-trained model <span class="math inline">\(\hat{f}\)</span> and a desired coverage level <span class="math inline">\((1-\alpha)\)</span>, CP constructs prediction sets <span class="math inline">\(\mathcal{C}^{\alpha}\)</span> that contain the true value with guaranteed probability:</p>
+<p><span class="math display">\[\mathbb{P}(Y_{n+1} \in \mathcal{C}^{\alpha}) \geq 1 - \alpha\]</span></p>
+<p>This guarantee holds regardless of model architecture, training procedure, or output dimensionality—requiring only that calibration samples are exchangeable with test samples.</p>
+<section id="how-it-works" class="level3">
+<h3 class="anchored" data-anchor-id="how-it-works">How It Works</h3>
+<p>The inductive CP framework operates through three simple steps:</p>
+<ol type="1">
+<li><strong>Calibration</strong>: Compute nonconformity scores on held-out calibration data, quantifying the disagreement between predictions and ground truth</li>
+<li><strong>Quantile Estimation</strong>: Find the <span class="math inline">\((1-\alpha)\)</span>-quantile <span class="math inline">\(\hat{q}\)</span> of these scores</li>
+<li><strong>Prediction Sets</strong>: For any new input, construct intervals using the calibrated quantile</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../img/blog/cp-surrogate/cp_framework.png" class="img-fluid figure-img"></p>
+<figcaption>The inductive CP framework</figcaption>
+</figure>
+</div>
+<p><em>The CP framework: (1) Compute nonconformity scores from calibration predictions and targets. (2) Estimate the quantile for desired coverage. (3) Construct prediction sets by applying the quantile to test predictions.</em></p>
+</section>
+<section id="nonconformity-scores" class="level3">
+<h3 class="anchored" data-anchor-id="nonconformity-scores">Nonconformity Scores</h3>
+<p>We evaluate three approaches for computing nonconformity scores:</p>
+<ul>
+<li><p><strong>Conformalised Quantile Regression (CQR)</strong>: Train models for the <span class="math inline">\(\alpha/2\)</span> and <span class="math inline">\((1-\alpha/2)\)</span> quantiles. The score measures distance to the nearest bound: <span class="math inline">\(s(x,y) = \max\{\underline{f}(x) - y, y - \overline{f}(x)\}\)</span></p></li>
+<li><p><strong>Absolute Error Residual (AER)</strong>: Use any pre-trained deterministic model. Simply compute <span class="math inline">\(s(x,y) = |y - \hat{f}(x)|\)</span>. No architectural modifications needed.</p></li>
+<li><p><strong>Standard Deviation (STD)</strong>: For probabilistic models outputting mean <span class="math inline">\(\mu(x)\)</span> and standard deviation <span class="math inline">\(\sigma(x)\)</span>, use <span class="math inline">\(s(x,y) = \frac{|y - \mu(x)|}{\sigma(x)}\)</span>. This provides input-adaptive bounds.</p></li>
+</ul>
+</section>
+</section>
+<section id="scaling-to-high-dimensional-spatio-temporal-data" class="level2">
+<h2 class="anchored" data-anchor-id="scaling-to-high-dimensional-spatio-temporal-data">Scaling to High-Dimensional Spatio-Temporal Data</h2>
+<p>A key contribution of our work is demonstrating that CP scales to the massive output dimensions typical of scientific surrogate models. We perform <strong>cell-wise calibration</strong>: computing separate quantiles for each spatial and temporal location in the output tensor.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../img/blog/cp-surrogate/cellwise_cp.png" class="img-fluid figure-img"></p>
+<figcaption>Cell-wise calibration for spatio-temporal data</figcaption>
+</figure>
+</div>
+<p><em>Cell-wise uncertainty calibration for a U-Net modelling the wave equation. MC dropout produces unrealistically small uncertainties, while CP correctly identifies regions of high uncertainty.</em></p>
+<p>Consider a model predicting the evolution of spatial fields <span class="math inline">\(\tilde{Y} = \hat{f}(X) \in \mathbb{R}^{T_{\text{out}} \times N_x \times N_y \times N_{\text{var}}}\)</span>. Our calibration procedure computes quantiles <span class="math inline">\(\hat{q} \in \mathbb{R}^{T_{\text{out}} \times N_x \times N_y \times N_{\text{var}}}\)</span> in a point-wise manner, preserving the tensorial structure while providing marginal coverage guarantees at every location.</p>
+<section id="computational-efficiency" class="level3">
+<h3 class="anchored" data-anchor-id="computational-efficiency">Computational Efficiency</h3>
+<p>The calibration procedure has complexity <span class="math inline">\(\mathcal{O}(d \cdot n_{\text{cal}} \log n_{\text{cal}})\)</span>, comprising element-wise score computation and sorting per dimension. Once calibrated, constructing prediction sets requires only <span class="math inline">\(\mathcal{O}(d)\)</span> operations.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Application</th>
+<th>Output Dimensions</th>
+<th>Calibration Time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1D Poisson</td>
+<td>32</td>
+<td>3 ms</td>
+</tr>
+<tr class="even">
+<td>2D Wave</td>
+<td>65,340</td>
+<td>34 s</td>
+</tr>
+<tr class="odd">
+<td>Weather (Global)</td>
+<td>12,777,600</td>
+<td>6 min</td>
+</tr>
+<tr class="even">
+<td>Camera Diagnostics</td>
+<td>2,867,200</td>
+<td>5 min</td>
+</tr>
+</tbody>
+</table>
+<p><em>Calibration times on standard laptop hardware—demonstrating near-zero computational cost even for millions of dimensions.</em></p>
+</section>
+</section>
+<section id="experiments-across-scientific-domains" class="level2">
+<h2 class="anchored" data-anchor-id="experiments-across-scientific-domains">Experiments Across Scientific Domains</h2>
+<p>We validated our CP framework across diverse applications, from fundamental PDEs to operational systems:</p>
+<section id="pde-surrogate-models" class="level3">
+<h3 class="anchored" data-anchor-id="pde-surrogate-models">PDE Surrogate Models</h3>
+<p><strong>Poisson Equation</strong>: Our simplest test case—MLPs mapping initial field distributions to equilibrium states. All three nonconformity methods achieve guaranteed coverage with tight bounds.</p>
+<p><strong>Wave Equation</strong>: Using both U-Nets (feed-forward) and FNOs (autoregressive), we tested in-distribution and out-of-distribution scenarios. Even when testing at half the wave velocity used during training, CP provides valid error bars.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../img/blog/cp-surrogate/wave_results.png" class="img-fluid figure-img"></p>
+<figcaption>Wave equation predictions with CP bounds</figcaption>
+</figure>
+</div>
+<p><em>Prediction sets for the 2D wave equation. CP achieves valid coverage both within and outside the training distribution.</em></p>
+<p><strong>Navier-Stokes</strong>: Training an FNO on viscosity <span class="math inline">\(\nu=10^{-3}\)</span> and testing on <span class="math inline">\(\nu=10^{-4}\)</span>, uncalibrated MC dropout provided only 7.52% coverage—severely underestimating errors. CP calibration corrects this to achieve the target coverage.</p>
+</section>
+<section id="magnetohydrodynamics-for-fusion" class="level3">
+<h3 class="anchored" data-anchor-id="magnetohydrodynamics-for-fusion">Magnetohydrodynamics for Fusion</h3>
+<p>We applied CP to a reduced-MHD system modelling plasma evolution in tokamaks, predicting three coupled variables—density, electrostatic potential, and temperature—on a toroidal grid. This represents a challenging multi-variable, multi-physics problem with 1.35 million output dimensions.</p>
+<p>We also demonstrate CP’s value for foundation model deployment: calibrating a pre-trained Multi-Physics Pretrained (MPP) vision transformer fine-tuned on fusion data. CP provides valid uncertainty bounds without any retraining of the expensive foundation model.</p>
+</section>
+<section id="weather-forecasting" class="level3">
+<h3 class="anchored" data-anchor-id="weather-forecasting">Weather Forecasting</h3>
+<p>We deployed CP on graph neural network weather models operating at two scales:</p>
+<ul>
+<li><strong>Limited Area Model</strong>: 20.6 million dimensions over the Nordic region</li>
+<li><strong>Global Model</strong>: 12.8 million dimensions at 1° resolution</li>
+</ul>
+<p>CP achieved valid coverage across all meteorological variables and lead times, with calibration completing in minutes on standard hardware.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../img/blog/cp-surrogate/weather_coverage.png" class="img-fluid figure-img"></p>
+<figcaption>Weather model coverage analysis</figcaption>
+</figure>
+</div>
+<p><em>Empirical coverage for weather prediction across different lead times. CP maintains guaranteed coverage even as forecasts extend further into the future.</em></p>
+</section>
+<section id="comprehensive-results" class="level3">
+<h3 class="anchored" data-anchor-id="comprehensive-results">Comprehensive Results</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Case</th>
+<th>Model</th>
+<th>Output Dims</th>
+<th>Method</th>
+<th>Uncalib. (%)</th>
+<th>Calib. (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1D Poisson</td>
+<td>MLP</td>
+<td>32</td>
+<td>AER</td>
+<td>-</td>
+<td>90.05</td>
+</tr>
+<tr class="even">
+<td>1D Conv-Diff*</td>
+<td>U-Net</td>
+<td>2,000</td>
+<td>CQR</td>
+<td>25.53</td>
+<td>93.05</td>
+</tr>
+<tr class="odd">
+<td>2D Wave</td>
+<td>FNO*</td>
+<td>65,340</td>
+<td>AER</td>
+<td>-</td>
+<td>89.24</td>
+</tr>
+<tr class="even">
+<td>2D Navier-Stokes*</td>
+<td>FNO</td>
+<td>40,960</td>
+<td>STD</td>
+<td>7.52</td>
+<td>90.27</td>
+</tr>
+<tr class="odd">
+<td>2D MHD</td>
+<td>ViT* (PT)</td>
+<td>313,344</td>
+<td>AER</td>
+<td>-</td>
+<td>89.95</td>
+</tr>
+<tr class="even">
+<td>Weather (Global)</td>
+<td>GNN</td>
+<td>12,777,600</td>
+<td>AER</td>
+<td>-</td>
+<td>90.03</td>
+</tr>
+</tbody>
+</table>
+<p><em>Coverage results for <span class="math inline">\(\alpha=0.1\)</span> (90% target coverage). Asterisks indicate out-of-distribution evaluation.</em></p>
+</section>
+</section>
+<section id="out-of-distribution-robustness" class="level2">
+<h2 class="anchored" data-anchor-id="out-of-distribution-robustness">Out-of-Distribution Robustness</h2>
+<p>A critical finding: <strong>CP provides valid prediction sets even when deployed outside the training distribution</strong>, provided exchangeability holds between calibration and prediction regimes.</p>
+<p>This enables valuable uncertainty quantification for previously unseen solution families. When a fusion model trained on one plasma configuration encounters different operating conditions, or when a weather model faces an unusual meteorological pattern, CP can still provide guaranteed bounds—as long as calibration data represents the deployment distribution.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../img/blog/cp-surrogate/ood_robustness.png" class="img-fluid figure-img"></p>
+<figcaption>Out-of-distribution robustness</figcaption>
+</figure>
+</div>
+<p><em>CP performance on out-of-distribution data. Valid coverage is maintained even when physics parameters differ from training.</em></p>
+</section>
+<section id="limitations-and-practical-considerations" class="level2">
+<h2 class="anchored" data-anchor-id="limitations-and-practical-considerations">Limitations and Practical Considerations</h2>
+<p>While CP offers substantial benefits, several limitations must be acknowledged:</p>
+<p><strong>Marginal vs.&nbsp;Conditional Coverage</strong>: The guarantee provides validity <em>averaged</em> over all predictions, not for each individual prediction. In risk-critical scenarios requiring reliable bounds for specific predictions, marginal coverage may be insufficient.</p>
+<p><strong>Exchangeability Requirements</strong>: CP requires calibration data that is exchangeable with the prediction regime. For experimental data where distribution shifts are common, violations lead to invalid coverage.</p>
+<p><strong>Input Independence in Deterministic Models</strong>: For AER scores, error bars are fixed during calibration and don’t vary with inputs. Probabilistic models (STD scores) provide input-adaptive bounds.</p>
+<p><strong>Cell-wise Independence</strong>: Our framework treats each spatio-temporal point independently, not capturing correlation structures inherent in physical systems.</p>
+</section>
+<section id="practical-recommendations" class="level2">
+<h2 class="anchored" data-anchor-id="practical-recommendations">Practical Recommendations</h2>
+<p>For optimal results with CP:</p>
+<ol type="1">
+<li><strong>Validate exchangeability assumptions</strong> through sensitivity analyses</li>
+<li><strong>Use conservative <span class="math inline">\(\alpha\)</span> values</strong> for risk-critical applications</li>
+<li><strong>Prefer probabilistic models</strong> when input-dependent bounds are crucial</li>
+<li><strong>Maintain awareness</strong> of marginal coverage guarantees when interpreting individual predictions</li>
+<li><strong>Calibration data size</strong>: <span class="math inline">\(n_{\text{cal}} \geq 1000\)</span> typically provides reliable coverage</li>
+</ol>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Conformal prediction provides a practical, computationally efficient method for uncertainty quantification in scientific machine learning. Our framework:</p>
+<ul>
+<li><strong>Provides statistical guarantees</strong> regardless of model architecture, training regime, or output dimensionality</li>
+<li><strong>Scales to 20+ million dimensions</strong> with calibration times of minutes on standard hardware</li>
+<li><strong>Enables validation of pre-trained models</strong> for specific downstream applications without retraining</li>
+<li><strong>Works out-of-distribution</strong> when calibration matches the deployment regime</li>
+</ul>
+<p>For practitioners deploying surrogate models in safety-critical contexts—from fusion reactor control to extreme weather response—CP offers actionable uncertainty quantification where uncertainty matters most.</p>
+<p>All code, data generation scripts, and trained models are available at <a href="https://github.com/gitvicky/Spatio-Temporal-CP/">https://github.com/gitvicky/Spatio-Temporal-CP/</a>.</p>
+<hr>
+<section id="references" class="level3">
+<h3 class="anchored" data-anchor-id="references">References</h3>
+<ol type="1">
+<li>Vovk, V., Gammerman, A., &amp; Shafer, G. (2005). Algorithmic Learning in a Random World. Springer.</li>
+<li>Romano, Y., Patterson, E., &amp; Candès, E. J. (2019). Conformalized Quantile Regression. NeurIPS.</li>
+<li>Li, Z., Kovachki, N., Azizzadenesheli, K., et al.&nbsp;(2021). Fourier Neural Operator for Parametric Partial Differential Equations. ICLR.</li>
+<li>Lam, R., Sanchez-Gonzalez, A., Willson, M., et al.&nbsp;(2022). GraphCast: Learning skillful medium-range global weather forecasting. arXiv preprint.</li>
+<li>Gopakumar, V., et al.&nbsp;(2024). Plasma Surrogate Modelling using Fourier Neural Operators. Nuclear Fusion.</li>
+</ol>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2025 Vignesh Gopakumar</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

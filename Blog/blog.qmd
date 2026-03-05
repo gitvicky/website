@@ -14,6 +14,9 @@ title: "Blog"
 <a href="/Blog/Inverse_kernel.qmd">Convolution as a Form of Integration</a>
 </div>
 
+<!-- [Uncertainty Quantification of Surrogate Models using Conformal Prediction](/Blog/SpatioTemporalCP_blog.md) -->
+
+:::
 <div class="blog-card">
 <a href="/Blog/iterative_solvers.qmd">Iterative Solvers for Linear Systems</a>
 </div>
