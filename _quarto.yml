@@ -13,7 +13,7 @@ website:
       - talks.qmd
       - Blog/blog.qmd
   page-footer:
-    left: "© Copyright 2025 Vignesh Gopakumar"
+    left: "© Copyright 2026 Vignesh Gopakumar"
 
 format:
   html:

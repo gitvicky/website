@@ -9,13 +9,13 @@ title-block-banner: false
 <img src="Images/profile_pic.jpg" class="hero-image" alt="Vignesh Gopakumar">
 
 <div class="hero-name">Vignesh Gopakumar</div>
-<div class="hero-subtitle">Exploring the physics of the universe, one neural network at a time</div>
+<!-- <div class="hero-subtitle">Exploring the physics of the universe, one neural network at a time</div> -->
 
 <div class="social-links">
-<a href="https://www.linkedin.com/in/vignesh-gopakumar/" target="_blank"><i class="bi bi-linkedin"></i> LinkedIn</a>
-<a href="https://x.com/mistervickster" target="_blank"><i class="bi bi-twitter"></i> Twitter</a>
-<a href="https://scholar.google.com/citations?user=NQtqemwAAAAJ&hl=en" target="_blank">{{< ai google-scholar-square >}} Scholar</a>
-<a href="https://github.com/gitvicky" target="_blank"><i class="bi bi-github"></i> GitHub</a>
+<a href="https://www.linkedin.com/in/vignesh-gopakumar/" target="_blank" style="margin-right: 15px;"><i class="bi bi-linkedin"></i> LinkedIn</a>
+<a href="https://x.com/mistervickster" target="_blank" style="margin-right: 15px;"><i class="bi bi-twitter"></i> Twitter</a>
+<a href="https://scholar.google.com/citations?user=NQtqemwAAAAJ&hl=en" target="_blank" style="margin-right: 15px;">{{< ai google-scholar-square >}} Scholar</a>
+<a href="https://github.com/gitvicky" target="_blank" style="margin-right: 15px;"><i class="bi bi-github"></i> GitHub</a>
 <a href="mailto:vignesh7g@gmail.com"><i class="bi bi-envelope"></i> Email</a>
 </div>
 </div>

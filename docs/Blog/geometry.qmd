@@ -1,0 +1,65 @@
+---
+title: "Geometry for Neural-PDE surrogates"
+date: 01/15/2025 #MM/DD/YYYY
+format: html
+bibliography: bibliography.bib
+csl: diabetologia.csl
+
+---
+***
+Most neural PDE solvers within the research ecosystem are built looking at regular geometry with structured uniform grids. Though this conjures up a great starting  point to look at solving complex phenomena, it is only mildly representative of the computational physics cases that we are interested in practice. Regular grids have been a beneficial starting point as it is easy to port the wealth of research done within computer vision with its clear 3D vioxel structure to more scientific applications. Though there are certain areas where regular geometry finds application, before we can move this research to product, we will need to address for irregular unstructured grids at vast scales (~ millions of cells).  
+
+This has been a large area of interest in the recent years and the work at modelling spatio-temporal data across irregular geometries can be split into the following categories:
+
+* **Graph-based Methods** : GNNs, GCN, GINOs. Involves message passing to emphasise the geometric structure. [@li2023geometryinformed;@li2020GNO; @brandstetter2022message; @Li2024FVGNN]
+* **Point Cloud Approaches** : Coordinate based-MLPs, Neural Fields, INRs.  No emphasis on graph structure apart from coordinates and perhaps the associated SDF [@Siren2020; @serrano2023coral; @yin2023dino].  
+* **Kernel-based Methods** : GPs. Function fitting and infering the field values at specific geometric positions. [@Chen2021GPPDE]
+
+The table below outlines a structured comparison table of machine learning methods for handling irregular geometries:
+
+| Method | Advantages | Limitations |
+|--------|------------|-------------|
+| Graph based Methods| - Natural handling of irregular spatial relationships through message passing<br>- Excellent capture of local geometric features<br>- Works with varying numbers of spatial points<br>- Maintains permutation invariance<br>- Easy incorporation of additional features at spatial locations | - Struggles with global geometric patterns<br>- Computationally expensive for dense graphs<br>- Performance depends heavily on graph construction<br>- Training stability issues in deep architectures<br>- Message passing can be inefficient for long-range dependencies |
+| Point Cloud Approaches | - Direct processing of unstructured data without connectivity information<br>- Effective for 3D data representation<br>- Handles varying point densities<br>- Natural permutation invariance<br>- Flexible with varying point cloud sizes | - Difficulty capturing fine geometric details<br>- Sensitive to point density variations<br>- Requires careful input data preprocessing<br>- Poor scaling of memory requirements with point count<br>- May miss local spatial relationships |
+| Kernel-Based Methods | - Natural uncertainty quantification<br>- Effective handling of irregular sampling<br>- Works well with limited data<br>- Incorporates prior knowledge via kernel design<br>- Provides smooth interpolation | - Poor scaling with dataset size<br>- Sensitive to kernel choice<br>- Hyperparameter selection challenges<br>- Struggles with discontinuities<br>- Difficulty capturing sharp geometric features |
+
+
+But for large scale neural PDE models modelling complex spatio-temporal domain with large context lengths, the modelling task is split into a encoder-processor-decoder architecture as shown below. 
+
+```{mermaid}
+%%| fig-width: 6.5
+%%|fig-align: center
+flowchart LR
+  A(Encoder) --> B(Processor)
+  B --> B
+  B --> C(Decoder)
+```
+
+The layout breaks down the modelling task into three parts. The encoder works within the spatial domain to deconstruct the initial conditions of the fields and the inherent geometry of the problem into a latent, more structured space. The processor learns to map the temporal evolution of the PDE within that latent space. The choice of the processor is often taken to be NN architecture that is quick to evaluate and could be setup as a Neural ODE. The decoder maps the final solution from the latent space to the actual unstructured grid that we are interested in.
+
+Using a structured NO such as the FNO, that has inductive bias, quick to evaluate has found to be rather beneficial, but the open questions still lie within the choice of the encoder-decoder. Papers such as [@li2023geometryinformed; @brandstetter2022message] utilise graph neural networks as the encoder-decoder, but however they have significant computational and memory requirements. 
+
+I am currently exploring the idea of maybe using coordinate-based MLPs for the encoder and a GP as the decoder, with a neural operator deployed as a neural ODE with operator-splitting as the processor (neural-UDE):
+
+```{mermaid}
+%%| fig-width: 6.5
+%%|fig-align: center
+flowchart LR
+  A(NeRF) --> B(Neural-UDE)
+  B --> B
+  B --> C(GP)
+```
+
+The challenge with the NeRF is that though allow for continuous space representations, they are terrible at enforcing strict boundaries within the domain and have soft gradients across them. These leads to losing strutcures with significant gradients being lost in the initial condition and geometry. The advantages could be that the IC might not have sharp enough gradients so representative capacity might not be that much of a concern. The other advantage is that they are small, light models, based on simple MLPs. 
+
+As for the GP, the challenges remain the same as always, whether they can be scaled to handle the dimension and size as we might need. Might have to train multiple GPs or Mixture of GPs? The advantage is that we can get UQ built into the models. 
+
+*This approach brings in a division of labour, having models learn a specific task and then connected together in an approach similar to integrated modelling. Is this a kind of Mixture of Experts ? *
+
+### Exploring Kernel Methods
+##### Consverative Remapping 
+
+
+##### Non-Uniform FFT
+FFT over non-uniform grids (nuFFT) as demonstrated within this [pytorch repository](https://github.com/mmuckley/torchkbnufft), where the grids are structured using a Kaisser-Bessel window functions as interpolation kernels. Essentially we are using a weighted kernel approach to move from unstructured grids to structured grids. 
+

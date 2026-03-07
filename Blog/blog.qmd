@@ -23,7 +23,7 @@ title: "Blog"
 </div>
 
 <div class="blog-card">
-<a href="/Blog/Geometry.qmd">Geometry for Neural PDEs</a>
+<a href="/Blog/geometry.qmd">Geometry for Neural PDEs</a>
 </div>
 
 <div class="blog-card">
