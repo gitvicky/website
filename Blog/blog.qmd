@@ -13,8 +13,6 @@ title: "Blog"
 
 [Geometry for Neural PDEs](/Blog/Geometry.qmd)
 
-<!-- [Uncertainty Quantification of Surrogate Models using Conformal Prediction](/Blog/SpatioTemporalCP_blog.md) -->
-
 :::
 
 ::: {.g-col-6}
