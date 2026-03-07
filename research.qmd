@@ -52,10 +52,10 @@ Few selected publications are given below. You can find the latest list of publi
 <div class="pub-card">
 <div class="pub-content">
 <div class="pub-title">Uncertainty Quantification of Surrogate Models using Conformal Prediction</div>
-<div class="pub-authors">Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi, Daniel Giles, Matt J. Kusner, Stanislas Pamela, Marc Peter Deisenroth — <em>arXiv preprint arXiv:2408.09881, 2024</em></div>
+<div class="pub-authors">Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi, Daniel Giles, Matt J. Kusner, Stanislas Pamela, Marc Peter Deisenroth — <em>IOP MLST, 2024</em></div>
 <div class="pub-tldr">Guaranteed and valid error bars across spatio-temporal domains using conformal prediction.</div>
 <div class="pub-links">
-<a href="https://arxiv.org/abs/2408.09881" class="btn-paper" target="_blank">Paper</a>
+<a href="https://iopscience.iop.org/article/10.1088/2632-2153/ae2e7b/meta" class="btn-paper" target="_blank">Paper</a>
 <a href="https://github.com/gitvicky/Spatio-Temporal-CP" class="btn-code" target="_blank">Code</a>
 </div>
 </div>
@@ -69,7 +69,7 @@ Few selected publications are given below. You can find the latest list of publi
 <div class="pub-card">
 <div class="pub-content">
 <div class="pub-title">Valid Error Bars for Neural Weather Models using Conformal Prediction</div>
-<div class="pub-authors">Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi, Stanislas Pamela, Daniel Giles, Matt J. Kusner, Marc Peter Deisenroth — <em>arXiv preprint arXiv:2406.14483, 2024</em></div>
+<div class="pub-authors">Vignesh Gopakumar, Ander Gray, Joel Oskarsson, Lorenzo Zanisi, Stanislas Pamela, Daniel Giles, Matt J. Kusner, Marc Peter Deisenroth — <em>ICML Workshop: Machine Learning for Earth System Modeling: Accelerating Pathways to Impact, 2024</em></div>
 <div class="pub-tldr">Marginal conformal prediction as a method of guaranteed error bars across neural weather models.</div>
 <div class="pub-links">
 <a href="https://arxiv.org/abs/2406.14483" class="btn-paper" target="_blank">Paper</a>
@@ -105,7 +105,7 @@ Few selected publications are given below. You can find the latest list of publi
 <div class="pub-card">
 <div class="pub-content">
 <div class="pub-title">Fourier-RNNs for Modelling Noisy Physics Data</div>
-<div class="pub-authors">Vignesh Gopakumar, Lorenzo Zanisi, Stanislas Pamela — <em>arXiv preprint arXiv:2302.06534, 2023</em></div>
+<div class="pub-authors">Vignesh Gopakumar, Lorenzo Zanisi, Stanislas Pamela — <em> IEEE-ICMLA, 2023</em></div>
 <div class="pub-tldr">Recurrent Fourier neural operators with hidden state representations for non-Markovian physical modelling.</div>
 <div class="pub-links">
 <a href="https://arxiv.org/abs/2302.06534" class="btn-paper" target="_blank">Paper</a>
