@@ -2,32 +2,123 @@
 title: "Talks"
 ---
 
-***
+---
 
+<div class="talk-year">2025</div>
 
-- **AI for Fusion: Old Challenges, New Tools** - AI for Science Symposium, Royal Swedish Academy of Sciences (Stockholm  2025) <code style="text-align: left; color: violet">[<a href="https://www.youtube.com/watch?v=KMJS0eeIcps&t=207s" target="_blank">Video</a>]</code> <code style="text-align: left">[<a href="Slides/AI4Fusion.qmd" target="_blank">Slides</a>]</code>
+<div class="talk-item">
+<div class="talk-title">AI for Fusion: Old Challenges, New Tools</div>
+<div class="talk-venue">AI for Science Symposium, Royal Swedish Academy of Sciences — Stockholm</div>
+<div class="talk-links">
+<a href="https://www.youtube.com/watch?v=KMJS0eeIcps&t=207s" class="badge-video" target="_blank">Video</a>
+<a href="Slides/AI4Fusion.qmd" class="badge-slides" target="_blank">Slides</a>
+</div>
+</div>
 
-- **Calibrated Physics-Informed Uncertainty Quantification** - Workshop on Calibrating Uncertainties, Isaac Newton Institute for Mathematical Sciences (Cambridge 2025) <code style="text-align: left; color: violet">[<a href="https://www.newton.ac.uk/seminar/46887/" target="_blank">Video</a>]</code> <code style="text-align: left">[<a href="Slides/AI4Fusion.qmd" target="_blank">Slides</a>]</code><code style="text-align: left; color: red">[<a href="Slides/ICML_Poster_Landscape.pdf" target="_blank">Poster</a>]</code>
+<div class="talk-item">
+<div class="talk-title">Calibrated Physics-Informed Uncertainty Quantification</div>
+<div class="talk-venue">Workshop on Calibrating Uncertainties, Isaac Newton Institute for Mathematical Sciences — Cambridge</div>
+<div class="talk-links">
+<a href="https://www.newton.ac.uk/seminar/46887/" class="badge-video" target="_blank">Video</a>
+<a href="Slides/AI4Fusion.qmd" class="badge-slides" target="_blank">Slides</a>
+<a href="Slides/ICML_Poster_Landscape.pdf" class="badge-poster" target="_blank">Poster</a>
+</div>
+</div>
 
-- **On Surrogate Modelling for Fusion** - PhysicsX (London 2024)  <code style="text-align: left">[<a href="Slides/PhysicsX.qmd" target="_blank">Slides</a>]</code>
+<div class="talk-year">2024</div>
 
-- **FNO for Plasma Modelling** - IAEA Workshop on AI for Accelerating Fusion and Plasma Science (Vienna 2023) <code style="text-align: left">[<a href="Slides/IAEA_AI_Fusion_Dec2023.qmd" target="_blank">Slides</a>]</code>
+<div class="talk-item">
+<div class="talk-title">On Surrogate Modelling for Fusion</div>
+<div class="talk-venue">PhysicsX — London</div>
+<div class="talk-links">
+<a href="Slides/PhysicsX.qmd" class="badge-slides" target="_blank">Slides</a>
+</div>
+</div>
 
-- **FNO for Plasma Modelling** - IAEA Fusion Energy Conference (London, 2023) <code style="text-align: left">[<a href="Slides/IAEA_AI_Fusion_Dec2023.qmd" target="_blank">Slides</a>]</code>
+<div class="talk-year">2023</div>
 
-- **FNO for Plasma Modelling** - AI for sustainability workshop @ UCL (London, 2023)
+<div class="talk-item">
+<div class="talk-title">FNO for Plasma Modelling</div>
+<div class="talk-venue">IAEA Workshop on AI for Accelerating Fusion and Plasma Science — Vienna</div>
+<div class="talk-links">
+<a href="Slides/IAEA_AI_Fusion_Dec2023.qmd" class="badge-slides" target="_blank">Slides</a>
+</div>
+</div>
 
-- **Fourier RNNs for modelling noisy physics data** - IEEE ICMLA (Bahamas, 2022) <code style="text-align: left">[<a href="Slides/F_RNNS.qmd" target="_blank">Slides</a>]</code>
+<div class="talk-item">
+<div class="talk-title">FNO for Plasma Modelling</div>
+<div class="talk-venue">IAEA Fusion Energy Conference — London</div>
+<div class="talk-links">
+<a href="Slides/IAEA_AI_Fusion_Dec2023.qmd" class="badge-slides" target="_blank">Slides</a>
+</div>
+</div>
 
-- **Informed Sampling of the Plasma Hyperspace for Digital Twinning** - IAEA Fusion Data Processing, Validation, Analysis (Chengdu, 2021) <code style="text-align: left">[<a href="Slides/IAEA_FDPVA.qmd" target="_blank">Slides</a>]</code>
+<div class="talk-item">
+<div class="talk-title">FNO for Plasma Modelling</div>
+<div class="talk-venue">AI for Sustainability Workshop @ UCL — London</div>
+</div>
 
-- **Optimising Physics Informed Neural Networks** - PyTorch Ecosystem Day (Virtual, 2021)<code style="text-align: left; color: red">[<a href="https://medium.com/@engineoutcompletely/pytorch-ecosystem-day-poster-9ced784da13b" target="_blank">Poster</a>]</code>
+<div class="talk-year">2022</div>
 
-- **Fluid Surrogates using Neural PDEs** - SciML at RAL, STFC (Oxford, 2020) <code style="text-align: left">[<a href="Slides/NPDE_SciML.qmd" target="_blank">Slides</a>]</code>
+<div class="talk-item">
+<div class="talk-title">Fourier RNNs for Modelling Noisy Physics Data</div>
+<div class="talk-venue">IEEE ICMLA — Bahamas</div>
+<div class="talk-links">
+<a href="Slides/F_RNNS.qmd" class="badge-slides" target="_blank">Slides</a>
+</div>
+</div>
 
-- **Solving Fluid Dynamics with Neural Networks** - FusionEP (Virtual, 2020)  <code style="text-align: left; color: violet">[<a href="https://www.youtube.com/watch?v=lXeVcMU1D9E" target="_blank">Video</a>]</code> <code style="text-align: left">[<a href="Slides/solving_fluids_neural_nets.qmd" target="_blank">Slides</a>]</code>
+<div class="talk-year">2021</div>
 
-- **Data Driven Modelling of Plasma in Tokamaks** - IOP Physics in the spotlight (London, 2019) <code style="text-align: left">[<a href="Slides/IOP_forum.qmd" target="_blank">Slides</a>]</code>
+<div class="talk-item">
+<div class="talk-title">Informed Sampling of the Plasma Hyperspace for Digital Twinning</div>
+<div class="talk-venue">IAEA Fusion Data Processing, Validation, Analysis — Chengdu</div>
+<div class="talk-links">
+<a href="Slides/IAEA_FDPVA.qmd" class="badge-slides" target="_blank">Slides</a>
+</div>
+</div>
 
-- **Data Driven Modelling and Control of Plasma in Fusion Reactors** - O'Reilly AI London (London, 2019) <code style="text-align: left; color: violet">[<a href="https://youtu.be/25GarkFQh2s" target="_blank">Video</a>]</code>
+<div class="talk-item">
+<div class="talk-title">Optimising Physics Informed Neural Networks</div>
+<div class="talk-venue">PyTorch Ecosystem Day — Virtual</div>
+<div class="talk-links">
+<a href="https://medium.com/@engineoutcompletely/pytorch-ecosystem-day-poster-9ced784da13b" class="badge-poster" target="_blank">Poster</a>
+</div>
+</div>
 
+<div class="talk-year">2020</div>
+
+<div class="talk-item">
+<div class="talk-title">Fluid Surrogates using Neural PDEs</div>
+<div class="talk-venue">SciML at RAL, STFC — Oxford</div>
+<div class="talk-links">
+<a href="Slides/NPDE_SciML.qmd" class="badge-slides" target="_blank">Slides</a>
+</div>
+</div>
+
+<div class="talk-item">
+<div class="talk-title">Solving Fluid Dynamics with Neural Networks</div>
+<div class="talk-venue">FusionEP — Virtual</div>
+<div class="talk-links">
+<a href="https://www.youtube.com/watch?v=lXeVcMU1D9E" class="badge-video" target="_blank">Video</a>
+<a href="Slides/solving_fluids_neural_nets.qmd" class="badge-slides" target="_blank">Slides</a>
+</div>
+</div>
+
+<div class="talk-year">2019</div>
+
+<div class="talk-item">
+<div class="talk-title">Data Driven Modelling of Plasma in Tokamaks</div>
+<div class="talk-venue">IOP Physics in the Spotlight — London</div>
+<div class="talk-links">
+<a href="Slides/IOP_forum.qmd" class="badge-slides" target="_blank">Slides</a>
+</div>
+</div>
+
+<div class="talk-item">
+<div class="talk-title">Data Driven Modelling and Control of Plasma in Fusion Reactors</div>
+<div class="talk-venue">O'Reilly AI London — London</div>
+<div class="talk-links">
+<a href="https://youtu.be/25GarkFQh2s" class="badge-video" target="_blank">Video</a>
+</div>
+</div>

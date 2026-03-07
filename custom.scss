@@ -1,0 +1,594 @@
+/*-- scss:defaults --*/
+
+// ============================================
+// MINIMALIST DESIGN SYSTEM
+// Forester-inspired monochrome minimalism
+// ============================================
+
+// --- Color Palette (Forester monochrome) ---
+$cream:          #FFFFFF;
+$oat:            #F8F8F8;
+$clay:           #CCCCCC;
+$coral:          #999999;
+$cactus:         #AAAAAA;
+$heather:        #BBBBBB;
+$sky:            #999999;
+$fig:            #555555;
+$text-primary:   #000000;
+$text-secondary: #808080;
+$hover-tint:     rgba(0, 100, 255, 0.04);
+
+// --- Bootstrap Variable Overrides ---
+$body-bg:           $cream;
+$body-color:        $text-primary;
+$font-family-sans-serif: "Inria Sans", "DM Sans", system-ui, -apple-system, sans-serif;
+$headings-font-family:   "Inria Serif", "Libre Baskerville", Georgia, serif;
+$font-family-monospace:  "JetBrains Mono", "Fira Code", monospace;
+$font-size-base:    1rem;
+$line-height-base:  1.6;
+$headings-font-weight: 700;
+$headings-color:    $text-primary;
+
+$link-color:        $text-secondary;
+$link-hover-color:  $text-primary;
+$link-decoration:   underline;
+
+$border-radius:     4px;
+$border-radius-lg:  6px;
+$border-radius-sm:  3px;
+
+$navbar-light-color:        $text-primary;
+$navbar-light-active-color: $text-primary;
+$navbar-light-hover-color:  $fig;
+$navbar-padding-y:          0.75rem;
+
+$card-bg:           transparent;
+$card-border-color: transparent;
+$card-border-radius: 4px;
+
+$code-color:        $fig;
+
+/*-- scss:rules --*/
+
+// --- Google Fonts Import ---
+@import url('https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Inria+Serif:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+// --- Selection Color ---
+::selection {
+  background: rgba(0, 100, 255, 0.12);
+  color: $text-primary;
+}
+
+// ============================================
+// GLOBAL LAYOUT
+// ============================================
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  hyphens: auto;
+}
+
+.page-layout-full .content {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+// --- Global link style (Forester dotted underline) ---
+a {
+  color: $text-secondary;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: $text-secondary;
+  text-underline-offset: 3px;
+  transition: color 150ms ease, background-color 150ms ease;
+
+  &:hover {
+    color: $text-primary;
+    background-color: rgba(0, 100, 255, 0.1);
+  }
+}
+
+// ============================================
+// NAVBAR
+// ============================================
+
+.navbar {
+  background-color: $cream !important;
+  border-bottom: 1px solid rgba($clay, 0.25);
+  padding: 0.6rem 2rem;
+  font-family: $font-family-sans-serif;
+  font-weight: 400;
+  letter-spacing: 0;
+
+  .navbar-brand {
+    font-family: $headings-font-family;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: $text-primary !important;
+    text-decoration: none;
+  }
+
+  .navbar-nav .nav-link {
+    color: $text-secondary !important;
+    padding: 0.3rem 0.75rem !important;
+    border-radius: 0;
+    transition: color 150ms ease;
+    font-size: 0.92rem;
+    text-decoration: none;
+
+    &:hover {
+      color: $text-primary !important;
+      background-color: transparent;
+    }
+
+    &.active {
+      color: $text-primary !important;
+      background-color: transparent;
+      border-bottom: 1.5px solid $clay;
+    }
+  }
+}
+
+// ============================================
+// PAGE TITLES
+// ============================================
+
+.title {
+  font-family: $headings-font-family;
+  color: $text-primary;
+}
+
+#title-block-header {
+  margin-bottom: 2rem;
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+}
+
+// ============================================
+// HERO SECTION (Homepage)
+// ============================================
+
+.hero-section {
+  text-align: center;
+  padding: 3rem 1rem 1.5rem;
+}
+
+.hero-image {
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 35%;
+  border: 2px solid rgba($clay, 0.5);
+  margin-bottom: 1.5rem;
+}
+
+.hero-name {
+  font-family: $headings-font-family;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: $text-primary;
+  margin-bottom: 0.2rem;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 1.05rem;
+  color: $text-secondary;
+  font-weight: 300;
+  margin-bottom: 1.75rem;
+  font-style: italic;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0;
+    font-size: 0.85rem;
+    font-weight: 400;
+    text-decoration: none;
+    color: $text-secondary;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px dotted rgba($fig, 0.3);
+    border-radius: 0;
+    transition: color 150ms ease;
+
+    &:hover {
+      color: $text-primary;
+      border-bottom-color: $text-primary;
+      transform: none;
+      box-shadow: none;
+      background-color: transparent;
+    }
+  }
+}
+
+.bio-card {
+  background-color: transparent;
+  border-radius: 0;
+  border-left: 2px solid rgba($clay, 0.4);
+  padding: 0.5rem 2rem;
+  max-width: 680px;
+  margin: 0 auto 2rem;
+  text-align: left;
+  line-height: 1.7;
+  box-shadow: none;
+}
+
+.research-tags {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+
+  .tag {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    border: 1px solid;
+
+    &.tag-coral, &.tag-cactus, &.tag-sky, &.tag-heather {
+      border-color: $clay;
+      color: $fig;
+      background: transparent;
+    }
+  }
+}
+
+.simvue-callout {
+  background: transparent;
+  border-radius: 0;
+  padding: 0.75rem 1.75rem;
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
+  text-align: left;
+  border-left: 2px solid $cactus;
+}
+
+// ============================================
+// BLOCKQUOTE
+// ============================================
+
+blockquote {
+  border-left: 2px solid rgba($coral, 0.5);
+  background-color: transparent;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0;
+  margin: 2rem auto;
+  max-width: 560px;
+  font-style: italic;
+  font-family: $headings-font-family;
+  color: $text-secondary;
+  font-size: 0.95rem;
+
+  p {
+    margin-bottom: 0;
+  }
+}
+
+// ============================================
+// PUBLICATION CARDS (Research page)
+// ============================================
+
+.year-header {
+  text-align: right;
+  font-family: $headings-font-family;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: $fig;
+  margin: 2.5rem 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba($fig, 0.15);
+}
+
+.pub-card {
+  background-color: transparent;
+  border-radius: 0;
+  padding: 1.25rem 0;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  box-shadow: none;
+  border-bottom: 1px solid rgba($clay, 0.2);
+  transition: background-color 150ms ease;
+
+  &:hover {
+    background-color: $hover-tint;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .pub-content {
+    flex: 3;
+  }
+
+  .pub-image {
+    flex: 1;
+    max-width: 180px;
+
+    img {
+      width: 100%;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  }
+
+  .pub-title {
+    font-family: $headings-font-family;
+    font-weight: 700;
+    font-size: 1rem;
+    color: $text-primary;
+    margin-bottom: 0.3rem;
+    line-height: 1.4;
+  }
+
+  .pub-authors {
+    font-size: 0.88rem;
+    color: $text-secondary;
+    margin-bottom: 0.4rem;
+    line-height: 1.5;
+  }
+
+  .pub-tldr {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: $fig;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    margin-bottom: 0.6rem;
+    line-height: 1.5;
+  }
+
+  .pub-links {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+}
+
+// Publication buttons — minimal, text-based
+.btn-paper, .btn-code, .btn-presentation {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  border-radius: 3px;
+  text-decoration: none;
+  transition: all 150ms ease;
+  border: 1px solid;
+  cursor: pointer;
+  background: transparent;
+}
+
+.btn-paper, .btn-code, .btn-presentation {
+  border-color: $clay;
+  color: $fig;
+
+  &:hover {
+    background-color: $hover-tint;
+    transform: none;
+    color: $text-primary;
+  }
+}
+
+// ============================================
+// TALKS PAGE
+// ============================================
+
+.talks-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.talk-year {
+  font-family: $headings-font-family;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: $fig;
+  margin: 2.5rem 0 1rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba($fig, 0.15);
+  text-align: right;
+}
+
+.talk-item {
+  background-color: transparent;
+  border-radius: 0;
+  padding: 1rem 0 1rem 1.25rem;
+  margin-bottom: 0.25rem;
+  border-left: 2px solid rgba($clay, 0.3);
+  transition: all 150ms ease;
+
+  &:hover {
+    background-color: $hover-tint;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .talk-title {
+    font-weight: 600;
+    color: $text-primary;
+    font-size: 0.95rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .talk-venue {
+    font-size: 0.85rem;
+    color: $text-secondary;
+    font-style: italic;
+    margin-bottom: 0.4rem;
+  }
+
+  .talk-links {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+}
+
+// Talk link badges — minimal
+.badge-video, .badge-slides, .badge-poster {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 3px;
+  font-size: 0.78rem;
+  font-weight: 400;
+  text-decoration: none;
+  transition: all 150ms ease;
+  border: 1px solid;
+  background: transparent;
+
+  &:hover {
+    transform: none;
+  }
+}
+
+.badge-video, .badge-slides, .badge-poster {
+  border-color: $clay;
+  color: $fig;
+  &:hover { background-color: $hover-tint; color: $text-primary; }
+}
+
+// ============================================
+// BLOG CARDS
+// ============================================
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.blog-card {
+  background-color: transparent;
+  border-radius: 0;
+  padding: 1rem 1.25rem;
+  transition: background-color 150ms ease;
+  box-shadow: none;
+  border: 1px solid rgba($clay, 0.2);
+
+  &:hover {
+    background-color: $hover-tint;
+    transform: none;
+    box-shadow: none;
+  }
+
+  a {
+    font-family: $headings-font-family;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: $text-primary;
+    text-decoration: none;
+    line-height: 1.4;
+    display: block;
+
+    &:hover {
+      color: $fig;
+    }
+  }
+}
+
+.blog-note {
+  background-color: transparent;
+  border-left: 2px solid $clay;
+  border-radius: 0;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.88rem;
+  color: $text-secondary;
+  font-style: italic;
+  margin-top: 1rem;
+}
+
+// ============================================
+// FOOTER
+// ============================================
+
+.nav-footer {
+  background-color: $cream !important;
+  border-top: 1px solid rgba($clay, 0.2);
+  padding: 1.25rem;
+  text-align: center;
+  font-size: 0.82rem;
+  color: $text-secondary;
+}
+
+// ============================================
+// HORIZONTAL RULES
+// ============================================
+
+hr {
+  border: none;
+  height: 1px;
+  background-color: rgba($clay, 0.3);
+  margin: 2rem 0;
+}
+
+// ============================================
+// CODE BLOCKS
+// ============================================
+
+code {
+  font-family: $font-family-monospace;
+  font-size: 0.88em;
+  color: $fig;
+  background-color: rgba(0, 100, 100, 0.04);
+  padding: 0.15rem 0.35rem;
+  border-radius: 3px;
+}
+
+pre {
+  background-color: rgba(0, 100, 100, 0.03);
+  border-radius: 4px;
+  padding: 1rem;
+  border: none;
+}
+
+// ============================================
+// RESPONSIVE
+// ============================================
+
+@media (max-width: 768px) {
+  .hero-name {
+    font-size: 1.8rem;
+  }
+
+  .pub-card {
+    flex-direction: column;
+
+    .pub-image {
+      max-width: 100%;
+      order: -1;
+    }
+  }
+
+  .blog-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bio-card {
+    padding: 0.5rem 1.25rem;
+  }
+}
