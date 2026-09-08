@@ -1,0 +1,40 @@
+---
+title: "Learning Physics You Can Trust: Seven Years in One Page"
+format: html
+---
+
+***
+
+Everything I have written as first author is, in hindsight, one long argument: **a neural network that predicts physics is useless unless you know when to believe it.** The papers below are the steps of that argument, roughly in the order I stumbled through them.
+
+### Start: can a network see plasma at all? (2020)
+
+[*Image Mapping the Temporal Evolution of Edge Characteristics in Tokamaks using Neural Networks*](/Blog/paper_edge_imagemapping.qmd) was the naive question — can a branched convolutional network emulate SOLPS at the scrape-off layer, with coupled plasma and neutral behaviour, instead of running the solver? It could. Cheap surrogates for edge physics were on the table. But it was a black box mapping images to images, and nothing in it said how wrong it was.
+
+### Making the physics do some of the work (2023)
+
+Two papers on making the learning problem easier rather than the network bigger. In [*Loss Landscape Engineering via Data Regulation on PINNs*](/Blog/paper_loss_landscape_pinns.qmd) the finding was that PINNs fail less because of capacity and more because of a pathological loss surface — feeding in a regulated amount of data smoothens that surface and convergence follows. In [*Fourier-RNNs for Modelling Noisy Physics Data*](/Blog/paper_fourier_rnns.qmd), a recurrent hidden state was bolted onto the Fourier operator, because real physics data is noisy and non-Markovian and one-step-in one-step-out is the wrong inductive bias for it.
+
+### Scale: the surrogate that actually ran on a tokamak (2024)
+
+[*Plasma Surrogate Modelling using Fourier Neural Operators*](/Blog/paper_plasma_fno.qmd) is the one that made the case at machine scale — a multi-variable FNO modelling plasma evolution inside a Tokamak, trained on JOREK simulations and then shown to hold on experimental MAST data. Six orders of magnitude faster than the solver. Which is exactly when the uncomfortable question arrives: this thing is fast and plausible, so how do I know its error bars?
+
+### The uncertainty years (2024–2025)
+
+I did not have a good answer, so the next three papers are that answer.
+
+[*Uncertainty Quantification of Surrogate Models using Conformal Prediction*](/Blog/paper_conformal_surrogates.qmd) brings conformal prediction to spatio-temporal surrogates: guaranteed, distribution-free, model-agnostic error bars across the whole domain, with no assumptions about the network that produced them. [*Valid Error Bars for Neural Weather Models using Conformal Prediction*](/Blog/paper_weather_cp.qmd) carries the same machinery out of fusion and into neural weather models, because nothing in the argument was fusion-specific.
+
+The catch in both is calibration data — you need held-out ground truth, which is the expensive thing you built the surrogate to avoid. [*Calibrated Physics-Informed Uncertainty Quantification*](/Blog/paper_calibrated_pi_uq.qmd) closes that loop: use the **PDE residual itself** as the non-conformity score. The governing equation becomes the calibration set. Data-free conformal prediction, guarantees intact.
+
+The [review](/Blog/upgrade_viva.qmd) I wrote in 2025 on surrogate modelling and UQ of neural differential equations is the tidy version of that whole detour.
+
+### Now: put the physics inside the model (2026)
+
+[*Learning Physical Operators using Neural Operators*](/Blog/paper_physical_operators.qmd) is where it currently rests. Rather than learning the whole solution operator and bounding the damage afterwards, split the PDE: keep a fixed linear approximation of the operator you already know, and learn only the non-linear remainder as a neural operator inside a Neural ODE. Fewer parameters, better generalisation to physics never seen in training, and a model whose pieces mean something.
+
+***
+
+Arc, stated plainly: **learn the map (2020) → help it learn (2023) → make it useful at scale (2024) → make it honest (2024–25) → stop making it learn what we already know (2026).** The trust problem was never solved by a bigger network. It was solved by giving the physics back its job.
+
+Papers and code: [Research](/research.qmd) · [Google Scholar](https://scholar.google.com/citations?user=NQtqemwAAAAJ&hl=en)

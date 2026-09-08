@@ -1,0 +1,33 @@
+---
+title: "Valid Error Bars for Neural Weather Models"
+subtitle: "ICML Workshop on ML for Earth System Modeling, 2024"
+format: html
+---
+
+***
+
+**Paper:** [Valid Error Bars for Neural Weather Models using Conformal Prediction](https://arxiv.org/abs/2406.14483) — *V. Gopakumar, J. Oskarsson, A. Gray, L. Zanisi, S. Pamela, D. Giles, M. J. Kusner, M. P. Deisenroth. ICML Workshop: ML for Earth System Modeling, 2024.* · [Code](https://github.com/gitvicky/neural-lam-CP)
+
+![](/Images/weather_cp.png){.lightbox}
+
+### The problem
+
+Neural weather models became genuinely competitive with numerical weather prediction, and did it while dropping the one thing operational forecasting is built on: the ensemble. NWP centres quantify uncertainty by running the physics many times from perturbed initial conditions. That is expensive, and a neural model that is a thousand times cheaper per forecast loses most of its advantage if you have to run fifty of them to say anything about spread.
+
+### The idea
+
+Take the [conformal machinery built for fusion surrogates](/Blog/paper_conformal_surrogates.qmd) and point it at a neural weather model. Nothing in conformal prediction is domain-specific — it needs a calibration set and a non-conformity score, not a plasma. Applied to a graph-based limited-area weather model, it produces marginal prediction bands with coverage guarantees over the forecast domain, at the cost of one calibration pass rather than an ensemble.
+
+### What it showed
+
+Guaranteed error bars on neural weather forecasts without ensembling. Coverage holds across variables and lead times, and the added compute is negligible next to the model itself.
+
+### Why it matters
+
+Two reasons, and the second is the real one.
+
+The stated reason: cheap, valid uncertainty is what a neural forecast needs before an operational centre can take it seriously.
+
+The reason I wrote it: it demonstrates that none of the [surrogate UQ work](/Blog/paper_conformal_surrogates.qmd) was about fusion. The argument is about neural PDE solvers in general — anywhere a network has replaced a numerical integrator and someone downstream is going to act on the output. Fusion is where I happen to work, not where the method stops.
+
+[Back to the arc](/Blog/research_arc.qmd)

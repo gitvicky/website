@@ -1,0 +1,33 @@
+---
+title: "Conformal Prediction for Spatio-Temporal Surrogates"
+subtitle: "Machine Learning: Science and Technology, 2024"
+format: html
+---
+
+***
+
+**Paper:** [Uncertainty Quantification of Surrogate Models using Conformal Prediction](https://iopscience.iop.org/article/10.1088/2632-2153/ae2e7b/meta) — *V. Gopakumar, A. Gray, J. Oskarsson, L. Zanisi, D. Giles, M. J. Kusner, S. Pamela, M. P. Deisenroth. MLST, 2024.* · [Code](https://github.com/gitvicky/Spatio-Temporal-CP)
+
+![](/Images/heatmap_cp.png){.lightbox}
+
+### The problem
+
+Every practical UQ method for deep surrogates asks you to give something up. Bayesian neural networks want a prior and an approximate posterior you have to trust. Deep ensembles want N times the training budget and still produce a spread, not a guarantee. Dropout-based estimates are cheap and calibrated by luck. None of them tell you: *the true field lies inside this band, with this probability, and here is the proof.*
+
+For a surrogate feeding a fusion design decision, "probably about right" is not a specification.
+
+### The idea
+
+Conformal prediction. Wrap the trained model — any trained model — in a distribution-free procedure that converts a held-out calibration set into prediction bands with a finite-sample coverage guarantee. No assumptions about the network, the data distribution, or the physics. Post-hoc, so it costs one calibration pass rather than a retraining regime.
+
+The contribution is making it work in the setting that actually matters here: **spatio-temporal fields**. A guarantee on a scalar output is standard; a guarantee that holds across every point of a spatial domain, over a rollout, without either collapsing into vacuous width or quietly losing coverage somewhere in the corner of the mesh, is not. The paper works through the marginal and the joint formulations and what each one actually promises you when the output is a field.
+
+### What it showed
+
+Valid, tight-enough error bars across the domain for neural PDE surrogates, at negligible cost over the base model, and agnostic to which surrogate produced the prediction — FNO, U-Net, whatever is in the box.
+
+### The catch
+
+Calibration data. The guarantee is bought with held-out ground truth, and ground truth is simulator output — the expensive thing the surrogate exists to avoid. That objection is the entire motivation for [physics-informed calibration](/Blog/paper_calibrated_pi_uq.qmd).
+
+[Back to the arc](/Blog/research_arc.qmd)

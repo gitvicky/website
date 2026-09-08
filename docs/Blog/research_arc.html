@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-05-11">
 
-<title>IAEA FDPVA – Vignesh Gopakumar</title>
+<title>Learning Physics You Can Trust: Seven Years in One Page – Vignesh Gopakumar</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -123,7 +122,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">IAEA FDPVA</h1>
+<h1 class="title">Learning Physics You Can Trust: Seven Years in One Page</h1>
 </div>
 
 
@@ -131,12 +130,6 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title-meta column-page">
 
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">May 11, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -147,9 +140,35 @@ ul.task-list li input[type="checkbox"] {
 
 
 <hr>
-<p><embed src="IAEA_FDPVA.pdf" style="width:100.0%" height="500"></p>
+<p>Everything I have written as first author is, in hindsight, one long argument: <strong>a neural network that predicts physics is useless unless you know when to believe it.</strong> The papers below are the steps of that argument, roughly in the order I stumbled through them.</p>
+<section id="start-can-a-network-see-plasma-at-all-2020" class="level3">
+<h3 class="anchored" data-anchor-id="start-can-a-network-see-plasma-at-all-2020">Start: can a network see plasma at all? (2020)</h3>
+<p><a href="../Blog/paper_edge_imagemapping.html"><em>Image Mapping the Temporal Evolution of Edge Characteristics in Tokamaks using Neural Networks</em></a> was the naive question — can a branched convolutional network emulate SOLPS at the scrape-off layer, with coupled plasma and neutral behaviour, instead of running the solver? It could. Cheap surrogates for edge physics were on the table. But it was a black box mapping images to images, and nothing in it said how wrong it was.</p>
+</section>
+<section id="making-the-physics-do-some-of-the-work-2023" class="level3">
+<h3 class="anchored" data-anchor-id="making-the-physics-do-some-of-the-work-2023">Making the physics do some of the work (2023)</h3>
+<p>Two papers on making the learning problem easier rather than the network bigger. In <a href="../Blog/paper_loss_landscape_pinns.html"><em>Loss Landscape Engineering via Data Regulation on PINNs</em></a> the finding was that PINNs fail less because of capacity and more because of a pathological loss surface — feeding in a regulated amount of data smoothens that surface and convergence follows. In <a href="../Blog/paper_fourier_rnns.html"><em>Fourier-RNNs for Modelling Noisy Physics Data</em></a>, a recurrent hidden state was bolted onto the Fourier operator, because real physics data is noisy and non-Markovian and one-step-in one-step-out is the wrong inductive bias for it.</p>
+</section>
+<section id="scale-the-surrogate-that-actually-ran-on-a-tokamak-2024" class="level3">
+<h3 class="anchored" data-anchor-id="scale-the-surrogate-that-actually-ran-on-a-tokamak-2024">Scale: the surrogate that actually ran on a tokamak (2024)</h3>
+<p><a href="../Blog/paper_plasma_fno.html"><em>Plasma Surrogate Modelling using Fourier Neural Operators</em></a> is the one that made the case at machine scale — a multi-variable FNO modelling plasma evolution inside a Tokamak, trained on JOREK simulations and then shown to hold on experimental MAST data. Six orders of magnitude faster than the solver. Which is exactly when the uncomfortable question arrives: this thing is fast and plausible, so how do I know its error bars?</p>
+</section>
+<section id="the-uncertainty-years-20242025" class="level3">
+<h3 class="anchored" data-anchor-id="the-uncertainty-years-20242025">The uncertainty years (2024–2025)</h3>
+<p>I did not have a good answer, so the next three papers are that answer.</p>
+<p><a href="../Blog/paper_conformal_surrogates.html"><em>Uncertainty Quantification of Surrogate Models using Conformal Prediction</em></a> brings conformal prediction to spatio-temporal surrogates: guaranteed, distribution-free, model-agnostic error bars across the whole domain, with no assumptions about the network that produced them. <a href="../Blog/paper_weather_cp.html"><em>Valid Error Bars for Neural Weather Models using Conformal Prediction</em></a> carries the same machinery out of fusion and into neural weather models, because nothing in the argument was fusion-specific.</p>
+<p>The catch in both is calibration data — you need held-out ground truth, which is the expensive thing you built the surrogate to avoid. <a href="../Blog/paper_calibrated_pi_uq.html"><em>Calibrated Physics-Informed Uncertainty Quantification</em></a> closes that loop: use the <strong>PDE residual itself</strong> as the non-conformity score. The governing equation becomes the calibration set. Data-free conformal prediction, guarantees intact.</p>
+<p>The <a href="../Blog/upgrade_viva.html">review</a> I wrote in 2025 on surrogate modelling and UQ of neural differential equations is the tidy version of that whole detour.</p>
+</section>
+<section id="now-put-the-physics-inside-the-model-2026" class="level3">
+<h3 class="anchored" data-anchor-id="now-put-the-physics-inside-the-model-2026">Now: put the physics inside the model (2026)</h3>
+<p><a href="../Blog/paper_physical_operators.html"><em>Learning Physical Operators using Neural Operators</em></a> is where it currently rests. Rather than learning the whole solution operator and bounding the damage afterwards, split the PDE: keep a fixed linear approximation of the operator you already know, and learn only the non-linear remainder as a neural operator inside a Neural ODE. Fewer parameters, better generalisation to physics never seen in training, and a model whose pieces mean something.</p>
+<hr>
+<p>Arc, stated plainly: <strong>learn the map (2020) → help it learn (2023) → make it useful at scale (2024) → make it honest (2024–25) → stop making it learn what we already know (2026).</strong> The trust problem was never solved by a bigger network. It was solved by giving the physics back its job.</p>
+<p>Papers and code: <a href="../research.html">Research</a> · <a href="https://scholar.google.com/citations?user=NQtqemwAAAAJ&amp;hl=en">Google Scholar</a></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

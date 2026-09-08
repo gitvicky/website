@@ -1,0 +1,33 @@
+---
+title: "Plasma Surrogate Modelling with Fourier Neural Operators"
+subtitle: "Nuclear Fusion, 2024"
+format: html
+---
+
+***
+
+**Paper:** [Plasma Surrogate Modelling using Fourier Neural Operators](https://iopscience.iop.org/article/10.1088/1741-4326/ad313a/meta) — *V. Gopakumar, S. Pamela, L. Zanisi, Z. Li, A. Gray, D. Brennand, N. Bhatia, G. Stathopoulos, M. Kusner, M. P. Deisenroth, A. Anandkumar, JOREK Team, MAST Team. Nuclear Fusion 64(5), 056025, 2024.* · [Code](https://github.com/Plasma-FNO)
+
+![](/Images/fno_plasma.png){.lightbox}
+
+### The problem
+
+MHD codes like JOREK describe plasma evolution inside a tokamak and cost enormous amounts of compute to run. Anything that needs many evaluations — design sweeps, scenario optimisation, control, uncertainty propagation — is priced out. A surrogate is the obvious answer, but the surrogate has to handle multiple coupled fields evolving together, not one scalar at a time.
+
+### The idea
+
+A multi-variable Fourier Neural Operator. Rather than training a separate model per field, the variables are modelled jointly so that the coupling between density, temperature and the rest is carried inside the operator instead of being reconstructed afterwards. Being an operator learner, it learns a mapping between function spaces — which is what makes it discretisation-flexible in a way the [convolutional edge model](/Blog/paper_edge_imagemapping.qmd) never was.
+
+### What it showed
+
+Two results, and the second is the one that matters.
+
+**On simulation:** the FNO reproduces JOREK's plasma evolution at a speedup of around six orders of magnitude. That moves plasma evolution from an overnight job into an inner loop.
+
+**On experiment:** the same architecture, trained on camera data from the MAST tokamak, predicts the observed plasma evolution. It is not a solver emulator confined to solver-land — it learns the dynamics from real machine data too.
+
+### Why it matters
+
+This is the paper that made the surrogate case at machine scale, and immediately created the problem that occupied the next two years. A model this fast *will* get used inside decision loops. Used that way, an unquantified error is not a benchmark number — it is a wrong divertor design or a bad control action. Hence [conformal prediction for surrogates](/Blog/paper_conformal_surrogates.qmd).
+
+[Back to the arc](/Blog/research_arc.qmd)

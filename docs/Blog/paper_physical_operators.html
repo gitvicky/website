@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-05-11">
 
-<title>IAEA FDPVA – Vignesh Gopakumar</title>
+<title>Learning Physical Operators using Neural Operators – Vignesh Gopakumar</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -41,6 +40,9 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -123,7 +125,8 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">IAEA FDPVA</h1>
+<h1 class="title">Learning Physical Operators using Neural Operators</h1>
+<p class="subtitle lead">AISTATS, 2026</p>
 </div>
 
 
@@ -131,12 +134,6 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title-meta column-page">
 
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">May 11, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -147,9 +144,35 @@ ul.task-list li input[type="checkbox"] {
 
 
 <hr>
-<p><embed src="IAEA_FDPVA.pdf" style="width:100.0%" height="500"></p>
+<p><strong>Paper:</strong> <a href="https://arxiv.org/abs/2602.23113">Learning Physical Operators using Neural Operators</a> — <em>V. Gopakumar, A. Gray, D. Giles, L. Zanisi, M. J. Kusner, T. Betcke, S. Pamela, M. P. Deisenroth. AISTATS, 2026.</em> · <a href="https://github.com/gitvicky/NOs_for_POs">Code</a></p>
+<p><a href="../Images/physop_learning.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="../Images/physop_learning.png" class="img-fluid"></a></p>
+<section id="the-problem" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem">The problem</h3>
+<p>A neural operator trained end-to-end learns the whole solution map, including the parts we have known analytically for two centuries. That is wasteful in parameters, and it is worse than wasteful in generalisation: a model that has learned diffusion <em>statistically</em> has no reason to keep obeying diffusion outside the distribution it was trained on. Push it to unseen physics and it degrades in ways nothing in the architecture prevents.</p>
+<p>Adding a residual penalty — the PINN route — softens this but does not fix it. The physics is a <em>preference</em> expressed through the loss, not a <em>property</em> of the model.</p>
+</section>
+<section id="the-idea" class="level3">
+<h3 class="anchored" data-anchor-id="the-idea">The idea</h3>
+<p>Split the operator instead of penalising it.</p>
+<p>Most PDEs of interest decompose into a linear part you can write down and a non-linear part you cannot. So do exactly that: fix a linear approximation of the operator, built from the known structure, and learn only the non-linear remainder with a neural operator. Compose the two inside a <strong>Neural ODE</strong>, so the whole thing integrates in continuous time and the split holds throughout the trajectory rather than at a single step.</p>
+<p><strong>OpsSplit.</strong> The known physics is architecture, not regularisation. It cannot be trained away.</p>
+</section>
+<section id="what-it-showed" class="level3">
+<h3 class="anchored" data-anchor-id="what-it-showed">What it showed</h3>
+<p>Three things worth having at once:</p>
+<ul>
+<li><strong>Generalisation to unseen physics.</strong> Because the linear operator is fixed rather than fitted, it holds outside the training distribution — the model extrapolates on the part of the dynamics that was never learned in the first place.</li>
+<li><strong>Parameter efficiency.</strong> The network only has to represent the non-linear residual, which is a much smaller function than the full solution operator.</li>
+<li><strong>Interpretability.</strong> The decomposition is not decorative. You can inspect what the learned component contributes over and above the known linear dynamics, which is a diagnostic you simply do not have with a monolithic operator.</li>
+</ul>
+</section>
+<section id="where-this-sits" class="level3">
+<h3 class="anchored" data-anchor-id="where-this-sits">Where this sits</h3>
+<p>The <a href="../Blog/paper_edge_imagemapping.html">2020 work</a> learned everything from scratch and could not say how wrong it was. The <a href="../Blog/paper_calibrated_pi_uq.html">UQ papers</a> bounded the error after the fact. This one attacks the cause: stop making the network learn what we already know, and there is less error to bound.</p>
+<p><a href="../Blog/research_arc.html">Back to the arc</a></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -586,6 +609,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","loop":false,"selector":".lightbox","openEffect":"zoom","closeEffect":"zoom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

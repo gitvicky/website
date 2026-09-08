@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-05-11">
 
-<title>IAEA FDPVA – Vignesh Gopakumar</title>
+<title>Plasma Surrogate Modelling with Fourier Neural Operators – Vignesh Gopakumar</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -41,6 +40,9 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -123,7 +125,8 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">IAEA FDPVA</h1>
+<h1 class="title">Plasma Surrogate Modelling with Fourier Neural Operators</h1>
+<p class="subtitle lead">Nuclear Fusion, 2024</p>
 </div>
 
 
@@ -131,12 +134,6 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title-meta column-page">
 
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">May 11, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -147,9 +144,29 @@ ul.task-list li input[type="checkbox"] {
 
 
 <hr>
-<p><embed src="IAEA_FDPVA.pdf" style="width:100.0%" height="500"></p>
+<p><strong>Paper:</strong> <a href="https://iopscience.iop.org/article/10.1088/1741-4326/ad313a/meta">Plasma Surrogate Modelling using Fourier Neural Operators</a> — <em>V. Gopakumar, S. Pamela, L. Zanisi, Z. Li, A. Gray, D. Brennand, N. Bhatia, G. Stathopoulos, M. Kusner, M. P. Deisenroth, A. Anandkumar, JOREK Team, MAST Team. Nuclear Fusion 64(5), 056025, 2024.</em> · <a href="https://github.com/Plasma-FNO">Code</a></p>
+<p><a href="../Images/fno_plasma.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="../Images/fno_plasma.png" class="img-fluid"></a></p>
+<section id="the-problem" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem">The problem</h3>
+<p>MHD codes like JOREK describe plasma evolution inside a tokamak and cost enormous amounts of compute to run. Anything that needs many evaluations — design sweeps, scenario optimisation, control, uncertainty propagation — is priced out. A surrogate is the obvious answer, but the surrogate has to handle multiple coupled fields evolving together, not one scalar at a time.</p>
+</section>
+<section id="the-idea" class="level3">
+<h3 class="anchored" data-anchor-id="the-idea">The idea</h3>
+<p>A multi-variable Fourier Neural Operator. Rather than training a separate model per field, the variables are modelled jointly so that the coupling between density, temperature and the rest is carried inside the operator instead of being reconstructed afterwards. Being an operator learner, it learns a mapping between function spaces — which is what makes it discretisation-flexible in a way the <a href="../Blog/paper_edge_imagemapping.html">convolutional edge model</a> never was.</p>
+</section>
+<section id="what-it-showed" class="level3">
+<h3 class="anchored" data-anchor-id="what-it-showed">What it showed</h3>
+<p>Two results, and the second is the one that matters.</p>
+<p><strong>On simulation:</strong> the FNO reproduces JOREK’s plasma evolution at a speedup of around six orders of magnitude. That moves plasma evolution from an overnight job into an inner loop.</p>
+<p><strong>On experiment:</strong> the same architecture, trained on camera data from the MAST tokamak, predicts the observed plasma evolution. It is not a solver emulator confined to solver-land — it learns the dynamics from real machine data too.</p>
+</section>
+<section id="why-it-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-it-matters">Why it matters</h3>
+<p>This is the paper that made the surrogate case at machine scale, and immediately created the problem that occupied the next two years. A model this fast <em>will</em> get used inside decision loops. Used that way, an unquantified error is not a benchmark number — it is a wrong divertor design or a bad control action. Hence <a href="../Blog/paper_conformal_surrogates.html">conformal prediction for surrogates</a>.</p>
+<p><a href="../Blog/research_arc.html">Back to the arc</a></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -586,6 +603,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","descPosition":"bottom","closeEffect":"zoom","openEffect":"zoom","loop":false});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

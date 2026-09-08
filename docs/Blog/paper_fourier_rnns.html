@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-05-11">
 
-<title>IAEA FDPVA – Vignesh Gopakumar</title>
+<title>Fourier-RNNs for Noisy Physics – Vignesh Gopakumar</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -41,6 +40,9 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -123,7 +125,8 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">IAEA FDPVA</h1>
+<h1 class="title">Fourier-RNNs for Noisy Physics</h1>
+<p class="subtitle lead">IEEE ICMLA, 2023</p>
 </div>
 
 
@@ -131,12 +134,6 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title-meta column-page">
 
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">May 11, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -147,9 +144,27 @@ ul.task-list li input[type="checkbox"] {
 
 
 <hr>
-<p><embed src="IAEA_FDPVA.pdf" style="width:100.0%" height="500"></p>
+<p><strong>Paper:</strong> <a href="https://arxiv.org/abs/2302.06534">Fourier-RNNs for Modelling Noisy Physics Data</a> — <em>V. Gopakumar, L. Zanisi, S. Pamela. ICMLA, 2023.</em></p>
+<p><a href="../Images/F_RNNs.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="../Images/F_RNNs.png" class="img-fluid"></a></p>
+<section id="the-problem" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem">The problem</h3>
+<p>Fourier Neural Operators are built on a clean assumption: the next state is a function of the current state. Markovian, one step in, one step out. Simulation data obliges. Experimental data does not — it is noisy, partially observed, and the quantity you actually measured is not the full state. Under those conditions the past carries information the present has lost, and a Markovian model has nowhere to put it.</p>
+</section>
+<section id="the-idea" class="level3">
+<h3 class="anchored" data-anchor-id="the-idea">The idea</h3>
+<p>Give the operator a memory. Wrap the Fourier layer in a recurrent structure so the model carries a hidden state across the rollout, and let that hidden state absorb the history that the observed field alone does not determine. The spectral convolution keeps doing what it is good at — resolution-independent global mixing — while the recurrence handles the non-Markovian part.</p>
+</section>
+<section id="what-it-showed" class="level3">
+<h3 class="anchored" data-anchor-id="what-it-showed">What it showed</h3>
+<p>On noisy and partially observed physics data, the recurrent variant degrades more gracefully than the plain FNO. Noise that a one-step model integrates straight into the rollout gets damped by the hidden state instead of compounding. The gain is smallest on clean synthetic data, which is the expected result and a useful sanity check: the recurrence earns its keep exactly where the Markov assumption breaks.</p>
+</section>
+<section id="why-it-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-it-matters">Why it matters</h3>
+<p>It is a small architectural paper with a large practical consequence — it is the piece that makes operator surrogates usable on <em>diagnostics</em> rather than only on solver output. That distinction is what let the next paper put an FNO against real <a href="../Blog/paper_plasma_fno.html">MAST data</a> rather than only against JOREK.</p>
+<p><a href="../Blog/research_arc.html">Back to the arc</a></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -586,6 +601,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","closeEffect":"zoom","loop":false,"descPosition":"bottom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

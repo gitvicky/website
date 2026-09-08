@@ -1,0 +1,31 @@
+---
+title: "Loss Landscape Engineering on PINNs"
+subtitle: "Machine Learning with Applications, 2023"
+format: html
+---
+
+***
+
+**Paper:** [Loss Landscape Engineering via Data Regulation on PINNs](https://www.sciencedirect.com/science/article/pii/S2666827023000178) — *V. Gopakumar, S. Pamela, D. Samaddar. MLA 12, 100464, 2023.* · [Code](https://github.com/gitvicky/Loss_Landscape_PINNs)
+
+![](/Images/loss_landscape.png){.lightbox}
+
+### The problem
+
+Physics-informed neural networks are elegant and frequently refuse to train. The usual response is to blame capacity — deeper, wider, different activations, longer schedules. That response mostly does not work, which suggests the diagnosis is wrong.
+
+### The idea
+
+The failure is geometric, not representational. A pure PDE-residual loss produces a pathological optimisation surface: sharp, ill-conditioned, full of the kind of structure gradient descent cannot navigate regardless of how many parameters you throw at it. The network *can* express the solution. The optimiser cannot get there.
+
+So regulate the loss with data. Add a controlled amount of supervised signal alongside the residual and the surface smoothens — the data term acts as a well-behaved envelope that keeps the optimiser inside a region where the residual term is informative rather than adversarial.
+
+### What it showed
+
+Visualising the loss landscape under different data regulation regimes makes the mechanism explicit: increasing data content flattens and regularises the surface, and convergence tracks that smoothening rather than tracking model size. There is a sweet spot — too little data leaves the pathology, too much and the PDE constraint stops doing any work and you have an ordinary supervised model wearing a physics costume.
+
+### Why it matters
+
+It reframes "PINNs are unreliable" as a solvable conditioning problem with a knob attached. It also sets up the tension the rest of the work lives in: how much of the physics do you *impose*, how much do you *learn*, and where is the split that makes the optimisation tractable. Six years later the same question shows up as [operator splitting](/Blog/paper_physical_operators.qmd).
+
+[Back to the arc](/Blog/research_arc.qmd)

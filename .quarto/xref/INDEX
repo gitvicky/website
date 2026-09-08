@@ -103,5 +103,32 @@
   },
   "Slides/AI4Fusion.qmd": {
     "AI4Fusion.html": "a8a87453"
+  },
+  "Blog/paper_fourier_rnns.qmd": {
+    "paper_fourier_rnns.html": "669bb801"
+  },
+  "Blog/paper_plasma_fno.qmd": {
+    "paper_plasma_fno.html": "f75350a3"
+  },
+  "Blog/paper_edge_imagemapping.qmd": {
+    "paper_edge_imagemapping.html": "4f3ae18b"
+  },
+  "Blog/paper_conformal_surrogates.qmd": {
+    "paper_conformal_surrogates.html": "e59b2c7f"
+  },
+  "Blog/paper_loss_landscape_pinns.qmd": {
+    "paper_loss_landscape_pinns.html": "82809c97"
+  },
+  "Blog/paper_physical_operators.qmd": {
+    "paper_physical_operators.html": "9ce4bc0e"
+  },
+  "Blog/paper_weather_cp.qmd": {
+    "paper_weather_cp.html": "6840cedf"
+  },
+  "Blog/paper_calibrated_pi_uq.qmd": {
+    "paper_calibrated_pi_uq.html": "e5ab9b68"
+  },
+  "Blog/research_arc.qmd": {
+    "research_arc.html": "6907c0c6"
   }
 }

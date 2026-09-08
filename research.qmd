@@ -18,6 +18,7 @@ Few selected publications are given below. You can find the latest list of publi
 <div class="pub-links">
 <a href="https://arxiv.org/abs/2602.23113" class="btn-paper" target="_blank">Paper</a>
 <a href="https://github.com/gitvicky/NOs_for_POs" class="btn-code" target="_blank">Code</a>
+<a href="/Blog/paper_physical_operators.qmd" class="btn-blog">Blog</a>
 </div>
 </div>
 <div class="pub-image">
@@ -38,6 +39,7 @@ Few selected publications are given below. You can find the latest list of publi
 <div class="pub-links">
 <a href="https://openreview.net/pdf?id=Z2uLBBck2X" class="btn-paper" target="_blank">Paper</a>
 <a href="https://github.com/gitvicky/CP-PRE" class="btn-code" target="_blank">Code</a>
+<a href="/Blog/paper_calibrated_pi_uq.qmd" class="btn-blog">Blog</a>
 </div>
 </div>
 <div class="pub-image">
@@ -57,6 +59,7 @@ Few selected publications are given below. You can find the latest list of publi
 <div class="pub-links">
 <a href="https://iopscience.iop.org/article/10.1088/2632-2153/ae2e7b/meta" class="btn-paper" target="_blank">Paper</a>
 <a href="https://github.com/gitvicky/Spatio-Temporal-CP" class="btn-code" target="_blank">Code</a>
+<a href="/Blog/paper_conformal_surrogates.qmd" class="btn-blog">Blog</a>
 </div>
 </div>
 <div class="pub-image">
@@ -74,6 +77,7 @@ Few selected publications are given below. You can find the latest list of publi
 <div class="pub-links">
 <a href="https://arxiv.org/abs/2406.14483" class="btn-paper" target="_blank">Paper</a>
 <a href="https://github.com/gitvicky/neural-lam-CP" class="btn-code" target="_blank">Code</a>
+<a href="/Blog/paper_weather_cp.qmd" class="btn-blog">Blog</a>
 </div>
 </div>
 <div class="pub-image">
@@ -91,6 +95,7 @@ Few selected publications are given below. You can find the latest list of publi
 <div class="pub-links">
 <a href="https://iopscience.iop.org/article/10.1088/1741-4326/ad313a/meta" class="btn-paper" target="_blank">Paper</a>
 <a href="https://github.com/Plasma-FNO" class="btn-code" target="_blank">Code</a>
+<a href="/Blog/paper_plasma_fno.qmd" class="btn-blog">Blog</a>
 </div>
 </div>
 <div class="pub-image">
@@ -109,6 +114,7 @@ Few selected publications are given below. You can find the latest list of publi
 <div class="pub-tldr">Recurrent Fourier neural operators with hidden state representations for non-Markovian physical modelling.</div>
 <div class="pub-links">
 <a href="https://arxiv.org/abs/2302.06534" class="btn-paper" target="_blank">Paper</a>
+<a href="/Blog/paper_fourier_rnns.qmd" class="btn-blog">Blog</a>
 </div>
 </div>
 <div class="pub-image">
@@ -126,6 +132,7 @@ Few selected publications are given below. You can find the latest list of publi
 <div class="pub-links">
 <a href="https://www.sciencedirect.com/science/article/pii/S2666827023000178" class="btn-paper" target="_blank">Paper</a>
 <a href="https://github.com/gitvicky/Loss_Landscape_PINNs" class="btn-code" target="_blank">Code</a>
+<a href="/Blog/paper_loss_landscape_pinns.qmd" class="btn-blog">Blog</a>
 </div>
 </div>
 <div class="pub-image">
@@ -144,6 +151,7 @@ Few selected publications are given below. You can find the latest list of publi
 <div class="pub-tldr">Branched fully convolutional network designed to emulate the plasma at the scrape-off layer with coupled plasma and neutral behaviour.</div>
 <div class="pub-links">
 <a href="https://iopscience.iop.org/article/10.1088/2632-2153/ab5639/meta" class="btn-paper" target="_blank">Paper</a>
+<a href="/Blog/paper_edge_imagemapping.qmd" class="btn-blog">Blog</a>
 </div>
 </div>
 <div class="pub-image">

@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-05-11">
 
-<title>IAEA FDPVA – Vignesh Gopakumar</title>
+<title>Conformal Prediction for Spatio-Temporal Surrogates – Vignesh Gopakumar</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -41,6 +40,9 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -123,7 +125,8 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">IAEA FDPVA</h1>
+<h1 class="title">Conformal Prediction for Spatio-Temporal Surrogates</h1>
+<p class="subtitle lead">Machine Learning: Science and Technology, 2024</p>
 </div>
 
 
@@ -131,12 +134,6 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title-meta column-page">
 
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">May 11, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -147,9 +144,29 @@ ul.task-list li input[type="checkbox"] {
 
 
 <hr>
-<p><embed src="IAEA_FDPVA.pdf" style="width:100.0%" height="500"></p>
+<p><strong>Paper:</strong> <a href="https://iopscience.iop.org/article/10.1088/2632-2153/ae2e7b/meta">Uncertainty Quantification of Surrogate Models using Conformal Prediction</a> — <em>V. Gopakumar, A. Gray, J. Oskarsson, L. Zanisi, D. Giles, M. J. Kusner, S. Pamela, M. P. Deisenroth. MLST, 2024.</em> · <a href="https://github.com/gitvicky/Spatio-Temporal-CP">Code</a></p>
+<p><a href="../Images/heatmap_cp.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="../Images/heatmap_cp.png" class="img-fluid"></a></p>
+<section id="the-problem" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem">The problem</h3>
+<p>Every practical UQ method for deep surrogates asks you to give something up. Bayesian neural networks want a prior and an approximate posterior you have to trust. Deep ensembles want N times the training budget and still produce a spread, not a guarantee. Dropout-based estimates are cheap and calibrated by luck. None of them tell you: <em>the true field lies inside this band, with this probability, and here is the proof.</em></p>
+<p>For a surrogate feeding a fusion design decision, “probably about right” is not a specification.</p>
+</section>
+<section id="the-idea" class="level3">
+<h3 class="anchored" data-anchor-id="the-idea">The idea</h3>
+<p>Conformal prediction. Wrap the trained model — any trained model — in a distribution-free procedure that converts a held-out calibration set into prediction bands with a finite-sample coverage guarantee. No assumptions about the network, the data distribution, or the physics. Post-hoc, so it costs one calibration pass rather than a retraining regime.</p>
+<p>The contribution is making it work in the setting that actually matters here: <strong>spatio-temporal fields</strong>. A guarantee on a scalar output is standard; a guarantee that holds across every point of a spatial domain, over a rollout, without either collapsing into vacuous width or quietly losing coverage somewhere in the corner of the mesh, is not. The paper works through the marginal and the joint formulations and what each one actually promises you when the output is a field.</p>
+</section>
+<section id="what-it-showed" class="level3">
+<h3 class="anchored" data-anchor-id="what-it-showed">What it showed</h3>
+<p>Valid, tight-enough error bars across the domain for neural PDE surrogates, at negligible cost over the base model, and agnostic to which surrogate produced the prediction — FNO, U-Net, whatever is in the box.</p>
+</section>
+<section id="the-catch" class="level3">
+<h3 class="anchored" data-anchor-id="the-catch">The catch</h3>
+<p>Calibration data. The guarantee is bought with held-out ground truth, and ground truth is simulator output — the expensive thing the surrogate exists to avoid. That objection is the entire motivation for <a href="../Blog/paper_calibrated_pi_uq.html">physics-informed calibration</a>.</p>
+<p><a href="../Blog/research_arc.html">Back to the arc</a></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -586,6 +603,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","closeEffect":"zoom","loop":false,"selector":".lightbox","descPosition":"bottom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

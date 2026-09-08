@@ -7,6 +7,10 @@ title: "Blog"
 <div class="blog-grid">
 
 <div class="blog-card">
+<a href="/Blog/research_arc.qmd">Learning Physics You Can Trust: Seven Years in One Page</a>
+</div>
+
+<div class="blog-card">
 <a href="/Blog/upgrade_viva.qmd">A Review on UQ and Surrogate Modelling for Neural PDE Solvers</a>
 </div>
 
@@ -31,6 +35,7 @@ title: "Blog"
 </div>
 
 </div>
+
 
 <!-- [Neural ODE](/Blog/Neural_ODE.qmd) -->
 <!-- [Neural Operators](/Blog/Neural_Operators.qmd) -->

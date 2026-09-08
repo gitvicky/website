@@ -1,0 +1,33 @@
+---
+title: "Image Mapping the Edge of a Tokamak"
+subtitle: "Machine Learning: Science and Technology, 2020"
+format: html
+---
+
+***
+
+**Paper:** [Image Mapping the Temporal Evolution of Edge Characteristics in Tokamaks using Neural Networks](https://iopscience.iop.org/article/10.1088/2632-2153/ab5639/meta) — *V. Gopakumar, D. Samaddar. MLST 1(1), 015006, 2020.*
+
+![](/Images/solps_cnn.png){.lightbox}
+
+### The problem
+
+The scrape-off layer is where a tokamak's exhaust problem lives, and modelling it means solving coupled plasma and neutral transport. SOLPS does this properly and slowly. Slowly enough that you cannot put it inside a design loop, a controller, or anything that needs an answer in the time a shot actually takes.
+
+### The idea
+
+Treat the edge as an image-to-image problem. Plasma state fields over the divertor geometry are pixels; their evolution is a sequence of pixels. A branched fully convolutional network maps one to the next, with separate branches for the plasma and the neutral characteristics, because the two behave differently and forcing them through one shared trunk washes out the coupling.
+
+No physics is imposed. The network is given SOLPS output and asked to become SOLPS.
+
+### What it showed
+
+It works. The network reproduces the temporal evolution of edge characteristics across the domain, and it does it fast enough to be treated as a component rather than an experiment. That established the thing everything after it depends on: expensive fusion codes have learnable structure, and a surrogate is not obviously doomed.
+
+### What it did not show
+
+Anything about error. The model outputs a field and no statement about that field. When it goes wrong it goes wrong silently and confidently, which for a design or control application is worse than being slow. Most of the work that followed — [conformal prediction](/Blog/paper_conformal_surrogates.qmd), [physics-informed calibration](/Blog/paper_calibrated_pi_uq.qmd) — exists because this paper answered the easy half of the question.
+
+Also: convolutions on a fixed grid. Change resolution or geometry and you retrain. That constraint is what makes [neural operators](/Blog/paper_plasma_fno.qmd) the obvious next move.
+
+[Back to the arc](/Blog/research_arc.qmd)

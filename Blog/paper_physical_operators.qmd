@@ -1,0 +1,39 @@
+---
+title: "Learning Physical Operators using Neural Operators"
+subtitle: "AISTATS, 2026"
+format: html
+---
+
+***
+
+**Paper:** [Learning Physical Operators using Neural Operators](https://arxiv.org/abs/2602.23113) — *V. Gopakumar, A. Gray, D. Giles, L. Zanisi, M. J. Kusner, T. Betcke, S. Pamela, M. P. Deisenroth. AISTATS, 2026.* · [Code](https://github.com/gitvicky/NOs_for_POs)
+
+![](/Images/physop_learning.png){.lightbox}
+
+### The problem
+
+A neural operator trained end-to-end learns the whole solution map, including the parts we have known analytically for two centuries. That is wasteful in parameters, and it is worse than wasteful in generalisation: a model that has learned diffusion *statistically* has no reason to keep obeying diffusion outside the distribution it was trained on. Push it to unseen physics and it degrades in ways nothing in the architecture prevents.
+
+Adding a residual penalty — the PINN route — softens this but does not fix it. The physics is a *preference* expressed through the loss, not a *property* of the model.
+
+### The idea
+
+Split the operator instead of penalising it.
+
+Most PDEs of interest decompose into a linear part you can write down and a non-linear part you cannot. So do exactly that: fix a linear approximation of the operator, built from the known structure, and learn only the non-linear remainder with a neural operator. Compose the two inside a **Neural ODE**, so the whole thing integrates in continuous time and the split holds throughout the trajectory rather than at a single step.
+
+**OpsSplit.** The known physics is architecture, not regularisation. It cannot be trained away.
+
+### What it showed
+
+Three things worth having at once:
+
+- **Generalisation to unseen physics.** Because the linear operator is fixed rather than fitted, it holds outside the training distribution — the model extrapolates on the part of the dynamics that was never learned in the first place.
+- **Parameter efficiency.** The network only has to represent the non-linear residual, which is a much smaller function than the full solution operator.
+- **Interpretability.** The decomposition is not decorative. You can inspect what the learned component contributes over and above the known linear dynamics, which is a diagnostic you simply do not have with a monolithic operator.
+
+### Where this sits
+
+The [2020 work](/Blog/paper_edge_imagemapping.qmd) learned everything from scratch and could not say how wrong it was. The [UQ papers](/Blog/paper_calibrated_pi_uq.qmd) bounded the error after the fact. This one attacks the cause: stop making the network learn what we already know, and there is less error to bound.
+
+[Back to the arc](/Blog/research_arc.qmd)

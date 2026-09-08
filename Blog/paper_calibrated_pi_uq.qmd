@@ -1,0 +1,33 @@
+---
+title: "Calibrated Physics-Informed Uncertainty Quantification"
+subtitle: "ICML, 2025"
+format: html
+---
+
+***
+
+**Paper:** [Calibrated Physics-Informed Uncertainty Quantification](https://openreview.net/pdf?id=Z2uLBBck2X) — *V. Gopakumar, A. Gray, L. Zanisi, T. Nunn, D. Giles, M. J. Kusner, S. Pamela, M. P. Deisenroth. ICML, 2025.* · [Code](https://github.com/gitvicky/CP-PRE)
+
+![](/Images/jorek_pre.png){.lightbox}
+
+### The problem
+
+[Conformal prediction gives neural PDE surrogates guaranteed error bars](/Blog/paper_conformal_surrogates.qmd), and charges for them in calibration data. That bill is uncomfortable. Ground truth means simulator runs, and the reason the surrogate exists is that simulator runs are unaffordable. Worse, the guarantee is only as good as the exchangeability of that calibration set — push the surrogate to a parameter regime the calibration data never covered and the coverage claim goes with it.
+
+### The idea
+
+Stop calibrating against data. Calibrate against the equation.
+
+A conformal procedure needs a non-conformity score — some measure of how badly a prediction fits. The standard choice is the residual against a known label. But for a PDE surrogate there is another measure sitting right there: **the PDE residual itself**. Push the predicted field through the governing differential operator and see how much it violates the physics it is supposed to obey. That number requires no ground truth. It requires the equation, which you have, because you wrote the simulator.
+
+Use the physics residual as the non-conformity score and conformal prediction runs **data-free**, with the coverage guarantee intact.
+
+### What it showed
+
+Calibrated, guaranteed error bands for neural PDE solvers with no labelled calibration set — validated across PDE systems and on JOREK-scale plasma problems. Because the score measures physics violation rather than distance to nearby training data, the bands stay meaningful in regimes where a data-calibrated procedure has no basis to speak.
+
+### Why it matters
+
+This is the paper the [2020 edge model](/Blog/paper_edge_imagemapping.qmd) needed and could not have. It closes the loop the [FNO surrogate](/Blog/paper_plasma_fno.qmd) opened: a fast neural solver that reports honest, guaranteed uncertainty, without paying the simulator back for the privilege.
+
+[Back to the arc](/Blog/research_arc.qmd)

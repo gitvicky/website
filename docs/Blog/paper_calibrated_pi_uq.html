@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-05-11">
 
-<title>IAEA FDPVA – Vignesh Gopakumar</title>
+<title>Calibrated Physics-Informed Uncertainty Quantification – Vignesh Gopakumar</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -41,6 +40,9 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -123,7 +125,8 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">IAEA FDPVA</h1>
+<h1 class="title">Calibrated Physics-Informed Uncertainty Quantification</h1>
+<p class="subtitle lead">ICML, 2025</p>
 </div>
 
 
@@ -131,12 +134,6 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title-meta column-page">
 
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">May 11, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -147,9 +144,29 @@ ul.task-list li input[type="checkbox"] {
 
 
 <hr>
-<p><embed src="IAEA_FDPVA.pdf" style="width:100.0%" height="500"></p>
+<p><strong>Paper:</strong> <a href="https://openreview.net/pdf?id=Z2uLBBck2X">Calibrated Physics-Informed Uncertainty Quantification</a> — <em>V. Gopakumar, A. Gray, L. Zanisi, T. Nunn, D. Giles, M. J. Kusner, S. Pamela, M. P. Deisenroth. ICML, 2025.</em> · <a href="https://github.com/gitvicky/CP-PRE">Code</a></p>
+<p><a href="../Images/jorek_pre.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="../Images/jorek_pre.png" class="img-fluid"></a></p>
+<section id="the-problem" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem">The problem</h3>
+<p><a href="../Blog/paper_conformal_surrogates.html">Conformal prediction gives neural PDE surrogates guaranteed error bars</a>, and charges for them in calibration data. That bill is uncomfortable. Ground truth means simulator runs, and the reason the surrogate exists is that simulator runs are unaffordable. Worse, the guarantee is only as good as the exchangeability of that calibration set — push the surrogate to a parameter regime the calibration data never covered and the coverage claim goes with it.</p>
+</section>
+<section id="the-idea" class="level3">
+<h3 class="anchored" data-anchor-id="the-idea">The idea</h3>
+<p>Stop calibrating against data. Calibrate against the equation.</p>
+<p>A conformal procedure needs a non-conformity score — some measure of how badly a prediction fits. The standard choice is the residual against a known label. But for a PDE surrogate there is another measure sitting right there: <strong>the PDE residual itself</strong>. Push the predicted field through the governing differential operator and see how much it violates the physics it is supposed to obey. That number requires no ground truth. It requires the equation, which you have, because you wrote the simulator.</p>
+<p>Use the physics residual as the non-conformity score and conformal prediction runs <strong>data-free</strong>, with the coverage guarantee intact.</p>
+</section>
+<section id="what-it-showed" class="level3">
+<h3 class="anchored" data-anchor-id="what-it-showed">What it showed</h3>
+<p>Calibrated, guaranteed error bands for neural PDE solvers with no labelled calibration set — validated across PDE systems and on JOREK-scale plasma problems. Because the score measures physics violation rather than distance to nearby training data, the bands stay meaningful in regimes where a data-calibrated procedure has no basis to speak.</p>
+</section>
+<section id="why-it-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-it-matters">Why it matters</h3>
+<p>This is the paper the <a href="../Blog/paper_edge_imagemapping.html">2020 edge model</a> needed and could not have. It closes the loop the <a href="../Blog/paper_plasma_fno.html">FNO surrogate</a> opened: a fast neural solver that reports honest, guaranteed uncertainty, without paying the simulator back for the privilege.</p>
+<p><a href="../Blog/research_arc.html">Back to the arc</a></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -586,6 +603,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","closeEffect":"zoom","descPosition":"bottom","selector":".lightbox","loop":false});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

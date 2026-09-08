@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-05-11">
 
-<title>IAEA FDPVA – Vignesh Gopakumar</title>
+<title>Valid Error Bars for Neural Weather Models – Vignesh Gopakumar</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -41,6 +40,9 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -123,7 +125,8 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">IAEA FDPVA</h1>
+<h1 class="title">Valid Error Bars for Neural Weather Models</h1>
+<p class="subtitle lead">ICML Workshop on ML for Earth System Modeling, 2024</p>
 </div>
 
 
@@ -131,12 +134,6 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title-meta column-page">
 
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">May 11, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -147,9 +144,29 @@ ul.task-list li input[type="checkbox"] {
 
 
 <hr>
-<p><embed src="IAEA_FDPVA.pdf" style="width:100.0%" height="500"></p>
+<p><strong>Paper:</strong> <a href="https://arxiv.org/abs/2406.14483">Valid Error Bars for Neural Weather Models using Conformal Prediction</a> — <em>V. Gopakumar, J. Oskarsson, A. Gray, L. Zanisi, S. Pamela, D. Giles, M. J. Kusner, M. P. Deisenroth. ICML Workshop: ML for Earth System Modeling, 2024.</em> · <a href="https://github.com/gitvicky/neural-lam-CP">Code</a></p>
+<p><a href="../Images/weather_cp.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="../Images/weather_cp.png" class="img-fluid"></a></p>
+<section id="the-problem" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem">The problem</h3>
+<p>Neural weather models became genuinely competitive with numerical weather prediction, and did it while dropping the one thing operational forecasting is built on: the ensemble. NWP centres quantify uncertainty by running the physics many times from perturbed initial conditions. That is expensive, and a neural model that is a thousand times cheaper per forecast loses most of its advantage if you have to run fifty of them to say anything about spread.</p>
+</section>
+<section id="the-idea" class="level3">
+<h3 class="anchored" data-anchor-id="the-idea">The idea</h3>
+<p>Take the <a href="../Blog/paper_conformal_surrogates.html">conformal machinery built for fusion surrogates</a> and point it at a neural weather model. Nothing in conformal prediction is domain-specific — it needs a calibration set and a non-conformity score, not a plasma. Applied to a graph-based limited-area weather model, it produces marginal prediction bands with coverage guarantees over the forecast domain, at the cost of one calibration pass rather than an ensemble.</p>
+</section>
+<section id="what-it-showed" class="level3">
+<h3 class="anchored" data-anchor-id="what-it-showed">What it showed</h3>
+<p>Guaranteed error bars on neural weather forecasts without ensembling. Coverage holds across variables and lead times, and the added compute is negligible next to the model itself.</p>
+</section>
+<section id="why-it-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-it-matters">Why it matters</h3>
+<p>Two reasons, and the second is the real one.</p>
+<p>The stated reason: cheap, valid uncertainty is what a neural forecast needs before an operational centre can take it seriously.</p>
+<p>The reason I wrote it: it demonstrates that none of the <a href="../Blog/paper_conformal_surrogates.html">surrogate UQ work</a> was about fusion. The argument is about neural PDE solvers in general — anywhere a network has replaced a numerical integrator and someone downstream is going to act on the output. Fusion is where I happen to work, not where the method stops.</p>
+<p><a href="../Blog/research_arc.html">Back to the arc</a></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -586,6 +603,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","descPosition":"bottom","loop":false,"openEffect":"zoom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

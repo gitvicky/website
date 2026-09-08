@@ -368,7 +368,7 @@ blockquote {
 }
 
 // Publication buttons — minimal, text-based
-.btn-paper, .btn-code, .btn-presentation {
+.btn-paper, .btn-code, .btn-presentation, .btn-blog {
   display: inline-block;
   padding: 0.2rem 0.6rem;
   font-size: 0.8rem;
@@ -381,7 +381,7 @@ blockquote {
   background: transparent;
 }
 
-.btn-paper, .btn-code, .btn-presentation {
+.btn-paper, .btn-code, .btn-presentation, .btn-blog {
   border-color: $clay;
   color: $fig;
 

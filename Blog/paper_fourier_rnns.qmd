@@ -1,0 +1,29 @@
+---
+title: "Fourier-RNNs for Noisy Physics"
+subtitle: "IEEE ICMLA, 2023"
+format: html
+---
+
+***
+
+**Paper:** [Fourier-RNNs for Modelling Noisy Physics Data](https://arxiv.org/abs/2302.06534) — *V. Gopakumar, L. Zanisi, S. Pamela. ICMLA, 2023.*
+
+![](/Images/F_RNNs.png){.lightbox}
+
+### The problem
+
+Fourier Neural Operators are built on a clean assumption: the next state is a function of the current state. Markovian, one step in, one step out. Simulation data obliges. Experimental data does not — it is noisy, partially observed, and the quantity you actually measured is not the full state. Under those conditions the past carries information the present has lost, and a Markovian model has nowhere to put it.
+
+### The idea
+
+Give the operator a memory. Wrap the Fourier layer in a recurrent structure so the model carries a hidden state across the rollout, and let that hidden state absorb the history that the observed field alone does not determine. The spectral convolution keeps doing what it is good at — resolution-independent global mixing — while the recurrence handles the non-Markovian part.
+
+### What it showed
+
+On noisy and partially observed physics data, the recurrent variant degrades more gracefully than the plain FNO. Noise that a one-step model integrates straight into the rollout gets damped by the hidden state instead of compounding. The gain is smallest on clean synthetic data, which is the expected result and a useful sanity check: the recurrence earns its keep exactly where the Markov assumption breaks.
+
+### Why it matters
+
+It is a small architectural paper with a large practical consequence — it is the piece that makes operator surrogates usable on *diagnostics* rather than only on solver output. That distinction is what let the next paper put an FNO against real [MAST data](/Blog/paper_plasma_fno.qmd) rather than only against JOREK.
+
+[Back to the arc](/Blog/research_arc.qmd)
