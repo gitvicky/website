@@ -566,6 +566,12 @@ pre {
   border: none;
 }
 
+// Plain (no-language) blocks hold prose notes — wrap instead of scrolling
+pre:not(.sourceCode), pre:not(.sourceCode) > code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 // ============================================
 // RESPONSIVE
 // ============================================
