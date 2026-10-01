@@ -130,5 +130,287 @@
   },
   "Blog/research_arc.qmd": {
     "research_arc.html": "6907c0c6"
+  },
+  "Blog/toktoit/posts/04-guard-inside-torax.md": {
+    "04-guard-inside-torax.html": "ec6f451d"
+  },
+  "Blog/toktoit/posts/01-newton-solver.md": {
+    "01-newton-solver.html": "0e3ffc61"
+  },
+  "Blog/toktoit/posts/06-freegsnke-mastu.md": {
+    "06-freegsnke-mastu.html": "4cf664d1"
+  },
+  "Blog/toktoit/posts/05-stalls-rf-and-builds.md": {
+    "05-stalls-rf-and-builds.html": "8936eb87"
+  },
+  "Blog/toktoit/posts/02-torax-backend.md": {
+    "02-torax-backend.html": "3ec01e42"
+  },
+  "Blog/toktoit/posts/03-fixed-step-loop.md": {
+    "03-fixed-step-loop.html": "94c3eec0"
+  },
+  "Blog/toktoit/posts/07-round-trip-blind-spot.md": {
+    "07-round-trip-blind-spot.html": "63aa86d0"
+  },
+  "Blog/toktoit/internal/04-guard-inside-torax.md": {
+    "04-guard-inside-torax.html": "96e09946"
+  },
+  "Blog/toktoit/internal/01-newton-solver.md": {
+    "01-newton-solver.html": "c9de9b18"
+  },
+  "Blog/toktoit/internal/06-freegsnke-mastu.md": {
+    "06-freegsnke-mastu.html": "08e9d5b5"
+  },
+  "Blog/toktoit/internal/05-stalls-rf-and-builds.md": {
+    "05-stalls-rf-and-builds.html": "dd89dfc4"
+  },
+  "Blog/toktoit/internal/02-torax-backend.md": {
+    "02-torax-backend.html": "b53ec7ef"
+  },
+  "Blog/toktoit/internal/03-fixed-step-loop.md": {
+    "03-fixed-step-loop.html": "82304c35"
+  },
+  "Blog/toktoit/pages/glossary.md": {
+    "glossary.html": "214bcd44"
+  },
+  "Blog/toktoit/pages/primer.md": {
+    "primer.html": "e07b7a16"
+  },
+  "Blog/toktoit/pages/index.md": {
+    "index.html": "0cb06329"
+  },
+  "Blog/toktoit/pages/milestones/M0.md": {
+    "M0.html": "474ca5ca"
+  },
+  "Blog/toktoit/pages/milestones/M1.md": {
+    "M1.html": "3e758855"
+  },
+  "Blog/toktoit/pages/errata.md": {
+    "errata.html": "9f3d15bb"
+  },
+  "Blog/toktoit/pages/about.md": {
+    "about.html": "f3fcd748"
+  },
+  "Blog/toktoit/pages/technical/index.md": {
+    "index.html": "e9c1c3ee"
+  },
+  "Blog/toktoit/pages/decisions.md": {
+    "decisions.html": "78d23129"
+  },
+  "Blog/toktoit/technical/transport-solver.md": {
+    "transport-solver.html": "fe4d7471"
+  },
+  "Blog/toktoit/technical/imas-adapters.md": {
+    "imas-adapters.html": "339d8721"
+  },
+  "Blog/toktoit/technical/guard.md": {
+    "guard.html": "3224f0cf"
+  },
+  "Blog/toktoit/technical/backends.md": {
+    "backends.html": "598fbd86"
+  },
+  "Blog/toktoit/technical/core-state.md": {
+    "core-state.html": "ac747af1"
+  },
+  "Blog/toktoit/technical/invariants.md": {
+    "invariants.html": "4d0af0ea"
+  },
+  "Blog/toktoit/technical/provenance.md": {
+    "provenance.html": "94d3fd75"
+  },
+  "Blog/toktoit/technical/physics-models.md": {
+    "physics-models.html": "e17e5ac4"
+  },
+  "Blog/toktoit/technical/tests.md": {
+    "tests.html": "76390959"
+  },
+  "Blog/toktoit/technical/coupling-loop.md": {
+    "coupling-loop.html": "f14b4c84"
+  },
+  "Blog/toktoit/index.qmd": {
+    "index.html": "be15ecca"
+  },
+  "Blog/toktoit/primer.qmd": {
+    "primer.html": "70d01d47"
+  },
+  "Blog/toktoit/glossary.qmd": {
+    "glossary.html": "dd76dd32"
+  },
+  "Blog/toktoit/about.qmd": {
+    "about.html": "bdb94dae"
+  },
+  "Blog/toktoit/milestones/M1.qmd": {
+    "M1.html": "c5ec9b34"
+  },
+  "Blog/toktoit/milestones/M0.qmd": {
+    "M0.html": "d566da77"
+  },
+  "Blog/toktoit/log/05-stalls-rf-and-builds.qmd": {
+    "05-stalls-rf-and-builds.html": "8ee0b701"
+  },
+  "Blog/toktoit/log/03-fixed-step-loop.qmd": {
+    "03-fixed-step-loop.html": "c0a42d86"
+  },
+  "Blog/toktoit/log/04-guard-inside-torax.qmd": {
+    "04-guard-inside-torax.html": "5cd9e978"
+  },
+  "Blog/toktoit/log/06-freegsnke-mastu.qmd": {
+    "06-freegsnke-mastu.html": "1d9de3a3"
+  },
+  "Blog/toktoit/log/07-round-trip-blind-spot.qmd": {
+    "07-round-trip-blind-spot.html": "174138d1"
+  },
+  "Blog/toktoit/log/02-torax-backend.qmd": {
+    "02-torax-backend.html": "4dc608d3"
+  },
+  "Blog/toktoit/log/01-newton-solver.qmd": {
+    "01-newton-solver.html": "41fb1513"
+  },
+  "Blog/toktoit/errata.qmd": {
+    "errata.html": "3201b8ba"
+  },
+  "Blog/toktoit/ceilings.qmd": {
+    "ceilings.html": "08aa22b1"
+  },
+  "Blog/toktoit/claims.qmd": {
+    "claims.html": "60dc9408"
+  },
+  "Blog/toktoit/technical/transport-solver.qmd": {
+    "transport-solver.html": "0eaf9d5f"
+  },
+  "Blog/toktoit/technical/tests.qmd": {
+    "tests.html": "d3b4cd3a"
+  },
+  "Blog/toktoit/technical/coupling-loop.qmd": {
+    "coupling-loop.html": "581ac4c9"
+  },
+  "Blog/toktoit/technical/guard.qmd": {
+    "guard.html": "de0fc9eb"
+  },
+  "Blog/toktoit/technical/imas-adapters.qmd": {
+    "imas-adapters.html": "8aa4ceb5"
+  },
+  "Blog/toktoit/technical/index.qmd": {
+    "index.html": "1a619cf3"
+  },
+  "Blog/toktoit/technical/physics-models.qmd": {
+    "physics-models.html": "ee9b6469"
+  },
+  "Blog/toktoit/technical/core-state.qmd": {
+    "core-state.html": "41943f74"
+  },
+  "Blog/toktoit/technical/provenance.qmd": {
+    "provenance.html": "ce575de7"
+  },
+  "Blog/toktoit/technical/backends.qmd": {
+    "backends.html": "6b91f4f9"
+  },
+  "Blog/toktoit/technical/invariants.qmd": {
+    "invariants.html": "3d4f09c9"
+  },
+  "Blog/toktoit/decisions.qmd": {
+    "decisions.html": "79041592"
+  },
+  "Blog/toktoit/toktoit/primer.qmd": {
+    "primer.html": "5a91fa96"
+  },
+  "Blog/toktoit/toktoit/index.qmd": {
+    "index.html": "4ba404f9"
+  },
+  "Blog/toktoit/toktoit/glossary.qmd": {
+    "glossary.html": "a71bd981"
+  },
+  "Blog/toktoit/toktoit/about.qmd": {
+    "about.html": "e2f2d6ee"
+  },
+  "Blog/toktoit/toktoit/milestones/M1.qmd": {
+    "M1.html": "589bafbe"
+  },
+  "Blog/toktoit/toktoit/milestones/M0.qmd": {
+    "M0.html": "326480cc"
+  },
+  "Blog/toktoit/toktoit/log/05-stalls-rf-and-builds.qmd": {
+    "05-stalls-rf-and-builds.html": "a1d10584"
+  },
+  "Blog/toktoit/toktoit/log/03-fixed-step-loop.qmd": {
+    "03-fixed-step-loop.html": "92a60c3e"
+  },
+  "Blog/toktoit/toktoit/log/04-guard-inside-torax.qmd": {
+    "04-guard-inside-torax.html": "7c017963"
+  },
+  "Blog/toktoit/toktoit/log/06-freegsnke-mastu.qmd": {
+    "06-freegsnke-mastu.html": "7e4b50ea"
+  },
+  "Blog/toktoit/toktoit/log/07-imas-export-minor-radius.qmd": {
+    "07-imas-export-minor-radius.html": "d4d86522"
+  },
+  "Blog/toktoit/toktoit/log/09-run-tracking.qmd": {
+    "09-run-tracking.html": "552be877"
+  },
+  "Blog/toktoit/toktoit/log/02-torax-backend.qmd": {
+    "02-torax-backend.html": "6860d925"
+  },
+  "Blog/toktoit/toktoit/log/08-energy-particle-balance.qmd": {
+    "08-energy-particle-balance.html": "f07f43d1"
+  },
+  "Blog/toktoit/toktoit/log/01-newton-solver.qmd": {
+    "01-newton-solver.html": "a601fdd6"
+  },
+  "Blog/toktoit/toktoit/errata.qmd": {
+    "errata.html": "165c4e66"
+  },
+  "Blog/toktoit/toktoit/ceilings.qmd": {
+    "ceilings.html": "bcf6b7c8"
+  },
+  "Blog/toktoit/toktoit/claims.qmd": {
+    "claims.html": "e4b61204"
+  },
+  "Blog/toktoit/toktoit/technical/transport-solver.qmd": {
+    "transport-solver.html": "a71fde2e"
+  },
+  "Blog/toktoit/toktoit/technical/tests.qmd": {
+    "tests.html": "51e83350"
+  },
+  "Blog/toktoit/toktoit/technical/coupling-loop.qmd": {
+    "coupling-loop.html": "6972192d"
+  },
+  "Blog/toktoit/toktoit/technical/guard.qmd": {
+    "guard.html": "b0030853"
+  },
+  "Blog/toktoit/toktoit/technical/imas-adapters.qmd": {
+    "imas-adapters.html": "b26fa854"
+  },
+  "Blog/toktoit/toktoit/technical/index.qmd": {
+    "index.html": "79ca60eb"
+  },
+  "Blog/toktoit/toktoit/technical/physics-models.qmd": {
+    "physics-models.html": "587812f1"
+  },
+  "Blog/toktoit/toktoit/technical/core-state.qmd": {
+    "core-state.html": "db452f90"
+  },
+  "Blog/toktoit/toktoit/technical/provenance.qmd": {
+    "provenance.html": "b0c1250e"
+  },
+  "Blog/toktoit/toktoit/technical/backends.qmd": {
+    "backends.html": "28c9c3b6"
+  },
+  "Blog/toktoit/toktoit/technical/invariants.qmd": {
+    "invariants.html": "929bee1a"
+  },
+  "Blog/toktoit/toktoit/decisions.qmd": {
+    "decisions.html": "a0486ecd"
+  },
+  "Blog/toktoit/log/07-imas-export-minor-radius.qmd": {
+    "07-imas-export-minor-radius.html": "03f6d59e"
+  },
+  "Blog/toktoit/log/09-run-tracking.qmd": {
+    "09-run-tracking.html": "7659093e"
+  },
+  "Blog/toktoit/log/10-ascot5-alpha-heating.qmd": {
+    "10-ascot5-alpha-heating.html": "35383f70"
+  },
+  "Blog/toktoit/log/08-energy-particle-balance.qmd": {
+    "08-energy-particle-balance.html": "db473622"
   }
 }

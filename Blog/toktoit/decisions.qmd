@@ -1,0 +1,107 @@
+---
+title: Decisions
+subtitle: Questions the agent is not allowed to settle, and how the owner settled
+  them
+toc: true
+---
+
+The brief lists the decisions that belong to a human: physics modelling choices, licence and
+data questions, which properties to prove, use of the compute cluster, and benchmark failures
+that aren't explained by a bug. When the agent reaches one, it writes the question down with
+context and a recommended answer, carries on with whatever isn't blocked, and waits. Numbers
+(OQ-*n*) match the project's internal record. Newest first within each group.
+
+## Awaiting a decision
+
+### OQ-11 · A second ASCOT5 cluster job {#oq-11}
+
+The first ASCOT5 job ([entry 10](log/10-ascot5-alpha-heating.qmd)) showed that the orbit
+tolerance chosen for speed loses alphas that should be confined ([C-043](/Blog/toktoit/claims.qmd#c-043)), and that at the
+tighter tolerance 640 markers resolve the total alpha heating but not its radial shape ([C-045](/Blog/toktoit/claims.qmd#c-045)).
+Open: a second job, one node for up to four hours, with ten times more markers at the tighter
+tolerance and a check at a tighter one still. *Recommendation:* approve it, so the ASCOT5
+source is converged before M1 counts it as done.
+
+### OQ-1 · The toy transport model as a fallback {#oq-1}
+
+M0 needed a toy transport model to exercise the loop; the brief didn't specify one. A smooth
+critical-gradient form was used as a numerical placeholder, not a physics claim. Open: whether
+the trusted fallback for real runs should be that, a constant diffusivity, or the
+Bohm/gyro-Bohm form now used as the fallback inside TORAX. *Recommendation:* decide at the M1
+physicist review together with the pedestal and sawtooth choices.
+
+## Settled
+
+### OQ-10 · Which radial variable the guard's features use {#oq-10}
+
+*Deferred 1 Oct 2026, to M3.* The guard checks whether a plasma state is inside the region the
+surrogate was trained on, using features such as normalised temperature gradients. toktoit
+computes those gradients with respect to the normalised flux radius, scaled by the geometric
+minor radius; QLKNN, as TORAX feeds it, uses the midplane minor radius of each surface. On the
+ITER hybrid scenario the two differ from [+19%]{.claim}[C-032](/Blog/toktoit/claims.qmd#c-032){.cid .st-measured} in the core to about a third at the
+edge ([K-008](/Blog/toktoit/ceilings.qmd#k-008)). No run is affected yet. **The convention will be chosen when the first trained
+surrogate exists (M3)**, and in any case before a verified domain is certified (M4).
+
+### OQ-9 · Fast-ion sources from ASCOT5 {#oq-9}
+
+*Decided 1 Oct 2026.* **Fusion alphas first**, born from the plasma profiles TORAX computes, as
+a direct check against TORAX's own alpha heating. Neutral-beam ions follow once a physicist has
+approved the injector geometry. **One short test job on the compute cluster is approved**; each
+further job needs its own approval.
+
+### OQ-5 · What "reproduces the benchmark" means {#oq-5}
+
+*Decided 1 Oct 2026.* Two comparisons: toktoit's loop against TORAX's own output at the same
+settings (a check of the wrapper), and against the published cross-code comparison (a physics
+statement). **The wrapper check must agree to 10^-10^** (it passes at round-off: [C-006](/Blog/toktoit/claims.qmd#c-006), [C-007](/Blog/toktoit/claims.qmd#c-007)).
+**The physics tolerance is set by the physicist reviewer** at the M1 gate. Because the published
+reference runs are not converged in time ([entry 3](log/03-fixed-step-loop.qmd), [C-012](/Blog/toktoit/claims.qmd#c-012), [C-013](/Blog/toktoit/claims.qmd#c-013)),
+**the physics comparison is made at the published settings first**, then at a converged time
+step, with the difference reported as its own line in the discrepancy budget. **Solver stalls
+stay reported**, not tuned away by relaxing a line-search setting
+([entry 5](log/05-stalls-rf-and-builds.qmd), [C-011](/Blog/toktoit/claims.qmd#c-011)). **Energy and particles must balance to
+10^-6^ per step** on converged steps ([entry 8](log/08-energy-particle-balance.qmd), [C-035](/Blog/toktoit/claims.qmd#c-035), [C-036](/Blog/toktoit/claims.qmd#c-036)); the
+flat-top reference solver's defect ([C-037](/Blog/toktoit/claims.qmd#c-037)) is reported, not required to close.
+
+### OQ-3 · Where the code will live {#oq-3}
+
+*Decided 1 Oct 2026.* **A private hosted repository**, where the continuous-integration
+workflow runs on every change. The code stays private; this log is how the work is shown. Until
+the workflow has passed, "tested" in the [claims register](claims.qmd) still means "asserted by
+a named test, run before each publish".
+
+### OQ-8 · Which machine description for the equilibrium solver {#oq-8}
+
+*Decided 30 Sep 2026.* **MAST-U.** FreeGSNKE's repository already ships a MAST-U-like machine
+description (coils, passive structures, limiter, wall; credited to UKAEA) under the same open
+licence, so nothing had to be assembled from published drawings. It is fetched from a pinned
+upstream version with a checksum per file. This covers the equilibrium work only: the M1
+transport benchmark stays with the ITER scenario, because no published TORAX MAST-U scenario
+exists and QLKNN was not trained on spherical-tokamak conditions.
+
+### OQ-7 · Input data for a STEP extension {#oq-7}
+
+*Deferred 30 Sep 2026.* Extending the benchmark to a STEP power-plant flat-top is a future
+extension, not part of M1. The work stays with the ITER benchmark and MAST-U for now; the data
+question reopens if and when the extension is picked up.
+
+### OQ-6 · Which benchmark {#oq-6}
+
+*Decided 21 Sep 2026, amended 30 Sep 2026.* **The ITER hybrid scenario** that ships with
+TORAX: an 80-second current ramp-up, and a 5-second flat-top as the quicker check. A planned
+STEP extension was deferred on 30 Sep ([OQ-7](/Blog/toktoit/decisions.qmd#oq-7)).
+
+### OQ-4 · Newton-Raphson for the coupling loop {#oq-4}
+
+*Decided 21 Sep 2026.* **Approved.** The M0 loop used relaxed Picard iteration, which
+oscillates instead of converging once transport becomes stiff: on the toy model's original
+settings the residual sat between 3 × 10⁻² and 8 × 10⁻² after 12 iterations. The owner
+approved a Newton-Raphson solver with derivatives from automatic differentiation and a fixed
+iteration count, keeping Picard as the fallback, and stall reporting for both
+([entry 1](log/01-newton-solver.qmd)).
+
+### OQ-2 · Where to run {#oq-2}
+
+*Decided 21 Sep 2026.* Tests and the early milestones run on an interactive node with one
+datacentre GPU. Anything longer goes through the cluster's batch system on an allocation the
+owner named, and every job is announced to the owner before it is submitted.

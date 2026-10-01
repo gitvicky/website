@@ -1,0 +1,62 @@
+---
+title: M1 · Open baseline
+subtitle: In progress
+toc: true
+---
+
+## Goal
+
+Replace the toy physics with real open-source codes, wired into the coupling loop, and show
+that the result reproduces a published benchmark. After M1, a surrogate has something real to
+stand in for, and a trusted baseline to be compared against.
+
+## Acceptance criteria (fixed in the brief before work started)
+
+1. The benchmark matches the published profiles within an agreed tolerance.
+2. Energy and particle balance are conserved to tolerance.
+3. Gradients are finite and checked against finite differences.
+4. **Human gate: physicist review.**
+
+The tolerance in (1) is set by the physicist reviewer; conservation in (2) must hold to 10^-6^ per
+step on converged steps ([OQ-5](/Blog/toktoit/decisions.qmd#oq-5), decided 1 Oct 2026). The physicist review has not happened.
+Until it has, physics claims from M1 are at most *tested* or *measured* in the
+[claims register](../claims.qmd), never *reviewed*.
+
+## Tasks
+
+| task | state | log |
+|---|---|---|
+| coupling loop with Newton-Raphson, Picard kept as fallback | done | [entry 1](../log/01-newton-solver.qmd) |
+| wrap TORAX; ITER hybrid reference runs with provenance | done | [entry 2](../log/02-torax-backend.qmd) |
+| fixed-step loop driving TORAX's own time step; time-convergence study | done | [entry 3](../log/03-fixed-step-loop.qmd) |
+| QLKNN behind the guard, inside TORAX | done | [entry 4](../log/04-guard-inside-torax.qmd) |
+| analytic Gaussian RF heating | done | [entry 5](../log/05-stalls-rf-and-builds.qmd) |
+| wrap FreeGSNKE; MAST-U free-boundary equilibrium | done (standalone) | [entry 6](../log/06-freegsnke-mastu.qmd) |
+| ASCOT5 sources | fusion-alpha heating from ASCOT5 into TORAX, first cluster run done; more markers and a convergence check await [OQ-11](/Blog/toktoit/decisions.qmd#oq-11) | [entry 10](../log/10-ascot5-alpha-heating.qmd) |
+| reproduce the ITER hybrid benchmark | wrapper check passes; physics comparison next, tolerance set at the physicist review ([OQ-5](/Blog/toktoit/decisions.qmd#oq-5)) | [entry 3](../log/03-fixed-step-loop.qmd) |
+| energy and particle balance on the benchmark | done; meets the agreed 10^-6^ per step ([OQ-5](/Blog/toktoit/decisions.qmd#oq-5)) | [entry 8](../log/08-energy-particle-balance.qmd) |
+
+## Against the criteria so far
+
+| criterion | where it stands |
+|---|---|
+| benchmark within tolerance | loop vs TORAX's own driver: [10^−13^]{.claim}[C-006](/Blog/toktoit/claims.qmd#c-006){.cid .st-tested}; vs the stored ramp-up reference: [10^−14^]{.claim}[C-007](/Blog/toktoit/claims.qmd#c-007){.cid .st-tested}. The physics comparison waits on the tolerance, and the references themselves are not converged in time ([34%]{.claim}[C-013](/Blog/toktoit/claims.qmd#c-013){.cid .st-preliminary} at t = 2 s, flat-top) |
+| conservation | every step's balance rebuilt from TORAX's own equations: energy [better than 10^-6^]{.claim}[C-035](/Blog/toktoit/claims.qmd#c-035){.cid .st-tested}, particles [better than 10^-10^]{.claim}[C-036](/Blog/toktoit/claims.qmd#c-036){.cid .st-tested} on the ramp-up benchmark; the flat-top's cheaper solver leaves [about 0.8%]{.claim}[C-037](/Blog/toktoit/claims.qmd#c-037){.cid .st-tested} of the energy unaccounted for. Conversion checks: stored energy [10^−16^]{.claim}[C-009](/Blog/toktoit/claims.qmd#c-009){.cid .st-tested}; heating power [better than 10^−8^]{.claim}[C-010](/Blog/toktoit/claims.qmd#c-010){.cid .st-tested} |
+| gradients | through three coupled TORAX steps: [10^−6^]{.claim}[C-008](/Blog/toktoit/claims.qmd#c-008){.cid .st-tested} against finite differences |
+| physicist review | not yet scheduled |
+
+## Deviations so far
+
+- **The benchmark is run through TORAX's own time step**, called from toktoit's fixed-step
+  loop, rather than by re-implementing TORAX's physics in toktoit's own solver. Same loop
+  shape, far more physics. See [coupling loop](../technical/coupling-loop.qmd#fixed-step-driver).
+- **The equilibrium is standalone.** FreeGSNKE solves MAST-U equilibria, but they don't yet
+  feed the transport loop: that needs a transport model valid on a spherical tokamak, which
+  QLKNN is not (M2, M3).
+- **The analytic RF model is TORAX's**, wrapped with a typed entry point and tests, rather than
+  a second implementation.
+
+## Future extensions
+
+Extending the benchmark to a STEP power-plant flat-top is planned as a future extension
+([OQ-7](/Blog/toktoit/decisions.qmd#oq-7), deferred). For now the work stays with the ITER benchmark and MAST-U.

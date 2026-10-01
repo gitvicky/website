@@ -1,0 +1,112 @@
+---
+title: Provenance and tracking
+toc: true
+toc-depth: 3
+date-modified: '2026-10-01'
+---
+
+## Purpose
+
+Invariant 6: every artifact records the code, version, configuration and tier that produced it.
+It is also the link between a number on this site and the run behind it: each row in the
+[claims register](../claims.qmd) names a commit, and each stored artifact names its commit and
+config hash.
+
+## The record
+
+Beside every artifact `<name>` sits `<name>.provenance.json`. Reading an artifact through the
+toolkit reads and validates its record; a missing or malformed record is an error, not a warning.
+
+| key | content |
+|---|---|
+| `producer` | dotted path of the function or command that wrote the artifact |
+| `tier` | `"B"` if any gated code or data contributed, else `"A"` |
+| `config` | the full resolved configuration |
+| `config_hash` | sha256 of the canonical (sorted-key) JSON of the config |
+| `inputs` | name → sha256 of each input file |
+| `git_sha`, `git_dirty` | commit of the code, and whether the working tree had uncommitted changes |
+| `package`, `package_version`, `python`, `jax`, `platform` | software environment |
+| `created` | UTC timestamp |
+
+Validation checks that every key is present, `tier` is `A` or `B`, and `inputs` is a mapping.
+*Tested by* `tests/unit/test_tracking.py`.
+
+Examples in use: TORAX reference runs (scenario, TORAX version, the full resolved TORAX config);
+the MAST-U machine description (upstream URL at the pinned commit, licence, sha256 of each
+file); saved FreeGSNKE equilibria (machine, FreeGSNKE version, upstream commit).
+
+## Run tracking {#run-tracking}
+
+**Purpose.** A record of every run that a person can browse, compare and be alerted from,
+without the simulation ever depending on it. It serves invariant 4 (nothing impure inside
+compiled code) and §9 of the brief (stalls are reported, not hidden).
+
+**What is recorded.** Every command that runs physics (the toy scenario, a TORAX whole-code run,
+toktoit's fixed-step loop over TORAX, a free-boundary equilibrium) opens a run. A local record is
+always written, as a directory per run:
+
+| file | content |
+|---|---|
+| `provenance.json`, `config.yaml` | the provenance record above, and the resolved configuration |
+| `params.json` | run parameters (scenario, time step, step count, tolerance, device, code versions) |
+| `metrics.jsonl` | one line per simulation step, with the step number, the **simulation time**, and the series below; then headline numbers (wall time, stored energy, fallback fraction, benchmark errors) |
+| `events.jsonl` | free-text events, alerts, artifacts logged, and the final status |
+| artifacts | copies of files written by the run, each with its provenance record |
+
+Per-step series: on-axis electron and ion temperature and density, stored thermal energy, the
+solver's convergence state and iteration count, sawtooth crashes, the guard's verdict and the
+fraction of radial faces handed to the fallback model (toy loop: also the final iteration
+residual and the ensemble spread of the transport coefficients).
+
+**Algorithm.** The compiled loop returns its whole trace (one row per step) at the end. Only
+then, on the host, is each step's row written as one metrics record. Nothing inside the
+compiled code calls the tracker, so tracking cannot change the numbers or the compiled program.
+
+**Alerts.** A condition the owner must see raises a named alert, recorded in the event log,
+printed to the terminal, and sent to the mirror as a critical alert:
+
+| alert | raised when |
+|---|---|
+| `picard_stall` | a fixed-point step ends above its stall tolerance |
+| `solver_stall` | TORAX's nonlinear solver reports non-convergence on any step |
+| `benchmark_fail` | a profile differs from its reference by more than the tolerance |
+| `torax_incomplete` | a TORAX run ends without completing |
+| `non_finite_metric` | a logged number is NaN or infinite (kept locally; the mirror rejects it) |
+
+A run is a context manager: if the simulation raises, the exception is logged as an event, the
+run ends with status `failed`, and the exception still propagates. A failed benchmark also ends
+the run `failed`.
+
+**Mirrors.** The local record can be mirrored to [Simvue](https://simvue.io) (Apache-2.0), a
+run-tracking server with a web dashboard, metric plots and alert notifications, or to MLflow.
+The mirror gets the same parameters, per-step metrics against simulation time, events, alerts,
+configuration, provenance (flattened into searchable metadata) and artifacts. Runs are filed by
+command and tagged with the tier, and the mirror's run name matches the local directory, so the
+two can always be matched.
+
+Compute nodes on the cluster have no internet access. Inside a batch job the mirror therefore
+runs in offline mode, caching everything locally; a script run later from a login node uploads
+the cache, and a run uploaded in several goes still lands as one run on the server.
+
+**Design decisions.**
+
+- *Local first, mirror second.* The local record is always complete. If the mirror cannot
+  start (no network, expired credentials), the run continues with a warning; a failure later in
+  the run is reported once and ignored. Tracking must never cost a simulation.
+- *Credentials never reach a log.* The server's own configuration errors echo the access token,
+  so only the error message itself is ever printed.
+- *Close, then mark failed.* The mirror's client discards its queue of unsent metrics if a run
+  is marked failed while still open, so a failed run is first closed (flushing everything) and
+  then given its failed status.
+
+**Correctness.** `tests/unit/test_tracking.py` (local record, events, alerts, failed status on an
+exception, one record per step), `tests/unit/test_simvue_tracking.py` (the mirror receives what
+the local record holds; offline mode inside a batch job; a mirror that cannot start leaves the
+local record intact; the real client writing an offline cache with no network), and
+`tests/regression/test_cli_tracking.py` (the toy scenario end to end: [100 of 100 steps]{.claim}[C-040](/Blog/toktoit/claims.qmd#c-040){.cid .st-tested}).
+
+## Changelog
+
+- 2026-09-30: first published version.
+- 2026-10-01: run tracking rewritten: every command tracked, per-step series, events and
+  alerts, Simvue mirror with offline mode (entry 9).

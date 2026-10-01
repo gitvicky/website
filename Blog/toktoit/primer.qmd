@@ -1,0 +1,101 @@
+---
+title: Primer
+subtitle: The setting, in plain words. Log entries refer back to this page.
+toc: true
+---
+
+## Where the plasma sits
+
+A **tokamak** holds a gas of charged particles, hotter than the centre of the Sun, inside a
+doughnut-shaped magnetic cage. The field lines wind around the doughnut and form nested
+surfaces, like the layers of an onion wrapped into a ring. Particles and heat move easily
+*along* a surface and only slowly *across* them, which is the basis of magnetic
+confinement.
+
+Because the plasma is nearly the same everywhere on one surface, most of the physics can be
+described by how things change from the centre (the *core*) to the edge. The log uses one
+number for "how far out": ρ (rho), which is 0 at the centre and 1 at the edge.
+
+The magnetic cage is shaped by coils outside the plasma, and by currents flowing in the
+plasma itself. Working out the shape the plasma settles into is the **equilibrium** problem.
+The machines named in this log are **ITER**, the large international device under
+construction in France, whose published scenarios are used as a benchmark, and **MAST-U**, a
+compact *spherical* tokamak in the UK, shaped more like a cored apple than a doughnut.
+
+## How heat and particles move
+
+Heating systems pour power into the core. It leaks out across the surfaces, mostly through
+small-scale turbulence. How fast it leaks decides how hot the core gets, and that decides
+how much fusion power the plasma makes.
+
+**Transport** is the name for that leakage. It is *stiff*: below a critical temperature
+gradient the turbulence is quiet, above it the turbulence switches on hard and the leak jumps.
+The plasma tends to sit right at that threshold, which makes it numerically awkward: small
+changes in the profile cause large changes in the leak, which change the profile, and so on.
+
+## Why these pieces have to be solved together
+
+**Integrated modelling** couples the separate pieces of physics:
+
+| piece | what it answers | example code used here |
+|---|---|---|
+| equilibrium | what shape is the plasma, given the coil currents? | FreeGSNKE |
+| transport | how fast do heat and particles leak across the surfaces? | TORAX with QLKNN |
+| sources | where does the heating power go? | a Gaussian model now; ASCOT5 next |
+| events | sudden internal collapses ("sawteeth") and edge transitions | TORAX's models |
+
+Each depends on the others, and each is solved at every time step of a simulation that covers
+seconds to minutes of plasma. The accurate versions of these codes take hours to days, which
+is the problem this project attacks.
+
+## What a surrogate is, and why it can't simply be trusted
+
+A **surrogate** is a neural network trained to reproduce a slow physics code. Once trained,
+it answers in microseconds. The catch is that a network will return a confident-looking
+number for *any* input, including plasma conditions it never saw in training, where its answer
+can be arbitrarily wrong.
+
+In this project every surrogate sits behind a **guard**. At every radius and every time step
+the guard checks three things:
+
+1. **Is the input inside the region the network was trained on?** (its *domain*)
+2. **Do several independently trained copies of the network agree?** (an *ensemble*; if they
+   disagree, nobody knows the answer)
+3. **Is the output physically possible?** (finite, positive where it must be, within bounds)
+
+If any check fails at a point, a trusted, slower physics model (the **fallback**) is used at
+that point instead, and the substitution is recorded. The fraction of points served by the
+fallback is reported for every run: a surrogate that is used rarely is not saving anything,
+and a rising fallback rate means the surrogate is being asked about conditions it doesn't
+know.
+
+## What "guarantees" means here
+
+Three kinds, each covering what the others can't:
+
+- **Formal**: proved mathematically for a whole box of inputs, e.g. "the predicted heat flux
+  never decreases when the temperature gradient increases". Proofs cover the network itself,
+  not the physics it imitates.
+- **Statistical**: calibrated error bars (*conformal prediction*) that contain the true
+  answer at a stated rate, on data like the training data.
+- **Closed-loop**: a whole simulation run with the surrogate compared with the same run using
+  the physics model, because small errors at each step can grow or cancel over thousands of
+  steps.
+
+## Open and gated codes
+
+The toolkit is built so that everything it ships depends only on **open-source** codes that
+anyone can download (called *Tier A* in this log). Some of the most accurate fusion codes are
+available only through the UK Atomic Energy Authority (*Tier B*). Those may be used to
+generate training data or reference runs, but never as something the finished toolkit needs
+in order to run. The test suite is run a second time with every gated code switched off to
+prove it.
+
+## Why JAX
+
+The simulation is written in **JAX**, a numerical library that compiles a whole calculation
+into one program for a GPU and can differentiate through it. That gives two things this
+project needs: speed, so thousands of runs are affordable, and exact derivatives of any
+output with respect to any input, which make uncertainty propagation, sensitivity analysis
+and optimisation practical. It also imposes discipline, described in the
+[technical internals](technical/invariants.qmd).

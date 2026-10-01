@@ -1,0 +1,300 @@
+---
+title: Building toktoit in public
+subtitle: An integrated tokamak simulation with guarded neural surrogates
+toc: false
+listing:
+  id: log
+  contents: log
+  sort: filename desc
+  type: table
+  fields:
+  - date
+  - title
+  - categories
+  sort-ui: false
+  filter-ui: false
+  date-format: D MMM YYYY
+---
+
+
+:::: {.tk-cols}
+::: {.tk-col}
+Designing, controlling and assessing a fusion reactor means running plasma simulations
+thousands of times. The physics codes that are accurate enough take hours per run. Neural
+networks trained on those codes run in milliseconds, but a network returns an answer
+for any input, including inputs far outside its training data.
+
+**toktoit** is an integrated tokamak simulation in which any expensive physics module can be
+swapped for a neural surrogate, but only behind a *guard*. At every radius and every time step
+the surrogate has to show that it is inside the conditions it was trained on, that its
+ensemble agrees with itself, and that its answer is physically possible. Where it can't, a
+trusted physics model takes over, and the handover is recorded. The whole simulation is
+written in JAX, so it compiles to one program and can be differentiated end to end, and it
+speaks IMAS, the fusion community's standard data format, at every boundary.
+
+The code is private for now. What is public is the argument: the method, the checks that
+define "correct", every number with where it came from, and the mistakes.
+[How this is built](about.qmd): the code is written by an AI agent, Claude, working to a
+brief by a human owner who makes every physics, licence and publication decision.
+:::
+
+::: {.tk-panel}
+### Status
+
+| | |
+|---|---|
+| milestone | M1 |
+| log entries | 10 |
+| tests passing | 98 full suite, 98 with gated codes disabled |
+| source | 4530 lines + 1786 lines of tests |
+| last commit | `ac911c3` |
+| updated | 2026-10-01 |
+
+### Where to start
+
+- [Primer](primer.qmd): no physics background assumed.
+- [The log](#the-log), read from the bottom up.
+- [Technical internals](technical/index.qmd), the [claims register](claims.qmd) and the
+  [decisions](decisions.qmd), for the details.
+:::
+::::
+
+
+## How the work fits together
+
+::: {.tk-flow}
+```{mermaid}
+%%| fig-cap: "The toktoit workflow, milestone by milestone. Box colour shows the current state of each part; hover over a box for what it covers."
+%%| fig-alt: "Flowchart. M0 Scaffold (done) leads to M1 Open baseline. In M1, the TORAX backend and the Newton-Raphson coupling loop (done) feed the fixed-step loop over TORAX (done), which feeds QLKNN behind the guard, analytic RF heating, energy and particle balance, and run tracking (all done), the ITER benchmark physics comparison (under construction), and ASCOT5 alpha heating (critical: a second cluster run awaits a decision, OQ-11). FreeGSNKE MAST-U equilibrium is done, standalone. Guard, balance, ASCOT5 and benchmark lead to the physicist review, the M1 gate (critical). M1 leads to M2 training data, M3 surrogates, M4 verification, certification review, M5 uncertainty and validation, and physicist sign-off, all pending; M3 also leads to FreeGSNKE coupled to transport (pending)."
+flowchart TB
+  m0["M0 · Scaffold: data structures, IMAS adapters,<br>guard, coupling loop, tests"]
+
+  subgraph s1 ["M1 · Open baseline"]
+    direction LR
+    torax["TORAX backend,<br>ITER hybrid<br>reference runs"]
+    newton["Newton-Raphson<br>coupling loop"]
+    fixed["Fixed-step loop<br>over TORAX"]
+    guard["QLKNN behind<br>the guard"]
+    rf["Analytic RF heating"]
+    bal["Energy and<br>particle balance"]
+    track["Run tracking"]
+    ascot["ASCOT5 alpha<br>heating into TORAX"]
+    bench["ITER benchmark:<br>physics comparison"]
+    fgs["FreeGSNKE: MAST-U<br>equilibrium, standalone"]
+    rev{{"Physicist review<br>(M1 gate)"}}
+    torax --> fixed
+    newton --> fixed
+    fixed --> guard & rf & bal & track & ascot & bench
+    guard & bal & ascot & bench --> rev
+  end
+
+  subgraph s2 ["M2 to M5"]
+    direction LR
+    m2["M2 · Training<br>data"]
+    m3["M3 ·<br>Surrogates"]
+    fgst["FreeGSNKE<br>coupled to<br>transport"]
+    m4["M4 ·<br>Verification"]
+    cert{{"Certification<br>review"}}
+    m5["M5 · UQ and<br>validation"]
+    sign{{"Physicist<br>sign-off"}}
+    m2 --> m3 --> m4 --> cert --> m5 --> sign
+    m3 --> fgst
+  end
+
+  m0 --> s1
+  s1 --> s2
+
+  %% states: done (green), wip = under construction (yellow), crit = critical (red), todo = pending (white)
+  classDef done fill:#cdeccd,stroke:#2e7d32,stroke-width:1.5px,color:#000
+  classDef wip fill:#fff1a8,stroke:#9a7400,stroke-width:1.5px,stroke-dasharray:6 3,color:#000
+  classDef crit fill:#f6c6c6,stroke:#b71c1c,stroke-width:3px,color:#000
+  classDef todo fill:#ffffff,stroke:#8a8a8a,stroke-width:1px,color:#000
+  class m0,newton,torax,fixed,guard,rf,bal,track,fgs done
+  class bench wip
+  class ascot,rev crit
+  class m2,m3,fgst,m4,cert,m5,sign todo
+  style s1 fill:#fafafa,stroke:#bdbdbd,color:#000
+  style s2 fill:#fafafa,stroke:#bdbdbd,color:#000
+```
+:::
+
+::: {.wf-key}
+[done]{.wf .done} [under construction]{.wf .wip} [critical: blocks the next milestone]{.wf .crit} [pending]{.wf .todo}
+:::
+
+:::: {#tk-flow-notes}
+::: {.tk-note data-node="m0"}
+**M0 · Scaffold** (done 18 Sep 2026). Data structures for the plasma state, the guard, the
+coupling loop, IMAS adapters, provenance records and a test suite, all checked on a toy physics
+model before real physics was added.
+:::
+::: {.tk-note data-node="torax"}
+**TORAX backend.** TORAX, the open-source JAX transport code, wrapped as a backend. Reference
+runs of the ITER hybrid scenario (5 s flat-top and 80 s current ramp-up), with output converted
+to toktoit's data structures and provenance recorded. Entry 2.
+:::
+::: {.tk-note data-node="newton"}
+**Newton-Raphson coupling loop.** The nonlinear solve inside each time step uses Newton-Raphson,
+with Picard iteration kept as a fallback. Entry 1.
+:::
+::: {.tk-note data-node="fixed"}
+**Fixed-step loop over TORAX.** toktoit's compiled fixed-step loop calls TORAX's own single
+time step, so a run is one program and can be differentiated end to end. Compared against
+TORAX's own driver in entry 3; solver stalls examined in entry 5.
+:::
+::: {.tk-note data-node="guard"}
+**QLKNN behind the guard.** QLKNN, a neural network trained on the QuaLiKiz turbulence code, runs
+inside TORAX behind the guard. At each radius and time step where a check fails, a physics
+model is used instead and the substitution is recorded. Entry 4.
+:::
+::: {.tk-note data-node="rf"}
+**Analytic RF heating.** TORAX's Gaussian RF heating model, wrapped with a typed entry point and
+tests. Entry 5.
+:::
+::: {.tk-note data-node="bal"}
+**Energy and particle balance.** Each step's energy and particle balance rebuilt from TORAX's own
+equations on the ramp-up benchmark; meets the agreed 10^-6^ per step ([OQ-5](/Blog/toktoit/decisions.qmd#oq-5)). Entry 8.
+:::
+::: {.tk-note data-node="track"}
+**Run tracking.** Every command that runs physics keeps a run record: settings, one record per
+step, alerts and final status, optionally sent to a Simvue tracking server. Entry 9.
+:::
+::: {.tk-note data-node="ascot"}
+**ASCOT5 alpha heating into TORAX.** ASCOT5 follows each fusion alpha particle along its orbit;
+the resulting heating replaces TORAX's local model. First cluster run done (entry 10). A second
+run with ten times more markers awaits a decision ([OQ-11](/Blog/toktoit/decisions.qmd#oq-11)).
+:::
+::: {.tk-note data-node="bench"}
+**ITER benchmark: physics comparison.** Comparison against the published ITER hybrid profiles.
+The wrapper check passes; the physics comparison is next, with the tolerance set at the
+physicist review ([OQ-5](/Blog/toktoit/decisions.qmd#oq-5)).
+:::
+::: {.tk-note data-node="fgs"}
+**FreeGSNKE: MAST-U equilibrium.** FreeGSNKE, an open-source free-boundary equilibrium solver,
+computes MAST-U plasma shapes from coil currents. Standalone: not yet coupled to transport.
+Entry 6.
+:::
+::: {.tk-note data-node="rev"}
+**Physicist review (M1 gate).** A physicist reviews the benchmark, conservation and gradient
+results and sets the benchmark tolerance. Not yet scheduled.
+:::
+::: {.tk-note data-node="m2"}
+**M2 · Training data.** Sampled datasets from first-principles turbulence codes, with
+provenance. Not started.
+:::
+::: {.tk-note data-node="m3"}
+**M3 · Surrogates.** Neural-network ensembles with physics built in, running inside the loop
+behind the guard. Not started.
+:::
+::: {.tk-note data-node="fgst"}
+**FreeGSNKE coupled to transport.** MAST-U equilibria feeding the transport loop. This needs a
+transport model valid on a spherical tokamak, which QLKNN is not, so it follows M3.
+:::
+::: {.tk-note data-node="m4"}
+**M4 · Verification.** For each surrogate: proved properties, calibrated uncertainty and
+closed-loop checks. Not started.
+:::
+::: {.tk-note data-node="cert"}
+**Certification review.** Human gate after M4: each surrogate is reviewed before it is used for
+results. Not started.
+:::
+::: {.tk-note data-node="m5"}
+**M5 · Uncertainty and validation.** Uncertainty propagated through the coupled simulation, and
+validation. Not started.
+:::
+::: {.tk-note data-node="sign"}
+**Physicist sign-off.** The final human gate. Not started.
+:::
+::::
+
+```{=html}
+<script>
+/* Hover descriptions for the workflow flowchart. Quarto renders Mermaid after page load and
+   does not bind Mermaid's own tooltips, so wait for the SVG, then match each node by its
+   element id ("flowchart-<node>-<n>") to a .tk-note[data-node] block above. */
+(function () {
+  var tip = null;
+  function show(html, x, y) {
+    tip.innerHTML = html;
+    tip.style.display = "block";
+    var w = tip.offsetWidth, h = tip.offsetHeight;
+    var left = Math.min(x + 14, window.innerWidth - w - 8);
+    var top = y + 16 + h > window.innerHeight ? y - h - 12 : y + 16;
+    tip.style.left = Math.max(8, left) + "px";
+    tip.style.top = Math.max(8, top) + "px";
+  }
+  function hide() { if (tip) tip.style.display = "none"; }
+  function bind() {
+    var nodes = document.querySelectorAll(".tk-flow svg.mermaid-js g.node");
+    if (!nodes.length) return false;
+    var notes = {};
+    document.querySelectorAll("#tk-flow-notes .tk-note").forEach(function (n) {
+      notes[n.dataset.node] = n.innerHTML;
+    });
+    tip = document.createElement("div");
+    tip.className = "tk-tip";
+    tip.setAttribute("role", "tooltip");
+    document.body.appendChild(tip);
+    nodes.forEach(function (g) {
+      var m = /flowchart-(.+)-\d+$/.exec(g.id);
+      var html = m && notes[m[1]];
+      if (!html) return;
+      g.classList.add("tk-has-note");
+      g.addEventListener("mousemove", function (e) { show(html, e.clientX, e.clientY); });
+      g.addEventListener("mouseleave", hide);
+      g.addEventListener("click", function (e) { e.stopPropagation(); show(html, e.clientX, e.clientY); });
+    });
+    document.addEventListener("click", hide);
+    window.addEventListener("scroll", hide, { passive: true });
+    return true;
+  }
+  window.addEventListener("load", function () {
+    var tries = 0;
+    var t = setInterval(function () { if (bind() || ++tries > 50) clearInterval(t); }, 200);
+  });
+})();
+</script>
+```
+
+## Milestones
+
+Each milestone has acceptance criteria fixed in advance; three of them end in a review by a
+human expert, not by the agent that built the code.
+
+| | milestone | what it delivers | state | human gate |
+|---|---|---|---|---|
+| M0 | [Scaffold](milestones/M0.qmd) | data structures, the guard, the coupling loop, IMAS adapters, tests | [done 18 Sep 2026]{.wf .done} | — |
+| M1 | [Open baseline](milestones/M1.qmd) | open-source physics codes wired in; a published benchmark reproduced | [in progress]{.wf .wip} | [physicist review]{.wf .crit} |
+| M2 | Training data | sampled datasets from first-principles turbulence codes, with provenance | [not started]{.wf .todo} | — |
+| M3 | Surrogates | neural ensembles with physics built in, running inside the loop | [not started]{.wf .todo} | — |
+| M4 | Verification | proved properties, calibrated uncertainty, closed-loop checks per surrogate | [not started]{.wf .todo} | [certification review]{.wf .todo} |
+| M5 | Uncertainty and validation | uncertainty propagated through the coupled simulation; validation | [not started]{.wf .todo} | [physicist sign-off]{.wf .todo} |
+
+:::: {.tk-cols}
+::: {.tk-col}
+## The log
+
+<details class="tk-log">
+<summary>Show all 10 entries, newest first</summary>
+
+::: {#log}
+:::
+
+</details>
+
+:::
+
+::: {.tk-col}
+## What's next
+
+- **ASCOT5 alpha heating with enough markers.** The first cluster run (entry 10) connected
+  ASCOT5 to TORAX and set the orbit tolerance. A second run, with ten times more markers and a
+  tighter-tolerance check, is awaiting a decision ([OQ-11](/Blog/toktoit/decisions.qmd#oq-11)). The approach then extends to
+  neutral-beam ions once the injector geometry is approved.
+- **Run the physics benchmark.** Compare against the published profiles at the published
+  settings, then at a converged time step, ahead of the physicist review that sets the
+  tolerance ([OQ-5](/Blog/toktoit/decisions.qmd#oq-5)).
+- **Future extension:** extending the benchmark to a STEP power-plant flat-top is planned as a
+  future extension. For now the work stays with the ITER benchmark and MAST-U.
+:::
+::::

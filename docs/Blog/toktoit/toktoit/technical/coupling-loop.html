@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Coupling loop – Vignesh Gopakumar</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../">
+<link href="../../../../Images/dy_dx.png" rel="icon" type="image/png">
+<script src="../../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../styles.css">
+<link rel="stylesheet" href="../toktoit.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../../index.html">
+    <span class="navbar-title">Vignesh Gopakumar</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../research.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../talks.html"> 
+<span class="menu-text">Talks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../Blog/blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose">Purpose</a></li>
+  <li><a href="#method" id="toc-method" class="nav-link" data-scroll-target="#method">Method</a></li>
+  <li><a href="#algorithm" id="toc-algorithm" class="nav-link" data-scroll-target="#algorithm">Algorithm</a>
+  <ul class="collapse">
+  <li><a href="#the-corrector-solve-deliberately" id="toc-the-corrector-solve-deliberately" class="nav-link" data-scroll-target="#the-corrector-solve-deliberately">The corrector solve, deliberately</a></li>
+  </ul></li>
+  <li><a href="#nonlinear-iteration" id="toc-nonlinear-iteration" class="nav-link" data-scroll-target="#nonlinear-iteration">Nonlinear iteration</a>
+  <ul class="collapse">
+  <li><a href="#why-not-iterate-until-converged" id="toc-why-not-iterate-until-converged" class="nav-link" data-scroll-target="#why-not-iterate-until-converged">Why not “iterate until converged”</a></li>
+  <li><a href="#measured-behaviour" id="toc-measured-behaviour" class="nav-link" data-scroll-target="#measured-behaviour">Measured behaviour</a></li>
+  </ul></li>
+  <li><a href="#fixed-step-driver" id="toc-fixed-step-driver" class="nav-link" data-scroll-target="#fixed-step-driver">Fixed-step driver over TORAX</a>
+  <ul class="collapse">
+  <li><a href="#time-convergence" id="toc-time-convergence" class="nav-link" data-scroll-target="#time-convergence">Time convergence of the published references</a></li>
+  <li><a href="#post-mortem-stalls" id="toc-post-mortem-stalls" class="nav-link" data-scroll-target="#post-mortem-stalls">Post-mortem: the stalls that were not a physics event</a></li>
+  </ul></li>
+  <li><a href="#interface" id="toc-interface" class="nav-link" data-scroll-target="#interface">Interface</a></li>
+  <li><a href="#parameters-and-defaults" id="toc-parameters-and-defaults" class="nav-link" data-scroll-target="#parameters-and-defaults">Parameters and defaults</a></li>
+  <li><a href="#correctness" id="toc-correctness" class="nav-link" data-scroll-target="#correctness">Correctness</a></li>
+  <li><a href="#ceilings" id="toc-ceilings" class="nav-link" data-scroll-target="#ceilings">Ceilings</a></li>
+  <li><a href="#changelog" id="toc-changelog" class="nav-link" data-scroll-target="#changelog">Changelog</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Coupling loop</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-left">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">September 30, 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="purpose" class="level2">
+<h2 class="anchored" data-anchor-id="purpose">Purpose</h2>
+<p>Advance the plasma state in time while the physics modules disagree with each other: transport coefficients depend on the profiles, and the profiles depend on the transport coefficients. Serves brief invariants 3 (nothing impure inside the compiled region) and 4 (the whole simulation differentiable end to end), and is the place where a guarded surrogate is substituted for a physics module.</p>
+</section>
+<section id="method" class="level2">
+<h2 class="anchored" data-anchor-id="method">Method</h2>
+<p>One time step solves the fixed point</p>
+<p><span class="math display">\[p = G(p), \qquad G(p) = \mathcal{S}\big(p_\text{old};\, \chi(p),\, S(p)\big),\]</span></p>
+<p>where <span class="math inline">\(p = (T_e, T_i, n_e)\)</span> on cell centres, <span class="math inline">\(\chi\)</span> are transport coefficients on cell faces, <span class="math inline">\(S\)</span> are volumetric sources on cell centres, and <span class="math inline">\(\mathcal S\)</span> is one backward-Euler (<span class="math inline">\(\theta = 1\)</span>) solve of the transport equations with those coefficients held fixed (see <a href="../../../../Blog/toktoit/toktoit/technical/transport-solver.html">transport solver</a>). Units follow the conventions document: SI except temperature in eV and density in m⁻³; the radial coordinate is normalised toroidal flux throughout.</p>
+</section>
+<section id="algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="algorithm">Algorithm</h2>
+<p><strong>Algorithm 1 — one step</strong> (as in <code>tkit.core.loop.make_step</code>):</p>
+<pre><code>eq   &lt;- equilibrium(state)                  # quasi-static, recomputed once per step
+p_k  &lt;- nonlinear_iteration(state.profiles) # Algorithm 2 or 3, fixed iteration count
+chi, S &lt;- transport(eq, p_k), sources(eq, p_k)
+p    &lt;- implicit_solve(p_old, chi, S, dt)   # corrector: coefficients frozen at p_k
+p    &lt;- sawtooth(eq, p)                     # smoothed trigger
+emit  trace(profiles, fluxes, sources, ok_masks, residual)</code></pre>
+<p>The outer loop over steps is a <code>scan</code> of fixed length with per-step checkpointing, so reverse-mode memory stays bounded over long discharges. No unbounded loop appears anywhere in the compiled region — a deliberate restriction from the brief, and the reason iteration counts are fixed rather than tolerance-driven.</p>
+<section id="the-corrector-solve-deliberately" class="level3">
+<h3 class="anchored" data-anchor-id="the-corrector-solve-deliberately">The corrector solve, deliberately</h3>
+<p>The accepted state is the exact solution of one final solve with coefficients frozen at the last iterate, rather than the last iterate itself. Consequence: the discrete particle and energy balances hold exactly for the coefficients that are <em>recorded in the trace</em>, however poorly the nonlinear iteration converged. Without it, non-convergence silently corrupts conservation; with it, non-convergence shows up only where it should, in the reported residual.</p>
+</section>
+</section>
+<section id="nonlinear-iteration" class="level2">
+<h2 class="anchored" data-anchor-id="nonlinear-iteration">Nonlinear iteration</h2>
+<p>Two schemes, selected by <code>loop.solver</code>.</p>
+<p><strong>Algorithm 2 — relaxed Picard</strong> (the M0 scheme, retained as fallback): iterate <span class="math inline">\(p \leftarrow p + \alpha\,(G(p) - p)\)</span> a fixed number of times with <span class="math inline">\(\alpha = 0.7\)</span>.</p>
+<p><strong>Algorithm 3 — Newton-Raphson</strong> (default since <a href="../../../../Blog/toktoit/decisions.html#oq-4">OQ-4</a>): solve <span class="math inline">\(F(p) = p - G(p) = 0\)</span>.</p>
+<ol type="1">
+<li>work in field-normalised variables <span class="math inline">\(x\)</span>, each field scaled by its magnitude at the start of the step, so the Jacobian is <span class="math inline">\(O(1)\)</span>;</li>
+<li><span class="math inline">\(J = I - \partial g/\partial x\)</span> by forward-mode automatic differentiation (dense);</li>
+<li><span class="math inline">\(\delta = -J^{-1}F\)</span>;</li>
+<li>line search over a fixed candidate set: step lengths <span class="math inline">\(1, \tfrac12, \tfrac14, \tfrac18\)</span> <em>and</em> the relaxed Picard update, evaluated in parallel; keep the smallest residual, with non-positive states scored as infinite;</li>
+<li>repeat for a fixed iteration count.</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tkit/core/loop.py @ 91d4e55 (one Newton iteration, trimmed)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>p_g, ok_t_new, ok_s_new <span class="op">=</span> fixed_point(p)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> to_x(p)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> x <span class="op">-</span> to_x(p_g)                                   <span class="co"># F(x) = x - g(x)</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>jac <span class="op">=</span> jnp.eye(x.size) <span class="op">-</span> jax.jacfwd(g)(x)            <span class="co"># dense, forward mode</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>dx <span class="op">=</span> jnp.linalg.solve(jac, <span class="op">-</span>f)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>cands <span class="op">=</span> jnp.concatenate(</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    [x[<span class="va">None</span>] <span class="op">+</span> lengths[:, <span class="va">None</span>] <span class="op">*</span> dx[<span class="va">None</span>], (x <span class="op">-</span> cfg.relax <span class="op">*</span> f)[<span class="va">None</span>]]</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)                                                   <span class="co"># Newton steps 1, 1/2, ... and Picard</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>best <span class="op">=</span> jnp.argmin(jax.vmap(merit)(cands))           <span class="co"># merit = residual, inf if non-positive</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> (to_p(cands[best]), ok_t <span class="op">&amp;</span> ok_t_new, ok_s <span class="op">&amp;</span> ok_s_new), res</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Including the Picard update among the candidates is what makes the guarantee “never worse per iteration than the scheme it replaced” hold, and keeps the fallback the owner asked for inside the same code path rather than as a separate mode.</p>
+<section id="why-not-iterate-until-converged" class="level3">
+<h3 class="anchored" data-anchor-id="why-not-iterate-until-converged">Why not “iterate until converged”</h3>
+<p>An unbounded loop cannot be reverse-differentiated without special handling, makes compiled cost unpredictable, and hides non-convergence. Fixed count plus reported residual makes the failure mode visible: <code>stall_tol</code> is compared against the final residual of every step and the run prints a stall on stderr. Tolerances are never loosened to silence it (brief §9).</p>
+</section>
+<section id="measured-behaviour" class="level3">
+<h3 class="anchored" data-anchor-id="measured-behaviour">Measured behaviour</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>case</th>
+<th>Picard</th>
+<th>Newton</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>toy, default: final residual</td>
+<td><span class="claim">3 × 10<sup>−5</sup></span><a href="../../../../Blog/toktoit/claims.html#c-002" class="cid st-measured">C-002</a></td>
+<td><span class="claim">10<sup>−14</sup></span><a href="../../../../Blog/toktoit/claims.html#c-003" class="cid st-tested">C-003</a></td>
+</tr>
+<tr class="even">
+<td>toy, stiff (original M0 settings): final residual</td>
+<td>stalls at 2 × 10⁻², reported</td>
+<td><span class="claim">3 × 10<sup>−11</sup></span><a href="../../../../Blog/toktoit/claims.html#c-005" class="cid st-tested">C-005</a></td>
+</tr>
+<tr class="odd">
+<td>cost, 100 steps, CPU</td>
+<td>baseline</td>
+<td><span class="claim">200× slower</span><a href="../../../../Blog/toktoit/claims.html#c-004" class="cid st-measured">C-004</a></td>
+</tr>
+</tbody>
+</table>
+<p>Quadratic convergence is asserted directly: each residual must be below <span class="math inline">\(50 r^2\)</span> of the previous one until round-off (<code>tests/regression/test_toy_loop.py::test_newton_converges_quadratically</code>).</p>
+</section>
+</section>
+<section id="fixed-step-driver" class="level2">
+<h2 class="anchored" data-anchor-id="fixed-step-driver">Fixed-step driver over TORAX</h2>
+<p>The same loop shape drives TORAX’s own step function. TORAX normally chooses its step adaptively in an interpreted loop; configured for fixed steps, its step is an ordinary compiled function and can be called from inside our <code>scan</code>, with our checkpointing. This gives the brief’s loop shape together with TORAX’s full physics (current diffusion, bootstrap current, fusion power, radiation, pedestal, sawteeth) instead of re-implementing it.</p>
+<p>Verified by: identity against its own driver (<span class="claim">10<sup>−13</sup></span><a href="../../../../Blog/toktoit/claims.html#c-006" class="cid st-tested">C-006</a>), reproduction of the stored reference at the reference’s own step (<span class="claim">10<sup>−14</sup></span><a href="../../../../Blog/toktoit/claims.html#c-007" class="cid st-tested">C-007</a>), and gradients through three coupled steps checked against finite differences (<span class="claim">10<sup>−6</sup></span><a href="../../../../Blog/toktoit/claims.html#c-008" class="cid st-tested">C-008</a>).</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tkit/physics/torax_loop.py @ 26f89fb (trimmed)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simulate(step_fn, state0, post0, n_steps, checkpoint<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> body(carry, _):</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        state, post <span class="op">=</span> step_fn(<span class="op">*</span>carry)               <span class="co"># TORAX's own compiled time step</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (state, post), _record(state, post, guard_ok(step_fn, state))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    step <span class="op">=</span> jax.checkpoint(body) <span class="cf">if</span> checkpoint <span class="cf">else</span> body</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jax.lax.scan(step, (state0, post0), <span class="va">None</span>, length<span class="op">=</span>n_steps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>TORAX is switched to fixed steps by three config overrides: <code>numerics.fixed_dt</code>, <code>numerics.adaptive_dt = False</code>, and <code>time_step_calculator.calculator_type = "fixed"</code>. Each recorded step carries TORAX’s solver status (0 converged, 1 not converged, 2 converged only to the coarse tolerance), its inner iteration count and whether a sawtooth crash was applied, so a stall is visible in the trace rather than only in a log.</p>
+<section id="time-convergence" class="level3">
+<h3 class="anchored" data-anchor-id="time-convergence">Time convergence of the published references</h3>
+<p>With fixed steps, the step can be halved and the answer watched. For the ramp-up, halving from the reference’s 2 s step changes the core electron temperature by <span class="claim">18%</span><a href="../../../../Blog/toktoit/claims.html#c-012" class="cid st-measured">C-012</a> at t = 2 s; the change shrinks as the step shrinks, as a first-order scheme should (<code>test_fixed_step_first_order_convergence</code>). The flat-top reference uses TORAX’s adaptive step (median 0.12 s, up to 0.42 s) and sits <span class="claim">34%</span><a href="../../../../Blog/toktoit/claims.html#c-013" class="cid st-preliminary">C-013</a> from the <span class="math inline">\(\Delta t \to 0\)</span> answer at t = 2 s. The error is concentrated in the initial heating transient. This is not a defect in TORAX, whose examples are tuned for speed, but it means part of any difference from a published curve is time-step error; how the benchmark accounts for it is <a href="../../../../Blog/toktoit/decisions.html#oq-5">OQ-5</a>.</p>
+<p><strong>Limits.</strong> Its Newton solver contains an unbounded internal loop, so reverse-mode gradients require its linear (predictor-corrector) solver; forward mode works with either. Disabling adaptive stepping also disables its retry-on-failure, which is what exposes the stalls below.</p>
+</section>
+<section id="post-mortem-stalls" class="level3">
+<h3 class="anchored" data-anchor-id="post-mortem-stalls">Post-mortem: the stalls that were not a physics event</h3>
+<p><em>Recorded 2026-09-22.</em></p>
+<p><strong>Observed.</strong> With fixed steps of 0.5 s or less, TORAX’s Newton solver reported non-convergence on up to six steps in a 2.5 s window late in the ITER hybrid ramp-up. Smaller steps failing more is backwards.</p>
+<p><strong>What it wasn’t.</strong> Plasma current, minimum safety factor, auxiliary and ohmic power, density and internal inductance are all smooth across the window; transport coefficients are smooth too, with no model switching on or off, and only the three pedestal-region faces pinned at their floor, as they are throughout the run. No discrete event, no clipping transition.</p>
+<p><strong>What it was.</strong> The failing steps exit after 3–5 of 30 allowed iterations, when the line search shrinks the step below <code>tau_min = 0.01</code> of the original. Neighbouring steps converge only to the coarse tolerance. The residual is hovering near <code>residual_tol = 1e-5</code>, where the line search cannot make progress. Which steps fail is sensitive to compilation details (eager stepping versus <code>scan</code>), confirming marginality rather than a physical cause.</p>
+<p><strong>Effect.</strong> Raising the iteration limit changes nothing. Lowering the line-search floor to 1e-3 (residual tolerance unchanged) removes all failures and moves stored energy at 80 s by <span class="claim">2 × 10<sup>−5</sup> relative</span><a href="../../../../Blog/toktoit/claims.html#c-011" class="cid st-measured">C-011</a>.</p>
+<p><strong>Not changed.</strong> Defaults are left alone and the stalls are reported; whether fixed-step runs may lower the floor is an owner decision (<a href="../../../../Blog/toktoit/decisions.html#oq-5">OQ-5</a>). Recorded as ceiling <a href="../../../../Blog/toktoit/ceilings.html#k-003">K-003</a>.</p>
+</section>
+</section>
+<section id="interface" class="level2">
+<h2 class="anchored" data-anchor-id="interface">Interface</h2>
+<p>Public signatures:</p>
+<ul>
+<li><code>Models(equilibrium, transport, sources, sawtooth)</code> — each returns <code>(output, ok_mask)</code>.</li>
+<li><code>LoopConfig(dt [s], n_steps, solver ∈ {newton, picard}, n_picard, relax, n_newton,   n_line_search, stall_tol)</code>.</li>
+<li><code>simulate(models, edge, cfg, state0) -&gt; (State, Trace)</code>, jit-compiled and differentiable.</li>
+<li><code>Trace(t, profiles, fluxes, flux_std, sources, ok_transport, ok_sources, picard_residual)</code>.</li>
+</ul>
+</section>
+<section id="parameters-and-defaults" class="level2">
+<h2 class="anchored" data-anchor-id="parameters-and-defaults">Parameters and defaults</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>parameter</th>
+<th>default</th>
+<th>sensitive to</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>dt</code></td>
+<td>5e-4 s (toy)</td>
+<td>stiffness; first-order accuracy in time</td>
+</tr>
+<tr class="even">
+<td><code>n_steps</code></td>
+<td>100 (toy)</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td><code>solver</code></td>
+<td><code>newton</code></td>
+<td>stiff transport; Picard stalls (<a href="../../../../Blog/toktoit/claims.html#c-005">C-005</a>)</td>
+</tr>
+<tr class="even">
+<td><code>n_newton</code></td>
+<td>4</td>
+<td>residual reached per step</td>
+</tr>
+<tr class="odd">
+<td><code>n_line_search</code></td>
+<td>4</td>
+<td>robustness on hard steps; cost per iteration</td>
+</tr>
+<tr class="even">
+<td><code>relax</code></td>
+<td>0.7</td>
+<td>Picard mode, and the Picard candidate in Newton’s line search</td>
+</tr>
+<tr class="odd">
+<td><code>stall_tol</code></td>
+<td>1e-3</td>
+<td>when a stall is reported</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="correctness" class="level2">
+<h2 class="anchored" data-anchor-id="correctness">Correctness</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>property</th>
+<th>test</th>
+<th>claim</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>100 coupled steps run compiled, finite, positive, edge condition respected</td>
+<td><code>test_100_steps_under_jit</code></td>
+<td><a href="../../../../Blog/toktoit/claims.html#c-001">C-001</a></td>
+</tr>
+<tr class="even">
+<td>per-step particle and energy balance reproduce from the trace to 1e-9</td>
+<td><code>tests/conservation</code></td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>Newton converges quadratically</td>
+<td><code>test_newton_converges_quadratically</code></td>
+<td><a href="../../../../Blog/toktoit/claims.html#c-003">C-003</a></td>
+</tr>
+<tr class="even">
+<td>Newton converges where Picard stalls, and the stall is reported</td>
+<td><code>test_newton_converges_where_picard_stalls</code></td>
+<td><a href="../../../../Blog/toktoit/claims.html#c-005">C-005</a></td>
+</tr>
+<tr class="odd">
+<td>both solvers agree once converged</td>
+<td><code>test_solvers_agree_on_converged_default</code></td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>gradients finite and finite-difference-checked through 20 coupled steps</td>
+<td><code>tests/diff/test_gradients.py</code></td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>identity against TORAX’s own driver</td>
+<td><code>test_scan_matches_torax_driver</code></td>
+<td><a href="../../../../Blog/toktoit/claims.html#c-006">C-006</a></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ceilings" class="level2">
+<h2 class="anchored" data-anchor-id="ceilings">Ceilings</h2>
+<p><a href="../../../../Blog/toktoit/ceilings.html#k-002">K-002</a> (dense Jacobian), <a href="../../../../Blog/toktoit/ceilings.html#k-003">K-003</a> (no adaptive retry).</p>
+</section>
+<section id="changelog" class="level2">
+<h2 class="anchored" data-anchor-id="changelog">Changelog</h2>
+<ul>
+<li>2026-09-30: first published version; code excerpts and time-convergence section added.</li>
+<li>2026-09-22: fixed-step driver section; stall post-mortem (entries 3, 5).</li>
+<li>2026-09-21 — Newton-Raphson with line search added, Picard retained (entry 1).</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2026 Vignesh Gopakumar</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<div class="toktoit-footer">
+Code and first draft by Claude (Anthropic), working to a brief by Vignesh Gopakumar,
+who reviewed and approved this page.
+<a href="../../../../Blog/toktoit/about.html">How this is built</a> ·
+<a href="../../../../Blog/toktoit/index.html">toktoit home</a>
+</div>
+
+
+
+
+</body></html>

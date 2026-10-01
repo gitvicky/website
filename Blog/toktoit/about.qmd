@@ -1,0 +1,76 @@
+---
+title: How this is built
+toc: true
+---
+
+## Who does what
+
+**The code is written by an AI.** toktoit is implemented by Claude, an AI model made by
+Anthropic, working as a coding agent. Claude also writes the tests and drafts every page of
+this log, including this one.
+
+**A human owns it.** Vignesh Gopakumar wrote the brief the agent works to, and makes every
+decision the brief reserves for a human:
+
+- physics modelling choices (which transport closure, which benchmark, which tolerance);
+- licence and data-sharing questions, including anything about experimental data;
+- which properties a verification should prove;
+- any use of the compute cluster beyond interactive work;
+- what gets published here: every page is reviewed and approved by the owner before it goes
+  live.
+
+**Physicists review at the gates.** Milestones M1 and M5 end in a physicist's review and M4 in
+a certification review, by people other than the agent that built the code. Until a gate has
+passed, physics claims on this site are labelled accordingly (see the
+[claims register](claims.qmd)).
+
+Readers should weigh the evidence with that in mind. A check written by the same author as the
+code it checks is weaker than an independent one, whether the author is a person or a model;
+where that applies, the page says so.
+
+## The rules the agent works under
+
+The brief sets six invariants. Breaking one is a build failure, not a design choice:
+
+1. **Open codes must stand alone.** Every module is labelled open (*Tier A*) or gated
+   (*Tier B*, UKAEA-access codes). The full test suite must pass with all gated code and data
+   unavailable.
+2. **Gated codes are never a runtime dependency** of anything shipped. They may generate
+   training data, reference runs and baselines only.
+3. **No AI inside the simulation.** The simulation itself is deterministic and reproducible;
+   the agent writes code, it does not run inside it.
+4. **Nothing impure inside compiled code**: no file access, logging or data-dependent Python
+   branching inside the compiled simulation.
+5. **Every surrogate sits behind a guard** with an explicit input domain and a trusted
+   fallback.
+6. **Provenance on every artifact**: every dataset, surrogate or certificate records the code,
+   version, configuration and tier that produced it.
+
+And an escalation rule: when the agent reaches a decision that is the owner's, it writes the
+question down with its recommended answer, carries on with whatever isn't blocked, and waits.
+Those questions and the answers are on the [decisions](decisions.qmd) page. When an iterative
+solver stalls, the stall is reported, never hidden by loosening a tolerance.
+
+## Why the code isn't public (yet)
+
+The code lives in a private repository while it is being built. This log is meant to make the
+work checkable anyway: every number links to a register entry that names the test or run it
+came from, the commit that produced it and the command that reproduces it; the technical pages
+describe the algorithms well enough to re-implement them; and short excerpts of the real code
+appear where the code itself is the point. The Python package is called `tkit`, which is the
+name that appears in code excerpts and module paths.
+
+## How a page gets here
+
+After each piece of work, the agent drafts a one-page entry for the [log](index.qmd) and
+updates the [technical internals](technical/index.qmd), with no length limit there. An
+automated check blocks publication if a page contains anything from a list of things that
+must not appear (paths, account names, material the owner has not cleared) or if an entry
+runs over one page. The owner reads the result and publishes it.
+
+## Credit
+
+toktoit builds on open-source work by others, used under their licences: **TORAX** (Google
+DeepMind, Apache-2.0), including the **QLKNN** transport network; **FreeGSNKE** (LGPL-3.0),
+including its MAST-U-like machine description, credited to UKAEA; **ASCOT5** and **Aurora**;
+**IMAS-Python** and the IMAS Data Dictionary; and **JAX** and **Equinox**.

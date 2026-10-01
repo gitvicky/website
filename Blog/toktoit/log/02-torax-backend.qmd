@@ -1,0 +1,58 @@
+---
+title: TORAX backend and the ITER hybrid reference runs
+date: '2026-09-21'
+categories:
+- built
+entry: 2
+milestone: M1
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 2 · milestone M1
+:::
+
+Milestone M1 asks us to reproduce a published benchmark. The owner chose the **ITER hybrid
+scenario** ([OQ-6](/Blog/toktoit/decisions.qmd#oq-6)), which ships with **TORAX**, the open-source JAX transport code from Google
+DeepMind that we build on. It has two variants: a five-second flat-top case, which is cheap to
+run, and an eighty-second current ramp-up, which is harder and closer to a real discharge.
+
+First we had to run TORAX and convert its output into our own data structures. Errors at this
+stage are easy to miss: two codes can differ in units, in where the radial grid points sit, or
+in the definition of a quantity, and still produce reasonable-looking profiles.
+
+## Checking the conversion
+
+The two codes' conventions differ in three places: temperatures in keV versus eV, profile
+arrays that include the boundary points versus arrays that do not, and a geometric factor
+defined with respect to volume in one code and to the radial coordinate in the other.
+
+To check the conversion, we recomputed two quantities that TORAX also reports, from our
+converted data, and compared them with TORAX's values:
+
+| quantity, recomputed from converted data | agreement |
+|---|---|
+| total heating power | [better than 10^−8^]{.claim}[C-010](/Blog/toktoit/claims.qmd#c-010){.cid .st-tested} |
+| stored thermal energy | [10^−16^]{.claim}[C-009](/Blog/toktoit/claims.qmd#c-009){.cid .st-tested} |
+
+The stored energy first differed by [0.3% low]{.claim}[C-034](/Blog/toktoit/claims.qmd#c-034){.cid .st-measured}, consistently. The conversion was
+correct. The difference came from impurity ions: an ITER plasma contains a small amount of
+heavy impurities, added to radiate power before it reaches the walls, and their pressure
+contributes to the stored energy. Our first calculation left them out. Including them brought
+the agreement to round-off.
+
+A difference of that size could have been attributed later to surrogate error. Finding it here
+means it is accounted for as a missing term.
+
+## Reference runs
+
+Both scenarios now have stored reference runs. Each has a provenance record with the exact
+configuration, code version and commit, and both reproduce bit for bit when re-run. On one
+datacentre GPU, the eighty-second ramp-up takes [under 4 s]{.claim}[C-023](/Blog/toktoit/claims.qmd#c-023){.cid .st-measured} after compilation.
+
+**Where this stands**: M1 in progress. The benchmark scenario is settled ([OQ-6](/Blog/toktoit/decisions.qmd#oq-6)); the tolerance
+is not.
+
+::: {.entry-links}
+**Technical details →** [Backends › transport code](/Blog/toktoit/technical/backends.qmd#transport-code) · [IMAS adapters](/Blog/toktoit/technical/imas-adapters.qmd)  
+**Decisions →** [OQ-6](/Blog/toktoit/decisions.qmd#oq-6)
+:::

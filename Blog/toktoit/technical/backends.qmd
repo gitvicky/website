@@ -1,0 +1,341 @@
+---
+title: Backends
+toc: true
+toc-depth: 3
+date-modified: '2026-10-01'
+---
+
+## Purpose
+
+The open-source (Tier A) codes toktoit drives, and exactly how their data is translated. Each
+translation is checked against a quantity the other code computes independently, because unit
+and grid mismatches produce plausible-looking plots.
+
+## TORAX: whole-code transport {#transport-code}
+
+[TORAX](https://github.com/google-deepmind/torax) (Google DeepMind, Apache-2.0) is a tokamak
+core transport simulator written in JAX: current diffusion, heat and particle transport,
+bootstrap current, fusion power, radiation, pedestal and sawtooth models, with QLKNN as its
+neural turbulent-transport model. toktoit uses it in two ways: as a whole-code backend
+(TORAX's own driver and adaptive time stepping, to produce references), and as the physics
+inside toktoit's fixed-step loop (see [coupling loop](coupling-loop.qmd#fixed-step-driver)).
+
+### Running a scenario
+
+A scenario is one of TORAX's example configurations (a Python `CONFIG` dict), with overrides
+deep-merged in (e.g. a shorter end time). The run is host-side, outside toktoit's compiled
+code, and returns TORAX's output tree. Benchmarks in use: `iterhybrid_rampup` (80 s current
+ramp-up, QLKNN transport, Newton solver) and `iterhybrid_predictor_corrector` (5 s flat-top,
+the quicker check).
+
+### Translating the output
+
+| quantity | TORAX | toktoit | conversion |
+|---|---|---|---|
+| temperatures | keV | eV | × 1000 |
+| profile arrays | face 0, $n$ cells, face $n$ | $n$ cells | drop the two boundary points |
+| geometric factor | `g1` $=\langle\lvert\nabla V\rvert^2\rangle$ | $G = \langle\lvert\nabla\rho\rvert^2\rangle$ | $G = g_1 / V'^2$ |
+| $V'$ | `vpr` | `vprime` | none ($\partial V/\partial\rho$ in both) |
+| safety factor | on faces | on cells | linear interpolation |
+| heat diffusivity | turbulent + neoclassical | `chi_e`, `chi_i` | sum |
+| particle pinch | turbulent + neoclassical + Ware | `v_e` | sum |
+| heating | one array per source and species | `q_e`, `q_i` | sum of `p_*_e` and `p_*_i`, then electron-ion exchange moved from electrons to ions |
+| particle source | one array per source | `s_n` | sum of `s_*` |
+
+Checked by recomputing two quantities TORAX reports independently, from the converted data, at
+every output time:
+
+- **Total heating power**, $\sum_i (q_{e,i} + q_{i,i})\,V'_i\,\Delta\rho_i$ against TORAX's
+  `P_heat_total`: [better than 10^−8^]{.claim}[C-010](/Blog/toktoit/claims.qmd#c-010){.cid .st-tested}.
+- **Stored thermal energy** against TORAX's `W_thermal_total`: [10^−16^]{.claim}[C-009](/Blog/toktoit/claims.qmd#c-009){.cid .st-tested}. This first
+  came out 0.3% low, consistently. Not a conversion bug: ITER scenarios include a neon impurity
+  (to radiate power before it reaches the wall) whose pressure contributes to the stored
+  energy. Including impurity pressure closed the gap to round-off. A discrepancy of that size is
+  easy to wave away, and would otherwise have been absorbed into "surrogate error" later.
+
+### Reference runs
+
+Both benchmark scenarios are stored as TORAX output files with a provenance record beside each
+(scenario, TORAX version, full resolved config, commit), and both reproduce bit for bit when
+re-run. The 80 s ramp-up takes [under 4 s]{.claim}[C-023](/Blog/toktoit/claims.qmd#c-023){.cid .st-measured} once compiled on one datacentre GPU.
+
+For ITER, the toroidal-flux radius at the boundary and the geometric minor radius differ by
+[a factor of 1.37]{.claim}[C-030](/Blog/toktoit/claims.qmd#c-030){.cid .st-measured}; see [K-007](/Blog/toktoit/ceilings.qmd#k-007) on the [IMAS adapters](imas-adapters.qmd) page for why that
+matters when exporting.
+
+### Energy and particle balance of a step {#balance}
+
+**Purpose.** M1's acceptance asks that energy and particles are conserved to a tolerance on
+the benchmark. The toy model's balance is checked in the [transport solver](transport-solver.qmd)
+tests; this is the same check for TORAX's own discretisation.
+
+**Method.** For each evolving channel $x$ (ion and electron temperature, electron density,
+poloidal flux), TORAX's finite-volume step with $\theta = 1$ solves, on every cell,
+
+$$
+c_\text{out}^{\,n+1}\,\frac{c_\text{in}^{\,n+1} x^{n+1} - c_\text{in}^{\,n} x^{n}}{\Delta t}
+= \big(C\,x + c\big)^{n+1},
+$$
+
+where $c_\text{out}, c_\text{in}$ are TORAX's transient coefficients (for temperature,
+$c_\text{out} c_\text{in} = \tfrac32 n V'$ in J/keV, written in the form
+$V'^{-2/3}\partial_t(V'^{5/3} n T)$ that accounts for a changing geometry) and $C x + c$
+collects diffusion, convection and sources at the new time. Multiplying by the cell width
+$\Delta\rho_i$ and summing over cells turns the equation into a global balance, because the
+diffusion and convection terms telescope to the flux through the last face (the face on the
+magnetic axis carries none):
+
+$$
+\underbrace{\textstyle\sum_i \Delta\rho_i\,\text{LHS}_i}_\text{storage}
+= \underbrace{\text{edge}}_{-\text{flux out}}
++ \text{sources} + \text{pinning} + \text{residual}.
+$$
+
+Units are W for energy ($T_i$ and $T_e$ summed, so electron-ion exchange cancels) and
+electrons per second for particles.
+
+**Algorithm.** Given the states before and after a step:
+
+1. Rebuild the step's inputs with TORAX's own code: pre-step processing at $t$ (explicit
+   sources, pedestal state), runtime parameters and geometry at $t + \Delta t$, the
+   boundary-condition update.
+2. Evaluate TORAX's coefficients at the accepted new state, and at the old state for the
+   transient term.
+3. Assemble $C x + c$ three times: complete; with the pedestal's adaptive source switched off
+   (its prefactors set to zero); and with every source term removed. The differences give
+   *pinning* and *sources*; the last gives *edge*.
+4. *residual* = storage − (edge + sources + pinning).
+
+Nothing re-implements TORAX's physics: every coefficient comes from TORAX. The *residual* is
+zero exactly when the accepted state satisfies TORAX's own discrete equation. Steps on which a
+sawtooth crash replaced the equation solve are flagged and not balanced (none occurred in the
+runs below).
+
+**The pinning term.** TORAX's `set_T_ped_n_ped` pedestal model holds the temperatures and density
+at the pedestal top ($\rho = 0.9$) at prescribed values. It does so by adding a very large
+source $k\,(x_\text{ped} - x)$ on that cell (TORAX's default $k$ is $2\times10^{10}$ for
+temperature and $2\times10^{8}$ for density): a numerical device, not a heating system. It injects or removes whatever power is needed to keep the pedestal where it is
+told to be. TORAX's reported heating power does not include it, and the power it reports
+crossing the edge is heating minus $\mathrm{d}W/\mathrm{d}t$, which therefore includes it.
+
+**Correctness.**
+
+- The *edge* term equals $D\,\partial x/\partial\rho$ at the last face, computed separately
+  from the face gradient: [10^-10^]{.claim}[C-039](/Blog/toktoit/claims.qmd#c-039){.cid .st-tested}.
+- Benchmark settings (ramp-up, Newton solver, 2 s steps): energy balance closes to
+  [better than 10^-6^]{.claim}[C-035](/Blog/toktoit/claims.qmd#c-035){.cid .st-tested} per step; particles to [better than 10^-10^]{.claim}[C-036](/Blog/toktoit/claims.qmd#c-036){.cid .st-tested}.
+- The flat-top benchmark's own solver (linear, one predictor-corrector step, Pereverzev
+  terms) leaves [about 0.8%]{.claim}[C-037](/Blog/toktoit/claims.qmd#c-037){.cid .st-tested} of the energy balance unaccounted for. The global sum is
+  insensitive to the Pereverzev terms, which telescope like any other transport term. What does
+  not cancel is the lag in the coefficients the solver froze one iterate earlier: the fusion,
+  radiation, ohmic and exchange sources, and the diffusivity at the edge face. More corrector
+  steps shrink it, so it is the solver's convergence, not the discretisation. Particles close to
+  round-off with either solver: their sources in these scenarios do not depend on the state.
+
+**What the balance shows about the ramp-up.** At every step after the first, the pedestal
+pinning source removes almost all of the heating power, and conduction through the edge carries
+only a small fraction ([87–98%]{.claim}[C-038](/Blog/toktoit/claims.qmd#c-038){.cid .st-measured}). In this model, the heat that crosses the pedestal
+top leaves through the pinning source. Physically, that heat would flow through the pedestal and
+out. Conclusions about power crossing the edge (for example, L-H threshold margins) should be
+read with that in mind. It matters again at M5, where a discrepancy budget has to put the pinning
+power somewhere.
+
+**Design decisions.**
+
+- *Rebuilt from TORAX, not re-derived.* A second implementation of TORAX's coefficients would
+  test our copy, not TORAX. The one quantity computed independently is the edge flux ([C-039](/Blog/toktoit/claims.qmd#c-039)),
+  because it is the step on which the balance leans.
+- *Relative residual* is |residual| divided by the sum of the magnitudes of the four terms, so
+  a step with nearly cancelling large terms (the ramp-up) is not judged against a small net
+  storage.
+
+## FreeGSNKE: free-boundary equilibrium {#equilibrium-code}
+
+[FreeGSNKE](https://github.com/FusionComputingLab/freegsnke) (LGPL-3.0) solves the
+free-boundary Grad-Shafranov problem: given coil currents and the conducting structures around
+the plasma, find the plasma's shape and internal flux distribution. The machine is **MAST-U**,
+from the "MAST-U-like" description shipped in FreeGSNKE's repository, credited to UKAEA ([OQ-8](/Blog/toktoit/decisions.qmd#oq-8)).
+
+### Pipeline
+
+```
+fetch machine description (pinned upstream commit, sha256 per file, provenance record)
+  -> build the machine (active coils, passive structures, limiter, wall)
+  -> static forward solve for given coil currents
+  -> FreeGSNKE's own IMAS writer -> equilibrium IDS
+  -> complete the IDS (three missing quantities, below)
+  -> toktoit's IMAS adapter -> Equilibrium on a uniform cell-centred grid
+```
+
+IMAS is the only interface between FreeGSNKE and the rest of toktoit.
+
+**Machine files are Python pickles**, which are executable content, so they are fetched only
+from FreeGSNKE's upstream repository at a pinned commit (`678ff6b`), and each file's sha256 goes
+into the provenance record.
+
+### The forward solve
+
+| parameter | value |
+|---|---|
+| computational domain | $R \in [0.1, 2.0]$ m, $Z \in [-2.2, 2.2]$ m |
+| grid | 65 × 129 |
+| current profile | FreeGSNKE's `ConstrainPaxisIp`: axis pressure 8.1 kPa and plasma current fixed, shape exponents $\alpha_m = 1.8$, $\alpha_n = 1.2$, `fvac` = 0.5 |
+| coil currents | FreeGSNKE's upstream example for a diverted plasma |
+| target relative tolerance | 10⁻⁹ |
+| requested plasma current | 620 kA |
+
+Result: a diverted plasma converged to [4 × 10^−10^]{.claim}[C-019](/Blog/toktoit/claims.qmd#c-019){.cid .st-measured} (26 of 100 allowed iterations, about
+43 s on one CPU), with plasma current matching the request to [10^−3^]{.claim}[C-018](/Blog/toktoit/claims.qmd#c-018){.cid .st-tested} and the
+magnetic axis at R = 0.99 m, Z = −0.05 m.
+
+### Completing the IDS
+
+FreeGSNKE's IDS omits three quantities toktoit needs:
+
+- **Toroidal-flux radius** from the toroidal flux: $\rho_t = \sqrt{\Phi/(\pi B_0)}$.
+- **$\partial V/\partial\rho_t$** by differentiating the enclosed volume numerically.
+- **Cross-sectional area** as $V/(2\pi R_\text{geo})$ with
+  $R_\text{geo} = (R_\text{in} + R_\text{out})/2$: Pappus's theorem with the centroid assumed at
+  the geometric centre. The obvious alternative, counting grid cells inside each flux surface,
+  fails for a diverted plasma: near the boundary the "inside" test also catches the private
+  region below the X-point, inflating the outermost area by [32%]{.claim}[C-022](/Blog/toktoit/claims.qmd#c-022){.cid .st-measured}. The Pappus form
+  is about 2% off at mid-radius ([K-004](/Blog/toktoit/ceilings.qmd#k-004)). Area is carried for export only; the transport solve
+  never uses it.
+
+The identity that does matter is checked: integrating $\partial V/\partial\rho$ recovers the
+enclosed volume to [2%]{.claim}[C-020](/Blog/toktoit/claims.qmd#c-020){.cid .st-tested}.
+
+### Two radii, kept apart
+
+On a spherical tokamak the toroidal-flux radius at the boundary and the geometric minor radius
+differ by [a factor of 1.52]{.claim}[C-021](/Blog/toktoit/claims.qmd#c-021){.cid .st-tested} (0.83 m against 0.55 m here). The former scales $V'$ and $G$ when
+converting from $\rho_t$ to $\rho$; the latter is `Equilibrium.a_minor`, which normalises
+gradients. Conflating them would put a 50% error into every normalised gradient, the quantity
+that decides whether turbulence switches on.
+
+### Resampling
+
+FreeGSNKE's radial grid is neither uniform nor cell-centred and starts away from the axis
+(innermost surface at $\rho \approx 0.08$ on the default grid). The adapter resamples onto a
+uniform grid of cell centres (25 cells by default) by linear interpolation, with constant
+extrapolation inside the innermost surface. The test compares the resampled values with the
+native ones interpolated independently, to 10⁻¹⁰.
+
+**Standalone, for now.** The equilibrium does not yet drive the transport loop ([K-006](/Blog/toktoit/ceilings.qmd#k-006)): that
+needs a transport model valid on a spherical tokamak, which QLKNN is not.
+
+## ASCOT5: fast-particle sources {#ascot5}
+
+[ASCOT5](https://github.com/ascot4fusion/ascot5) (LGPL-3.0) follows fast ions (neutral-beam
+ions, fusion alphas) along their orbits as they slow down, giving where their power and driven
+current are deposited. It is built and runs; a smoke test checks an analytic ITER field's 1/R
+fall-off to [2%]{.claim}[C-031](/Blog/toktoit/claims.qmd#c-031){.cid .st-tested}. Build notes are on the [invariants](invariants.qmd#external-builds)
+page.
+
+**Coupling.** ASCOT5 is far too slow to call every time step. It runs at chosen times on the
+current equilibrium and profiles, and its heating profiles are handed to TORAX as prescribed
+sources until the next update. That is the same interface a heating surrogate will replace at
+M3. Fusion alphas first ([OQ-9](/Blog/toktoit/decisions.qmd#oq-9)); neutral beams once a physicist approves the injector geometry.
+
+### Fusion-alpha heating {#ascot5-alpha}
+
+**Inputs.**
+
+| input | source | conversion |
+|---|---|---|
+| magnetic field | the ITER hybrid EQDSK shipped with TORAX (the CHEASE equilibrium behind TORAX's geometry, COCOS 11) | poloidal flux scaled by TORAX's plasma current / the file's (10.5 / 11.77 MA), as TORAX does; flux on axis padded by 10^-6^ of the axis-to-edge flux, without which the normalised radius is undefined exactly on the axis and every flux-surface volume with it |
+| radial coordinate | TORAX uses $\rho_\text{tor}$, ASCOT5 $\rho_\text{pol} = \sqrt{\psi_N}$ | $\rho_\text{tor}(\psi_N)$ from $\Phi = \int q\,\mathrm{d}\psi$ on the EQDSK's own flux surfaces; it differs from TORAX's evolved-flux mapping by at most 0.035 |
+| plasma | TORAX's $T_e$, $T_i$, $n_e$, main-ion and impurity densities | D and T each half the main ions; neon fully ionised |
+| wall | the separatrix moved out by 10 cm | markers stop at $\rho_\text{pol} = 1$ in any case |
+
+**Algorithm.**
+
+1. Alpha source: ASCOT5's fusion-source module (AFSI) integrates the D-T reaction rate of the
+   two Maxwellian populations on a $(\rho_\text{pol}, \theta)$ grid (50 x 18 cells, 1600 Monte
+   Carlo samples per cell), giving the birth distribution in position and momentum. Its
+   total, times TORAX's 3.5 MeV per reaction, is compared with TORAX's alpha power
+   ([1.002]{.claim}[C-042](/Blog/toktoit/claims.qmd#c-042){.cid .st-tested}).
+2. Markers: positions and momenta drawn with probability proportional to each cell's birth
+   rate, every marker carrying the same weight, total rate / N. a5py's own weighting gives
+   each marker its cell's content divided by the markers in that cell, which drops every cell
+   no marker lands in: with 32 markers on 2.8 x 10^6^ cells it kept 0.03% of the source.
+3. Slowing down: guiding-centre orbits with Coulomb collisions on electrons, D, T and neon;
+   adaptive step with orbit tolerance 10^-6^; a marker ends at twice the local ion
+   temperature (at least 2 keV), at $\rho_\text{pol} = 1$, at the wall, or after 10 s.
+   ASCOT5's separate simulated-time limit defaults to 1 s and must be raised with it, or core
+   alphas stop before they have slowed down.
+4. Deposition: ASCOT5's electron and ion power-deposition moments of the collected
+   $(\rho_\text{pol}, p_\parallel, p_\perp)$ distribution (50 x 100 x 50 bins), interpolated in
+   $\rho_\text{tor}$ onto TORAX's cells.
+5. Back into TORAX: the `fusion` source in PRESCRIBED mode with the ion and electron profiles,
+   held until the next ASCOT5 update.
+
+**Energy books.** Birth power = deposited + carried out by lost markers + left in markers at
+the thermal limit + left in unfinished markers. Closes to 0.5% when markers stop at 1.5 MeV
+(test), to 2% over (deposited too high) with full slowing down at 10^-6^. The overshoot comes
+from evaluating the slowing-down rates at bin centres and is not yet reduced.
+
+**Orbit tolerance.** The first cluster job (one node, 34 minutes) ran 640 markers at two
+tolerances:
+
+| 640 markers | 10^-5^ | 10^-6^ |
+|---|---|---|
+| lost across the separatrix | 113 (18%) | 4 (0.6%) |
+| heating of electrons | 52.3 MW | 47.5 MW |
+| heating of ions | 13.2 MW | 25.0 MW |
+| electron half-power radius ($\rho_\text{tor}$) | 0.74 | 0.38 |
+| cost per marker (64 threads) | about 20 CPU-s | about 78 CPU-s |
+
+At 10^-5^ the orbit integration error moves alphas outward; they are lost before the late,
+ion-heating part of the slowing-down. The default is 10^-6^; whether 10^-6^ is converged needs
+a 10^-7^ comparison ([OQ-11](/Blog/toktoit/decisions.qmd#oq-11)). Thirteen of 6400 markers in the discarded 10^-5^ run aborted: some
+left the EQDSK's field grid, which extends only 0.2 m beyond the separatrix, and the rest
+exceeded ASCOT5's collision-noise buffer.
+
+**Comparison with TORAX's local alpha model** (t = 5 s, 640 markers at 10^-6^):
+
+| | TORAX local | ASCOT5 |
+|---|---|---|
+| total heating | 70.5 MW | 73.6 MW ([73.6 MW vs 70.5 MW]{.claim}[C-045](/Blog/toktoit/claims.qmd#c-045){.cid .st-preliminary}) |
+| electron fraction | 0.649 | 0.649 |
+| centroid / half-power radius ($\rho_\text{tor}$) | 0.362 / 0.325 | 0.355 / 0.303 |
+
+The +4.4% in total is numerical: +0.7% from ASCOT5's 3.52 MeV birth energy against TORAX's
+3.5 MeV and AFSI noise, about +2% from the deposition overshoot, and +1.6% from interpolating
+W/m^3^ onto TORAX's cells, which does not conserve the total. Cell by cell the ratio to TORAX
+scatters between 0.3 and 1.5: 640 markers resolve totals, not shapes.
+
+**Effect on TORAX.** Restarting the stored flat-top at 5 s and running to 7 s
+(`tkit ascot-apply`): ASCOT5's profiles held fixed against TORAX's own t = 5 s profiles held
+fixed differ by [-0.005%]{.claim}[C-046](/Blog/toktoit/claims.qmd#c-046){.cid .st-measured} in stored energy (temperature profiles 0.3-0.6%). Holding
+the heating fixed for 2 s at all, while TORAX's local model raises it from 70.5 to 77.5 MW,
+costs [-0.3% (central T_e -1.0%)]{.claim}[C-047](/Blog/toktoit/claims.qmd#c-047){.cid .st-measured}.
+
+**Correctness.** `tests/physics/test_ascot_alpha.py`: the AFSI birth rate matches TORAX's to
+2%; markers carry the whole source with equal weights; the energy books close to 3% (markers
+stopped at 1.5 MeV); profiles handed to TORAX arrive cell by cell to 10^-12^; a restart with
+held profiles keeps the alpha power fixed. `tests/regression/test_cli_ascot_apply.py`: the
+comparison reproduces TORAX's totals and is exactly zero for identical profiles.
+
+**Design decisions.**
+
+- *Equal marker weights, not a5py's per-cell weights*, so the source is complete at any marker
+  count.
+- *The tolerance was set by a check, not by speed.* The job reran a marker subset at a tighter
+  tolerance; that check is what showed 10^-5^ fails.
+- *Prescribed, not rescaled.* Between updates the heating is held at ASCOT5's profiles, not
+  rescaled with TORAX's fusion power, so the coupling error is measured directly ([C-047](/Blog/toktoit/claims.qmd#c-047)).
+
+## Aurora: impurity transport {#aurora}
+
+[Aurora](https://github.com/fsciortino/Aurora) (MIT) models impurity transport and radiation.
+It builds and its Fortran core runs (smoke test); atomic data is not downloaded yet and it is
+not used by any run so far.
+
+## Changelog
+
+- 2026-09-30: first published version (TORAX, FreeGSNKE, ASCOT5, Aurora).
+- 2026-09-30: TORAX step energy and particle balance, and the pedestal pinning term
+  (entry 8).
+- 2026-10-01: ASCOT5 fusion-alpha heating, the orbit-tolerance check and the comparison with
+  TORAX's local model (entry 10).

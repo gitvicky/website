@@ -1,0 +1,70 @@
+---
+title: 'ASCOT5 fusion-alpha heating for the ITER flat-top: first cluster run'
+date: '2026-10-01'
+categories:
+- measured
+entry: 10
+milestone: M1
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 10 · milestone M1
+:::
+
+Fusion reactions in a deuterium-tritium plasma produce helium nuclei (alpha particles) at
+3.5 MeV. They heat the plasma as they slow down. TORAX models this locally: the heating appears
+where the reaction happened, split between electrons and ions by a formula. ASCOT5, an
+open-source orbit-following code, follows each alpha along its orbit until it slows down or
+leaves the plasma. M1 asks for ASCOT5 sources in the coupled simulation (see the
+[Primer](../primer.qmd)). The owner approved fusion alphas first and one cluster job ([OQ-9](/Blog/toktoit/decisions.qmd#oq-9)).
+
+## Method
+
+We take the TORAX state at the end of the ITER hybrid flat-top run, where the alpha heating
+is highest. ASCOT5's fusion-source module computes the alpha birth distribution from TORAX's
+temperature and density profiles. Its birth rate agrees with TORAX's to
+[1.002]{.claim}[C-042](/Blog/toktoit/claims.qmd#c-042){.cid .st-tested} (ratio). ASCOT5 then follows a sample of alphas (markers) with Coulomb
+collisions until each one slows to twice the local ion temperature or crosses the separatrix.
+The heating to electrons and ions is taken from where the markers spent time and at what energy.
+The profiles are handed back to TORAX as a prescribed heating source.
+
+The job ran 6400 markers at a guiding-centre orbit tolerance of 10^-5^, chosen because it was
+seven times faster than tighter settings on a short test. It also reran 640 markers at 10^-5^
+and at 10^-6^ as a check.
+
+## Result
+
+The check failed the production setting:
+
+| 640 markers, same in both runs | result |
+|---|---|
+| markers lost across the separatrix | [18% at 10^-5^, 0.6% at 10^-6^]{.claim}[C-043](/Blog/toktoit/claims.qmd#c-043){.cid .st-measured} |
+| heating of ions | [13.2 MW at 10^-5^, 25.0 MW at 10^-6^ (TORAX: 24.8 MW)]{.claim}[C-044](/Blog/toktoit/claims.qmd#c-044){.cid .st-measured} |
+| total heating at 10^-6^, ASCOT5 vs TORAX's local model | [73.6 MW vs 70.5 MW]{.claim}[C-045](/Blog/toktoit/claims.qmd#c-045){.cid .st-preliminary} |
+
+At 10^-5^ the integration error moves alphas outward. Many cross the separatrix before they
+have slowed down, and ions, which take most of their heating late in the slowing-down, receive
+half as much. The total heating changed much less than the ion heating, so the total alone
+would not have shown the error. We discarded the 6400-marker run and made 10^-6^ the default.
+
+At 10^-6^ the two models give the same split between electrons and ions, ASCOT5's heating is
+slightly more peaked, and its total is higher by the amount in the table. Most of that
+difference is numerical (alpha energy convention, the deposition calculation, interpolation
+onto TORAX's cells), not orbit physics. With 640 markers
+the profile is noisy cell by cell, so this run compares totals, not shapes.
+
+We then continued TORAX from that state three times, over the same interval. With ASCOT5's
+profiles held fixed, stored energy differs by [-0.005%]{.claim}[C-046](/Blog/toktoit/claims.qmd#c-046){.cid .st-measured} from a run with TORAX's own
+profiles from the same state held fixed.
+Holding the heating fixed at all, instead of letting TORAX update it, changes stored energy by
+[-0.3% (central T_e -1.0%)]{.claim}[C-047](/Blog/toktoit/claims.qmd#c-047){.cid .st-measured}. That is the cost of updating ASCOT5 once per interval rather than every step.
+
+**Where this stands**: M1 in progress. The ASCOT5 source works end to end. A second job with
+more markers and a 10^-7^ convergence check is awaiting a decision ([OQ-11](/Blog/toktoit/decisions.qmd#oq-11)).
+
+Technical details → [Backends: ASCOT5](../technical/backends.qmd#ascot5)
+
+::: {.entry-links}
+**Technical details →** [Backends › ascot5](/Blog/toktoit/technical/backends.qmd#ascot5)  
+**Decisions →** [OQ-9](/Blog/toktoit/decisions.qmd#oq-9) · [OQ-11](/Blog/toktoit/decisions.qmd#oq-11)
+:::

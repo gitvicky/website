@@ -1,0 +1,63 @@
+---
+title: Guard inside TORAX, and a fix for an unset smoothing default
+date: '2026-09-21'
+categories:
+- built
+- fixed
+entry: 4
+milestone: M1
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} [bug fix]{.chip .fixed} Entry 4 · milestone M1
+:::
+
+The guard decides where the neural transport model may be used. At every radius and time step
+it checks three things for QLKNN (a neural network trained to reproduce the QuaLiKiz turbulence
+code): whether the plasma state is inside the region the network was trained on, whether its
+output is finite and physically possible, and whether its ensemble uncertainty is below a
+threshold. Where any check fails, a physics model is used instead and the substitution is
+recorded. The fraction of the plasma using the fallback is reported for every run.
+
+Until now the guard ran in our own test loop. With TORAX doing the physics, it has to run
+inside TORAX. TORAX lets users register their own transport models, so our guarded model
+contains two: QLKNN as the surrogate, and an empirical model (Bohm/gyro-Bohm) as the fallback.
+It evaluates both, selects per radius, and lets TORAX apply its usual post-processing to the
+combined result.
+
+## Identity test
+
+If the guard's acceptance region is set so wide that it never triggers, the run must be
+identical to running QLKNN without the guard. It was not: the core temperature differed by
+[5%]{.claim}[C-016](/Blog/toktoit/claims.qmd#c-016){.cid .st-measured}.
+
+When TORAX reads the configuration for QLKNN, a validator fills in a radial smoothing width if
+the user has not set one. Without the guard, QLKNN is the top-level model, so the smoothing is
+applied. With the guard, the default was set on the inner model, where TORAX does not apply
+smoothing, and our wrapper used its own default of no smoothing. The physics was the same; the
+post-processing was not, and the core temperature differed by five percent.
+
+The fix resolves the inner model's configuration first and copies any post-processing defaults
+the validator filled in up to the wrapper. After the fix:
+
+| guard setting | expected | result |
+|---|---|---|
+| never triggers | identical to the unwrapped model | [bit-identical]{.claim}[C-014](/Blog/toktoit/claims.qmd#c-014){.cid .st-tested} |
+| always triggers | identical to the pure fallback | [10^−12^]{.claim}[C-015](/Blog/toktoit/claims.qmd#c-015){.cid .st-tested} |
+| trusted only at low gradients | partial handover, logged | about half the radius-steps |
+
+The third row shows that the guard switches between models when it should, and that the trace
+records where.
+
+## Why it matters
+
+Nothing in the results looked wrong. A five percent difference in core temperature is within
+the range usually attributed to model choice. Found after the surrogates were added, it would
+likely have been attributed to the surrogate, and could have been compensated by retraining
+instead of being fixed. Every wrapper we add now gets the same identity test first.
+
+**Where this stands**: M1 in progress; the guard now runs inside TORAX.
+
+::: {.entry-links}
+**Technical details →** [Guard and fallback](/Blog/toktoit/technical/guard.qmd) · [Guard and fallback › post mortem smoothing](/Blog/toktoit/technical/guard.qmd#post-mortem-smoothing)
+:::
