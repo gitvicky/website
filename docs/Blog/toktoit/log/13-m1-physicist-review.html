@@ -8,7 +8,7 @@
 
 <meta name="dcterms.date" content="2026-10-01">
 
-<title>ASCOT5 fusion-alpha heating for the ITER flat-top: first cluster run – Vignesh Gopakumar</title>
+<title>M1 physicist review: benchmark tolerance, pedestal, time step, ASCOT5 and the fallback model – Vignesh Gopakumar</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -124,9 +124,9 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">ASCOT5 fusion-alpha heating for the ITER flat-top: first cluster run</h1>
+<h1 class="title">M1 physicist review: benchmark tolerance, pedestal, time step, ASCOT5 and the fallback model</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">measured</div>
+    <div class="quarto-category">decision</div>
   </div>
   </div>
 
@@ -151,47 +151,54 @@ ul.task-list li input[type="checkbox"] {
 
 
 <div class="entry-meta">
-<p><span class="chip measured">measurement</span> Entry 10 · milestone M1</p>
+<p><span class="chip decision">decision</span> Entry 13 · milestone M1</p>
 </div>
-<p>Fusion reactions in a deuterium-tritium plasma produce helium nuclei (alpha particles) at 3.5 MeV. They heat the plasma as they slow down. TORAX models this locally: the heating appears where the reaction happened, split between electrons and ions by a formula. ASCOT5, an open-source orbit-following code, follows each alpha along its orbit until it slows down or leaves the plasma. M1 asks for ASCOT5 sources in the coupled simulation (see the <a href="../../../Blog/toktoit/primer.html">Primer</a>). The owner approved fusion alphas first and one cluster job (<a href="../../../Blog/toktoit/decisions.html#oq-9">OQ-9</a>).</p>
-<section id="method" class="level2">
-<h2 class="anchored" data-anchor-id="method">Method</h2>
-<p>We take the TORAX state at the end of the ITER hybrid flat-top run, where the alpha heating is highest. ASCOT5’s fusion-source module computes the alpha birth distribution from TORAX’s temperature and density profiles. Its birth rate agrees with TORAX’s to <span class="claim">1.002</span><a href="../../../Blog/toktoit/claims.html#c-042" class="cid st-tested">C-042</a> (ratio). ASCOT5 then follows a sample of alphas (markers) with Coulomb collisions until each one slows to twice the local ion temperature or crosses the separatrix. The heating to electrons and ions is taken from where the markers spent time and at what energy. The profiles are handed back to TORAX as a prescribed heating source.</p>
-<p>The job ran 6400 markers at a guiding-centre orbit tolerance of 10<sup>-5</sup>, chosen because it was seven times faster than tighter settings on a short test. It also reran 640 markers at 10<sup>-5</sup> and at 10<sup>-6</sup> as a check.</p>
-</section>
-<section id="result" class="level2">
-<h2 class="anchored" data-anchor-id="result">Result</h2>
-<p>The check failed the production setting:</p>
+<p>M1 ends in a review by a physicist, the milestone’s human gate. Every M1 task was built and the other three acceptance criteria were met (entries 8, 11 and 12). Open for the review were the tolerance for the published benchmark, which the brief leaves to the physicist (<a href="../../../Blog/toktoit/decisions.html#oq-5">OQ-5</a>), and the choice of fallback transport model (<a href="../../../Blog/toktoit/decisions.html#oq-1">OQ-1</a>). The owner did the review as reviewer of record. The agent set out six items, each with its evidence and a recommendation. The owner accepted all six as written. The full list is on the <a href="../../../Blog/toktoit/decisions.html#m1-review">decisions page</a>.</p>
+<section id="what-was-decided" class="level2">
+<h2 class="anchored" data-anchor-id="what-was-decided">What was decided</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th>640 markers, same in both runs</th>
-<th>result</th>
+<th>item</th>
+<th>decision</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>markers lost across the separatrix</td>
-<td><span class="claim">18% at 10<sup>-5</sup>, 0.6% at 10<sup>-6</sup></span><a href="../../../Blog/toktoit/claims.html#c-043" class="cid st-measured">C-043</a></td>
+<td>benchmark tolerance</td>
+<td>against RAPTOR, <span class="claim">profiles ≤ 2% (densities ≤ 0.1%), traces ≤ 5%</span><a href="../../../Blog/toktoit/claims.html#c-061" class="cid st-reviewed">C-061</a>; fusion and Ohmic powers reported, not gated. Result: <span class="claim">T_i 1.23% (1.1%), T_e 0.28% (0.71%), n_e 0.03% (0.03%), psi 0.49% (0.41%), q 0.69% (0.70%)</span><a href="../../../Blog/toktoit/claims.html#c-050" class="cid st-reviewed">C-050</a>, transient <span class="claim">2.4% at dt = 0.05 s, 2.9% at dt = 0.00625 s (1.0% at t = 10 s)</span><a href="../../../Blog/toktoit/claims.html#c-053" class="cid st-reviewed">C-053</a>; both pass</td>
 </tr>
 <tr class="even">
-<td>heating of ions</td>
-<td><span class="claim">13.2 MW at 10<sup>-5</sup>, 25.0 MW at 10<sup>-6</sup> (TORAX: 24.8 MW)</span><a href="../../../Blog/toktoit/claims.html#c-044" class="cid st-measured">C-044</a></td>
+<td>TORAX version</td>
+<td>the change from the paper’s TORAX run (<span class="claim">T_i 0.13%, T_e 0.50%, n_e 0.01%, psi 0.08%, q 0.16%; Ohmic power density 3.6%</span><a href="../../../Blog/toktoit/claims.html#c-051" class="cid st-reviewed">C-051</a>) accepted as a code-version effect</td>
 </tr>
 <tr class="odd">
-<td>total heating at 10<sup>-6</sup>, ASCOT5 vs TORAX’s local model</td>
-<td><span class="claim">73.6 MW vs 70.5 MW</span><a href="../../../Blog/toktoit/claims.html#c-045" class="cid st-superseded">C-045</a></td>
+<td>pedestal</td>
+<td>the pinning source removes <span class="claim">87–98%</span><a href="../../../Blog/toktoit/claims.html#c-038" class="cid st-reviewed">C-038</a> of the heating; accepted for core profiles, edge power not taken from these runs (<a href="../../../Blog/toktoit/ceilings.html#k-010">K-010</a>)</td>
+</tr>
+<tr class="even">
+<td>time step</td>
+<td>the ITER hybrid example settings check the wrapper only; physics reference runs use a step converged in time to the limit on the <a href="../../../Blog/toktoit/decisions.html#m1-review">decisions page</a></td>
+</tr>
+<tr class="odd">
+<td>ASCOT5</td>
+<td>orbit tolerance 10<sup>-7</sup>; 640 alphas give totals (<span class="claim">72.2 MW vs 70.5 MW</span><a href="../../../Blog/toktoit/claims.html#c-059" class="cid st-reviewed">C-059</a>) and the electron/ion split; the radial shape waits for the queued production run; an unexplained excess in birth power (<a href="../../../Blog/toktoit/ceilings.html#k-011">K-011</a>) to be found before beam ions</td>
+</tr>
+<tr class="even">
+<td>fallback</td>
+<td>TORAX’s Bohm/gyro-Bohm model; the critical-gradient model stays in the analytic test loop</td>
 </tr>
 </tbody>
 </table>
-<p>At 10<sup>-5</sup> the integration error moves alphas outward. Many cross the separatrix before they have slowed down, and ions, which take most of their heating late in the slowing-down, receive half as much. The total heating changed much less than the ion heating, so the total alone would not have shown the error. We discarded the 6400-marker run and made 10<sup>-6</sup> the default.</p>
-<p>At 10<sup>-6</sup> the two models give the same split between electrons and ions, ASCOT5’s heating is slightly more peaked, and its total is higher by the amount in the table. Most of that difference is numerical (alpha energy convention, the deposition calculation, interpolation onto TORAX’s cells), not orbit physics. With 640 markers the profile is noisy cell by cell, so this run compares totals, not shapes.</p>
-<p>We then continued TORAX from that state three times, over the same interval. With ASCOT5’s profiles held fixed, stored energy differs by <span class="claim">-0.005%</span><a href="../../../Blog/toktoit/claims.html#c-046" class="cid st-measured">C-046</a> from a run with TORAX’s own profiles from the same state held fixed. Holding the heating fixed at all, instead of letting TORAX update it, changes stored energy by <span class="claim">-0.3% (central T_e -1.0%)</span><a href="../../../Blog/toktoit/claims.html#c-047" class="cid st-reviewed">C-047</a>. That is the cost of updating ASCOT5 once per interval rather than every step.</p>
-<p><strong>Where this stands</strong>: M1 in progress. The ASCOT5 source works end to end. A second job with more markers and a 10<sup>-7</sup> convergence check is awaiting a decision (<a href="../../../Blog/toktoit/decisions.html#oq-11">OQ-11</a>).</p>
-<p>Technical details → <a href="../../../Blog/toktoit/technical/backends.html#ascot5">Backends: ASCOT5</a></p>
+</section>
+<section id="what-changed-in-the-code" class="level2">
+<h2 class="anchored" data-anchor-id="what-changed-in-the-code">What changed in the code</h2>
+<p>The tolerance is now part of the benchmark: the limits sit in the benchmark module, a regression test fails if any gated quantity leaves them, and the benchmark command prints each quantity against its limit. Two known limits were added to the ceilings list: the pedestal pinning (<a href="../../../Blog/toktoit/ceilings.html#k-010">K-010</a>) and the alpha birth-power excess (<a href="../../../Blog/toktoit/ceilings.html#k-011">K-011</a>). The claims that the review judged are now marked <em>reviewed</em> in the <a href="../../../Blog/toktoit/claims.html">claims register</a>.</p>
+<p><strong>Where this stands</strong>: M1 has passed its acceptance criteria and its human gate. The ASCOT5 production run (<a href="../../../Blog/toktoit/decisions.html#oq-13">OQ-13</a>) continues as follow-up work and does not reopen the gate. M2 (training data) starts once the owner provides access to the turbulence code and its licence terms, the operating space to sample, and a compute allocation.</p>
+<p>Technical details → <a href="../../../Blog/toktoit/technical/backends.html#raptor-benchmark">Backends: the RAPTOR L-mode benchmark</a></p>
 <div class="entry-links">
-<p><strong>Technical details →</strong> <a href="../../../Blog/toktoit/technical/backends.html#ascot5">Backends › ascot5</a><br>
-<strong>Decisions →</strong> <a href="../../../Blog/toktoit/decisions.html#oq-9">OQ-9</a> · <a href="../../../Blog/toktoit/decisions.html#oq-11">OQ-11</a></p>
+<p><strong>Technical details →</strong> <a href="../../../Blog/toktoit/technical/backends.html#raptor-benchmark">Backends › raptor benchmark</a><br>
+<strong>Decisions →</strong> <a href="../../../Blog/toktoit/decisions.html#oq-1">OQ-1</a> · <a href="../../../Blog/toktoit/decisions.html#oq-5">OQ-5</a></p>
 </div>
 
 

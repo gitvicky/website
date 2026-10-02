@@ -153,20 +153,26 @@ table.claims .tol, table.claims .caveat { color: var(--tk-muted); font-size: 0.8
 /* Mermaid diagrams fit the content width (Mermaid caps them at their natural size) */
 main.content svg.mermaid-js { max-width: 100% !important; height: auto; }
 
-/* home page workflow flowchart: capped and centred so it does not dominate the page */
-.tk-flow svg.mermaid-js {
-  max-width: min(100%, 860px) !important;
+/* home page diagrams (inline SVG from blog/figures/make_*.py): full
+   width up to its drawn size; below 760px it scrolls sideways instead of shrinking the text */
+.tk-flow { overflow-x: auto; }
+.tk-physics-fig { margin: 0.5rem 0 1.6rem; }
+.tk-flow svg.tk-diagram {
   display: block;
+  width: 100%;
+  max-width: 1200px;
+  min-width: 760px;
+  height: auto;
   margin: 0 auto;
 }
-.tk-flow figcaption { text-align: center; }
-.tk-flow + .wf-key { text-align: center; }
+.tk-flow figcaption { text-align: center; color: var(--tk-muted); font-size: 0.9rem; }
 
-/* hover descriptions on flowchart boxes (text in #tk-flow-notes, script in index.md) */
-#tk-flow-notes { display: none; }
+/* hover descriptions on diagram boxes (text in .tk-notes, script in index.md) */
+.tk-notes { display: none; }
 .tk-flow g.tk-has-note { cursor: help; }
 .tk-flow g.tk-has-note:hover rect,
-.tk-flow g.tk-has-note:hover polygon { filter: brightness(0.94); }
+.tk-flow g.tk-has-note:hover polygon,
+.tk-flow g.tk-has-note:hover path { filter: brightness(0.94); }
 .tk-tip {
   display: none;
   position: fixed;

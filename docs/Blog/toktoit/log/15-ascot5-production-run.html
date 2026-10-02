@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-10-01">
+<meta name="dcterms.date" content="2026-10-02">
 
-<title>ASCOT5 fusion-alpha heating for the ITER flat-top: first cluster run – Vignesh Gopakumar</title>
+<title>ASCOT5 production run: alpha heating from 6400 markers – Vignesh Gopakumar</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -124,7 +124,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">ASCOT5 fusion-alpha heating for the ITER flat-top: first cluster run</h1>
+<h1 class="title">ASCOT5 production run: alpha heating from 6400 markers</h1>
   <div class="quarto-categories">
     <div class="quarto-category">measured</div>
   </div>
@@ -138,7 +138,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 1, 2026</p>
+      <p class="date">October 2, 2026</p>
     </div>
   </div>
   
@@ -151,47 +151,46 @@ ul.task-list li input[type="checkbox"] {
 
 
 <div class="entry-meta">
-<p><span class="chip measured">measurement</span> Entry 10 · milestone M1</p>
+<p><span class="chip measured">measurement</span> Entry 15 · milestone M1</p>
 </div>
-<p>Fusion reactions in a deuterium-tritium plasma produce helium nuclei (alpha particles) at 3.5 MeV. They heat the plasma as they slow down. TORAX models this locally: the heating appears where the reaction happened, split between electrons and ions by a formula. ASCOT5, an open-source orbit-following code, follows each alpha along its orbit until it slows down or leaves the plasma. M1 asks for ASCOT5 sources in the coupled simulation (see the <a href="../../../Blog/toktoit/primer.html">Primer</a>). The owner approved fusion alphas first and one cluster job (<a href="../../../Blog/toktoit/decisions.html#oq-9">OQ-9</a>).</p>
-<section id="method" class="level2">
-<h2 class="anchored" data-anchor-id="method">Method</h2>
-<p>We take the TORAX state at the end of the ITER hybrid flat-top run, where the alpha heating is highest. ASCOT5’s fusion-source module computes the alpha birth distribution from TORAX’s temperature and density profiles. Its birth rate agrees with TORAX’s to <span class="claim">1.002</span><a href="../../../Blog/toktoit/claims.html#c-042" class="cid st-tested">C-042</a> (ratio). ASCOT5 then follows a sample of alphas (markers) with Coulomb collisions until each one slows to twice the local ion temperature or crosses the separatrix. The heating to electrons and ions is taken from where the markers spent time and at what energy. The profiles are handed back to TORAX as a prescribed heating source.</p>
-<p>The job ran 6400 markers at a guiding-centre orbit tolerance of 10<sup>-5</sup>, chosen because it was seven times faster than tighter settings on a short test. It also reran 640 markers at 10<sup>-5</sup> and at 10<sup>-6</sup> as a check.</p>
+<p><a href="../../../Blog/toktoit/log/12-ascot5-second-run.html">Entry 12</a> left one ASCOT5 run to do. Its aim was to resolve where in radius the fusion alphas deposit their heat, which samples of 640 alphas could not do (see the <a href="../../../Blog/toktoit/primer.html">Primer</a>). The owner approved a third cluster job (<a href="../../../Blog/toktoit/decisions.html#oq-13">OQ-13</a>): 6400 alphas at the working orbit tolerance, with no per-alpha time limit, and the same 640 alphas run at that tolerance and ten times tighter, as a check. The job ran in under four hours on one node; every alpha either slowed down or left the plasma.</p>
+<section id="what-it-showed" class="level2">
+<h2 class="anchored" data-anchor-id="what-it-showed">What it showed</h2>
+<p>The totals agree with the 640-alpha runs. ASCOT5’s alpha heating on TORAX’s grid, against TORAX’s local model, which deposits each alpha’s energy where it is born: <span class="claim">71.8 MW vs 70.5 MW</span><a href="../../../Blog/toktoit/claims.html#c-064" class="cid st-measured">C-064</a>. The tighter tolerance changes the heating only slightly (<span class="claim">electrons -0.16%, ions +0.08%</span><a href="../../../Blog/toktoit/claims.html#c-066" class="cid st-measured">C-066</a>), so the working tolerance stands. Holding ASCOT5’s heating fixed in TORAX for two seconds, against holding TORAX’s own heating fixed: <span class="claim">-0.009% in stored energy (central T_e +0.3%, T_e and T_i profiles 0.4% and 0.5%)</span><a href="../../../Blog/toktoit/claims.html#c-067" class="cid st-measured">C-067</a>.</p>
+<p>The run explained one open item. Earlier jobs found the alphas’ total birth power slightly higher than the fusion reaction rate implies (ceiling <a href="../../../Blog/toktoit/ceilings.html#k-011">K-011</a>). The alphas’ statistical weights add up to the reaction rate exactly, so the excess must be in their birth energies. We had assumed every alpha is born at the nominal energy; their mean is <span class="claim">3.573 MeV, 1.5% above 3.52 MeV</span><a href="../../../Blog/toktoit/claims.html#c-063" class="cid st-measured">C-063</a>. That accounts for all of the excess. The smaller excesses reported in entries 10 and 12 came from samples of 640 alphas, which scatter more. Thermal motion of the reacting ions raises the mean birth energy. We have not yet checked whether it accounts for all of the shift; that stays open until neutral-beam ions are added.</p>
+<p>The radial position is resolved in its averages. The heating lies slightly further out than in TORAX’s model: <span class="claim">centroid 0.370 vs 0.362, half-power radius 0.331 vs 0.325</span><a href="../../../Blog/toktoit/claims.html#c-065" class="cid st-measured">C-065</a>. Every sample shows it, the 6400-alpha run and all three 640-alpha samples.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/ascot_alpha_profile.svg" class="img-fluid figure-img"></p>
+<figcaption>Alpha heating of electrons (left) and ions (right) at one time in the ITER flat-top. Look at the core: inside about a third of the radius the 6400-alpha profile (accent) scatters as much as the 640-alpha samples (grey); further out they all follow TORAX’s local model (dashed).</figcaption>
+</figure>
+</div>
 </section>
-<section id="result" class="level2">
-<h2 class="anchored" data-anchor-id="result">Result</h2>
-<p>The check failed the production setting:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>640 markers, same in both runs</th>
-<th>result</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>markers lost across the separatrix</td>
-<td><span class="claim">18% at 10<sup>-5</sup>, 0.6% at 10<sup>-6</sup></span><a href="../../../Blog/toktoit/claims.html#c-043" class="cid st-measured">C-043</a></td>
-</tr>
-<tr class="even">
-<td>heating of ions</td>
-<td><span class="claim">13.2 MW at 10<sup>-5</sup>, 25.0 MW at 10<sup>-6</sup> (TORAX: 24.8 MW)</span><a href="../../../Blog/toktoit/claims.html#c-044" class="cid st-measured">C-044</a></td>
-</tr>
-<tr class="odd">
-<td>total heating at 10<sup>-6</sup>, ASCOT5 vs TORAX’s local model</td>
-<td><span class="claim">73.6 MW vs 70.5 MW</span><a href="../../../Blog/toktoit/claims.html#c-045" class="cid st-superseded">C-045</a></td>
-</tr>
-</tbody>
-</table>
-<p>At 10<sup>-5</sup> the integration error moves alphas outward. Many cross the separatrix before they have slowed down, and ions, which take most of their heating late in the slowing-down, receive half as much. The total heating changed much less than the ion heating, so the total alone would not have shown the error. We discarded the 6400-marker run and made 10<sup>-6</sup> the default.</p>
-<p>At 10<sup>-6</sup> the two models give the same split between electrons and ions, ASCOT5’s heating is slightly more peaked, and its total is higher by the amount in the table. Most of that difference is numerical (alpha energy convention, the deposition calculation, interpolation onto TORAX’s cells), not orbit physics. With 640 markers the profile is noisy cell by cell, so this run compares totals, not shapes.</p>
-<p>We then continued TORAX from that state three times, over the same interval. With ASCOT5’s profiles held fixed, stored energy differs by <span class="claim">-0.005%</span><a href="../../../Blog/toktoit/claims.html#c-046" class="cid st-measured">C-046</a> from a run with TORAX’s own profiles from the same state held fixed. Holding the heating fixed at all, instead of letting TORAX update it, changes stored energy by <span class="claim">-0.3% (central T_e -1.0%)</span><a href="../../../Blog/toktoit/claims.html#c-047" class="cid st-reviewed">C-047</a>. That is the cost of updating ASCOT5 once per interval rather than every step.</p>
-<p><strong>Where this stands</strong>: M1 in progress. The ASCOT5 source works end to end. A second job with more markers and a 10<sup>-7</sup> convergence check is awaiting a decision (<a href="../../../Blog/toktoit/decisions.html#oq-11">OQ-11</a>).</p>
-<p>Technical details → <a href="../../../Blog/toktoit/technical/backends.html#ascot5">Backends: ASCOT5</a></p>
+<section id="what-it-did-not-show" class="level2">
+<h2 class="anchored" data-anchor-id="what-it-did-not-show">What it did not show</h2>
+<p>The profile in the core is not resolved cell by cell. With ten times more alphas, the scatter between neighbouring cells near the axis should have fallen by about a factor of three. It did not, so the scatter does not come only from the number of alphas. The narrow radial bins near the axis are the likely cause; we have not tested it. This is a new ceiling (<a href="../../../Blog/toktoit/ceilings.html#k-012">K-012</a>). M1 uses ASCOT5’s totals, its electron/ion split and the averages of its shape, not its core profile cell by cell.</p>
+<p>Two smaller findings are on the technical page. The energy accounting overshoots slightly; the tighter tolerance does not remove that. The job’s provenance files recorded the wrong commit: the job ran from a working copy that received new commits while it ran, and the commit was read when each file was written. That is fixed, and a test now covers it.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Provenance
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Cluster job 2287778 (one node, 64 threads), ASCOT5 5.6.4, alphas generated by <code>tkit ascot-alpha</code> at commit <code>fcd8ce5</code> (the job log; its provenance files record <code>2138b3c</code>, see above), config hash <code>30ffe57c</code>, seed 0, tier A, 2026-10-01. TORAX restarts by <code>tkit ascot-apply</code> at <code>2138b3c</code> plus the changes in this entry, TORAX 1.4.3, JAX 0.10.2, Python 3.11.7, float64, 2026-10-02. Figure: <code>blog/figures/make_ascot_alpha_profile.py</code>; data in <code>ascot_alpha_profile.csv</code>.</p>
+</div>
+</div>
+</div>
+<p><strong>Where this stands</strong>: M1 is closed, with no follow-up outstanding. <a href="../../../Blog/toktoit/ceilings.html#k-011">K-011</a> and <a href="../../../Blog/toktoit/ceilings.html#k-012">K-012</a> are open ceilings for the neutral-beam work. M2 waits on the owner’s inputs.</p>
+<p>Technical details → <a href="../../../Blog/toktoit/technical/backends.html#ascot5-production">Backends: ASCOT5 production run</a> · Decision → <a href="../../../Blog/toktoit/decisions.html#oq-13">OQ-13</a></p>
 <div class="entry-links">
-<p><strong>Technical details →</strong> <a href="../../../Blog/toktoit/technical/backends.html#ascot5">Backends › ascot5</a><br>
-<strong>Decisions →</strong> <a href="../../../Blog/toktoit/decisions.html#oq-9">OQ-9</a> · <a href="../../../Blog/toktoit/decisions.html#oq-11">OQ-11</a></p>
+<p><strong>Technical details →</strong> <a href="../../../Blog/toktoit/technical/backends.html#ascot5-production">Backends › ascot5 production</a><br>
+<strong>Decisions →</strong> <a href="../../../Blog/toktoit/decisions.html#oq-13">OQ-13</a></p>
 </div>
 
 

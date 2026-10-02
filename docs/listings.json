@@ -22,31 +22,21 @@
   {
     "listing": "/Blog/toktoit/index.html",
     "items": [
-      "/Blog/toktoit/toktoit/log/15-ascot5-production-run.html",
-      "/Blog/toktoit/toktoit/log/14-forward-mode-nan.html",
-      "/Blog/toktoit/toktoit/log/13-m1-physicist-review.html",
-      "/Blog/toktoit/toktoit/log/12-ascot5-second-run.html",
-      "/Blog/toktoit/toktoit/log/11-raptor-lmode-benchmark.html",
+      "/Blog/toktoit/log/15-ascot5-production-run.html",
+      "/Blog/toktoit/log/14-forward-mode-nan.html",
+      "/Blog/toktoit/log/13-m1-physicist-review.html",
+      "/Blog/toktoit/log/12-ascot5-second-run.html",
+      "/Blog/toktoit/log/11-raptor-lmode-benchmark.html",
       "/Blog/toktoit/log/10-ascot5-alpha-heating.html",
-      "/Blog/toktoit/toktoit/log/10-ascot5-alpha-heating.html",
       "/Blog/toktoit/log/09-run-tracking.html",
-      "/Blog/toktoit/toktoit/log/09-run-tracking.html",
       "/Blog/toktoit/log/08-energy-particle-balance.html",
-      "/Blog/toktoit/toktoit/log/08-energy-particle-balance.html",
       "/Blog/toktoit/log/07-imas-export-minor-radius.html",
-      "/Blog/toktoit/toktoit/log/07-imas-export-minor-radius.html",
       "/Blog/toktoit/log/06-freegsnke-mastu.html",
-      "/Blog/toktoit/toktoit/log/06-freegsnke-mastu.html",
       "/Blog/toktoit/log/05-stalls-rf-and-builds.html",
-      "/Blog/toktoit/toktoit/log/05-stalls-rf-and-builds.html",
       "/Blog/toktoit/log/04-guard-inside-torax.html",
-      "/Blog/toktoit/toktoit/log/04-guard-inside-torax.html",
       "/Blog/toktoit/log/03-fixed-step-loop.html",
-      "/Blog/toktoit/toktoit/log/03-fixed-step-loop.html",
       "/Blog/toktoit/log/02-torax-backend.html",
-      "/Blog/toktoit/toktoit/log/02-torax-backend.html",
-      "/Blog/toktoit/log/01-newton-solver.html",
-      "/Blog/toktoit/toktoit/log/01-newton-solver.html"
+      "/Blog/toktoit/log/01-newton-solver.html"
     ]
   }
 ]

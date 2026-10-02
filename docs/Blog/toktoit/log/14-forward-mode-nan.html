@@ -8,7 +8,7 @@
 
 <meta name="dcterms.date" content="2026-10-01">
 
-<title>ASCOT5 fusion-alpha heating for the ITER flat-top: first cluster run – Vignesh Gopakumar</title>
+<title>Fix: NaN forward-mode gradients through TORAX’s Newton solver – Vignesh Gopakumar</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -124,9 +124,9 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">ASCOT5 fusion-alpha heating for the ITER flat-top: first cluster run</h1>
+<h1 class="title">Fix: NaN forward-mode gradients through TORAX’s Newton solver</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">measured</div>
+    <div class="quarto-category">fixed</div>
   </div>
   </div>
 
@@ -151,47 +151,40 @@ ul.task-list li input[type="checkbox"] {
 
 
 <div class="entry-meta">
-<p><span class="chip measured">measurement</span> Entry 10 · milestone M1</p>
+<p><span class="chip fixed">bug fix</span> Entry 14 · milestone M1</p>
 </div>
-<p>Fusion reactions in a deuterium-tritium plasma produce helium nuclei (alpha particles) at 3.5 MeV. They heat the plasma as they slow down. TORAX models this locally: the heating appears where the reaction happened, split between electrons and ions by a formula. ASCOT5, an open-source orbit-following code, follows each alpha along its orbit until it slows down or leaves the plasma. M1 asks for ASCOT5 sources in the coupled simulation (see the <a href="../../../Blog/toktoit/primer.html">Primer</a>). The owner approved fusion alphas first and one cluster job (<a href="../../../Blog/toktoit/decisions.html#oq-9">OQ-9</a>).</p>
-<section id="method" class="level2">
-<h2 class="anchored" data-anchor-id="method">Method</h2>
-<p>We take the TORAX state at the end of the ITER hybrid flat-top run, where the alpha heating is highest. ASCOT5’s fusion-source module computes the alpha birth distribution from TORAX’s temperature and density profiles. Its birth rate agrees with TORAX’s to <span class="claim">1.002</span><a href="../../../Blog/toktoit/claims.html#c-042" class="cid st-tested">C-042</a> (ratio). ASCOT5 then follows a sample of alphas (markers) with Coulomb collisions until each one slows to twice the local ion temperature or crosses the separatrix. The heating to electrons and ions is taken from where the markers spent time and at what energy. The profiles are handed back to TORAX as a prescribed heating source.</p>
-<p>The job ran 6400 markers at a guiding-centre orbit tolerance of 10<sup>-5</sup>, chosen because it was seven times faster than tighter settings on a short test. It also reran 640 markers at 10<sup>-5</sup> and at 10<sup>-6</sup> as a check.</p>
+<p>toktoit is written in JAX so that the whole simulation can be differentiated: the derivative of any output with respect to any input (see the <a href="../../../Blog/toktoit/primer.html">Primer</a>). JAX offers two ways to compute it. Reverse mode is efficient for one output and many inputs; forward mode is efficient for few inputs and many outputs, and the brief asks for it in milestone M5, where uncertainty is propagated through a linearised model. <a href="../../../Blog/toktoit/log/11-raptor-lmode-benchmark.html">Entry 11</a> found that reverse mode through TORAX’s Newton solver matched finite differences, but forward mode returned NaN (“not a number”) for every component, even through a single step.</p>
+<section id="what-was-wrong" class="level2">
+<h2 class="anchored" data-anchor-id="what-was-wrong">What was wrong</h2>
+<p>TORAX solves each step’s nonlinear equations by Newton iteration and lets JAX differentiate the converged answer directly, through the implicit-function theorem, rather than through the iterations. In forward mode JAX then differentiates the equations with respect to every quantity they depend on, including the plasma geometry, which does not change and so has a derivative of zero. One of TORAX’s formulas, the fraction of trapped particles, contains the square root of the local inverse aspect ratio. That ratio is exactly zero on the magnetic axis, and the slope of a square root at zero is infinite. Zero times infinity is NaN in floating-point arithmetic, and the solve that follows spreads it to every value. Reverse mode puts the same NaN only into the geometry’s derivative, which nothing uses, so it never showed.</p>
+<p>We found it by tracing the derivative computation and evaluating it one operation at a time until the first NaN appeared. Each piece checked separately was finite, which is why the cause was not obvious.</p>
 </section>
-<section id="result" class="level2">
-<h2 class="anchored" data-anchor-id="result">Result</h2>
-<p>The check failed the production setting:</p>
+<section id="the-fix-and-its-check" class="level2">
+<h2 class="anchored" data-anchor-id="the-fix-and-its-check">The fix and its check</h2>
+<p>toktoit now replaces that one TORAX function with a version whose square root has slope zero at zero. The values it returns are unchanged: stored energy after three steps is identical to the last bit with and without it. The replacement is applied only when TORAX’s function matches, character for character, the version it was written for, so a future TORAX release is never silently overridden.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th>640 markers, same in both runs</th>
-<th>result</th>
+<th>gradient of stored energy through three Newton steps</th>
+<th></th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>markers lost across the separatrix</td>
-<td><span class="claim">18% at 10<sup>-5</sup>, 0.6% at 10<sup>-6</sup></span><a href="../../../Blog/toktoit/claims.html#c-043" class="cid st-measured">C-043</a></td>
+<td>reverse mode vs finite differences</td>
+<td><span class="claim">6 × 10<sup>-9</sup></span><a href="../../../Blog/toktoit/claims.html#c-055" class="cid st-tested">C-055</a></td>
 </tr>
 <tr class="even">
-<td>heating of ions</td>
-<td><span class="claim">13.2 MW at 10<sup>-5</sup>, 25.0 MW at 10<sup>-6</sup> (TORAX: 24.8 MW)</span><a href="../../../Blog/toktoit/claims.html#c-044" class="cid st-measured">C-044</a></td>
-</tr>
-<tr class="odd">
-<td>total heating at 10<sup>-6</sup>, ASCOT5 vs TORAX’s local model</td>
-<td><span class="claim">73.6 MW vs 70.5 MW</span><a href="../../../Blog/toktoit/claims.html#c-045" class="cid st-superseded">C-045</a></td>
+<td>forward mode vs reverse mode, after the fix</td>
+<td><span class="claim">2 × 10<sup>-15</sup> (NaN before the fix)</span><a href="../../../Blog/toktoit/claims.html#c-062" class="cid st-tested">C-062</a></td>
 </tr>
 </tbody>
 </table>
-<p>At 10<sup>-5</sup> the integration error moves alphas outward. Many cross the separatrix before they have slowed down, and ions, which take most of their heating late in the slowing-down, receive half as much. The total heating changed much less than the ion heating, so the total alone would not have shown the error. We discarded the 6400-marker run and made 10<sup>-6</sup> the default.</p>
-<p>At 10<sup>-6</sup> the two models give the same split between electrons and ions, ASCOT5’s heating is slightly more peaked, and its total is higher by the amount in the table. Most of that difference is numerical (alpha energy convention, the deposition calculation, interpolation onto TORAX’s cells), not orbit physics. With 640 markers the profile is noisy cell by cell, so this run compares totals, not shapes.</p>
-<p>We then continued TORAX from that state three times, over the same interval. With ASCOT5’s profiles held fixed, stored energy differs by <span class="claim">-0.005%</span><a href="../../../Blog/toktoit/claims.html#c-046" class="cid st-measured">C-046</a> from a run with TORAX’s own profiles from the same state held fixed. Holding the heating fixed at all, instead of letting TORAX update it, changes stored energy by <span class="claim">-0.3% (central T_e -1.0%)</span><a href="../../../Blog/toktoit/claims.html#c-047" class="cid st-reviewed">C-047</a>. That is the cost of updating ASCOT5 once per interval rather than every step.</p>
-<p><strong>Where this stands</strong>: M1 in progress. The ASCOT5 source works end to end. A second job with more markers and a 10<sup>-7</sup> convergence check is awaiting a decision (<a href="../../../Blog/toktoit/decisions.html#oq-11">OQ-11</a>).</p>
-<p>Technical details → <a href="../../../Blog/toktoit/technical/backends.html#ascot5">Backends: ASCOT5</a></p>
+<p>The check is independent of the fix in one respect: reverse mode never went through the patched derivative path at all, and forward mode now agrees with it.</p>
+<p><strong>Where this stands</strong>: M1 passed its physicist review (<a href="../../../Blog/toktoit/log/13-m1-physicist-review.html">entry 13</a>); this fix came after it and is tested, not reviewed. Forward-mode propagation is available for M5. A report to the TORAX developers is drafted for the owner to send.</p>
+<p>Technical details → <a href="../../../Blog/toktoit/technical/coupling-loop.html#forward-mode-nan">Coupling loop: NaN forward-mode gradients</a></p>
 <div class="entry-links">
-<p><strong>Technical details →</strong> <a href="../../../Blog/toktoit/technical/backends.html#ascot5">Backends › ascot5</a><br>
-<strong>Decisions →</strong> <a href="../../../Blog/toktoit/decisions.html#oq-9">OQ-9</a> · <a href="../../../Blog/toktoit/decisions.html#oq-11">OQ-11</a></p>
+<p><strong>Technical details →</strong> <a href="../../../Blog/toktoit/technical/coupling-loop.html#forward-mode-nan">Coupling loop › forward mode nan</a></p>
 </div>
 
 

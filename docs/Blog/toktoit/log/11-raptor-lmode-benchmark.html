@@ -8,7 +8,7 @@
 
 <meta name="dcterms.date" content="2026-10-01">
 
-<title>ASCOT5 fusion-alpha heating for the ITER flat-top: first cluster run – Vignesh Gopakumar</title>
+<title>ITER L-mode benchmark against RAPTOR, from the TORAX paper – Vignesh Gopakumar</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -124,7 +124,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">ASCOT5 fusion-alpha heating for the ITER flat-top: first cluster run</h1>
+<h1 class="title">ITER L-mode benchmark against RAPTOR, from the TORAX paper</h1>
   <div class="quarto-categories">
     <div class="quarto-category">measured</div>
   </div>
@@ -151,47 +151,47 @@ ul.task-list li input[type="checkbox"] {
 
 
 <div class="entry-meta">
-<p><span class="chip measured">measurement</span> Entry 10 · milestone M1</p>
+<p><span class="chip measured">measurement</span> Entry 11 · milestone M1</p>
 </div>
-<p>Fusion reactions in a deuterium-tritium plasma produce helium nuclei (alpha particles) at 3.5 MeV. They heat the plasma as they slow down. TORAX models this locally: the heating appears where the reaction happened, split between electrons and ions by a formula. ASCOT5, an open-source orbit-following code, follows each alpha along its orbit until it slows down or leaves the plasma. M1 asks for ASCOT5 sources in the coupled simulation (see the <a href="../../../Blog/toktoit/primer.html">Primer</a>). The owner approved fusion alphas first and one cluster job (<a href="../../../Blog/toktoit/decisions.html#oq-9">OQ-9</a>).</p>
+<p>M1 asks that the benchmark match <em>published profiles</em> within a tolerance set by a physicist (see the <a href="../../../Blog/toktoit/primer.html">Primer</a>). The ITER hybrid scenarios we have used so far have no published profiles from a second code, only TORAX’s own output, which our loop reproduces to round-off. The TORAX paper (Citrin et al., arXiv:2406.06718) publishes one quantitative comparison with an independent code, RAPTOR: an ITER L-mode plasma with constant current, constant heating and constant transport coefficients, run until the profiles are steady. The owner chose this case as the M1 physics benchmark (<a href="../../../Blog/toktoit/decisions.html#oq-12">OQ-12</a>).</p>
 <section id="method" class="level2">
 <h2 class="anchored" data-anchor-id="method">Method</h2>
-<p>We take the TORAX state at the end of the ITER hybrid flat-top run, where the alpha heating is highest. ASCOT5’s fusion-source module computes the alpha birth distribution from TORAX’s temperature and density profiles. Its birth rate agrees with TORAX’s to <span class="claim">1.002</span><a href="../../../Blog/toktoit/claims.html#c-042" class="cid st-tested">C-042</a> (ratio). ASCOT5 then follows a sample of alphas (markers) with Coulomb collisions until each one slows to twice the local ion temperature or crosses the separatrix. The heating to electrons and ions is taken from where the markers spent time and at what energy. The profiles are handed back to TORAX as a prescribed heating source.</p>
-<p>The job ran 6400 markers at a guiding-centre orbit tolerance of 10<sup>-5</sup>, chosen because it was seven times faster than tighter settings on a short test. It also reran 640 markers at 10<sup>-5</sup> and at 10<sup>-6</sup> as a check.</p>
+<p>The paper gives the full TORAX configuration (its Table II), written for an early TORAX version. We translated it to TORAX 1.4.3 parameter names. One setting needed care: the paper fixes the neon impurity’s charge at 10, while TORAX 1.4 computes it from the electron temperature. Leaving the computed charge in place changes the ion density: <span class="claim">0.35% with the computed charge, 0.009% with Z = 10</span><a href="../../../Blog/toktoit/claims.html#c-056" class="cid st-measured">C-056</a>.</p>
+<p>The comparison data come from the paper’s Fig. 6. The figure is vector graphics, so the plotted points of both curves, RAPTOR and the paper’s own TORAX run, are stored in the PDF. We read them out and mapped them to data units with each panel’s tick marks. To check the read-out, we recomputed the paper’s error measure (normalised root-mean-square deviation, NRMSD) between its two curves: <span class="claim">all five printed values reproduced (1.102, 0.712, 0.026, 0.414, 0.701% vs 1.1, 0.71, 0.03, 0.41, 0.70%)</span><a href="../../../Blog/toktoit/claims.html#c-048" class="cid st-tested">C-048</a>.</p>
+<p>The run goes through toktoit’s fixed-step loop over TORAX’s time step. It matches TORAX’s own driver to <span class="claim">better than 10<sup>-13</sup></span><a href="../../../Blog/toktoit/claims.html#c-049" class="cid st-measured">C-049</a>, so the comparison below tests the physics, not the wrapper.</p>
 </section>
-<section id="result" class="level2">
-<h2 class="anchored" data-anchor-id="result">Result</h2>
-<p>The check failed the production setting:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>640 markers, same in both runs</th>
-<th>result</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>markers lost across the separatrix</td>
-<td><span class="claim">18% at 10<sup>-5</sup>, 0.6% at 10<sup>-6</sup></span><a href="../../../Blog/toktoit/claims.html#c-043" class="cid st-measured">C-043</a></td>
-</tr>
-<tr class="even">
-<td>heating of ions</td>
-<td><span class="claim">13.2 MW at 10<sup>-5</sup>, 25.0 MW at 10<sup>-6</sup> (TORAX: 24.8 MW)</span><a href="../../../Blog/toktoit/claims.html#c-044" class="cid st-measured">C-044</a></td>
-</tr>
-<tr class="odd">
-<td>total heating at 10<sup>-6</sup>, ASCOT5 vs TORAX’s local model</td>
-<td><span class="claim">73.6 MW vs 70.5 MW</span><a href="../../../Blog/toktoit/claims.html#c-045" class="cid st-superseded">C-045</a></td>
-</tr>
-</tbody>
-</table>
-<p>At 10<sup>-5</sup> the integration error moves alphas outward. Many cross the separatrix before they have slowed down, and ions, which take most of their heating late in the slowing-down, receive half as much. The total heating changed much less than the ion heating, so the total alone would not have shown the error. We discarded the 6400-marker run and made 10<sup>-6</sup> the default.</p>
-<p>At 10<sup>-6</sup> the two models give the same split between electrons and ions, ASCOT5’s heating is slightly more peaked, and its total is higher by the amount in the table. Most of that difference is numerical (alpha energy convention, the deposition calculation, interpolation onto TORAX’s cells), not orbit physics. With 640 markers the profile is noisy cell by cell, so this run compares totals, not shapes.</p>
-<p>We then continued TORAX from that state three times, over the same interval. With ASCOT5’s profiles held fixed, stored energy differs by <span class="claim">-0.005%</span><a href="../../../Blog/toktoit/claims.html#c-046" class="cid st-measured">C-046</a> from a run with TORAX’s own profiles from the same state held fixed. Holding the heating fixed at all, instead of letting TORAX update it, changes stored energy by <span class="claim">-0.3% (central T_e -1.0%)</span><a href="../../../Blog/toktoit/claims.html#c-047" class="cid st-reviewed">C-047</a>. That is the cost of updating ASCOT5 once per interval rather than every step.</p>
-<p><strong>Where this stands</strong>: M1 in progress. The ASCOT5 source works end to end. A second job with more markers and a 10<sup>-7</sup> convergence check is awaiting a decision (<a href="../../../Blog/toktoit/decisions.html#oq-11">OQ-11</a>).</p>
-<p>Technical details → <a href="../../../Blog/toktoit/technical/backends.html#ascot5">Backends: ASCOT5</a></p>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/raptor_lmode.svg" class="img-fluid figure-img"></p>
+<figcaption>Top: profiles at the end of the run. Bottom: difference from RAPTOR in percent of RAPTOR’s mean. Look at the bottom row: toktoit and the paper’s TORAX run differ from RAPTOR in the same way.</figcaption>
+</figure>
+</div>
+<p>Against RAPTOR, NRMSD at the end of the run (the paper’s TORAX in brackets): <span class="claim">T_i 1.23% (1.1%), T_e 0.28% (0.71%), n_e 0.03% (0.03%), psi 0.49% (0.41%), q 0.69% (0.70%)</span><a href="../../../Blog/toktoit/claims.html#c-050" class="cid st-reviewed">C-050</a>. Against the paper’s TORAX run: <span class="claim">T_i 0.13%, T_e 0.50%, n_e 0.01%, psi 0.08%, q 0.16%; Ohmic power density 3.6%</span><a href="../../../Blog/toktoit/claims.html#c-051" class="cid st-reviewed">C-051</a>. That second line measures how much TORAX has changed between the paper’s version and 1.4.3, plus any translation error. It is largest for the electron temperature and the Ohmic heating, which depend on the plasma’s electrical conductivity.</p>
+<p>Halving the time step three times changes these end-of-run numbers by <span class="claim">at most 0.006 percentage points</span><a href="../../../Blog/toktoit/claims.html#c-052" class="cid st-measured">C-052</a>, so the published step is fine for the end state. The transient differs more; that is on the technical page.</p>
+<p>The other M1 criteria hold on this case as well. Energy and particle balance close on every step: <span class="claim">energy 1.1 × 10<sup>-7</sup>, particles 3 × 10<sup>-13</sup></span><a href="../../../Blog/toktoit/claims.html#c-054" class="cid st-tested">C-054</a>. The gradient of stored energy through three steps matches finite differences to <span class="claim">6 × 10<sup>-9</sup></span><a href="../../../Blog/toktoit/claims.html#c-055" class="cid st-tested">C-055</a>. Forward-mode derivatives through TORAX’s Newton solver came out as NaN at first (ceiling <a href="../../../Blog/toktoit/ceilings.html#k-009">K-009</a>, since fixed in <a href="../../../Blog/toktoit/log/14-forward-mode-nan.html">entry 14</a>).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Provenance
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Run: <code>tkit benchmark-raptor --dt 0.05</code> at commit <code>d689def</code> (clean tree), config hash <code>c9f9626e</code>, TORAX 1.4.3, JAX 0.10.2, Python 3.11.7, float64, tier A, 2026-10-01. Reference curves: arXiv:2406.06718v4 Fig. 6 (CC BY 4.0), read from the PDF’s vector paths. Figure: <code>blog/figures/make_raptor_lmode.py</code>; data in <code>raptor_lmode.csv</code>.</p>
+</div>
+</div>
+</div>
+<p><strong>Where this stands</strong>: M1 in progress. All four acceptance criteria now have results on a published benchmark. The tolerance against RAPTOR is the physicist reviewer’s (<a href="../../../Blog/toktoit/decisions.html#oq-5">OQ-5</a>); the review is the M1 gate.</p>
+<p>Technical details → <a href="../../../Blog/toktoit/technical/backends.html#raptor-benchmark">Backends: the RAPTOR L-mode benchmark</a></p>
 <div class="entry-links">
-<p><strong>Technical details →</strong> <a href="../../../Blog/toktoit/technical/backends.html#ascot5">Backends › ascot5</a><br>
-<strong>Decisions →</strong> <a href="../../../Blog/toktoit/decisions.html#oq-9">OQ-9</a> · <a href="../../../Blog/toktoit/decisions.html#oq-11">OQ-11</a></p>
+<p><strong>Technical details →</strong> <a href="../../../Blog/toktoit/technical/backends.html#raptor-benchmark">Backends › raptor benchmark</a><br>
+<strong>Decisions →</strong> <a href="../../../Blog/toktoit/decisions.html#oq-12">OQ-12</a> · <a href="../../../Blog/toktoit/decisions.html#oq-5">OQ-5</a></p>
 </div>
 
 
