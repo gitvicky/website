@@ -354,6 +354,9 @@ FreeGSNKE writes its own equilibrium IDS.
 :::
 ::::
 
+<!-- Run-tracking section hidden for now (owner, 2 Oct 2026). Quarto drops .content-hidden
+     from the rendered page; delete the wrapper to show it again. -->
+::::: {.content-hidden}
 ## How each run is recorded
 
 Every command that runs physics keeps a run record ([entry 9](log/09-run-tracking.qmd)). The
@@ -733,6 +736,7 @@ and the command. Its metadata holds the flattened configuration, provenance and 
 so runs can be filtered and compared in the runs table.
 :::
 ::::
+:::::
 
 ```{=html}
 <script>
