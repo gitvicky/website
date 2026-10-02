@@ -148,9 +148,34 @@ t = 2 s. The error is concentrated in the initial heating transient. This is not
 TORAX, whose examples are tuned for speed, but it means part of any difference from a published
 curve is time-step error; how the benchmark accounts for it is [OQ-5](/Blog/toktoit/decisions.qmd#oq-5).
 
-**Limits.** Its Newton solver contains an unbounded internal loop, so reverse-mode gradients
-require its linear (predictor-corrector) solver; forward mode works with either. Disabling
-adaptive stepping also disables its retry-on-failure, which is what exposes the stalls below.
+**Limits.** Disabling adaptive stepping also disables TORAX's retry-on-failure, which is what
+exposes the stalls below. Gradients work through both of TORAX's solvers and in both modes:
+the Newton solver's `lax.while_loop` sits inside `jax.lax.custom_root`, which differentiates
+the converged solution implicitly instead of the iterations. (This page said until 1 Oct 2026
+that reverse mode needed the linear solver; that was wrong.)
+
+### Post-mortem: NaN forward-mode gradients through Newton {#forward-mode-nan}
+
+*Recorded 2026-10-01.* Forward-mode derivatives (`jax.jvp`, `jacfwd`) through one Newton step
+of the published benchmark were NaN in every component; reverse mode matched finite
+differences. TORAX's root finder alone was fine on a toy problem, and the residual's own
+forward derivative at the root, the Jacobian (condition number 2 x 10^3^) and its solve were
+all finite when evaluated directly. The NaN came from how `custom_root`'s forward rule
+evaluates that derivative: it differentiates the residual with respect to *every* closed-over
+constant, with explicit zero tangents for the ones that do not vary, where an ordinary forward
+pass skips them. Evaluating the traced derivative operation by operation found the first NaN
+in TORAX's trapped-particle fraction (Sauter), $1 - \sqrt{a}\,(1-\epsilon_\text{eff})/(1 +
+2\sqrt{\epsilon_\text{eff}})$: $\epsilon = 0$ on the magnetic-axis face, the derivative of
+$\sqrt{\epsilon}$ is infinite there, and zero times infinity is NaN. It enters the conductivity
+on the axis face, and the tangent linear solve spreads it to every unknown. Reverse mode puts
+the same NaN only into the geometry's cotangent, which nothing reads.
+
+`tkit.physics.torax_patches` replaces the function, only if its source hash matches TORAX
+1.4.3's, with one whose square root has derivative 0 at 0
+(`where(e > 0, sqrt(where(e > 0, e, 1)), 0)`). Values are unchanged to the last bit; forward
+mode now equals reverse mode ([2 × 10^-15^ (NaN before the fix)]{.claim}[C-062](/Blog/toktoit/claims.qmd#c-062){.cid .st-tested}). The same pattern (a square root of a
+quantity that is exactly zero on the axis) could recur in other TORAX models; the forward-mode
+test on the benchmark would catch it.
 
 ### Post-mortem: the stalls that were not a physics event {#post-mortem-stalls}
 

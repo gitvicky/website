@@ -44,7 +44,7 @@ goes into this source:
 
 | where the heating power goes (ramp-up, every step after the first) | share of heating |
 |---|---|
-| removed by the pedestal source | [87–98%]{.claim}[C-038](/Blog/toktoit/claims.qmd#c-038){.cid .st-measured} |
+| removed by the pedestal source | [87–98%]{.claim}[C-038](/Blog/toktoit/claims.qmd#c-038){.cid .st-reviewed} |
 | conducted out through the edge | [1.5–10%]{.claim}[C-041](/Blog/toktoit/claims.qmd#c-041){.cid .st-measured} |
 | stored in the plasma | the small remainder |
 

@@ -24,12 +24,20 @@ toolkit reads and validates its record; a missing or malformed record is an erro
 | `config` | the full resolved configuration |
 | `config_hash` | sha256 of the canonical (sorted-key) JSON of the config |
 | `inputs` | name → sha256 of each input file |
-| `git_sha`, `git_dirty` | commit of the code, and whether the working tree had uncommitted changes |
+| `git_sha`, `git_dirty` | commit of the code the process imported, and whether the working tree had uncommitted changes then (read once, at import) |
 | `package`, `package_version`, `python`, `jax`, `platform` | software environment |
 | `created` | UTC timestamp |
 
+**The commit is read at import, not at write time** (since 2 Oct 2026). A cluster job runs
+from the repository's working copy, and commits can land there while it runs. Read at write
+time, `git_sha` named whatever the working copy's HEAD had become: the third ASCOT5 job started
+at `fcd8ce5` and its files record `2138b3c` ([entry 15](../log/15-ascot5-production-run.qmd)).
+The process's code is fixed when it is imported, so that is when the commit is read. The
+earlier ASCOT5 jobs may carry the same error; each job log prints the commit it started at.
+
 Validation checks that every key is present, `tier` is `A` or `B`, and `inputs` is a mapping.
-*Tested by* `tests/unit/test_tracking.py`.
+*Tested by* `tests/unit/test_tracking.py`, including
+`test_provenance_records_the_commit_the_process_imported`.
 
 Examples in use: TORAX reference runs (scenario, TORAX version, the full resolved TORAX config);
 the MAST-U machine description (upstream URL at the pinned commit, licence, sha256 of each
@@ -110,3 +118,4 @@ local record intact; the real client writing an offline cache with no network), 
 - 2026-09-30: first published version.
 - 2026-10-01: run tracking rewritten: every command tracked, per-step series, events and
   alerts, Simvue mirror with offline mode (entry 9).
+- 2026-10-02: `git_sha` and `git_dirty` read once at import, not at write time (entry 15).
