@@ -1,0 +1,63 @@
+---
+title: FreeGSNKE wrapper and a MAST-U free-boundary equilibrium
+date: '2026-09-30'
+categories:
+- built
+entry: 6
+milestone: M1
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 6 · milestone M1
+:::
+
+A tokamak plasma is held in place by magnetic fields from coils outside it. Computing the
+plasma shape from the coil currents is the *free-boundary equilibrium* problem. It comes before
+any transport calculation, because transport is computed across the magnetic surfaces that the
+equilibrium defines.
+
+This milestone asks us to wrap FreeGSNKE, an open-source free-boundary equilibrium solver. It
+needs a machine description: coil positions, the conducting structure around the plasma, and
+the wall. We had planned to build one from published geometry and asked the owner to approve a
+source. FreeGSNKE's repository already includes descriptions for several machines under the
+same open licence. The owner chose **MAST-U**, the UK's spherical tokamak, which is also the
+machine used most in FreeGSNKE's examples ([OQ-8](/Blog/toktoit/decisions.qmd#oq-8)).
+
+## Reading the output through IMAS
+
+In M0 we made every boundary of our code read and write IMAS, the fusion community's standard
+data format. FreeGSNKE can write its result as an IMAS record, and our code already reads IMAS,
+so the two codes are connected through a format the standard defines, not a mapping we wrote.
+
+FreeGSNKE's output omits three quantities we need, which the wrapper reconstructs from the
+rest. One is the cross-sectional area of each magnetic surface. Counting grid cells inside a
+surface does not work here: this plasma has a *divertor* (a magnetic configuration that guides
+exhaust to a target plate), and near the edge the inside test also includes the region below
+the X-point, which increases the outermost area by [32%]{.claim}[C-022](/Blog/toktoit/claims.qmd#c-022){.cid .st-measured}. We use a volume-based
+formula instead. A test checks that integrating the derivative of the volume recovers the
+volume to [2%]{.claim}[C-020](/Blog/toktoit/claims.qmd#c-020){.cid .st-tested}.
+
+## Minor radius
+
+On a conventional tokamak, the two usual definitions of minor radius are close enough that
+they are often used interchangeably. On a spherical tokamak they are not. The plasma's
+geometric half-width and the radius derived from magnetic flux differ by [a factor of 1.52]{.claim}[C-021](/Blog/toktoit/claims.qmd#c-021){.cid .st-tested}
+here. Using one in place of the other would put a fifty percent error into every normalised
+temperature gradient, which is the input that determines whether turbulent transport is
+active. The wrapper keeps the two separate, and a test checks it.
+
+## The solve
+
+A diverted MAST-U plasma, converged to [4 × 10^−10^]{.claim}[C-019](/Blog/toktoit/claims.qmd#c-019){.cid .st-measured}, with the plasma current matching the
+request to [10^−3^]{.claim}[C-018](/Blog/toktoit/claims.qmd#c-018){.cid .st-tested} and the magnetic axis in the expected position. Machine files are
+fetched from a pinned upstream version and their checksums are recorded, so each run can be
+traced to the geometry it used.
+
+**Where this stands**: M1 in progress. The equilibrium is solved standalone. Coupling it to the
+transport loop needs a transport model valid for a spherical tokamak, which later milestones
+provide.
+
+::: {.entry-links}
+**Technical details →** [Backends › equilibrium code](/Blog/toktoit/technical/backends.qmd#equilibrium-code) · [IMAS adapters](/Blog/toktoit/technical/imas-adapters.qmd)  
+**Decisions →** [OQ-8](/Blog/toktoit/decisions.qmd#oq-8)
+:::

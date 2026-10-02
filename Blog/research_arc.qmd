@@ -27,7 +27,7 @@ I did not have a good answer, so the next three papers are that answer.
 
 The catch in both is calibration data — you need held-out ground truth, which is the expensive thing you built the surrogate to avoid. [*Calibrated Physics-Informed Uncertainty Quantification*](/Blog/paper_calibrated_pi_uq.qmd) closes that loop: use the **PDE residual itself** as the non-conformity score. The governing equation becomes the calibration set. Data-free conformal prediction, guarantees intact.
 
-The [review](/Blog/upgrade_viva.qmd) I wrote in 2025 on surrogate modelling and UQ of neural differential equations is the tidy version of that whole detour.
+The [review](/Blog/Upgrade_viva_Review.pdf) I wrote in 2025 on surrogate modelling and UQ of neural differential equations is the tidy version of that whole detour.
 
 ### Now: put the physics inside the model (2026)
 

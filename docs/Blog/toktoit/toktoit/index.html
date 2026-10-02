@@ -98,9 +98,6 @@ ul.task-list li input[type="checkbox"] {
     }
   })
   </script>
-<script src="../../../site_libs/quarto-diagram/mermaid.min.js"></script>
-<script src="../../../site_libs/quarto-diagram/mermaid-init.js"></script>
-<link href="../../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -182,7 +179,7 @@ window.Quarto = {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content page-columns page-full column-body" id="quarto-document-content">
+<main class="content column-page" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -192,7 +189,7 @@ window.Quarto = {
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta column-page">
 
     
   
@@ -204,109 +201,692 @@ window.Quarto = {
 </header>
 
 
-<section id="how-the-work-fits-together" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="how-the-work-fits-together">How the work fits together</h2>
-<div class="column-page">
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart TB
-  m0["M0 · Scaffold: data structures, IMAS adapters,&lt;br&gt;guard, coupling loop, tests"]
-
-  subgraph s1 ["M1 · Open baseline"]
-    direction LR
-    torax["TORAX backend,&lt;br&gt;ITER hybrid&lt;br&gt;reference runs"]
-    newton["Newton-Raphson&lt;br&gt;coupling loop"]
-    fixed["Fixed-step loop&lt;br&gt;over TORAX"]
-    guard["QLKNN behind&lt;br&gt;the guard"]
-    rf["Analytic RF heating"]
-    bal["Energy and&lt;br&gt;particle balance"]
-    track["Run tracking"]
-    ascot["ASCOT5 alpha&lt;br&gt;heating into TORAX"]
-    bench["ITER benchmark:&lt;br&gt;physics comparison"]
-    fgs["FreeGSNKE: MAST-U&lt;br&gt;equilibrium, standalone"]
-    rev{{"Physicist review&lt;br&gt;(M1 gate)"}}
-    torax --&gt; fixed
-    newton --&gt; fixed
-    fixed --&gt; guard &amp; rf &amp; bal &amp; track &amp; ascot &amp; bench
-    guard &amp; bal &amp; ascot &amp; bench --&gt; rev
-  end
-
-  subgraph s2 ["M2 to M5"]
-    direction LR
-    m2["M2 · Training&lt;br&gt;data"]
-    m3["M3 ·&lt;br&gt;Surrogates"]
-    fgst["FreeGSNKE&lt;br&gt;coupled to&lt;br&gt;transport"]
-    m4["M4 ·&lt;br&gt;Verification"]
-    cert{{"Certification&lt;br&gt;review"}}
-    m5["M5 · UQ and&lt;br&gt;validation"]
-    sign{{"Physicist&lt;br&gt;sign-off"}}
-    m2 --&gt; m3 --&gt; m4 --&gt; cert --&gt; m5 --&gt; sign
-    m3 --&gt; fgst
-  end
-
-  m0 --&gt; s1
-  s1 --&gt; s2
-
-  %% states: done (green), wip = under construction (yellow), crit = critical (red), todo = pending (white)
-  classDef done fill:#cdeccd,stroke:#2e7d32,stroke-width:1.5px,color:#000
-  classDef wip fill:#fff1a8,stroke:#9a7400,stroke-width:1.5px,stroke-dasharray:6 3,color:#000
-  classDef crit fill:#f6c6c6,stroke:#b71c1c,stroke-width:3px,color:#000
-  classDef todo fill:#ffffff,stroke:#8a8a8a,stroke-width:1px,color:#000
-  class m0,newton,torax,fixed,guard,rf,bal,track,fgs done
-  class ascot,bench wip
-  class rev crit
-  class m2,m3,fgst,m4,cert,m5,sign todo
-  style s1 fill:#fafafa,stroke:#bdbdbd,color:#000
-  style s2 fill:#fafafa,stroke:#bdbdbd,color:#000
-</pre>
-</div>
-<p></p><figcaption> The toktoit workflow, milestone by milestone. Box colour shows the current state of each part.</figcaption> </figure><p></p>
-</div>
-</div>
-</div>
-</div>
-<div class="wf-key">
-<p><span class="wf done">done</span> <span class="wf wip">under construction</span> <span class="wf crit">critical: blocks the next milestone</span> <span class="wf todo">pending</span></p>
-</div>
+<div class="tk-cols">
+<div class="tk-col">
 <p>Designing, controlling and assessing a fusion reactor means running plasma simulations thousands of times. The physics codes that are accurate enough take hours per run. Neural networks trained on those codes run in milliseconds, but a network returns an answer for any input, including inputs far outside its training data.</p>
 <p><strong>toktoit</strong> is an integrated tokamak simulation in which any expensive physics module can be swapped for a neural surrogate, but only behind a <em>guard</em>. At every radius and every time step the surrogate has to show that it is inside the conditions it was trained on, that its ensemble agrees with itself, and that its answer is physically possible. Where it can’t, a trusted physics model takes over, and the handover is recorded. The whole simulation is written in JAX, so it compiles to one program and can be differentiated end to end, and it speaks IMAS, the fusion community’s standard data format, at every boundary.</p>
 <p>The code is private for now. What is public is the argument: the method, the checks that define “correct”, every number with where it came from, and the mistakes. <a href="../../../Blog/toktoit/toktoit/about.html">How this is built</a>: the code is written by an AI agent, Claude, working to a brief by a human owner who makes every physics, licence and publication decision.</p>
-<div class="stat-strip">
+</div>
+<div class="tk-panel">
+<section id="status" class="level3">
+<h3 class="anchored" data-anchor-id="status">Status</h3>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>milestone</th>
-<th>log entries</th>
-<th>tests passing</th>
-<th>source</th>
-<th>last commit</th>
-<th>updated</th>
-</tr>
-</thead>
 <tbody>
 <tr class="odd">
+<td>milestone</td>
 <td>M1</td>
-<td>9</td>
-<td>91 full suite, 91 with gated codes disabled</td>
-<td>3825 lines + 1628 lines of tests</td>
-<td><code>e8e1d6f</code></td>
+</tr>
+<tr class="even">
+<td>log entries</td>
+<td>14</td>
+</tr>
+<tr class="odd">
+<td>tests passing</td>
+<td>107 full suite, 107 with gated codes disabled</td>
+</tr>
+<tr class="even">
+<td>source</td>
+<td>4969 lines + 1969 lines of tests</td>
+</tr>
+<tr class="odd">
+<td>last commit</td>
+<td><code>6b386bc</code></td>
+</tr>
+<tr class="even">
+<td>updated</td>
 <td>2026-10-01</td>
 </tr>
 </tbody>
 </table>
+</section>
+<section id="where-to-start" class="level3">
+<h3 class="anchored" data-anchor-id="where-to-start">Where to start</h3>
+<ul>
+<li><a href="../../../Blog/toktoit/toktoit/primer.html">Primer</a>: no physics background assumed.</li>
+<li><a href="#the-log">The log</a>, read from the bottom up.</li>
+<li><a href="../../../Blog/toktoit/toktoit/technical/index.html">Technical internals</a>, the <a href="../../../Blog/toktoit/toktoit/claims.html">claims register</a> and the <a href="../../../Blog/toktoit/toktoit/decisions.html">decisions</a>, for the details.</li>
+</ul>
+</section>
 </div>
-<p>New here? Start with the <a href="../../../Blog/toktoit/toktoit/primer.html">primer</a> (no physics background assumed), then read the log from the bottom up. For the details, go to the <a href="../../../Blog/toktoit/toktoit/technical/index.html">technical internals</a>, the <a href="../../../Blog/toktoit/toktoit/claims.html">claims register</a> and the <a href="../../../Blog/toktoit/toktoit/decisions.html">decisions</a>.</p>
+</div>
+<section id="how-the-physics-fits-together" class="level2">
+<h2 class="anchored" data-anchor-id="how-the-physics-fits-together">How the physics fits together</h2>
+<div class="tk-flow">
+<figure class="tk-physics-fig figure">
+<!-- SVG below is written by blog/figures/make_physics_coupling.py; edit the script, not the SVG -->
+<!-- physics-svg:start -->
+<svg class="tk-diagram tk-physics" viewbox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="tkp-title tkp-desc">
+<title id="tkp-title">How the physics codes in toktoit exchange information</title>
+<desc id="tkp-desc">Diagram. TORAX, the core transport solver, sits in the centre and evolves electron and ion temperature, electron density and poloidal flux. Above it, the equilibrium: a prescribed CHEASE EQDSK for the ITER hybrid scenario supplies flux-surface geometry every step; FreeGSNKE computes MAST-U-like free-boundary equilibria from coil currents and its two-way coupling to TORAX is planned. On the left, the sources: TORAX sends density, temperature and Z_eff; RF heating (Gaussian deposition), ASCOT5 fusion alphas (with the magnetic field from the EQDSK, updated outside the loop and held between updates) and other TORAX source models return heat, particle and current sources. On the right, the transport coefficients: TORAX sends gradients, q, magnetic shear, temperature ratio and collisionality; QLKNN, a neural network trained offline on QuaLiKiz, and the Bohm/gyro-Bohm fallback both feed the guard, which picks one per face; with the Sauter neoclassical model they return diffusivities, convection, bootstrap current and conductivity. Below, the pedestal and sawtooth models exchange pressure and q for edge values and profile resets, and TORAX writes profiles, sources and fluxes to IMAS IDSs.</desc>
+<defs><marker id="tkp-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"></path></marker><marker id="tkp-ahp" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"></path></marker></defs>
+<style>.tk-diagram text{font-family:inherit}.tk-diagram text.halo{paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}</style>
+<rect x="300" y="20" width="600" height="150" rx="4" fill="#fafafa" stroke="#bdbdbd" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="start" fill="#6b6b6b">
+<tspan x="312" y="36.0" dominant-baseline="middle">Equilibrium</tspan>
+</text>
+<rect x="20" y="230" width="330" height="330" rx="4" fill="#fafafa" stroke="#bdbdbd" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="start" fill="#6b6b6b">
+<tspan x="32" y="246.0" dominant-baseline="middle">Heating, current and particle sources</tspan>
+</text>
+<rect x="860" y="230" width="320" height="330" rx="4" fill="#fafafa" stroke="#bdbdbd" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="start" fill="#6b6b6b">
+<tspan x="872" y="246.0" dominant-baseline="middle">Transport coefficients</tspan>
+</text>
+<rect x="875" y="255" width="290" height="190" rx="4" fill="#f0f0f0" stroke="#bdbdbd" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="start" fill="#6b6b6b">
+<tspan x="887" y="271.0" dominant-baseline="middle">Turbulence, behind the guard</tspan>
+</text>
+<g data-node="eqdsk">
+<rect x="330" y="55" width="210" height="90" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="13" text-anchor="middle" fill="#000">
+<tspan x="435.0" y="82.5" dominant-baseline="middle"><tspan font-weight="600">Prescribed equilibrium</tspan></tspan>
+<tspan x="435.0" y="100.0" dominant-baseline="middle">CHEASE EQDSK file</tspan>
+<tspan x="435.0" y="117.6" dominant-baseline="middle">ITER hybrid scenario</tspan>
+</text>
+</g>
+<g data-node="fgs">
+<rect x="590" y="55" width="180" height="90" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="13" text-anchor="middle" fill="#000">
+<tspan x="680.0" y="82.5" dominant-baseline="middle"><tspan font-weight="600">Free-boundary</tspan></tspan>
+<tspan x="680.0" y="100.0" dominant-baseline="middle">FreeGSNKE</tspan>
+<tspan x="680.0" y="117.6" dominant-baseline="middle">MAST-U-like machine</tspan>
+</text>
+</g>
+<g data-node="coils">
+<rect x="800" y="75" width="80" height="50" rx="3" fill="#f6f6f6" stroke="#8a8a8a" stroke-width="1"></rect>
+<text font-size="13" text-anchor="middle" fill="#000">
+<tspan x="840.0" y="91.2" dominant-baseline="middle">Coil</tspan>
+<tspan x="840.0" y="108.8" dominant-baseline="middle">currents</tspan>
+</text>
+</g>
+<g data-node="core">
+<rect x="470" y="290" width="260" height="130" rx="3" fill="#dbe4fb" stroke="#1d4ed8" stroke-width="2"></rect>
+<text font-size="14" text-anchor="middle" fill="#000">
+<tspan x="600.0" y="326.6" dominant-baseline="middle"><tspan font-weight="600">Core transport</tspan></tspan>
+<tspan x="600.0" y="345.5" dominant-baseline="middle">TORAX</tspan>
+<tspan x="600.0" y="364.4" dominant-baseline="middle">evolves T<tspan baseline-shift="sub" font-size="72%">e</tspan>, T<tspan baseline-shift="sub" font-size="72%">i</tspan>, n<tspan baseline-shift="sub" font-size="72%">e</tspan> and ψ on ρ</tspan>
+<tspan x="600.0" y="383.3" dominant-baseline="middle">implicit solve every time step</tspan>
+</text>
+</g>
+<g data-node="ascot">
+<rect x="45" y="270" width="280" height="80" rx="3" fill="#fff" stroke="#555" stroke-width="1.2" stroke-dasharray="6 3"></rect>
+<text font-size="13" text-anchor="middle" fill="#000">
+<tspan x="185.0" y="292.4" dominant-baseline="middle"><tspan font-weight="600">Fusion alphas</tspan></tspan>
+<tspan x="185.0" y="310.0" dominant-baseline="middle">ASCOT5 orbit following,</tspan>
+<tspan x="185.0" y="327.6" dominant-baseline="middle">AFSI birth source</tspan>
+</text>
+</g>
+<g data-node="rf">
+<rect x="45" y="370" width="280" height="60" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="13" text-anchor="middle" fill="#000">
+<tspan x="185.0" y="391.2" dominant-baseline="middle"><tspan font-weight="600">RF heating</tspan></tspan>
+<tspan x="185.0" y="408.8" dominant-baseline="middle">Gaussian deposition</tspan>
+</text>
+</g>
+<g data-node="src">
+<rect x="45" y="450" width="280" height="90" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="13" text-anchor="middle" fill="#000">
+<tspan x="185.0" y="468.7" dominant-baseline="middle"><tspan font-weight="600">Other sources</tspan></tspan>
+<tspan x="185.0" y="486.2" dominant-baseline="middle">TORAX models: auxiliary heating,</tspan>
+<tspan x="185.0" y="503.8" dominant-baseline="middle">ohmic, radiation, e-i exchange,</tspan>
+<tspan x="185.0" y="521.3" dominant-baseline="middle">gas puff, pellets</tspan>
+</text>
+</g>
+<g data-node="qlk">
+<rect x="890" y="285" width="120" height="50" rx="3" fill="#f6f6f6" stroke="#8a8a8a" stroke-width="1"></rect>
+<text font-size="13" text-anchor="middle" fill="#000">
+<tspan x="950.0" y="301.2" dominant-baseline="middle">QuaLiKiz</tspan>
+<tspan x="950.0" y="318.8" dominant-baseline="middle">quasilinear code</tspan>
+</text>
+</g>
+<g data-node="qlknn">
+<rect x="890" y="375" width="120" height="50" rx="3" fill="#e6e6e6" stroke="#555" stroke-width="1"></rect>
+<text font-size="13" text-anchor="middle" fill="#000">
+<tspan x="950.0" y="391.2" dominant-baseline="middle">QLKNN</tspan>
+<tspan x="950.0" y="408.8" dominant-baseline="middle">neural surrogate</tspan>
+</text>
+</g>
+<g data-node="bgb">
+<rect x="1030" y="285" width="120" height="50" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="13" text-anchor="middle" fill="#000">
+<tspan x="1090.0" y="301.2" dominant-baseline="middle">Bohm/gyro-Bohm</tspan>
+<tspan x="1090.0" y="318.8" dominant-baseline="middle">physics fallback</tspan>
+</text>
+</g>
+<g data-node="guard">
+<polygon points="1044,375 1136,375 1150,400.0 1136,425 1044,425 1030,400.0" fill="#e6e6e6" stroke="#555" stroke-width="1"></polygon>
+<text font-size="13" text-anchor="middle" fill="#000">
+<tspan x="1090.0" y="391.2" dominant-baseline="middle">Guard</tspan>
+<tspan x="1090.0" y="408.8" dominant-baseline="middle">per face</tspan>
+</text>
+</g>
+<g data-node="neo">
+<rect x="890" y="470" width="260" height="60" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="13" text-anchor="middle" fill="#000">
+<tspan x="1020.0" y="491.2" dominant-baseline="middle"><tspan font-weight="600">Neoclassical</tspan></tspan>
+<tspan x="1020.0" y="508.8" dominant-baseline="middle">TORAX, Sauter model</tspan>
+</text>
+</g>
+<g data-node="mhd">
+<rect x="400" y="530" width="170" height="64" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="13" text-anchor="middle" fill="#000">
+<tspan x="485.0" y="553.2" dominant-baseline="middle"><tspan font-weight="600">Pedestal, sawteeth</tspan></tspan>
+<tspan x="485.0" y="570.8" dominant-baseline="middle">TORAX models</tspan>
+</text>
+</g>
+<g data-node="imas">
+<path d="M630,536 A85.0,8 0 0 0 800,536 V588 A85.0,8 0 0 1 630,588 Z" fill="#f6f6f6" stroke="#8a8a8a" stroke-width="1"></path>
+<path d="M630,536 A85.0,8 0 0 1 800,536" fill="none" stroke="#8a8a8a" stroke-width="1"></path>
+<text font-size="13" text-anchor="middle" fill="#000">
+<tspan x="715.0" y="566.0" dominant-baseline="middle">IMAS IDSs</tspan>
+</text>
+</g>
+<path d="M500,145 L500,288" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkp-ah)"></path>
+<text font-size="12" text-anchor="end" fill="#000" class="halo">
+<tspan x="492" y="216.9" dominant-baseline="middle">flux-surface</tspan>
+<tspan x="492" y="233.1" dominant-baseline="middle">geometry</tspan>
+</text>
+<path d="M680,147 L680,288" fill="none" stroke="#9a9a9a" stroke-width="1.4" stroke-dasharray="3 4" marker-end="url(#tkp-ahp)" marker-start="url(#tkp-ahp)"></path>
+<text font-size="12" text-anchor="start" fill="#6b6b6b" class="halo">
+<tspan x="690" y="205.0" dominant-baseline="middle">planned coupling:</tspan>
+</text>
+<text font-size="12" text-anchor="start" fill="#6b6b6b" class="halo">
+<tspan x="690" y="223.0" dominant-baseline="middle">↓ ψ(R,Z), geometry</tspan>
+</text>
+<text font-size="12" text-anchor="start" fill="#6b6b6b" class="halo">
+<tspan x="690" y="241.0" dominant-baseline="middle">↑ p(ψ), j(ψ), I<tspan baseline-shift="sub" font-size="72%">p</tspan></tspan>
+</text>
+<path d="M800,100 L772,100" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkp-ah)"></path>
+<path d="M330,100 L300,100 L300,268" fill="none" stroke="#000" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#tkp-ah)"></path>
+<text font-size="12" text-anchor="start" fill="#000" class="halo">
+<tspan x="308" y="190.0" dominant-baseline="middle">B(R,Z)</tspan>
+</text>
+<path d="M470,320 L352,320" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkp-ah)"></path>
+<text font-size="12" text-anchor="middle" fill="#000" class="halo">
+<tspan x="410" y="307.0" dominant-baseline="middle">n, T, Z<tspan baseline-shift="sub" font-size="72%">eff</tspan></tspan>
+</text>
+<path d="M350,385 L468,385" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkp-ah)"></path>
+<text font-size="12" text-anchor="middle" fill="#000" class="halo">
+<tspan x="410" y="399.9" dominant-baseline="middle">heat, particle,</tspan>
+<tspan x="410" y="416.1" dominant-baseline="middle">current sources</tspan>
+</text>
+<path d="M730,320 L858,320" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkp-ah)"></path>
+<text font-size="12" text-anchor="middle" fill="#000" class="halo">
+<tspan x="795" y="284.9" dominant-baseline="middle">gradients, q, ŝ,</tspan>
+<tspan x="795" y="301.1" dominant-baseline="middle">T<tspan baseline-shift="sub" font-size="72%">i</tspan>/T<tspan baseline-shift="sub" font-size="72%">e</tspan>, collisionality</tspan>
+</text>
+<path d="M860,385 L732,385" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkp-ah)"></path>
+<text font-size="12" text-anchor="middle" fill="#000" class="halo">
+<tspan x="795" y="399.8" dominant-baseline="middle">χ<tspan baseline-shift="sub" font-size="72%">e</tspan>, χ<tspan baseline-shift="sub" font-size="72%">i</tspan>, D<tspan baseline-shift="sub" font-size="72%">e</tspan>, V<tspan baseline-shift="sub" font-size="72%">e</tspan>,</tspan>
+<tspan x="795" y="416.0" dominant-baseline="middle">bootstrap current,</tspan>
+<tspan x="795" y="432.2" dominant-baseline="middle">conductivity</tspan>
+</text>
+<path d="M950,335 L950,373" fill="none" stroke="#000" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#tkp-ah)"></path>
+<text font-size="11.5" text-anchor="start" fill="#000" class="halo">
+<tspan x="958" y="354.0" dominant-baseline="middle">training (offline)</tspan>
+</text>
+<path d="M1010,400 L1028,400" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkp-ah)"></path>
+<path d="M1090,335 L1090,373" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkp-ah)"></path>
+<path d="M460,420 L460,528" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkp-ah)"></path>
+<text font-size="12" text-anchor="end" fill="#000" class="halo">
+<tspan x="452" y="474.0" dominant-baseline="middle">pressure, q</tspan>
+</text>
+<path d="M530,530 L530,422" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkp-ah)"></path>
+<text font-size="12" text-anchor="start" fill="#000" class="halo">
+<tspan x="538" y="465.9" dominant-baseline="middle">edge values,</tspan>
+<tspan x="538" y="482.1" dominant-baseline="middle">profile resets</tspan>
+</text>
+<path d="M700,420 L700,526" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkp-ah)"></path>
+<text font-size="12" text-anchor="start" fill="#000" class="halo">
+<tspan x="708" y="465.9" dominant-baseline="middle">profiles, sources,</tspan>
+<tspan x="708" y="482.1" dominant-baseline="middle">fluxes</tspan>
+</text>
+<line x1="300" y1="650" x2="900" y2="650" stroke="#d9d9d9"></line>
+<path d="M40,682 L84,682" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkp-ah)"></path>
+<text font-size="12" text-anchor="start" fill="#000">
+<tspan x="94" y="682.0" dominant-baseline="middle">every time step, inside the compiled loop</tspan>
+</text>
+<path d="M370,682 L414,682" fill="none" stroke="#000" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#tkp-ah)"></path>
+<text font-size="12" text-anchor="start" fill="#000">
+<tspan x="424" y="682.0" dominant-baseline="middle">outside the loop (ASCOT5 updates, offline training)</tspan>
+</text>
+<path d="M790,682 L834,682" fill="none" stroke="#9a9a9a" stroke-width="1.4" stroke-dasharray="3 4" marker-end="url(#tkp-ahp)"></path>
+<text font-size="12" text-anchor="start" fill="#000">
+<tspan x="844" y="682.0" dominant-baseline="middle">planned, not yet coupled</tspan>
+</text>
+<rect x="1030" y="672" width="30" height="20" rx="3" fill="#e6e6e6" stroke="#555"></rect>
+<text font-size="12" text-anchor="start" fill="#000">
+<tspan x="1068" y="682.0" dominant-baseline="middle">neural network</tspan>
+</text>
+</svg>
+<!-- physics-svg:end -->
+<figcaption>How the physics codes exchange information during a run. TORAX solves core
+transport; the other codes supply its geometry, transport coefficients and sources. Hover over
+a box for what it does.</figcaption>
+</figure>
+</div>
+<div class="tk-notes">
+<div class="tk-note" data-node="core">
+<p><strong>Core transport: TORAX.</strong> The open-source JAX transport code. On a radial grid in ρ it evolves the electron and ion temperatures, the electron density and the poloidal flux ψ (current diffusion), with an implicit solve every time step (Newton-Raphson, with Picard iteration as a fallback). toktoit calls TORAX’s own single-step function from a fixed-step compiled loop, so a whole run is one program that can be differentiated end to end. Entries 1 to 3.</p>
+</div>
+<div class="tk-note" data-node="eqdsk">
+<p><strong>Prescribed equilibrium.</strong> The CHEASE equilibrium of the ITER hybrid scenario, shipped with TORAX as an EQDSK file. TORAX builds its flux-surface geometry (volumes, areas, metric coefficients) from it. ASCOT5 takes its magnetic field from the same file, with the poloidal flux scaled to TORAX’s plasma current. Used for the ITER cases.</p>
+</div>
+<div class="tk-note" data-node="fgs">
+<p><strong>Free-boundary equilibrium: FreeGSNKE.</strong> Solves the free-boundary Grad-Shafranov equation for the MAST-U-like machine description and writes an IMAS equilibrium IDS. Not yet coupled to transport: that needs a turbulence model valid on a spherical tokamak, which QLKNN is not. Entry 6.</p>
+</div>
+<div class="tk-note" data-node="coils">
+<p><strong>Coil currents.</strong> The poloidal-field coil currents, with the coil, passive-structure and wall geometry of the machine description, are the input to the free-boundary solve.</p>
+</div>
+<div class="tk-note" data-node="ascot">
+<p><strong>Fusion alphas: ASCOT5.</strong> AFSI computes where D-T fusion alphas are born from TORAX’s density and temperature profiles. ASCOT5 follows each alpha along its guiding-centre orbit while it slows down on electrons and ions, or is lost. The power given to electrons and to ions is mapped back to TORAX’s grid and replaces TORAX’s local alpha-heating model. ASCOT5 runs outside the compiled loop; its result is held as a prescribed source until the next update. Entries 10, 12 and 15.</p>
+</div>
+<div class="tk-note" data-node="rf">
+<p><strong>RF heating.</strong> A radial Gaussian deposition of RF power to electrons, normalised to the injected power, with an optional co-located driven current. This is the physics model an RF deposition surrogate would fall back to. Entry 5.</p>
+</div>
+<div class="tk-note" data-node="src">
+<p><strong>Other sources.</strong> TORAX’s own source models: auxiliary heating, ohmic heating, radiation, electron-ion heat exchange, gas puff and pellet fuelling. Which ones are active depends on the scenario configuration.</p>
+</div>
+<div class="tk-note" data-node="qlk">
+<p><strong>QuaLiKiz.</strong> A quasilinear gyrokinetic turbulence code. QLKNN was trained on its output, offline; toktoit does not run QuaLiKiz itself.</p>
+</div>
+<div class="tk-note" data-node="qlknn">
+<p><strong>QLKNN.</strong> A neural network that returns turbulent heat and particle fluxes from local plasma parameters (normalised gradients, q, magnetic shear, temperature ratio, collisionality) in microseconds. Entry 4.</p>
+</div>
+<div class="tk-note" data-node="bgb">
+<p><strong>Bohm/gyro-Bohm.</strong> An empirical transport model. It is used at each face where the guard rejects the surrogate (<a href="../../../Blog/toktoit/decisions.html#oq-1">OQ-1</a>).</p>
+</div>
+<div class="tk-note" data-node="guard">
+<p><strong>The guard.</strong> At every radial face and every time step, the surrogate’s output is kept only if its inputs are inside the training domain and its outputs are finite and within bounds. Otherwise the fallback value is used and the substitution is recorded. Entry 4.</p>
+</div>
+<div class="tk-note" data-node="neo">
+<p><strong>Neoclassical.</strong> TORAX’s Sauter model: the bootstrap current and the plasma conductivity used in current diffusion.</p>
+</div>
+<div class="tk-note" data-node="mhd">
+<p><strong>Pedestal and sawteeth.</strong> TORAX’s pedestal model sets the temperature and density at the pedestal top, the outer boundary of the core solve. Its sawtooth model flattens the core profiles inside the q = 1 surface when the trigger condition is met.</p>
+</div>
+<div class="tk-note" data-node="imas">
+<p><strong>IMAS IDSs.</strong> toktoit writes its state as IMAS data structures (core_profiles, core_sources, core_transport, equilibrium). Unit and coordinate conversions happen only in these adapters. FreeGSNKE writes its own equilibrium IDS.</p>
+</div>
+</div>
+</section>
+<section id="how-each-run-is-recorded" class="level2">
+<h2 class="anchored" data-anchor-id="how-each-run-is-recorded">How each run is recorded</h2>
+<p>Every command that runs physics keeps a run record (<a href="../../../Blog/toktoit/toktoit/log/09-run-tracking.html">entry 9</a>). The record is written on the host after the compiled loop returns, so tracking cannot change a result. A local copy is always written; <a href="https://simvue.io">Simvue</a> receives a mirror of it.</p>
+<div class="tk-flow">
+<figure class="tk-physics-fig figure">
+<!-- SVG below is written by blog/figures/make_run_tracking.py; edit the script, not the SVG -->
+<!-- tracking-svg:start -->
+<svg class="tk-diagram tk-tracking" viewbox="0 0 1200 610" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="tkr-title tkr-desc">
+<title id="tkr-title">How each toktoit run is recorded and mirrored to Simvue</title>
+<desc id="tkr-desc">Diagram. On the left, the toktoit commands that run physics: torax, torax-loop, benchmark-raptor, equilibrium, ascot-alpha, ascot-apply and run, plus dataset generation (M2) and surrogate training (M3), which are planned. Each opens one run record. In the middle, the life of a run: start_run records the configuration and provenance (git commit, package versions, configuration hash, input hashes); log_params records the settings; the compiled loop runs with no tracking calls inside and returns its full trace; log_series then writes one record per step with the step number and simulation time; alerts and events are raised; output files are saved with their provenance; finish marks the run completed or failed. On the right, every call goes to two places: a local record under runs/, always written, and a Simvue mirror. On a login node the mirror writes to the Simvue server directly; inside a SLURM job it writes to an offline cache, which make simvue-push uploads from a login node. On the server each run sits in folder /tkit/&lt;command&gt; with tags, metadata, metrics against step and simulation time, events, alerts and files. If Simvue cannot start, the run continues on the local record.</desc>
+<defs><marker id="tkr-ah" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"></path></marker><marker id="tkr-ahp" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"></path></marker></defs>
+<style>.tk-diagram text{font-family:inherit}.tk-diagram text.halo{paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}</style>
+<rect x="20" y="20" width="280" height="560" rx="4" fill="#fafafa" stroke="#bdbdbd" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="start" fill="#6b6b6b">
+<tspan x="32" y="36.0" dominant-baseline="middle">Commands that run physics</tspan>
+</text>
+<g data-node="rt-torax">
+<rect x="40" y="45" width="220" height="46" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="150.0" y="59.6" dominant-baseline="middle"><tspan font-weight="600">torax</tspan></tspan>
+<tspan x="150.0" y="76.4" dominant-baseline="middle">TORAX reference run</tspan>
+</text>
+</g>
+<path d="M260,68 L280,68" fill="none" stroke="#000" stroke-width="1.4"></path>
+<g data-node="rt-loop">
+<rect x="40" y="99" width="220" height="46" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="150.0" y="113.6" dominant-baseline="middle"><tspan font-weight="600">torax-loop</tspan></tspan>
+<tspan x="150.0" y="130.4" dominant-baseline="middle">fixed-step loop, guard</tspan>
+</text>
+</g>
+<path d="M260,122 L280,122" fill="none" stroke="#000" stroke-width="1.4"></path>
+<g data-node="rt-bench">
+<rect x="40" y="153" width="220" height="46" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="150.0" y="167.6" dominant-baseline="middle"><tspan font-weight="600">benchmark-raptor</tspan></tspan>
+<tspan x="150.0" y="184.4" dominant-baseline="middle">comparison with RAPTOR</tspan>
+</text>
+</g>
+<path d="M260,176 L280,176" fill="none" stroke="#000" stroke-width="1.4"></path>
+<g data-node="rt-eq">
+<rect x="40" y="207" width="220" height="46" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="150.0" y="221.6" dominant-baseline="middle"><tspan font-weight="600">equilibrium</tspan></tspan>
+<tspan x="150.0" y="238.4" dominant-baseline="middle">FreeGSNKE equilibrium</tspan>
+</text>
+</g>
+<path d="M260,230 L280,230" fill="none" stroke="#000" stroke-width="1.4"></path>
+<g data-node="rt-alpha">
+<rect x="40" y="261" width="220" height="46" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="150.0" y="275.6" dominant-baseline="middle"><tspan font-weight="600">ascot-alpha</tspan></tspan>
+<tspan x="150.0" y="292.4" dominant-baseline="middle">ASCOT5 alphas, on the cluster</tspan>
+</text>
+</g>
+<path d="M260,284 L280,284" fill="none" stroke="#000" stroke-width="1.4"></path>
+<g data-node="rt-apply">
+<rect x="40" y="315" width="220" height="46" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="150.0" y="329.6" dominant-baseline="middle"><tspan font-weight="600">ascot-apply</tspan></tspan>
+<tspan x="150.0" y="346.4" dominant-baseline="middle">alpha heating into TORAX</tspan>
+</text>
+</g>
+<path d="M260,338 L280,338" fill="none" stroke="#000" stroke-width="1.4"></path>
+<g data-node="rt-toy">
+<rect x="40" y="369" width="220" height="46" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="150.0" y="383.6" dominant-baseline="middle"><tspan font-weight="600">run</tspan></tspan>
+<tspan x="150.0" y="400.4" dominant-baseline="middle">toy models</tspan>
+</text>
+</g>
+<path d="M260,392 L280,392" fill="none" stroke="#000" stroke-width="1.4"></path>
+<text font-size="12" text-anchor="middle" fill="#6b6b6b">
+<tspan x="150" y="431.0" dominant-baseline="middle">planned</tspan>
+</text>
+<g data-node="rt-data">
+<rect x="40" y="445" width="220" height="46" rx="3" fill="#fff" stroke="#9a9a9a" stroke-width="1.2" stroke-dasharray="3 4"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#6b6b6b">
+<tspan x="150.0" y="459.6" dominant-baseline="middle"><tspan font-weight="600">Dataset generation</tspan></tspan>
+<tspan x="150.0" y="476.4" dominant-baseline="middle">M2</tspan>
+</text>
+</g>
+<g data-node="rt-train">
+<rect x="40" y="499" width="220" height="46" rx="3" fill="#fff" stroke="#9a9a9a" stroke-width="1.2" stroke-dasharray="3 4"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#6b6b6b">
+<tspan x="150.0" y="513.6" dominant-baseline="middle"><tspan font-weight="600">Surrogate training</tspan></tspan>
+<tspan x="150.0" y="530.4" dominant-baseline="middle">M3</tspan>
+</text>
+</g>
+<path d="M260,468 L280,468" fill="none" stroke="#9a9a9a" stroke-width="1.4" stroke-dasharray="3 4"></path>
+<path d="M260,522 L280,522" fill="none" stroke="#9a9a9a" stroke-width="1.4" stroke-dasharray="3 4"></path>
+<path d="M280,392 L280,522" fill="none" stroke="#9a9a9a" stroke-width="1.4" stroke-dasharray="3 4"></path>
+<path d="M280,68 L280,392" fill="none" stroke="#000" stroke-width="1.4"></path>
+<path d="M280,290 L338,290" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"></path>
+<text font-size="12" text-anchor="middle" fill="#000" class="halo">
+<tspan x="309" y="276.0" dominant-baseline="middle">one run</tspan>
+</text>
+<rect x="340" y="20" width="360" height="560" rx="4" fill="#fafafa" stroke="#bdbdbd" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="start" fill="#6b6b6b">
+<tspan x="352" y="36.0" dominant-baseline="middle">One run, from start to finish</tspan>
+</text>
+<g data-node="rt-start">
+<rect x="360" y="45" width="320" height="60" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="520.0" y="58.1" dominant-baseline="middle"><tspan font-weight="600">start_run</tspan></tspan>
+<tspan x="520.0" y="75.0" dominant-baseline="middle">configuration and provenance: git commit,</tspan>
+<tspan x="520.0" y="91.9" dominant-baseline="middle">package versions, config hash, input hashes</tspan>
+</text>
+</g>
+<path d="M520,105 L520,120" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"></path>
+<g data-node="rt-params">
+<rect x="360" y="122" width="320" height="60" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="520.0" y="143.6" dominant-baseline="middle"><tspan font-weight="600">log_params</tspan></tspan>
+<tspan x="520.0" y="160.4" dominant-baseline="middle">settings: scenario, time step, steps, device</tspan>
+</text>
+</g>
+<path d="M520,182 L520,197" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"></path>
+<g data-node="rt-jit">
+<rect x="360" y="199" width="320" height="60" rx="3" fill="#dbe4fb" stroke="#1d4ed8" stroke-width="2"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="520.0" y="212.1" dominant-baseline="middle"><tspan font-weight="600">Compiled loop</tspan></tspan>
+<tspan x="520.0" y="229.0" dominant-baseline="middle">no tracking calls inside;</tspan>
+<tspan x="520.0" y="245.9" dominant-baseline="middle">returns the full trace</tspan>
+</text>
+</g>
+<path d="M520,259 L520,274" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"></path>
+<g data-node="rt-series">
+<rect x="360" y="276" width="320" height="60" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="520.0" y="289.1" dominant-baseline="middle"><tspan font-weight="600">log_series</tspan></tspan>
+<tspan x="520.0" y="306.0" dominant-baseline="middle">one record per step, with the step</tspan>
+<tspan x="520.0" y="322.9" dominant-baseline="middle">number and the simulation time</tspan>
+</text>
+</g>
+<path d="M520,336 L520,351" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"></path>
+<g data-node="rt-alert">
+<rect x="360" y="353" width="320" height="60" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="520.0" y="366.1" dominant-baseline="middle"><tspan font-weight="600">Alerts and events</tspan></tspan>
+<tspan x="520.0" y="383.0" dominant-baseline="middle">solver stall, result outside tolerance,</tspan>
+<tspan x="520.0" y="399.9" dominant-baseline="middle">non-finite value</tspan>
+</text>
+</g>
+<path d="M520,413 L520,428" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"></path>
+<g data-node="rt-artifact">
+<rect x="360" y="430" width="320" height="60" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="520.0" y="443.1" dominant-baseline="middle"><tspan font-weight="600">log_artifact</tspan></tspan>
+<tspan x="520.0" y="460.0" dominant-baseline="middle">output files, each with its</tspan>
+<tspan x="520.0" y="476.9" dominant-baseline="middle">provenance JSON</tspan>
+</text>
+</g>
+<path d="M520,490 L520,505" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"></path>
+<g data-node="rt-finish">
+<rect x="360" y="507" width="320" height="60" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="520.0" y="528.6" dominant-baseline="middle"><tspan font-weight="600">finish</tspan></tspan>
+<tspan x="520.0" y="545.4" dominant-baseline="middle">completed, or failed on an exception</tspan>
+</text>
+</g>
+<rect x="740" y="20" width="440" height="210" rx="4" fill="#fafafa" stroke="#bdbdbd" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="start" fill="#6b6b6b">
+<tspan x="752" y="36.0" dominant-baseline="middle">Local record, always written</tspan>
+</text>
+<g data-node="rt-local">
+<rect x="755" y="42" width="410" height="172" rx="3" fill="#f6f6f6" stroke="#8a8a8a"></rect>
+<text font-size="12" text-anchor="start" fill="#000" style="font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+<tspan x="768" y="60.0" dominant-baseline="middle">runs/‹date›-‹time›-‹command›/</tspan>
+</text>
+<text font-size="12" text-anchor="start" fill="#000" style="font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+<tspan x="786" y="80.0" dominant-baseline="middle">params.json  config.yaml</tspan>
+</text>
+<text font-size="11.5" text-anchor="end" fill="#6b6b6b">
+<tspan x="1152" y="80.0" dominant-baseline="middle">settings</tspan>
+</text>
+<text font-size="12" text-anchor="start" fill="#000" style="font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+<tspan x="786" y="100.0" dominant-baseline="middle">provenance.json</tspan>
+</text>
+<text font-size="11.5" text-anchor="end" fill="#6b6b6b">
+<tspan x="1152" y="100.0" dominant-baseline="middle">code, versions, inputs</tspan>
+</text>
+<text font-size="12" text-anchor="start" fill="#000" style="font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+<tspan x="786" y="120.0" dominant-baseline="middle">metrics.jsonl</tspan>
+</text>
+<text font-size="11.5" text-anchor="end" fill="#6b6b6b">
+<tspan x="1152" y="120.0" dominant-baseline="middle">one line per step</tspan>
+</text>
+<text font-size="12" text-anchor="start" fill="#000" style="font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+<tspan x="786" y="140.0" dominant-baseline="middle">events.jsonl</tspan>
+</text>
+<text font-size="11.5" text-anchor="end" fill="#6b6b6b">
+<tspan x="1152" y="140.0" dominant-baseline="middle">events, alerts, status</tspan>
+</text>
+<text font-size="12" text-anchor="start" fill="#000" style="font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+<tspan x="786" y="160.0" dominant-baseline="middle">‹output›.nc</tspan>
+</text>
+<text font-size="11.5" text-anchor="end" fill="#6b6b6b">
+<tspan x="1152" y="160.0" dominant-baseline="middle">output file</tspan>
+</text>
+<text font-size="12" text-anchor="start" fill="#000" style="font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+<tspan x="786" y="180.0" dominant-baseline="middle">‹output›.nc.provenance.json</tspan>
+</text>
+<text font-size="11.5" text-anchor="end" fill="#6b6b6b">
+<tspan x="1152" y="180.0" dominant-baseline="middle">its provenance</tspan>
+</text>
+<text font-size="12" text-anchor="start" fill="#000" style="font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+<tspan x="786" y="200.0" dominant-baseline="middle">simvue.json</tspan>
+</text>
+<text font-size="11.5" text-anchor="end" fill="#6b6b6b">
+<tspan x="1152" y="200.0" dominant-baseline="middle">Simvue run id, if mirrored</tspan>
+</text>
+</g>
+<rect x="740" y="250" width="440" height="330" rx="4" fill="#fafafa" stroke="#bdbdbd" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="start" fill="#6b6b6b">
+<tspan x="752" y="266.0" dominant-baseline="middle">Simvue mirror</tspan>
+</text>
+<g data-node="rt-online">
+<rect x="760" y="290" width="180" height="48" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="850.0" y="305.6" dominant-baseline="middle"><tspan font-weight="600">On a login node</tspan></tspan>
+<tspan x="850.0" y="322.4" dominant-baseline="middle">online</tspan>
+</text>
+</g>
+<g data-node="rt-offline">
+<rect x="760" y="360" width="180" height="56" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="850.0" y="379.6" dominant-baseline="middle"><tspan font-weight="600">Inside a SLURM job</tspan></tspan>
+<tspan x="850.0" y="396.4" dominant-baseline="middle">offline cache on $WORK</tspan>
+</text>
+</g>
+<g data-node="rt-push">
+<rect x="760" y="438" width="180" height="48" rx="3" fill="#fff" stroke="#555" stroke-width="1"></rect>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="850.0" y="453.6" dominant-baseline="middle"><tspan font-weight="600">make simvue-push</tspan></tspan>
+<tspan x="850.0" y="470.4" dominant-baseline="middle">from a login node</tspan>
+</text>
+</g>
+<g data-node="rt-server">
+<rect x="965" y="280" width="200" height="280" rx="3" fill="#f6f6f6" stroke="#8a8a8a" stroke-width="1"></rect>
+<text font-size="12" text-anchor="middle" fill="#000">
+<tspan x="1065.0" y="339.0" dominant-baseline="middle"><tspan font-weight="600">Simvue server</tspan></tspan>
+<tspan x="1065.0" y="355.2" dominant-baseline="middle">uk.simvue.io</tspan>
+<tspan x="1065.0" y="371.4" dominant-baseline="middle"></tspan>
+<tspan x="1065.0" y="387.6" dominant-baseline="middle">folder /tkit/‹command›</tspan>
+<tspan x="1065.0" y="403.8" dominant-baseline="middle">tags: tkit, tier, command</tspan>
+<tspan x="1065.0" y="420.0" dominant-baseline="middle">metadata: config.*,</tspan>
+<tspan x="1065.0" y="436.2" dominant-baseline="middle">provenance.*, slurm.*</tspan>
+<tspan x="1065.0" y="452.4" dominant-baseline="middle">metrics against step</tspan>
+<tspan x="1065.0" y="468.6" dominant-baseline="middle">and simulation time</tspan>
+<tspan x="1065.0" y="484.8" dominant-baseline="middle">events, alerts</tspan>
+<tspan x="1065.0" y="501.0" dominant-baseline="middle">files: inputs, outputs</tspan>
+</text>
+</g>
+<path d="M940,314 L963,314" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"></path>
+<path d="M850,416 L850,436" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"></path>
+<path d="M940,462 L963,462" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"></path>
+<text font-size="11.5" text-anchor="middle" fill="#6b6b6b">
+<tspan x="850" y="512.5" dominant-baseline="middle">If Simvue cannot start,</tspan>
+<tspan x="850" y="528.0" dominant-baseline="middle">the run carries on with</tspan>
+<tspan x="850" y="543.5" dominant-baseline="middle">the local record only.</tspan>
+</text>
+<path d="M700,128 L753,128" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"></path>
+<path d="M700,388 L758,388" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"></path>
+<path d="M722,388 L722,314 L758,314" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"></path>
+<text font-size="11.5" text-anchor="middle" fill="#6b6b6b">
+<tspan x="720" y="92.2" dominant-baseline="middle">every</tspan>
+<tspan x="720" y="107.8" dominant-baseline="middle">call</tspan>
+</text>
+</svg>
+<!-- tracking-svg:end -->
+<figcaption>What each run records and where the record goes. Training runs do not exist yet;
+they are shown where they will join. Hover over a box for details.</figcaption>
+</figure>
+</div>
+<div class="tk-notes">
+<div class="tk-note" data-node="rt-torax">
+<p><strong>torax.</strong> Runs a TORAX scenario with TORAX’s own driver (adaptive time step). Records the scenario, tolerance and TORAX version, the TORAX output series per output time, the wall time, and the output file with its provenance. Alert if TORAX does not complete.</p>
+</div>
+<div class="tk-note" data-node="rt-loop">
+<p><strong>torax-loop.</strong> toktoit’s fixed-step loop over TORAX. Per step: axis T<sub>e</sub>, T<sub>i</sub> and n<sub>e</sub>, thermal energy, solver error flag, inner iterations, sawtooth crashes, and the fraction of faces where the guard used the fallback. Alert if the solver stalls.</p>
+</div>
+<div class="tk-note" data-node="rt-bench">
+<p><strong>benchmark-raptor.</strong> The ITER L-mode benchmark against RAPTOR. Records the deviation of each profile and trace from both published curves. Alerts if a quantity is outside the tolerance set at the physicist review, if the loop and TORAX’s driver disagree, or if the solver stalls.</p>
+</div>
+<div class="tk-note" data-node="rt-eq">
+<p><strong>equilibrium.</strong> A FreeGSNKE free-boundary solve. Records every coil current, the plasma current and its error against the target, the magnetic-axis position, the wall time and the IMAS equilibrium file.</p>
+</div>
+<div class="tk-note" data-node="rt-alpha">
+<p><strong>ascot-alpha.</strong> The ASCOT5 alpha-particle run, submitted to the cluster. Records the inputs, the AFSI birth rate against TORAX’s, the power deposited on electrons and ions, and the end conditions of the markers. Alerts if the birth rates disagree or too much power is unfinished. Inside a SLURM job the Simvue mirror writes offline.</p>
+</div>
+<div class="tk-note" data-node="rt-apply">
+<p><strong>ascot-apply.</strong> Restarts TORAX with the ASCOT5 alpha heating as a prescribed source and compares it with TORAX’s local model. Records both heating profiles’ totals, the restart series and the restart files.</p>
+</div>
+<div class="tk-note" data-node="rt-toy">
+<p><strong>run.</strong> The toy Tier A models from M0. Records the per-step trace and benchmark errors; alert on a Picard stall or a benchmark failure.</p>
+</div>
+<div class="tk-note" data-node="rt-data">
+<p><strong>Dataset generation (M2).</strong> Not built. Datasets are to be immutable and versioned, each with a provenance file, so that a training run can identify its data by hash.</p>
+</div>
+<div class="tk-note" data-node="rt-train">
+<p><strong>Surrogate training (M3).</strong> Not built. Planned to open its run through the same interface as the commands above, with the dataset hashes in its provenance. What it logs per epoch is not yet decided.</p>
+</div>
+<div class="tk-note" data-node="rt-start">
+<p><strong>start_run.</strong> Opens the record. Provenance: time, package version, git commit and whether the working tree had uncommitted changes (read when the process starts), Python, JAX and platform, tier, the producing command, the full configuration and its hash, and the hashes of input files.</p>
+</div>
+<div class="tk-note" data-node="rt-params">
+<p><strong>log_params.</strong> The settings of this run, e.g.&nbsp;scenario, time step, number of steps, tolerance, device, code versions.</p>
+</div>
+<div class="tk-note" data-node="rt-jit">
+<p><strong>Compiled loop.</strong> The whole time loop is one compiled JAX program. It makes no tracking calls, writes no files, and returns one row per step.</p>
+</div>
+<div class="tk-note" data-node="rt-series">
+<p><strong>log_series.</strong> After the loop returns, one metric record per step, stamped with the step number and the simulation time in seconds. Simvue rejects non-finite values; the local record keeps them and an alert is raised once per metric.</p>
+</div>
+<div class="tk-note" data-node="rt-alert">
+<p><strong>Alerts and events.</strong> Named alerts (e.g.&nbsp;solver_stall, acceptance, afsi_mismatch, non_finite_metric) are logged as events and set to critical in Simvue, optionally with an email. An exception inside the run is logged as an event before the run is marked failed.</p>
+</div>
+<div class="tk-note" data-node="rt-artifact">
+<p><strong>log_artifact.</strong> Copies each output file into the record with its provenance JSON. In Simvue the configuration and provenance are saved as inputs, the results as outputs.</p>
+</div>
+<div class="tk-note" data-node="rt-finish">
+<p><strong>finish.</strong> Status completed, or failed if an exception left the run. The Simvue queue is flushed before a failed status is set, so no records are lost.</p>
+</div>
+<div class="tk-note" data-node="rt-local">
+<p><strong>Local record.</strong> A directory per run under runs/, named by start time and command. It is written first and is complete even when Simvue is unavailable.</p>
+</div>
+<div class="tk-note" data-node="rt-online">
+<p><strong>Online.</strong> On a login node the mirror sends each call to the server as it happens.</p>
+</div>
+<div class="tk-note" data-node="rt-offline">
+<p><strong>Offline.</strong> Cluster compute nodes have no internet access, so inside a SLURM job the mirror writes to a cache on the work file system.</p>
+</div>
+<div class="tk-note" data-node="rt-push">
+<p><strong>make simvue-push.</strong> Uploads the offline cache from a login node with Simvue’s sender. Safe to repeat: a run uploaded in several goes becomes one server run.</p>
+</div>
+<div class="tk-note" data-node="rt-server">
+<p><strong>Simvue server.</strong> Each run has the same name as its local record, sits in folder /tkit/‹command› (/tkit-validation for test runs) and carries the tags tkit, tier-A or tier-B, and the command. Its metadata holds the flattened configuration, provenance and SLURM job ids, so runs can be filtered and compared in the runs table.</p>
+</div>
+</div>
+<script>
+/* Hover descriptions for the diagrams: each SVG box carries data-node="<id>", matched to a
+   .tk-note[data-node] block in a hidden .tk-notes container above. */
+(function () {
+  var tip = null;
+  function show(html, x, y) {
+    tip.innerHTML = html;
+    tip.style.display = "block";
+    var w = tip.offsetWidth, h = tip.offsetHeight;
+    var left = Math.min(x + 14, window.innerWidth - w - 8);
+    var top = y + 16 + h > window.innerHeight ? y - h - 12 : y + 16;
+    tip.style.left = Math.max(8, left) + "px";
+    tip.style.top = Math.max(8, top) + "px";
+  }
+  function hide() { if (tip) tip.style.display = "none"; }
+  window.addEventListener("DOMContentLoaded", function () {
+    var notes = {};
+    document.querySelectorAll(".tk-notes .tk-note").forEach(function (n) {
+      notes[n.dataset.node] = n.innerHTML;
+    });
+    tip = document.createElement("div");
+    tip.className = "tk-tip";
+    tip.setAttribute("role", "tooltip");
+    document.body.appendChild(tip);
+    document.querySelectorAll(".tk-flow svg g[data-node]").forEach(function (g) {
+      var html = notes[g.dataset.node];
+      if (!html) return;
+      g.classList.add("tk-has-note");
+      g.addEventListener("mousemove", function (e) { show(html, e.clientX, e.clientY); });
+      g.addEventListener("mouseleave", hide);
+      g.addEventListener("click", function (e) { e.stopPropagation(); show(html, e.clientX, e.clientY); });
+    });
+    document.addEventListener("click", hide);
+    window.addEventListener("scroll", hide, { passive: true });
+  });
+})();
+</script>
 </section>
 <section id="milestones" class="level2">
 <h2 class="anchored" data-anchor-id="milestones">Milestones</h2>
@@ -333,8 +913,8 @@ window.Quarto = {
 <td>M1</td>
 <td><a href="../../../Blog/toktoit/toktoit/milestones/M1.html">Open baseline</a></td>
 <td>open-source physics codes wired in; a published benchmark reproduced</td>
-<td><span class="wf wip">in progress</span></td>
-<td><span class="wf crit">physicist review</span></td>
+<td><span class="wf done">done 1 Oct 2026</span></td>
+<td><span class="wf done">physicist review: passed</span></td>
 </tr>
 <tr class="odd">
 <td>M2</td>
@@ -367,8 +947,13 @@ window.Quarto = {
 </tbody>
 </table>
 </section>
-<section id="the-log" class="level2">
+<div class="tk-cols">
+<section id="the-log" class="level2 tk-col">
 <h2 class="anchored" data-anchor-id="the-log">The log</h2>
+<details class="tk-log">
+<summary>
+Show all 14 entries, newest first
+</summary>
 <div id="listing-log" class="quarto-listing quarto-listing-container-table">
 <table class="quarto-listing-table table">
 <thead>
@@ -385,7 +970,73 @@ Categories
 </tr>
 </thead>
 <tbody class="list">
-<tr data-index="0" data-categories="built" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1790852704000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="444" data-listing-title-sort="Run tracking with Simvue" data-listing-filename-sort="09-run-tracking.qmd">
+<tr data-index="0" data-categories="measured" data-listing-date-sort="1790895600000" data-listing-file-modified-sort="1790936348000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="609" data-listing-title-sort="ASCOT5 production run: alpha heating from 6400 markers" data-listing-filename-sort="15-ascot5-production-run.qmd">
+<td>
+<span class="listing-date">2 Oct 2026</span>
+</td>
+<td>
+<a href="../../../Blog/toktoit/toktoit/log/15-ascot5-production-run.html" class="title listing-title">ASCOT5 production run: alpha heating from 6400 markers</a>
+</td>
+<td>
+<span class="listing-categories">measured</span>
+</td>
+</tr>
+<tr data-index="1" data-categories="fixed" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1790936348000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="439" data-listing-title-sort="Fix: NaN forward-mode gradients through TORAX's Newton solver" data-listing-filename-sort="14-forward-mode-nan.qmd">
+<td>
+<span class="listing-date">1 Oct 2026</span>
+</td>
+<td>
+<a href="../../../Blog/toktoit/toktoit/log/14-forward-mode-nan.html" class="title listing-title">Fix: NaN forward-mode gradients through TORAX’s Newton solver</a>
+</td>
+<td>
+<span class="listing-categories">fixed</span>
+</td>
+</tr>
+<tr data-index="2" data-categories="decision" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1790936348000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="441" data-listing-title-sort="M1 physicist review: benchmark tolerance, pedestal, time step, ASCOT5 and the fallback model" data-listing-filename-sort="13-m1-physicist-review.qmd">
+<td>
+<span class="listing-date">1 Oct 2026</span>
+</td>
+<td>
+<a href="../../../Blog/toktoit/toktoit/log/13-m1-physicist-review.html" class="title listing-title">M1 physicist review: benchmark tolerance, pedestal, time step, ASCOT5 and the fallback model</a>
+</td>
+<td>
+<span class="listing-categories">decision</span>
+</td>
+</tr>
+<tr data-index="3" data-categories="measured" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1790936348000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="480" data-listing-title-sort="ASCOT5 second cluster run: a tighter orbit tolerance, and a production run lost to a time limit" data-listing-filename-sort="12-ascot5-second-run.qmd">
+<td>
+<span class="listing-date">1 Oct 2026</span>
+</td>
+<td>
+<a href="../../../Blog/toktoit/toktoit/log/12-ascot5-second-run.html" class="title listing-title">ASCOT5 second cluster run: a tighter orbit tolerance, and a production run lost to a time limit</a>
+</td>
+<td>
+<span class="listing-categories">measured</span>
+</td>
+</tr>
+<tr data-index="4" data-categories="measured" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1790936348000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="560" data-listing-title-sort="ITER L-mode benchmark against RAPTOR, from the TORAX paper" data-listing-filename-sort="11-raptor-lmode-benchmark.qmd">
+<td>
+<span class="listing-date">1 Oct 2026</span>
+</td>
+<td>
+<a href="../../../Blog/toktoit/toktoit/log/11-raptor-lmode-benchmark.html" class="title listing-title">ITER L-mode benchmark against RAPTOR, from the TORAX paper</a>
+</td>
+<td>
+<span class="listing-categories">measured</span>
+</td>
+</tr>
+<tr data-index="5" data-categories="measured" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1790936348000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="506" data-listing-title-sort="ASCOT5 fusion-alpha heating for the ITER flat-top: first cluster run" data-listing-filename-sort="10-ascot5-alpha-heating.qmd">
+<td>
+<span class="listing-date">1 Oct 2026</span>
+</td>
+<td>
+<a href="../../../Blog/toktoit/toktoit/log/10-ascot5-alpha-heating.html" class="title listing-title">ASCOT5 fusion-alpha heating for the ITER flat-top: first cluster run</a>
+</td>
+<td>
+<span class="listing-categories">measured</span>
+</td>
+</tr>
+<tr data-index="6" data-categories="built" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1790936348000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="444" data-listing-title-sort="Run tracking with Simvue" data-listing-filename-sort="09-run-tracking.qmd">
 <td>
 <span class="listing-date">1 Oct 2026</span>
 </td>
@@ -396,7 +1047,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="1" data-categories="measured" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1790852704000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="463" data-listing-title-sort="Energy and particle balance on the ITER benchmark" data-listing-filename-sort="08-energy-particle-balance.qmd">
+<tr data-index="7" data-categories="measured" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1790936348000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="463" data-listing-title-sort="Energy and particle balance on the ITER benchmark" data-listing-filename-sort="08-energy-particle-balance.qmd">
 <td>
 <span class="listing-date">30 Sep 2026</span>
 </td>
@@ -407,7 +1058,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="2" data-categories="fixed" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1790852704000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="382" data-listing-title-sort="Fix: wrong minor radius in the IMAS export" data-listing-filename-sort="07-imas-export-minor-radius.qmd">
+<tr data-index="8" data-categories="fixed" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1790936348000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="382" data-listing-title-sort="Fix: wrong minor radius in the IMAS export" data-listing-filename-sort="07-imas-export-minor-radius.qmd">
 <td>
 <span class="listing-date">30 Sep 2026</span>
 </td>
@@ -418,7 +1069,7 @@ Categories
 <span class="listing-categories">fixed</span>
 </td>
 </tr>
-<tr data-index="3" data-categories="built" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1790852704000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="428" data-listing-title-sort="FreeGSNKE wrapper and a MAST-U free-boundary equilibrium" data-listing-filename-sort="06-freegsnke-mastu.qmd">
+<tr data-index="9" data-categories="built" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1790936348000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="428" data-listing-title-sort="FreeGSNKE wrapper and a MAST-U free-boundary equilibrium" data-listing-filename-sort="06-freegsnke-mastu.qmd">
 <td>
 <span class="listing-date">30 Sep 2026</span>
 </td>
@@ -429,7 +1080,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="4" data-categories="measured,built" data-listing-date-sort="1790031600000" data-listing-file-modified-sort="1790852704000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="475" data-listing-title-sort="Solver stalls in the ITER ramp-up, analytic RF heating, Aurora and ASCOT5 builds" data-listing-filename-sort="05-stalls-rf-and-builds.qmd">
+<tr data-index="10" data-categories="measured,built" data-listing-date-sort="1790031600000" data-listing-file-modified-sort="1790936348000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="475" data-listing-title-sort="Solver stalls in the ITER ramp-up, analytic RF heating, Aurora and ASCOT5 builds" data-listing-filename-sort="05-stalls-rf-and-builds.qmd">
 <td>
 <span class="listing-date">22 Sep 2026</span>
 </td>
@@ -440,7 +1091,7 @@ Categories
 <span class="listing-categories">measured, built</span>
 </td>
 </tr>
-<tr data-index="5" data-categories="built,fixed" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1790852704000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="429" data-listing-title-sort="Guard inside TORAX, and a fix for an unset smoothing default" data-listing-filename-sort="04-guard-inside-torax.qmd">
+<tr data-index="11" data-categories="built,fixed" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1790936348000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="429" data-listing-title-sort="Guard inside TORAX, and a fix for an unset smoothing default" data-listing-filename-sort="04-guard-inside-torax.qmd">
 <td>
 <span class="listing-date">21 Sep 2026</span>
 </td>
@@ -451,7 +1102,7 @@ Categories
 <span class="listing-categories">built, fixed</span>
 </td>
 </tr>
-<tr data-index="6" data-categories="measured" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1790852704000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="419" data-listing-title-sort="Fixed-step loop over TORAX and a time-step convergence study" data-listing-filename-sort="03-fixed-step-loop.qmd">
+<tr data-index="12" data-categories="measured" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1790936348000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="419" data-listing-title-sort="Fixed-step loop over TORAX and a time-step convergence study" data-listing-filename-sort="03-fixed-step-loop.qmd">
 <td>
 <span class="listing-date">21 Sep 2026</span>
 </td>
@@ -462,7 +1113,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="7" data-categories="built" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1790852704000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="343" data-listing-title-sort="TORAX backend and the ITER hybrid reference runs" data-listing-filename-sort="02-torax-backend.qmd">
+<tr data-index="13" data-categories="built" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1790936348000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="343" data-listing-title-sort="TORAX backend and the ITER hybrid reference runs" data-listing-filename-sort="02-torax-backend.qmd">
 <td>
 <span class="listing-date">21 Sep 2026</span>
 </td>
@@ -473,7 +1124,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="8" data-categories="built" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1790852704000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="452" data-listing-title-sort="Newton-Raphson solver for the coupling loop" data-listing-filename-sort="01-newton-solver.qmd">
+<tr data-index="14" data-categories="built" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1790936348000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="452" data-listing-title-sort="Newton-Raphson solver for the coupling loop" data-listing-filename-sort="01-newton-solver.qmd">
 <td>
 <span class="listing-date">21 Sep 2026</span>
 </td>
@@ -490,18 +1141,20 @@ Categories
 No matching items
 </div>
 </div>
+</details>
 </section>
-<section id="whats-next" class="level2">
+<section id="whats-next" class="level2 tk-col">
 <h2 class="anchored" data-anchor-id="whats-next">What’s next</h2>
 <ul>
-<li><strong>Connect ASCOT5 to TORAX.</strong> ASCOT5 follows fast particles (beam ions, fusion alphas) through the plasma and is far too slow to call every time step, so it runs at chosen times and hands TORAX its heating and current profiles as fixed sources. That is exactly the interface a heating surrogate will later replace. Fusion alphas come first, and one cluster job is approved (<a href="../../../Blog/toktoit/decisions.html#oq-9">OQ-9</a>); it will also be the first real test of offline run tracking (entry 9).</li>
-<li><strong>Run the physics benchmark.</strong> Compare against the published profiles at the published settings, then at a converged time step, ahead of the physicist review that sets the tolerance (<a href="../../../Blog/toktoit/decisions.html#oq-5">OQ-5</a>).</li>
+<li><strong>ASCOT5 follow-ups, before neutral-beam ions.</strong> Check the alphas’ mean birth energy against the D-T reaction kinematics (<a href="../../../Blog/toktoit/ceilings.html#k-011">K-011</a>), and resolve the core heating profile cell by cell (<a href="../../../Blog/toktoit/ceilings.html#k-012">K-012</a>). Neutral-beam ions follow once the injector geometry is approved.</li>
+<li><strong>M2, training data.</strong> Starts with three inputs from the owner: access to the turbulence code that generates the data and its licence terms, the operating space to sample (including spherical-tokamak ranges), and a compute allocation for dataset generation.</li>
 <li><strong>Future extension:</strong> extending the benchmark to a STEP power-plant flat-top is planned as a future extension. For now the work stays with the ITER benchmark and MAST-U.</li>
 </ul>
-
-
-
 </section>
+</div>
+
+
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

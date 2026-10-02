@@ -11,7 +11,7 @@ title: "Blog"
 </div>
 
 <div class="blog-card">
-<a href="/Blog/upgrade_viva.qmd">A Review on UQ and Surrogate Modelling for Neural PDE Solvers</a>
+<a href="/Blog/Upgrade_viva_Review.pdf">A Review on UQ and Surrogate Modelling for Neural PDE Solvers</a>
 </div>
 
 <div class="blog-card">

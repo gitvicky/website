@@ -125,8 +125,8 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#goal" id="toc-goal" class="nav-link active" data-scroll-target="#goal">Goal</a></li>
   <li><a href="#acceptance-criteria-fixed-in-the-brief-before-work-started" id="toc-acceptance-criteria-fixed-in-the-brief-before-work-started" class="nav-link" data-scroll-target="#acceptance-criteria-fixed-in-the-brief-before-work-started">Acceptance criteria (fixed in the brief before work started)</a></li>
   <li><a href="#tasks" id="toc-tasks" class="nav-link" data-scroll-target="#tasks">Tasks</a></li>
-  <li><a href="#against-the-criteria-so-far" id="toc-against-the-criteria-so-far" class="nav-link" data-scroll-target="#against-the-criteria-so-far">Against the criteria so far</a></li>
-  <li><a href="#deviations-so-far" id="toc-deviations-so-far" class="nav-link" data-scroll-target="#deviations-so-far">Deviations so far</a></li>
+  <li><a href="#against-the-criteria" id="toc-against-the-criteria" class="nav-link" data-scroll-target="#against-the-criteria">Against the criteria</a></li>
+  <li><a href="#deviations" id="toc-deviations" class="nav-link" data-scroll-target="#deviations">Deviations</a></li>
   <li><a href="#future-extensions" id="toc-future-extensions" class="nav-link" data-scroll-target="#future-extensions">Future extensions</a></li>
   </ul>
 </nav>
@@ -137,7 +137,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">M1 · Open baseline</h1>
-<p class="subtitle lead">In progress</p>
+<p class="subtitle lead">Done 1 Oct 2026</p>
 </div>
 
 
@@ -166,7 +166,7 @@ ul.task-list li input[type="checkbox"] {
 <li>Gradients are finite and checked against finite differences.</li>
 <li><strong>Human gate: physicist review.</strong></li>
 </ol>
-<p>The tolerance in (1) is set by the physicist reviewer; conservation in (2) must hold to 10<sup>-6</sup> per step on converged steps (<a href="../../../../Blog/toktoit/decisions.html#oq-5">OQ-5</a>, decided 1 Oct 2026). The physicist review has not happened. Until it has, physics claims from M1 are at most <em>tested</em> or <em>measured</em> in the <a href="../../../../Blog/toktoit/toktoit/claims.html">claims register</a>, never <em>reviewed</em>.</p>
+<p>The tolerance in (1) was set at the physicist review: the t = 10 s profiles within 2% of RAPTOR (densities 0.1%) and the time traces within 5%. Conservation in (2) must hold to 10<sup>-6</sup> per step on converged steps (<a href="../../../../Blog/toktoit/decisions.html#oq-5">OQ-5</a>). <strong>The physicist review passed on 1 Oct 2026</strong>, with the owner as reviewer of record (<a href="../../../../Blog/toktoit/toktoit/decisions.html#m1-review">decisions</a>, <a href="../../../../Blog/toktoit/toktoit/log/13-m1-physicist-review.html">entry 13</a>). The claims it judged are marked <em>reviewed</em> in the <a href="../../../../Blog/toktoit/toktoit/claims.html">claims register</a>.</p>
 </section>
 <section id="tasks" class="level2">
 <h2 class="anchored" data-anchor-id="tasks">Tasks</h2>
@@ -211,15 +211,20 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="odd">
 <td>ASCOT5 sources</td>
-<td>ASCOT5 builds and runs; alphas first, one cluster job approved (<a href="../../../../Blog/toktoit/decisions.html#oq-9">OQ-9</a>)</td>
-<td><a href="../../../../Blog/toktoit/toktoit/log/05-stalls-rf-and-builds.html">entry 5</a></td>
+<td>done: fusion-alpha heating from ASCOT5 into TORAX, checked against TORAX’s local model (<span class="claim">71.8 MW vs 70.5 MW</span><a href="../../../../Blog/toktoit/claims.html#c-064" class="cid st-measured">C-064</a>, 6400 alphas); orbit tolerance 10<sup>-7</sup> (<span class="claim">0.348 at 10<sup>-6</sup>, 0.331 at 10<sup>-7</sup></span><a href="../../../../Blog/toktoit/claims.html#c-058" class="cid st-reviewed">C-058</a>, <span class="claim">electrons -0.16%, ions +0.08%</span><a href="../../../../Blog/toktoit/claims.html#c-066" class="cid st-measured">C-066</a>). The production run (<a href="../../../../Blog/toktoit/decisions.html#oq-13">OQ-13</a>) finished on 2 Oct 2026</td>
+<td><a href="../../../../Blog/toktoit/toktoit/log/10-ascot5-alpha-heating.html">entries 10</a>, <a href="../../../../Blog/toktoit/toktoit/log/12-ascot5-second-run.html">12</a>, <a href="../../../../Blog/toktoit/toktoit/log/15-ascot5-production-run.html">15</a></td>
 </tr>
 <tr class="even">
-<td>reproduce the ITER hybrid benchmark</td>
-<td>wrapper check passes; physics comparison next, tolerance set at the physicist review (<a href="../../../../Blog/toktoit/decisions.html#oq-5">OQ-5</a>)</td>
-<td><a href="../../../../Blog/toktoit/toktoit/log/03-fixed-step-loop.html">entry 3</a></td>
+<td>reproduce a published benchmark</td>
+<td>ITER L-mode case of the TORAX paper against RAPTOR and the paper’s TORAX run (<a href="../../../../Blog/toktoit/decisions.html#oq-12">OQ-12</a>); done, within the tolerance set at the physicist review</td>
+<td><a href="../../../../Blog/toktoit/toktoit/log/11-raptor-lmode-benchmark.html">entry 11</a></td>
 </tr>
 <tr class="odd">
+<td>wrapper check on the ITER hybrid scenarios</td>
+<td>done</td>
+<td><a href="../../../../Blog/toktoit/toktoit/log/03-fixed-step-loop.html">entry 3</a></td>
+</tr>
+<tr class="even">
 <td>energy and particle balance on the benchmark</td>
 <td>done; meets the agreed 10<sup>-6</sup> per step (<a href="../../../../Blog/toktoit/decisions.html#oq-5">OQ-5</a>)</td>
 <td><a href="../../../../Blog/toktoit/toktoit/log/08-energy-particle-balance.html">entry 8</a></td>
@@ -227,8 +232,8 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="against-the-criteria-so-far" class="level2">
-<h2 class="anchored" data-anchor-id="against-the-criteria-so-far">Against the criteria so far</h2>
+<section id="against-the-criteria" class="level2">
+<h2 class="anchored" data-anchor-id="against-the-criteria">Against the criteria</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -239,28 +244,29 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd">
 <td>benchmark within tolerance</td>
-<td>loop vs TORAX’s own driver: <span class="claim">10<sup>−13</sup></span><a href="../../../../Blog/toktoit/claims.html#c-006" class="cid st-tested">C-006</a>; vs the stored ramp-up reference: <span class="claim">10<sup>−14</sup></span><a href="../../../../Blog/toktoit/claims.html#c-007" class="cid st-tested">C-007</a>. The physics comparison waits on the tolerance, and the references themselves are not converged in time (<span class="claim">34%</span><a href="../../../../Blog/toktoit/claims.html#c-013" class="cid st-preliminary">C-013</a> at t = 2 s, flat-top)</td>
+<td>published ITER L-mode case, NRMSD against RAPTOR at t = 10 s: <span class="claim">T_i 1.23% (1.1%), T_e 0.28% (0.71%), n_e 0.03% (0.03%), psi 0.49% (0.41%), q 0.69% (0.70%)</span><a href="../../../../Blog/toktoit/claims.html#c-050" class="cid st-reviewed">C-050</a>; against the paper’s own TORAX run: <span class="claim">T_i 0.13%, T_e 0.50%, n_e 0.01%, psi 0.08%, q 0.16%; Ohmic power density 3.6%</span><a href="../../../../Blog/toktoit/claims.html#c-051" class="cid st-reviewed">C-051</a>; time-step convergence of those numbers: <span class="claim">at most 0.006 percentage points</span><a href="../../../../Blog/toktoit/claims.html#c-052" class="cid st-measured">C-052</a>. Loop vs TORAX’s own driver: <span class="claim">better than 10<sup>-13</sup></span><a href="../../../../Blog/toktoit/claims.html#c-049" class="cid st-measured">C-049</a>. <strong>Passes</strong> the tolerance set at the review</td>
 </tr>
 <tr class="even">
 <td>conservation</td>
-<td>every step’s balance rebuilt from TORAX’s own equations: energy <span class="claim">better than 10<sup>-6</sup></span><a href="../../../../Blog/toktoit/claims.html#c-035" class="cid st-tested">C-035</a>, particles <span class="claim">better than 10<sup>-10</sup></span><a href="../../../../Blog/toktoit/claims.html#c-036" class="cid st-tested">C-036</a> on the ramp-up benchmark; the flat-top’s cheaper solver leaves <span class="claim">about 0.8%</span><a href="../../../../Blog/toktoit/claims.html#c-037" class="cid st-tested">C-037</a> of the energy unaccounted for. Conversion checks: stored energy <span class="claim">10<sup>−16</sup></span><a href="../../../../Blog/toktoit/claims.html#c-009" class="cid st-tested">C-009</a>; heating power <span class="claim">better than 10<sup>−8</sup></span><a href="../../../../Blog/toktoit/claims.html#c-010" class="cid st-tested">C-010</a></td>
+<td>every step’s balance rebuilt from TORAX’s own equations: on the published benchmark <span class="claim">energy 1.1 × 10<sup>-7</sup>, particles 3 × 10<sup>-13</sup></span><a href="../../../../Blog/toktoit/claims.html#c-054" class="cid st-tested">C-054</a>; energy <span class="claim">better than 10<sup>-6</sup></span><a href="../../../../Blog/toktoit/claims.html#c-035" class="cid st-tested">C-035</a>, particles <span class="claim">better than 10<sup>-10</sup></span><a href="../../../../Blog/toktoit/claims.html#c-036" class="cid st-tested">C-036</a> on the ITER hybrid ramp-up; the flat-top’s cheaper solver leaves <span class="claim">about 0.8%</span><a href="../../../../Blog/toktoit/claims.html#c-037" class="cid st-tested">C-037</a> of the energy unaccounted for. Conversion checks: stored energy <span class="claim">10<sup>−16</sup></span><a href="../../../../Blog/toktoit/claims.html#c-009" class="cid st-tested">C-009</a>; heating power <span class="claim">better than 10<sup>−8</sup></span><a href="../../../../Blog/toktoit/claims.html#c-010" class="cid st-tested">C-010</a></td>
 </tr>
 <tr class="odd">
 <td>gradients</td>
-<td>through three coupled TORAX steps: <span class="claim">10<sup>−6</sup></span><a href="../../../../Blog/toktoit/claims.html#c-008" class="cid st-tested">C-008</a> against finite differences</td>
+<td>through three coupled TORAX steps: <span class="claim">10<sup>−6</sup></span><a href="../../../../Blog/toktoit/claims.html#c-008" class="cid st-tested">C-008</a> against finite differences (linear solver); through three Newton steps of the published benchmark: <span class="claim">6 × 10<sup>-9</sup></span><a href="../../../../Blog/toktoit/claims.html#c-055" class="cid st-tested">C-055</a>; forward mode equals reverse mode (<span class="claim">2 × 10<sup>-15</sup> (NaN before the fix)</span><a href="../../../../Blog/toktoit/claims.html#c-062" class="cid st-tested">C-062</a>)</td>
 </tr>
 <tr class="even">
 <td>physicist review</td>
-<td>not yet scheduled</td>
+<td><strong>passed</strong> 1 Oct 2026 (<a href="../../../../Blog/toktoit/toktoit/log/13-m1-physicist-review.html">entry 13</a>)</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="deviations-so-far" class="level2">
-<h2 class="anchored" data-anchor-id="deviations-so-far">Deviations so far</h2>
+<section id="deviations" class="level2">
+<h2 class="anchored" data-anchor-id="deviations">Deviations</h2>
 <ul>
 <li><strong>The benchmark is run through TORAX’s own time step</strong>, called from toktoit’s fixed-step loop, rather than by re-implementing TORAX’s physics in toktoit’s own solver. Same loop shape, far more physics. See <a href="../../../../Blog/toktoit/toktoit/technical/coupling-loop.html#fixed-step-driver">coupling loop</a>.</li>
 <li><strong>The equilibrium is standalone.</strong> FreeGSNKE solves MAST-U equilibria, but they don’t yet feed the transport loop: that needs a transport model valid on a spherical tokamak, which QLKNN is not (M2, M3).</li>
+<li><strong>The published benchmark is an L-mode case with constant transport</strong> (<a href="../../../../Blog/toktoit/decisions.html#oq-12">OQ-12</a>), because it is the only TORAX benchmark published against an independent code. QLKNN and the pedestal are exercised on the ITER hybrid scenarios, which have no independent published profiles.</li>
 <li><strong>The analytic RF model is TORAX’s</strong>, wrapped with a typed entry point and tests, rather than a second implementation.</li>
 </ul>
 </section>

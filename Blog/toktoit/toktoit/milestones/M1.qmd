@@ -1,0 +1,68 @@
+---
+title: M1 · Open baseline
+subtitle: Done 1 Oct 2026
+toc: true
+---
+
+## Goal
+
+Replace the toy physics with real open-source codes, wired into the coupling loop, and show
+that the result reproduces a published benchmark. After M1, a surrogate has something real to
+stand in for, and a trusted baseline to be compared against.
+
+## Acceptance criteria (fixed in the brief before work started)
+
+1. The benchmark matches the published profiles within an agreed tolerance.
+2. Energy and particle balance are conserved to tolerance.
+3. Gradients are finite and checked against finite differences.
+4. **Human gate: physicist review.**
+
+The tolerance in (1) was set at the physicist review: the t = 10 s profiles within 2% of
+RAPTOR (densities 0.1%) and the time traces within 5%. Conservation in (2) must hold to 10^-6^
+per step on converged steps ([OQ-5](/Blog/toktoit/decisions.qmd#oq-5)). **The physicist review passed on 1 Oct 2026**, with the
+owner as reviewer of record ([decisions](../decisions.qmd#m1-review),
+[entry 13](../log/13-m1-physicist-review.qmd)). The claims it judged are marked *reviewed* in
+the [claims register](../claims.qmd).
+
+## Tasks
+
+| task | state | log |
+|---|---|---|
+| coupling loop with Newton-Raphson, Picard kept as fallback | done | [entry 1](../log/01-newton-solver.qmd) |
+| wrap TORAX; ITER hybrid reference runs with provenance | done | [entry 2](../log/02-torax-backend.qmd) |
+| fixed-step loop driving TORAX's own time step; time-convergence study | done | [entry 3](../log/03-fixed-step-loop.qmd) |
+| QLKNN behind the guard, inside TORAX | done | [entry 4](../log/04-guard-inside-torax.qmd) |
+| analytic Gaussian RF heating | done | [entry 5](../log/05-stalls-rf-and-builds.qmd) |
+| wrap FreeGSNKE; MAST-U free-boundary equilibrium | done (standalone) | [entry 6](../log/06-freegsnke-mastu.qmd) |
+| ASCOT5 sources | done: fusion-alpha heating from ASCOT5 into TORAX, checked against TORAX's local model ([71.8 MW vs 70.5 MW]{.claim}[C-064](/Blog/toktoit/claims.qmd#c-064){.cid .st-measured}, 6400 alphas); orbit tolerance 10^-7^ ([0.348 at 10^-6^, 0.331 at 10^-7^]{.claim}[C-058](/Blog/toktoit/claims.qmd#c-058){.cid .st-reviewed}, [electrons -0.16%, ions +0.08%]{.claim}[C-066](/Blog/toktoit/claims.qmd#c-066){.cid .st-measured}). The production run ([OQ-13](/Blog/toktoit/decisions.qmd#oq-13)) finished on 2 Oct 2026 | [entries 10](../log/10-ascot5-alpha-heating.qmd), [12](../log/12-ascot5-second-run.qmd), [15](../log/15-ascot5-production-run.qmd) |
+| reproduce a published benchmark | ITER L-mode case of the TORAX paper against RAPTOR and the paper's TORAX run ([OQ-12](/Blog/toktoit/decisions.qmd#oq-12)); done, within the tolerance set at the physicist review | [entry 11](../log/11-raptor-lmode-benchmark.qmd) |
+| wrapper check on the ITER hybrid scenarios | done | [entry 3](../log/03-fixed-step-loop.qmd) |
+| energy and particle balance on the benchmark | done; meets the agreed 10^-6^ per step ([OQ-5](/Blog/toktoit/decisions.qmd#oq-5)) | [entry 8](../log/08-energy-particle-balance.qmd) |
+
+## Against the criteria
+
+| criterion | where it stands |
+|---|---|
+| benchmark within tolerance | published ITER L-mode case, NRMSD against RAPTOR at t = 10 s: [T_i 1.23% (1.1%), T_e 0.28% (0.71%), n_e 0.03% (0.03%), psi 0.49% (0.41%), q 0.69% (0.70%)]{.claim}[C-050](/Blog/toktoit/claims.qmd#c-050){.cid .st-reviewed}; against the paper's own TORAX run: [T_i 0.13%, T_e 0.50%, n_e 0.01%, psi 0.08%, q 0.16%; Ohmic power density 3.6%]{.claim}[C-051](/Blog/toktoit/claims.qmd#c-051){.cid .st-reviewed}; time-step convergence of those numbers: [at most 0.006 percentage points]{.claim}[C-052](/Blog/toktoit/claims.qmd#c-052){.cid .st-measured}. Loop vs TORAX's own driver: [better than 10^-13^]{.claim}[C-049](/Blog/toktoit/claims.qmd#c-049){.cid .st-measured}. **Passes** the tolerance set at the review |
+| conservation | every step's balance rebuilt from TORAX's own equations: on the published benchmark [energy 1.1 × 10^-7^, particles 3 × 10^-13^]{.claim}[C-054](/Blog/toktoit/claims.qmd#c-054){.cid .st-tested}; energy [better than 10^-6^]{.claim}[C-035](/Blog/toktoit/claims.qmd#c-035){.cid .st-tested}, particles [better than 10^-10^]{.claim}[C-036](/Blog/toktoit/claims.qmd#c-036){.cid .st-tested} on the ITER hybrid ramp-up; the flat-top's cheaper solver leaves [about 0.8%]{.claim}[C-037](/Blog/toktoit/claims.qmd#c-037){.cid .st-tested} of the energy unaccounted for. Conversion checks: stored energy [10^−16^]{.claim}[C-009](/Blog/toktoit/claims.qmd#c-009){.cid .st-tested}; heating power [better than 10^−8^]{.claim}[C-010](/Blog/toktoit/claims.qmd#c-010){.cid .st-tested} |
+| gradients | through three coupled TORAX steps: [10^−6^]{.claim}[C-008](/Blog/toktoit/claims.qmd#c-008){.cid .st-tested} against finite differences (linear solver); through three Newton steps of the published benchmark: [6 × 10^-9^]{.claim}[C-055](/Blog/toktoit/claims.qmd#c-055){.cid .st-tested}; forward mode equals reverse mode ([2 × 10^-15^ (NaN before the fix)]{.claim}[C-062](/Blog/toktoit/claims.qmd#c-062){.cid .st-tested}) |
+| physicist review | **passed** 1 Oct 2026 ([entry 13](../log/13-m1-physicist-review.qmd)) |
+
+## Deviations
+
+- **The benchmark is run through TORAX's own time step**, called from toktoit's fixed-step
+  loop, rather than by re-implementing TORAX's physics in toktoit's own solver. Same loop
+  shape, far more physics. See [coupling loop](../technical/coupling-loop.qmd#fixed-step-driver).
+- **The equilibrium is standalone.** FreeGSNKE solves MAST-U equilibria, but they don't yet
+  feed the transport loop: that needs a transport model valid on a spherical tokamak, which
+  QLKNN is not (M2, M3).
+- **The published benchmark is an L-mode case with constant transport** ([OQ-12](/Blog/toktoit/decisions.qmd#oq-12)), because it is
+  the only TORAX benchmark published against an independent code. QLKNN and the pedestal are
+  exercised on the ITER hybrid scenarios, which have no independent published profiles.
+- **The analytic RF model is TORAX's**, wrapped with a typed entry point and tests, rather than
+  a second implementation.
+
+## Future extensions
+
+Extending the benchmark to a STEP power-plant flat-top is planned as a future extension
+([OQ-7](/Blog/toktoit/decisions.qmd#oq-7), deferred). For now the work stays with the ITER benchmark and MAST-U.

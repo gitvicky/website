@@ -412,5 +412,23 @@
   },
   "Blog/toktoit/log/08-energy-particle-balance.qmd": {
     "08-energy-particle-balance.html": "db473622"
+  },
+  "Blog/toktoit/toktoit/log/12-ascot5-second-run.qmd": {
+    "12-ascot5-second-run.html": "7f65e09c"
+  },
+  "Blog/toktoit/toktoit/log/10-ascot5-alpha-heating.qmd": {
+    "10-ascot5-alpha-heating.html": "8f6853e2"
+  },
+  "Blog/toktoit/toktoit/log/11-raptor-lmode-benchmark.qmd": {
+    "11-raptor-lmode-benchmark.html": "115adf26"
+  },
+  "Blog/toktoit/toktoit/log/13-m1-physicist-review.qmd": {
+    "13-m1-physicist-review.html": "c1be31bb"
+  },
+  "Blog/toktoit/toktoit/log/15-ascot5-production-run.qmd": {
+    "15-ascot5-production-run.html": "4102577f"
+  },
+  "Blog/toktoit/toktoit/log/14-forward-mode-nan.qmd": {
+    "14-forward-mode-nan.html": "8ec12226"
   }
 }

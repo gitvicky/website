@@ -3,6 +3,7 @@ project:
   output-dir: docs
   resources:
     - CNAME
+    - Blog/Upgrade_viva_Review.pdf
 
 website:
   title: "Vignesh Gopakumar"

@@ -1,0 +1,62 @@
+---
+title: 'ASCOT5 second cluster run: a tighter orbit tolerance, and a production run
+  lost to a time limit'
+date: '2026-10-01'
+categories:
+- measured
+entry: 12
+milestone: M1
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 12 · milestone M1
+:::
+
+[Entry 10](10-ascot5-alpha-heating.qmd) computed the fusion-alpha heating with ASCOT5 and fed
+it back into TORAX (see the [Primer](../primer.qmd)). Two things were left open: whether the
+orbit-integration tolerance was tight enough, and how the heating is distributed in radius,
+which the first run's sample of alphas was too small to resolve. The owner approved a second
+cluster job for both ([OQ-11](/Blog/toktoit/decisions.qmd#oq-11)): ten times more alphas for the radial profile, and a smaller
+sample at a tolerance ten times tighter as the check.
+
+## What happened
+
+The tolerance check worked. The production run did not. ASCOT5 stops any alpha that has used
+more than a set amount of computing time, as a guard against runaway markers. We set that limit
+from the average cost per alpha in the first job. ASCOT5, however, advances alphas in batches
+and charges every alpha the time of its whole batch, so the limit stopped
+[2823 of 6400 markers, 18% of the birth power]{.claim}[C-057](/Blog/toktoit/claims.qmd#c-057){.cid .st-measured}. The heating they had not yet delivered is missing from the profiles, so
+the run is discarded. The error was ours, in reading what the limit measures. toktoit now sets
+no such limit (the cluster's job time limit bounds the run instead), records the undelivered
+share with every profile, and refuses to pass profiles to TORAX when that share exceeds one percent.
+
+## What the check showed
+
+The tighter tolerance, in a sample of the same size as the first job's, changes the share of
+the heating that goes to ions: [0.348 at 10^-6^, 0.331 at 10^-7^]{.claim}[C-058](/Blog/toktoit/claims.qmd#c-058){.cid .st-reviewed}. The share going to electrons does not change,
+and the energy accounting closes four times better. So the first job's tolerance was not tight
+enough for ion heating, and the tighter one is now the working value. The first job's analysis
+had put part of the energy-accounting error down to how ASCOT5's output is binned; it was mostly
+the orbit tolerance, and the technical page now says so.
+
+| ASCOT5 at the tighter tolerance vs TORAX's own alpha model | |
+|---|---|
+| total alpha heating | [72.2 MW vs 70.5 MW]{.claim}[C-059](/Blog/toktoit/claims.qmd#c-059){.cid .st-reviewed} |
+| effect on TORAX after two seconds, heating held fixed | [+0.03% in stored energy (central T_e +0.5%, T_e and T_i profiles 0.6%)]{.claim}[C-060](/Blog/toktoit/claims.qmd#c-060){.cid .st-reviewed} |
+| alphas stopped by the time limit in the discarded production run | [2823 of 6400 markers, 18% of the birth power]{.claim}[C-057](/Blog/toktoit/claims.qmd#c-057){.cid .st-measured} |
+
+The total heating and its split between electrons and ions agree with TORAX's simpler model to
+a few percent. Where in radius the heat lands is still not resolved: the heating's centre moved
+from slightly inside TORAX's to slightly outside it between the two samples, which is sampling
+noise. Resolving it needs the production run.
+
+**Where this stands**: M1's ASCOT5 task is done, with totals checked against TORAX. A
+production run that resolves the radial profile awaits a decision ([OQ-13](/Blog/toktoit/decisions.qmd#oq-13)); the recommendation
+is not to hold the M1 physicist review for it.
+
+Technical details → [Backends: fusion-alpha heating](../technical/backends.qmd#ascot5-alpha)
+
+::: {.entry-links}
+**Technical details →** [Backends › ascot5 alpha](/Blog/toktoit/technical/backends.qmd#ascot5-alpha)  
+**Decisions →** [OQ-11](/Blog/toktoit/decisions.qmd#oq-11) · [OQ-13](/Blog/toktoit/decisions.qmd#oq-13)
+:::

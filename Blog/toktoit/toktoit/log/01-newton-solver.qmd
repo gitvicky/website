@@ -1,0 +1,68 @@
+---
+title: Newton-Raphson solver for the coupling loop
+date: '2026-09-21'
+categories:
+- built
+entry: 1
+milestone: M1
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 1 · milestone M1
+:::
+
+We are building a tokamak plasma simulation in which slow physics modules can be replaced by
+neural networks. Each network sits behind a guard that checks whether the current plasma state
+is inside the conditions it was trained on, and switches to a physics model when it is not. The
+[primer](../primer.qmd) describes the setting. This entry covers the nonlinear solver used
+inside each time step.
+
+## The problem
+
+Each time step solves a nonlinear system. The heat flux out of the plasma depends on the
+temperature profile, and the temperature profile depends on the heat flux. Milestone M0 solved
+this with Picard iteration: evaluate the fluxes at the current guess, solve the resulting
+linear system, blend with the previous guess, and repeat a fixed number of times.
+
+Plasma transport is *stiff*: above a critical temperature gradient, turbulent transport
+increases sharply. Picard iteration converges poorly on stiff problems. A guess with too steep
+a gradient gives a large flux, the next guess is too flat and gives a small flux, and the
+iteration oscillates. The placeholder transport model in M0 was made less stiff on purpose, so
+the problem did not appear there. It will appear with the real transport models.
+
+## What we changed
+
+We replaced Picard with Newton-Raphson, with two conditions. First, the number of iterations is
+fixed, not "until converged", because the whole simulation is compiled as one program and
+differentiated end to end, and a data-dependent loop length makes that harder. The final
+residual is reported instead of convergence being assumed. Second, each iteration also
+computes the Picard update and keeps whichever of the two has the smaller residual. The new
+solver therefore does no worse than Picard on any iteration, and Picard remains available as
+the fallback the owner asked for.
+
+The Jacobian is computed by automatic differentiation, not by hand.
+
+| toy scenario | Picard | Newton |
+|---|---|---|
+| default settings | [3 × 10^−5^]{.claim}[C-002](/Blog/toktoit/claims.qmd#c-002){.cid .st-measured} | [10^−14^]{.claim}[C-003](/Blog/toktoit/claims.qmd#c-003){.cid .st-tested} |
+| stiff settings | stalls, reported | [3 × 10^−11^]{.claim}[C-005](/Blog/toktoit/claims.qmd#c-005){.cid .st-tested} |
+
+On the first step the residual roughly squares at each iteration until it reaches round-off,
+which is the expected behaviour of Newton's method near the solution. Tests check both this
+convergence pattern and the stiff case.
+
+## Cost
+
+Newton is [200× slower]{.claim}[C-004](/Blog/toktoit/claims.qmd#c-004){.cid .st-measured} on the toy problem. Almost all of the extra time is spent
+building the Jacobian. Transport is local, so the Jacobian is mostly zeros and could be built
+about ten times faster with a sparse method. We have not done this yet: if the locality
+assumption were wrong for some transport model, the derivatives would be wrong without any
+error being raised, so we will check it against the real transport models first. It is
+recorded as a known ceiling.
+
+**Where this stands**: M1 in progress. The owner approved Newton-Raphson ([OQ-4](/Blog/toktoit/decisions.qmd#oq-4)).
+
+::: {.entry-links}
+**Technical details →** [Coupling loop › nonlinear iteration](/Blog/toktoit/technical/coupling-loop.qmd#nonlinear-iteration)  
+**Decisions →** [OQ-4](/Blog/toktoit/decisions.qmd#oq-4)
+:::

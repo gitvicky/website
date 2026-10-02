@@ -1,0 +1,62 @@
+---
+title: 'Fix: NaN forward-mode gradients through TORAX''s Newton solver'
+date: '2026-10-01'
+categories:
+- fixed
+entry: 14
+milestone: M1
+---
+
+::: {.entry-meta}
+[bug fix]{.chip .fixed} Entry 14 · milestone M1
+:::
+
+toktoit is written in JAX so that the whole simulation can be differentiated: the derivative of
+any output with respect to any input (see the [Primer](../primer.qmd)). JAX offers two ways to
+compute it. Reverse mode is efficient for one output and many inputs; forward mode is efficient
+for few inputs and many outputs, and the brief asks for it in milestone M5, where uncertainty
+is propagated through a linearised model. [Entry 11](11-raptor-lmode-benchmark.qmd) found that
+reverse mode through TORAX's Newton solver matched finite differences, but forward mode returned
+NaN ("not a number") for every component, even through a single step.
+
+## What was wrong
+
+TORAX solves each step's nonlinear equations by Newton iteration and lets JAX differentiate the
+converged answer directly, through the implicit-function theorem, rather than through the
+iterations. In forward mode JAX then differentiates the equations with respect to every
+quantity they depend on, including the plasma geometry, which does not change and so has a
+derivative of zero. One of TORAX's formulas, the fraction of trapped particles, contains the
+square root of the local inverse aspect ratio. That ratio is exactly zero on the magnetic axis,
+and the slope of a square root at zero is infinite. Zero times infinity is NaN in floating-point
+arithmetic, and the solve that follows spreads it to every value. Reverse mode puts the same NaN
+only into the geometry's derivative, which nothing uses, so it never showed.
+
+We found it by tracing the derivative computation and evaluating it one operation at a time
+until the first NaN appeared. Each piece checked separately was finite, which is why the cause
+was not obvious.
+
+## The fix and its check
+
+toktoit now replaces that one TORAX function with a version whose square root has slope zero at
+zero. The values it returns are unchanged: stored energy after three steps is identical to the
+last bit with and without it. The replacement is applied only when TORAX's function matches,
+character for character, the version it was written for, so a future TORAX release is never
+silently overridden.
+
+| gradient of stored energy through three Newton steps | |
+|---|---|
+| reverse mode vs finite differences | [6 × 10^-9^]{.claim}[C-055](/Blog/toktoit/claims.qmd#c-055){.cid .st-tested} |
+| forward mode vs reverse mode, after the fix | [2 × 10^-15^ (NaN before the fix)]{.claim}[C-062](/Blog/toktoit/claims.qmd#c-062){.cid .st-tested} |
+
+The check is independent of the fix in one respect: reverse mode never went through the patched
+derivative path at all, and forward mode now agrees with it.
+
+**Where this stands**: M1 passed its physicist review ([entry 13](13-m1-physicist-review.qmd));
+this fix came after it and is tested, not reviewed. Forward-mode propagation is available for
+M5. A report to the TORAX developers is drafted for the owner to send.
+
+Technical details → [Coupling loop: NaN forward-mode gradients](../technical/coupling-loop.qmd#forward-mode-nan)
+
+::: {.entry-links}
+**Technical details →** [Coupling loop › forward mode nan](/Blog/toktoit/technical/coupling-loop.qmd#forward-mode-nan)
+:::

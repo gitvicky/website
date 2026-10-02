@@ -1,0 +1,263 @@
+<svg class="tk-diagram tk-tracking" viewBox="0 0 1200 610" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="tkr-title tkr-desc">
+<title id="tkr-title">How each toktoit run is recorded and mirrored to Simvue</title>
+<desc id="tkr-desc">Diagram. On the left, the toktoit commands that run physics: torax, torax-loop, benchmark-raptor, equilibrium, ascot-alpha, ascot-apply and run, plus dataset generation (M2) and surrogate training (M3), which are planned. Each opens one run record. In the middle, the life of a run: start_run records the configuration and provenance (git commit, package versions, configuration hash, input hashes); log_params records the settings; the compiled loop runs with no tracking calls inside and returns its full trace; log_series then writes one record per step with the step number and simulation time; alerts and events are raised; output files are saved with their provenance; finish marks the run completed or failed. On the right, every call goes to two places: a local record under runs/, always written, and a Simvue mirror. On a login node the mirror writes to the Simvue server directly; inside a SLURM job it writes to an offline cache, which make simvue-push uploads from a login node. On the server each run sits in folder /tkit/&lt;command&gt; with tags, metadata, metrics against step and simulation time, events, alerts and files. If Simvue cannot start, the run continues on the local record.</desc>
+<defs><marker id="tkr-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker><marker id="tkr-ahp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker></defs>
+<style>.tk-diagram text{font-family:inherit}.tk-diagram text.halo{paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}</style>
+<rect x="20" y="20" width="280" height="560" rx="4" fill="#fafafa" stroke="#bdbdbd" stroke-width="1"/>
+<text font-size="12.5" text-anchor="start" fill="#6b6b6b">
+<tspan x="32" y="36.0" dominant-baseline="middle">Commands that run physics</tspan>
+</text>
+<g data-node="rt-torax">
+<rect x="40" y="45" width="220" height="46" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="150.0" y="59.6" dominant-baseline="middle"><tspan font-weight="600">torax</tspan></tspan>
+<tspan x="150.0" y="76.4" dominant-baseline="middle">TORAX reference run</tspan>
+</text>
+</g>
+<path d="M260,68 L280,68" fill="none" stroke="#000" stroke-width="1.4"/>
+<g data-node="rt-loop">
+<rect x="40" y="99" width="220" height="46" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="150.0" y="113.6" dominant-baseline="middle"><tspan font-weight="600">torax-loop</tspan></tspan>
+<tspan x="150.0" y="130.4" dominant-baseline="middle">fixed-step loop, guard</tspan>
+</text>
+</g>
+<path d="M260,122 L280,122" fill="none" stroke="#000" stroke-width="1.4"/>
+<g data-node="rt-bench">
+<rect x="40" y="153" width="220" height="46" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="150.0" y="167.6" dominant-baseline="middle"><tspan font-weight="600">benchmark-raptor</tspan></tspan>
+<tspan x="150.0" y="184.4" dominant-baseline="middle">comparison with RAPTOR</tspan>
+</text>
+</g>
+<path d="M260,176 L280,176" fill="none" stroke="#000" stroke-width="1.4"/>
+<g data-node="rt-eq">
+<rect x="40" y="207" width="220" height="46" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="150.0" y="221.6" dominant-baseline="middle"><tspan font-weight="600">equilibrium</tspan></tspan>
+<tspan x="150.0" y="238.4" dominant-baseline="middle">FreeGSNKE equilibrium</tspan>
+</text>
+</g>
+<path d="M260,230 L280,230" fill="none" stroke="#000" stroke-width="1.4"/>
+<g data-node="rt-alpha">
+<rect x="40" y="261" width="220" height="46" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="150.0" y="275.6" dominant-baseline="middle"><tspan font-weight="600">ascot-alpha</tspan></tspan>
+<tspan x="150.0" y="292.4" dominant-baseline="middle">ASCOT5 alphas, on the cluster</tspan>
+</text>
+</g>
+<path d="M260,284 L280,284" fill="none" stroke="#000" stroke-width="1.4"/>
+<g data-node="rt-apply">
+<rect x="40" y="315" width="220" height="46" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="150.0" y="329.6" dominant-baseline="middle"><tspan font-weight="600">ascot-apply</tspan></tspan>
+<tspan x="150.0" y="346.4" dominant-baseline="middle">alpha heating into TORAX</tspan>
+</text>
+</g>
+<path d="M260,338 L280,338" fill="none" stroke="#000" stroke-width="1.4"/>
+<g data-node="rt-toy">
+<rect x="40" y="369" width="220" height="46" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="150.0" y="383.6" dominant-baseline="middle"><tspan font-weight="600">run</tspan></tspan>
+<tspan x="150.0" y="400.4" dominant-baseline="middle">toy models</tspan>
+</text>
+</g>
+<path d="M260,392 L280,392" fill="none" stroke="#000" stroke-width="1.4"/>
+<text font-size="12" text-anchor="middle" fill="#6b6b6b">
+<tspan x="150" y="431.0" dominant-baseline="middle">planned</tspan>
+</text>
+<g data-node="rt-data">
+<rect x="40" y="445" width="220" height="46" rx="3" fill="#fff" stroke="#9a9a9a" stroke-width="1.2" stroke-dasharray="3 4"/>
+<text font-size="12.5" text-anchor="middle" fill="#6b6b6b">
+<tspan x="150.0" y="459.6" dominant-baseline="middle"><tspan font-weight="600">Dataset generation</tspan></tspan>
+<tspan x="150.0" y="476.4" dominant-baseline="middle">M2</tspan>
+</text>
+</g>
+<g data-node="rt-train">
+<rect x="40" y="499" width="220" height="46" rx="3" fill="#fff" stroke="#9a9a9a" stroke-width="1.2" stroke-dasharray="3 4"/>
+<text font-size="12.5" text-anchor="middle" fill="#6b6b6b">
+<tspan x="150.0" y="513.6" dominant-baseline="middle"><tspan font-weight="600">Surrogate training</tspan></tspan>
+<tspan x="150.0" y="530.4" dominant-baseline="middle">M3</tspan>
+</text>
+</g>
+<path d="M260,468 L280,468" fill="none" stroke="#9a9a9a" stroke-width="1.4" stroke-dasharray="3 4"/>
+<path d="M260,522 L280,522" fill="none" stroke="#9a9a9a" stroke-width="1.4" stroke-dasharray="3 4"/>
+<path d="M280,392 L280,522" fill="none" stroke="#9a9a9a" stroke-width="1.4" stroke-dasharray="3 4"/>
+<path d="M280,68 L280,392" fill="none" stroke="#000" stroke-width="1.4"/>
+<path d="M280,290 L338,290" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"/>
+<text font-size="12" text-anchor="middle" fill="#000" class="halo">
+<tspan x="309" y="276.0" dominant-baseline="middle">one run</tspan>
+</text>
+<rect x="340" y="20" width="360" height="560" rx="4" fill="#fafafa" stroke="#bdbdbd" stroke-width="1"/>
+<text font-size="12.5" text-anchor="start" fill="#6b6b6b">
+<tspan x="352" y="36.0" dominant-baseline="middle">One run, from start to finish</tspan>
+</text>
+<g data-node="rt-start">
+<rect x="360" y="45" width="320" height="60" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="520.0" y="58.1" dominant-baseline="middle"><tspan font-weight="600">start_run</tspan></tspan>
+<tspan x="520.0" y="75.0" dominant-baseline="middle">configuration and provenance: git commit,</tspan>
+<tspan x="520.0" y="91.9" dominant-baseline="middle">package versions, config hash, input hashes</tspan>
+</text>
+</g>
+<path d="M520,105 L520,120" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"/>
+<g data-node="rt-params">
+<rect x="360" y="122" width="320" height="60" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="520.0" y="143.6" dominant-baseline="middle"><tspan font-weight="600">log_params</tspan></tspan>
+<tspan x="520.0" y="160.4" dominant-baseline="middle">settings: scenario, time step, steps, device</tspan>
+</text>
+</g>
+<path d="M520,182 L520,197" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"/>
+<g data-node="rt-jit">
+<rect x="360" y="199" width="320" height="60" rx="3" fill="#dbe4fb" stroke="#1d4ed8" stroke-width="2"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="520.0" y="212.1" dominant-baseline="middle"><tspan font-weight="600">Compiled loop</tspan></tspan>
+<tspan x="520.0" y="229.0" dominant-baseline="middle">no tracking calls inside;</tspan>
+<tspan x="520.0" y="245.9" dominant-baseline="middle">returns the full trace</tspan>
+</text>
+</g>
+<path d="M520,259 L520,274" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"/>
+<g data-node="rt-series">
+<rect x="360" y="276" width="320" height="60" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="520.0" y="289.1" dominant-baseline="middle"><tspan font-weight="600">log_series</tspan></tspan>
+<tspan x="520.0" y="306.0" dominant-baseline="middle">one record per step, with the step</tspan>
+<tspan x="520.0" y="322.9" dominant-baseline="middle">number and the simulation time</tspan>
+</text>
+</g>
+<path d="M520,336 L520,351" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"/>
+<g data-node="rt-alert">
+<rect x="360" y="353" width="320" height="60" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="520.0" y="366.1" dominant-baseline="middle"><tspan font-weight="600">Alerts and events</tspan></tspan>
+<tspan x="520.0" y="383.0" dominant-baseline="middle">solver stall, result outside tolerance,</tspan>
+<tspan x="520.0" y="399.9" dominant-baseline="middle">non-finite value</tspan>
+</text>
+</g>
+<path d="M520,413 L520,428" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"/>
+<g data-node="rt-artifact">
+<rect x="360" y="430" width="320" height="60" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="520.0" y="443.1" dominant-baseline="middle"><tspan font-weight="600">log_artifact</tspan></tspan>
+<tspan x="520.0" y="460.0" dominant-baseline="middle">output files, each with its</tspan>
+<tspan x="520.0" y="476.9" dominant-baseline="middle">provenance JSON</tspan>
+</text>
+</g>
+<path d="M520,490 L520,505" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"/>
+<g data-node="rt-finish">
+<rect x="360" y="507" width="320" height="60" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="520.0" y="528.6" dominant-baseline="middle"><tspan font-weight="600">finish</tspan></tspan>
+<tspan x="520.0" y="545.4" dominant-baseline="middle">completed, or failed on an exception</tspan>
+</text>
+</g>
+<rect x="740" y="20" width="440" height="210" rx="4" fill="#fafafa" stroke="#bdbdbd" stroke-width="1"/>
+<text font-size="12.5" text-anchor="start" fill="#6b6b6b">
+<tspan x="752" y="36.0" dominant-baseline="middle">Local record, always written</tspan>
+</text>
+<g data-node="rt-local">
+<rect x="755" y="42" width="410" height="172" rx="3" fill="#f6f6f6" stroke="#8a8a8a"/>
+<text font-size="12" text-anchor="start" fill="#000" style="font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+<tspan x="768" y="60.0" dominant-baseline="middle">runs/‹date›-‹time›-‹command›/</tspan>
+</text>
+<text font-size="12" text-anchor="start" fill="#000" style="font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+<tspan x="786" y="80.0" dominant-baseline="middle">params.json  config.yaml</tspan>
+</text>
+<text font-size="11.5" text-anchor="end" fill="#6b6b6b">
+<tspan x="1152" y="80.0" dominant-baseline="middle">settings</tspan>
+</text>
+<text font-size="12" text-anchor="start" fill="#000" style="font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+<tspan x="786" y="100.0" dominant-baseline="middle">provenance.json</tspan>
+</text>
+<text font-size="11.5" text-anchor="end" fill="#6b6b6b">
+<tspan x="1152" y="100.0" dominant-baseline="middle">code, versions, inputs</tspan>
+</text>
+<text font-size="12" text-anchor="start" fill="#000" style="font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+<tspan x="786" y="120.0" dominant-baseline="middle">metrics.jsonl</tspan>
+</text>
+<text font-size="11.5" text-anchor="end" fill="#6b6b6b">
+<tspan x="1152" y="120.0" dominant-baseline="middle">one line per step</tspan>
+</text>
+<text font-size="12" text-anchor="start" fill="#000" style="font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+<tspan x="786" y="140.0" dominant-baseline="middle">events.jsonl</tspan>
+</text>
+<text font-size="11.5" text-anchor="end" fill="#6b6b6b">
+<tspan x="1152" y="140.0" dominant-baseline="middle">events, alerts, status</tspan>
+</text>
+<text font-size="12" text-anchor="start" fill="#000" style="font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+<tspan x="786" y="160.0" dominant-baseline="middle">‹output›.nc</tspan>
+</text>
+<text font-size="11.5" text-anchor="end" fill="#6b6b6b">
+<tspan x="1152" y="160.0" dominant-baseline="middle">output file</tspan>
+</text>
+<text font-size="12" text-anchor="start" fill="#000" style="font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+<tspan x="786" y="180.0" dominant-baseline="middle">‹output›.nc.provenance.json</tspan>
+</text>
+<text font-size="11.5" text-anchor="end" fill="#6b6b6b">
+<tspan x="1152" y="180.0" dominant-baseline="middle">its provenance</tspan>
+</text>
+<text font-size="12" text-anchor="start" fill="#000" style="font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+<tspan x="786" y="200.0" dominant-baseline="middle">simvue.json</tspan>
+</text>
+<text font-size="11.5" text-anchor="end" fill="#6b6b6b">
+<tspan x="1152" y="200.0" dominant-baseline="middle">Simvue run id, if mirrored</tspan>
+</text>
+</g>
+<rect x="740" y="250" width="440" height="330" rx="4" fill="#fafafa" stroke="#bdbdbd" stroke-width="1"/>
+<text font-size="12.5" text-anchor="start" fill="#6b6b6b">
+<tspan x="752" y="266.0" dominant-baseline="middle">Simvue mirror</tspan>
+</text>
+<g data-node="rt-online">
+<rect x="760" y="290" width="180" height="48" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="850.0" y="305.6" dominant-baseline="middle"><tspan font-weight="600">On a login node</tspan></tspan>
+<tspan x="850.0" y="322.4" dominant-baseline="middle">online</tspan>
+</text>
+</g>
+<g data-node="rt-offline">
+<rect x="760" y="360" width="180" height="56" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="850.0" y="379.6" dominant-baseline="middle"><tspan font-weight="600">Inside a SLURM job</tspan></tspan>
+<tspan x="850.0" y="396.4" dominant-baseline="middle">offline cache on $WORK</tspan>
+</text>
+</g>
+<g data-node="rt-push">
+<rect x="760" y="438" width="180" height="48" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="850.0" y="453.6" dominant-baseline="middle"><tspan font-weight="600">make simvue-push</tspan></tspan>
+<tspan x="850.0" y="470.4" dominant-baseline="middle">from a login node</tspan>
+</text>
+</g>
+<g data-node="rt-server">
+<rect x="965" y="280" width="200" height="280" rx="3" fill="#f6f6f6" stroke="#8a8a8a" stroke-width="1"/>
+<text font-size="12" text-anchor="middle" fill="#000">
+<tspan x="1065.0" y="339.0" dominant-baseline="middle"><tspan font-weight="600">Simvue server</tspan></tspan>
+<tspan x="1065.0" y="355.2" dominant-baseline="middle">uk.simvue.io</tspan>
+<tspan x="1065.0" y="371.4" dominant-baseline="middle"></tspan>
+<tspan x="1065.0" y="387.6" dominant-baseline="middle">folder /tkit/‹command›</tspan>
+<tspan x="1065.0" y="403.8" dominant-baseline="middle">tags: tkit, tier, command</tspan>
+<tspan x="1065.0" y="420.0" dominant-baseline="middle">metadata: config.*,</tspan>
+<tspan x="1065.0" y="436.2" dominant-baseline="middle">provenance.*, slurm.*</tspan>
+<tspan x="1065.0" y="452.4" dominant-baseline="middle">metrics against step</tspan>
+<tspan x="1065.0" y="468.6" dominant-baseline="middle">and simulation time</tspan>
+<tspan x="1065.0" y="484.8" dominant-baseline="middle">events, alerts</tspan>
+<tspan x="1065.0" y="501.0" dominant-baseline="middle">files: inputs, outputs</tspan>
+</text>
+</g>
+<path d="M940,314 L963,314" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"/>
+<path d="M850,416 L850,436" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"/>
+<path d="M940,462 L963,462" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"/>
+<text font-size="11.5" text-anchor="middle" fill="#6b6b6b">
+<tspan x="850" y="512.5" dominant-baseline="middle">If Simvue cannot start,</tspan>
+<tspan x="850" y="528.0" dominant-baseline="middle">the run carries on with</tspan>
+<tspan x="850" y="543.5" dominant-baseline="middle">the local record only.</tspan>
+</text>
+<path d="M700,128 L753,128" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"/>
+<path d="M700,388 L758,388" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"/>
+<path d="M722,388 L722,314 L758,314" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkr-ah)"/>
+<text font-size="11.5" text-anchor="middle" fill="#6b6b6b">
+<tspan x="720" y="92.2" dominant-baseline="middle">every</tspan>
+<tspan x="720" y="107.8" dominant-baseline="middle">call</tspan>
+</text>
+</svg>

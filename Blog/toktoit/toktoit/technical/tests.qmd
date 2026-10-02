@@ -1,0 +1,51 @@
+---
+title: Tests
+toc: true
+toc-depth: 3
+date-modified: '2026-10-01'
+---
+
+## Purpose
+
+What each category of test is there to prove, and which claims rest on it. The suite is run in
+full and again with every gated code disabled (`TKIT_TIER_A_ONLY=1`); at the last publish,
+107 tests passed in the first mode and 107 in the
+second, at commit `6b386bc`. Tests that need an optional code (TORAX, FreeGSNKE,
+ASCOT5, Aurora) or a downloaded file skip cleanly when it is absent.
+
+The code now has a private hosted repository and the continuous-integration workflow runs on
+every change ([OQ-3](/Blog/toktoit/decisions.qmd#oq-3)). Until it has passed, these counts come from runs made before each publish,
+not from CI.
+
+## Categories
+
+| category | proves | examples | claims |
+|---|---|---|---|
+| **unit** | each component does what its interface says, in isolation | config parsing and scalar coercion; domain membership under `jit`/`vmap`; guard decisions; ensemble shapes; IMAS round trips; provenance validation; run tracking (local record, alerts, failed status, the Simvue mirror offline); smoke tests of ASCOT5 and Aurora | [C-024](/Blog/toktoit/claims.qmd#c-024), [C-031](/Blog/toktoit/claims.qmd#c-031) |
+| **conservation** | the discrete equations conserve what the physics conserves | single-step particle and energy balance; every step's balance reconstructed from a full run's trace; stored-energy identity over a run; TORAX's per-step energy and particle balance on the ITER benchmark, with the edge flux computed independently | [C-026](/Blog/toktoit/claims.qmd#c-026), [C-027](/Blog/toktoit/claims.qmd#c-027), [C-035](/Blog/toktoit/claims.qmd#c-035), [C-036](/Blog/toktoit/claims.qmd#c-036), [C-037](/Blog/toktoit/claims.qmd#c-037), [C-039](/Blog/toktoit/claims.qmd#c-039) |
+| **physics** | responses have the right sign and shape | more heating gives higher temperature; critical-gradient stiffness; Gaussian RF power, position and response; MAST-U equilibrium current, axis, completeness and resampling | [C-017](/Blog/toktoit/claims.qmd#c-017), [C-018](/Blog/toktoit/claims.qmd#c-018), [C-020](/Blog/toktoit/claims.qmd#c-020), [C-021](/Blog/toktoit/claims.qmd#c-021) |
+| **regression** | known results stay known | 100 compiled toy steps; Newton converges quadratically and where Picard stalls; loop equals TORAX's own driver; tracked command-line run end to end; reference reproduced; first-order time convergence; guard identities; TORAX conversion identities | [C-001](/Blog/toktoit/claims.qmd#c-001), [C-003](/Blog/toktoit/claims.qmd#c-003), [C-005](/Blog/toktoit/claims.qmd#c-005), [C-006](/Blog/toktoit/claims.qmd#c-006), [C-007](/Blog/toktoit/claims.qmd#c-007), [C-009](/Blog/toktoit/claims.qmd#c-009), [C-010](/Blog/toktoit/claims.qmd#c-010), [C-014](/Blog/toktoit/claims.qmd#c-014), [C-015](/Blog/toktoit/claims.qmd#c-015), [C-040](/Blog/toktoit/claims.qmd#c-040) |
+| **diff** | derivatives exist and are right | gradients through 20 toy steps and three TORAX steps against finite differences; forward mode equals reverse mode | [C-008](/Blog/toktoit/claims.qmd#c-008), [C-028](/Blog/toktoit/claims.qmd#c-028) |
+| **tier_a** | open code stands alone | every module labelled; every module imports with all gated packages blocked | – |
+
+## How a claim becomes `tested`
+
+A claim is marked `tested` only if a named test asserts it, at a tolerance no looser than the
+one quoted. The test's name is in the claim's evidence column. Measured numbers that no test
+pins (timings, study results) are `measured`, and say which run produced them.
+
+## Honest limits
+
+- Most tests were written by the same agent that wrote the code they test. The identity tests
+  (wrapped equals unwrapped, loop equals TORAX's own driver, recomputed equals reported) are the
+  strongest, because they compare against something the agent did not write.
+- The IMAS round trip is self-consistent by construction and missed [K-007](/Blog/toktoit/ceilings.qmd#k-007); see
+  [IMAS adapters](imas-adapters.qmd#post-mortem-export); it is now fixed and covered by
+  tests that compare against the source codes' own values.
+- No physicist has reviewed the physics tests yet (M1 gate).
+
+## Changelog
+
+- 2026-09-30: first published version.
+- 2026-09-30: TORAX balance tests in the conservation category (entry 8).
+- 2026-10-01: run-tracking tests (entry 9).

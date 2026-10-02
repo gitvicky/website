@@ -1,0 +1,44 @@
+---
+title: Glossary
+toc: false
+---
+
+| term | meaning |
+|---|---|
+| **ASCOT5** | open-source code that follows fast particles (beam ions, fusion alphas) through the plasma to work out where they deposit heat and drive current |
+| **Aurora** | open-source code for impurity transport and radiation |
+| **benchmark** | a published simulation that a new code must reproduce before its own results are believed |
+| **Bohm/gyro-Bohm** | a simple empirical model of turbulent transport; used here as the trusted fallback |
+| **checkpointing** | recomputing parts of a calculation instead of storing them, to keep the memory for derivatives bounded |
+| **claim ID** | `[C-012](/Blog/toktoit/claims.qmd#c-012)` etc.: the row in the [claims register](claims.qmd) that a quoted number comes from |
+| **conformal prediction** | a statistical method that turns a model's errors on held-out data into error bars with a guaranteed coverage rate |
+| **coupling loop** | the part of the simulation that makes the physics modules agree with each other at each time step |
+| **diverted plasma** | a plasma whose outermost surface has an X-point, a magnetic null that funnels exhaust onto dedicated targets (the *divertor*) |
+| **ensemble** | several copies of a neural network trained independently; their spread measures how uncertain the prediction is |
+| **equilibrium** | the shape and internal magnetic structure the plasma settles into |
+| **fallback** | the trusted physics model used wherever the guard rejects the surrogate |
+| **fallback fraction** | share of (radius, time step) points served by the fallback; reported for every run |
+| **finite differences** | estimating a derivative by nudging an input and watching the output; used to check exact derivatives |
+| **fixed point** | a state that maps onto itself; each time step solves for one |
+| **flat-top** | the steady phase of a plasma discharge, after the current has ramped up |
+| **FreeGSNKE** | open-source free-boundary equilibrium solver (LGPL-3.0) |
+| **guard** | the per-point check that decides whether a surrogate's answer may be used |
+| **IMAS / IDS** | the fusion community's standard data model; an IDS is one record type in it (e.g. `equilibrium`, `core_profiles`) |
+| **ITER** | the international tokamak under construction in France; its "hybrid scenario" is the benchmark here |
+| **JAX** | numerical library that compiles and differentiates array programs |
+| **jit** | just-in-time compilation: turning a Python function into one compiled program |
+| **MAST-U** | the UK's spherical tokamak at Culham |
+| **Newton-Raphson** | an iterative solver that uses derivatives; converges very fast near the answer |
+| **Picard iteration** | the simplest iterative solver: guess, recompute, repeat |
+| **provenance** | a record, stored next to every artifact, of the code version, configuration and inputs that produced it |
+| **QLKNN** | a neural network trained to reproduce the QuaLiKiz turbulent transport code; part of TORAX |
+| **ramp-up** | the phase in which the plasma current is raised from zero to its target |
+| **residual** | how far an iterative solver is from satisfying its equations |
+| **ρ (rho)** | normalised radius: 0 at the centre, 1 at the edge (strictly, based on toroidal magnetic flux) |
+| **sawtooth** | a periodic internal collapse of the core temperature |
+| **spherical tokamak** | a tokamak with a very small central hole relative to its size, like MAST-U |
+| **stiff** | a system where small input changes cause large output changes; hard for simple solvers |
+| **surrogate** | a fast model (here a neural network) trained to reproduce a slow one |
+| **Tier A / Tier B** | open-source codes the toolkit may depend on / UKAEA-access-gated codes it may only learn from |
+| **TORAX** | open-source tokamak transport simulator in JAX, from Google DeepMind (Apache-2.0) |
+| **transport** | the leakage of heat and particles across the magnetic surfaces |
