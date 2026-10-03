@@ -7,7 +7,7 @@ title: "Blog"
 <div class="blog-grid">
 
 <div class="blog-card">
-<a href="/Blog/learning_from_convergence.qmd">Learning from Convergence</a>
+<a href="/Blog/learning_from_convergence.qmd">Learning without Convergence</a>
 </div>
 
 <div class="blog-card">

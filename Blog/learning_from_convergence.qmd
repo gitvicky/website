@@ -1,5 +1,5 @@
 ---
-title: "Learning from Convergence"
+title: "Learning without Convergence"
 subtitle: "Learning deterministic expectations from deliberately noisy Monte Carlo estimates"
 date: 2026-10-03
 description: "When can convergence be shared across a family of Monte Carlo problems? Unbiased supervision, simulation budgets, and nonlinear bias."
