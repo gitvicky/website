@@ -1,0 +1,52 @@
+---
+title: M2 · Training data
+subtitle: In progress
+toc: true
+---
+
+## Goal
+
+Produce the data the surrogates of M3 are trained on: fluxes from a first-principles
+turbulence model, sampled over the operating space of each machine, stored as immutable,
+versioned datasets with provenance. The brief requires the sampling to cover spherical-tokamak
+conditions: the transport network used in M1, QLKNN, was trained at a fixed aspect ratio of 3
+and does not.
+
+## Acceptance criteria (fixed in the brief before work started)
+
+1. The dataset loads.
+2. Its provenance validates.
+3. The sampled domain is documented and plotted against the intended operating space.
+
+M2 has no human gate in the brief. The kinetic ranges were approved by the owner before any
+dataset was generated ([OQ-16](/Blog/tokamak-toolkit/decisions.qmd#oq-16)).
+
+## Tasks
+
+| task | state | log |
+|---|---|---|
+| turbulence code: TGLF (GACODE, Apache-2.0) built, checked, timed; CGYRO built for spot checks | done | [entry 16](../log/16-tglf-build-and-cost.qmd) |
+| geometry ranges measured on MAST-U (FreeGSNKE) and ITER (TORAX) equilibria | done ([OQ-15](/Blog/tokamak-toolkit/decisions.qmd#oq-15)) | [entry 17](../log/17-tglf-datasets-mastu-iter.qmd) |
+| kinetic ranges, species and α~MHD~ cap per machine | done, approved ([OQ-16](/Blog/tokamak-toolkit/decisions.qmd#oq-16)) | [entry 17](../log/17-tglf-datasets-mastu-iter.qmd) |
+| Latin hypercube datasets, MAST-U and ITER, 10^5^ cases each | done (version 1) | [entry 17](../log/17-tglf-datasets-mastu-iter.qmd) |
+| sampled domain plotted against the operating space | done | [datasets](../technical/datasets.qmd#datasets-v1) |
+| high-flux cases explained ([K-019](/Blog/tokamak-toolkit/ceilings.qmd#k-019)) | open | |
+| active learning near critical gradients | not started | |
+| QuaLiKiz driver (Tier A) | not started | |
+| Tier B drivers behind the tier flag | not started; needs access | |
+
+## Against the criteria
+
+| criterion | where it stands |
+|---|---|
+| loads | both datasets load through the library's loader, which recomputes each file's hash ([100000 of 100000 cases completed, all six fluxes finite]{.claim}[C-071](/Blog/tokamak-toolkit/claims.qmd#c-071){.cid .st-measured}, [100000 of 100000 cases completed, all six fluxes finite]{.claim}[C-072](/Blog/tokamak-toolkit/claims.qmd#c-072){.cid .st-measured}) |
+| provenance validates | each file's SHA-256 matches its provenance record; the generator commit is recorded with a clean tree; a tampered file is refused (unit test) |
+| domain plotted | [figure](../technical/datasets.qmd#fig-tglf-domain); input by input [MAST-U 0.72 (triangularity) to 0.94 (q); ITER 0.63 (q) to 0.94 (triangularity shear)]{.claim}[C-076](/Blog/tokamak-toolkit/claims.qmd#c-076){.cid .st-measured}. Wider than the measured set jointly ([K-018](/Blog/tokamak-toolkit/ceilings.qmd#k-018)) |
+
+## Deviations
+
+- **TGLF only, so far.** The brief lists drivers for TGLF and QuaLiKiz (Tier A) and for Tier B
+  codes. Version 1 uses TGLF alone.
+- **One dataset per machine** (owner, 2026-10-02), rather than one sampling space.
+- **Rejection by α~MHD~** in the sampler, not in the brief: without it, independent draws give
+  pressure gradients far beyond ballooning stability ([OQ-16](/Blog/tokamak-toolkit/decisions.qmd#oq-16)).

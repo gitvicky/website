@@ -1,0 +1,64 @@
+---
+title: TGLF built, checked and timed for the M2 datasets
+date: '2026-10-02'
+categories:
+- measured
+entry: 16
+milestone: M2
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 16 · milestone M2
+:::
+
+M2 produces the training data for the surrogates of M3. The surrogates replace a turbulence
+model: given local plasma parameters (gradients, safety factor q, magnetic shear, plasma shape,
+beta), it returns the turbulent heat and particle fluxes (see the [Primer](../primer.qmd)). The
+neural transport model used so far, QLKNN, was trained at a fixed aspect ratio of 3 with no
+shaping input. MAST-U is a spherical tokamak with an aspect ratio near 1.6, so it is outside
+that training set, and the brief assumes retraining.
+
+The data comes from TGLF, a quasilinear turbulence model from General Atomics' GACODE suite.
+The owner pointed to the public GACODE repository; it is Apache-2.0, so TGLF and anything
+trained on it are open (Tier A). We built GACODE on the cluster's CPU nodes, together with
+CGYRO, the nonlinear gyrokinetic code in the same suite, which the owner wants for spot checks
+of TGLF at M4 ([OQ-15](/Blog/tokamak-toolkit/decisions.qmd#oq-15)).
+
+## What was checked
+
+Each part was checked against the suite's own reference results, not against the Tokamak Toolkit code:
+TGLF's regression cases, the in-process wrapper that TORAX uses to call TGLF, TORAX's own
+TGLF transport-model tests, and CGYRO's regression suite: [TGLF 9/9 regression cases; tglf2py wrapper 11/11; TORAX TGLF transport-model tests 3/3; CGYRO 21/21]{.claim}[C-069](/Blog/tokamak-toolkit/claims.qmd#c-069){.cid .st-measured}. TORAX 1.4.3 needed
+one upstream TGLF fix, applied as a patch.
+
+One cluster job ([OQ-14](/Blog/tokamak-toolkit/decisions.qmd#oq-14)) then measured the cost of a TGLF case on inputs drawn from the M2
+sampling spaces, with the settings the datasets use: SAT2 saturation rule (as in the TGLF-based
+network distributed with TORAX, so the two can be compared later), both magnetic-field
+perturbations on, three species. Result: [2.2-2.5 s per case alone, 2.6 s median in a 64-worker pool; about 700 core-hours per 10^6 cases]{.claim}[C-068](/Blog/tokamak-toolkit/claims.qmd#c-068){.cid .st-measured}. Every case in the timing run
+completed with finite fluxes. At this cost a dataset of 10^5^ cases fits in under an hour on
+one node, so cost does not limit the sample size.
+
+The same job ran TGLF as TORAX's transport model on TORAX's ITER hybrid example. It did not
+complete a step: [fails at the first step: NaN fluxes on the axis face, about 10^6 gyro-Bohm units on the edge face ([K-015](/Blog/tokamak-toolkit/ceilings.qmd#k-015))]{.claim}[C-070](/Blog/tokamak-toolkit/claims.qmd#c-070){.cid .st-measured}. TORAX's own TGLF tests pass on the same node, and every
+TGLF call outside TORAX runs, so the failure is in how the case is set up (no radial domain
+that excludes the axis and the pedestal) rather than in the build. This is recorded as
+ceiling [K-015](/Blog/tokamak-toolkit/ceilings.qmd#k-015). It does not block the datasets, which call TGLF directly, but it must be fixed
+before TGLF can serve as a reference inside TORAX at M3 and M4.
+
+| check | result |
+|---|---|
+| install checks | [TGLF 9/9 regression cases; tglf2py wrapper 11/11; TORAX TGLF transport-model tests 3/3; CGYRO 21/21]{.claim}[C-069](/Blog/tokamak-toolkit/claims.qmd#c-069){.cid .st-measured} |
+| cost per TGLF case | [2.2-2.5 s per case alone, 2.6 s median in a 64-worker pool; about 700 core-hours per 10^6 cases]{.claim}[C-068](/Blog/tokamak-toolkit/claims.qmd#c-068){.cid .st-measured} |
+| TGLF inside TORAX, ITER hybrid | [fails at the first step: NaN fluxes on the axis face, about 10^6 gyro-Bohm units on the edge face ([K-015](/Blog/tokamak-toolkit/ceilings.qmd#k-015))]{.claim}[C-070](/Blog/tokamak-toolkit/claims.qmd#c-070){.cid .st-measured} |
+
+## Where this stands
+
+M2 is in progress. The datasets that use this build are in [entry 17](17-tglf-datasets-mastu-iter.qmd).
+
+Technical details → [Datasets: TGLF](../technical/datasets.qmd#tglf).
+Decisions → [OQ-14](../decisions.qmd#oq-14), [OQ-15](../decisions.qmd#oq-15).
+
+::: {.entry-links}
+**Technical details →** [Datasets › tglf](/Blog/tokamak-toolkit/technical/datasets.qmd#tglf)  
+**Decisions →** [OQ-14](/Blog/tokamak-toolkit/decisions.qmd#oq-14) · [OQ-15](/Blog/tokamak-toolkit/decisions.qmd#oq-15)
+:::

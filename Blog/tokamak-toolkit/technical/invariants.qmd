@@ -1,0 +1,148 @@
+---
+title: Invariants and environment
+toc: true
+toc-depth: 3
+date-modified: '2026-09-30'
+---
+
+## Purpose
+
+The rules every other section relies on, and for each one the mechanism that enforces it.
+A rule that exists only as a convention is marked as such.
+
+## Numerical and physical conventions
+
+**Float64 everywhere.** Importing the package switches JAX to double precision
+(`jax_enable_x64`), because stiff transport and Newton iterations lose too much in single
+precision. Nothing turns it off.
+
+```python
+# tkit/__init__.py @ 426e6ad
+import jax
+
+jax.config.update("jax_enable_x64", True)
+```
+
+**Units** are strict SI except temperature in eV and density in m⁻³, matching IMAS (the full
+table is in the [notation](index.qmd#notation)). Every array field of every state object
+carries its unit in a same-line docstring. **Adapters are the only place unit conversion
+happens**: inside the core, physics and surrogate packages there are no conversion factors
+apart from the elementary charge, used to turn eV into joules. *Enforced by convention and
+review, not by a test.*
+
+**One radial coordinate.** Internally everything is on $\rho$ (`rho_tor_norm`). Profiles and
+sources on cell centres, transport coefficients on faces. Conversions from other coordinates
+happen only in adapters. *Convention.*
+
+**No magic numbers.** Every physical or numerical parameter is a typed config field with a unit
+docstring, serialised to YAML. Unknown keys are rejected, and scalars are coerced to their
+annotated type. That second rule exists because PyYAML implements YAML 1.1, under which `2.0e6`
+(an exponent without a sign) is a *string*, which would otherwise travel silently into a JAX
+array. *Enforced by* `tests/unit/test_config.py`.
+
+**Explicit randomness.** Random keys are threaded through call signatures; there are no global
+seeds. *Convention* (nothing random runs in the simulation yet).
+
+## Purity inside compiled code
+
+The whole simulation compiles to one program. Inside it: no file I/O, no tracking or logging
+calls, and no Python `if` on a traced value. Tracking happens on the host after `simulate`
+returns. Loops are `lax.scan` of fixed length, never `while_loop`, so reverse-mode
+differentiation works and cost is predictable. *Partly enforced*: the differentiability tests
+(see [tests](tests.qmd)) fail if an unbounded loop appears in a differentiated path. The purity
+rule is enforced by review only. An impure call inside `jit` does not fail: it runs once,
+silently, while the function is being traced, and never again, which is exactly why the rule
+exists.
+
+## Open and gated code {#tiers}
+
+Every module declares `TIER: Literal["A", "B"]`. *Tier A* is open-source and redistributable;
+*Tier B* is UKAEA-access-gated. The rules:
+
+1. Every module has a label. *Enforced by* `tests/tier_a/test_tier_labels.py`.
+2. A Tier B module imports its gated package lazily, inside a function wrapped by
+   `require_tier_b`, so importing the module never imports gated software.
+3. Tier B is never a runtime dependency of anything shipped. A surrogate trained on Tier B data
+   records `tier: "B"` in its provenance; the surrogate, its guard and its fallback are Tier A.
+4. `TKIT_TIER_A_ONLY=1` forces the gate closed even when gated software is installed. The whole
+   suite runs a second time this way.
+
+```python
+# tkit/tier.py @ 426e6ad (trimmed)
+def require_tier_b(code: str) -> Callable[[Callable[P, R]], Callable[P, R]]:
+    if code not in TIER_B_PACKAGES:
+        raise KeyError(f"unknown Tier B code {code!r}; add it to TIER_B_PACKAGES")
+    def deco(fn: Callable[P, R]) -> Callable[P, R]:
+        @functools.wraps(fn)
+        def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
+            if not tier_b_available(code):
+                raise TierBUnavailable(...)
+            return fn(*args, **kwargs)
+        wrapper.__tier__ = "B"
+        return wrapper
+    return deco
+```
+
+The isolation test runs in a subprocess, replaces every gated package in `sys.modules` with
+`None` (so any import of it raises), imports every `tkit` module, and asserts none of them
+pulled a gated package in. *Enforced by* `tests/tier_a/test_tier_isolation.py`. No Tier B
+module exists yet; the machinery is in place for M2 and M5.
+
+## Versions
+
+The versions every number on this site was produced with, unless a claim says otherwise:
+
+| component | version | licence |
+|---|---|---|
+| Python | 3.11.7 | |
+| JAX | 0.10.2 | Apache-2.0 |
+| Equinox | 0.13.8 | Apache-2.0 |
+| TORAX | 1.4.3 (ships QLKNN via `fusion_surrogates` 0.4.6) | Apache-2.0 |
+| IMAS-Python / Data Dictionary | 2.1.0 / 4.1.1 | LGPL-3.0 |
+| FreeGSNKE / freegs4e | 3.1.1 / 0.15.0 | LGPL-3.0 |
+| ASCOT5 (a5py) | 5.6.4, git `77e32a6`, built without MPI | LGPL-3.0 |
+| Aurora | 3.0.6 | MIT |
+| NumPy / xarray | 2.4.6 / 2026.7.0 | BSD |
+
+Hardware: tests run on CPU; timings quoted as "one datacentre GPU" are on a single NVIDIA H100.
+
+## Building the external codes {#external-builds}
+
+Recorded because two of these took several attempts and the failure modes are not obvious.
+
+**Aurora 3.0.6.** Its source distribution declares `cmake.minimum-version` and
+`ninja.minimum-version`, which scikit-build-core 0.8 and later reject. Replacing them with
+`cmake.version = ">=3.17.2"` and `ninja.version = ">=1.10"` in `pyproject.toml` fixes the build
+(with a Fortran compiler set via `FC`, and `--no-build-isolation`). **The install silently
+downgrades NumPy to 1.26 and xarray to 2022.9**, which breaks TORAX and JAX. Both are restored
+afterwards, Aurora's Fortran core was checked to work under NumPy 2.4.6 despite its `numpy<2`
+pin, and every later install uses a constraints file pinning NumPy and xarray. Atomic data
+(OPEN-ADAS) is not downloaded yet.
+
+**ASCOT5 (non-MPI).** Built from source with three workarounds for the cluster's toolchain:
+
+- the HDF5 compiler wrapper rejects a flag the build passes (`-shlib`), so the build uses plain
+  `gcc` with explicit HDF5 include, library and `rpath` flags;
+- the system `gcc` is configured to offload OpenMP to GPUs, which breaks the final link, so the
+  build passes `-foffload=disable`;
+- loading the compiler through the module system silently blocks the Python and CMake modules,
+  so the compiler is used by its full path instead.
+
+Then the Python bindings are installed without dependencies, under the NumPy/xarray constraints.
+A smoke test builds an analytic ITER magnetic field and checks its 1/R fall-off to
+[2%]{.claim}[C-031](/Blog/tokamak-toolkit/claims.qmd#c-031){.cid .st-tested}.
+
+**FreeGSNKE 3.1.1 and the IMAS-Python pin.** FreeGSNKE 3.1.1 declares
+`imas-python>=2.3,<3`; TORAX 1.4.3 pins `imas-python==2.1.0`. No resolver can satisfy both.
+FreeGSNKE uses only `IDSFactory` and `DBEntry`, both present in 2.1.0, so it is installed with
+`--no-deps` (and `freegs4e` separately), and its IMAS writer is exercised by the MAST-U tests.
+The CI workflow does not install the equilibrium extra for this reason, so those tests skip
+there.
+
+**Process CPU limit.** The cluster's interactive nodes kill any process after 600 s of CPU time,
+summed over threads. XLA's multithreaded CPU backend reaches that quickly, so the suite is run
+as one process per test file.
+
+## Changelog
+
+- 2026-09-30: first published version.

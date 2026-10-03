@@ -1,0 +1,74 @@
+---
+title: TGLF datasets for MAST-U and ITER, version 1
+date: '2026-10-02'
+categories:
+- built
+entry: 17
+milestone: M2
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 17 · milestone M2
+:::
+
+The surrogates of M3 learn TGLF's fluxes from examples ([entry 16](16-tglf-build-and-cost.qmd)).
+The owner set one dataset per machine, MAST-U and ITER, so that either can be used alone or
+both pooled. Each dataset is a set of TGLF input points and the fluxes TGLF returns for them.
+
+## How the points were chosen
+
+Each TGLF input is a local description of the plasma at one radius. We split the inputs into
+two groups. The **geometry** inputs (major radius, elongation, triangularity and their radial
+derivatives, q, magnetic shear) were measured, not guessed: we computed them the way TORAX
+computes them, on the flux surfaces of real equilibria, and took each range from the 1st to
+99th percentile. For MAST-U the equilibria are 42 FreeGSNKE free-boundary solutions on the
+MAST-U machine description. For ITER they are TORAX's ITER hybrid equilibrium plus the q
+profiles of TORAX's current ramp-up example. The **kinetic** inputs (temperature and density
+gradients, temperature ratio, beta, collisionality, effective charge, flow shear) were
+proposed by the agent and approved by the owner per machine ([OQ-16](/Blog/tokamak-toolkit/decisions.qmd#oq-16)). The generator refuses to
+write a dataset for a region until its kinetic inputs are marked approved.
+
+The inputs are drawn by Latin hypercube sampling. Drawn independently, high beta and steep
+gradients combine into pressure gradients far beyond ballooning stability, where TGLF returned
+fluxes of 10^4^ to 10^5^ gyro-Bohm units in the timing run. Points are therefore rejected above
+a fixed normalised pressure gradient α~MHD~, set per machine for version 1; a cap that depends
+on the magnetic shear is to follow ([OQ-16](/Blog/tokamak-toolkit/decisions.qmd#oq-16)). The cap keeps about half the draws and shifts the
+kept set towards low q and low beta.
+
+## What was produced and checked
+
+Two cluster jobs, one per machine, each of 10^5^ cases. Each dataset is written once, made
+read-only, and stored with a provenance record that binds the file's hash, the sampling space
+and the measured geometry. Both are also stored on the run tracker (Simvue) with their
+provenance, and the uploaded files match the local hashes.
+
+| quantity | MAST-U and ITER |
+|---|---|
+| cases completed, fluxes finite | [100000 of 100000 cases completed, all six fluxes finite]{.claim}[C-071](/Blog/tokamak-toolkit/claims.qmd#c-071){.cid .st-measured}; [100000 of 100000 cases completed, all six fluxes finite]{.claim}[C-072](/Blog/tokamak-toolkit/claims.qmd#c-072){.cid .st-measured} |
+| draws kept under the cap | [MAST-U 0.490 kept (220936 drawn), ITER 0.425 (258597 drawn); kept mean beta_e 23-25% below the box mean on both; kept median q 1.90 (MAST-U) and 1.73 (ITER, sampled log-uniform over 1.02-11.1)]{.claim}[C-073](/Blog/tokamak-toolkit/claims.qmd#c-073){.cid .st-measured} |
+| cost | [91.6 core-h (MAST-U) and 92.4 core-h (ITER); 3.3 s per case mean; 35 min wall per job]{.claim}[C-074](/Blog/tokamak-toolkit/claims.qmd#c-074){.cid .st-measured} |
+| cases with Q~e~ + Q~i~ above 10^4^ gyro-Bohm units | [MAST-U 0.283 above 10^4 and 0.122 above 10^5; ITER 0.097 above 10^4 and 0.0065 above 10^5]{.claim}[C-075](/Blog/tokamak-toolkit/claims.qmd#c-075){.cid .st-preliminary} |
+
+The brief's acceptance test for M2 includes plotting the sampled domain against the intended
+operating space. The plot is in the technical section. It shows that the geometry inputs, drawn
+independently, cover combinations that no measured equilibrium has, for example high q at low
+shear on MAST-U ([MAST-U 0.72 (triangularity) to 0.94 (q); ITER 0.63 (q) to 0.94 (triangularity shear)]{.claim}[C-076](/Blog/tokamak-toolkit/claims.qmd#c-076){.cid .st-measured}; ceiling [K-018](/Blog/tokamak-toolkit/ceilings.qmd#k-018)).
+
+The last row is not explained yet. Even under the cap, a large fraction of cases have heat
+fluxes several orders of magnitude above typical values, mostly at steep electron temperature
+gradients. We have not established whether these are physical, for example electromagnetic
+modes at high beta, or come from how the inputs are constructed. The cases are kept as computed,
+and the question is recorded as ceiling [K-019](/Blog/tokamak-toolkit/ceilings.qmd#k-019), to be resolved before training at M3.
+
+## Where this stands
+
+M2: datasets exist, load and validate. Open before M3: [K-016](/Blog/tokamak-toolkit/ceilings.qmd#k-016) (ITER v1 has one plasma shape),
+[K-017](/Blog/tokamak-toolkit/ceilings.qmd#k-017) (fixed cap), [K-018](/Blog/tokamak-toolkit/ceilings.qmd#k-018) (independent geometry sampling), [K-019](/Blog/tokamak-toolkit/ceilings.qmd#k-019) (high-flux cases).
+
+Technical details → [Datasets](../technical/datasets.qmd#sampling-space).
+Decisions → [OQ-15](../decisions.qmd#oq-15), [OQ-16](../decisions.qmd#oq-16).
+
+::: {.entry-links}
+**Technical details →** [Datasets › sampling space](/Blog/tokamak-toolkit/technical/datasets.qmd#sampling-space) · [Datasets › datasets v1](/Blog/tokamak-toolkit/technical/datasets.qmd#datasets-v1)  
+**Decisions →** [OQ-15](/Blog/tokamak-toolkit/decisions.qmd#oq-15) · [OQ-16](/Blog/tokamak-toolkit/decisions.qmd#oq-16)
+:::

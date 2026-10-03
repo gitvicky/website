@@ -1,0 +1,68 @@
+---
+title: Technical internals
+subtitle: Organised by component, revised in place. Written for someone who would
+  re-implement or audit it.
+toc: true
+---
+
+The bar for these pages: a competent reader should be able to re-implement any component from
+its section and expect to reproduce the published numbers to the stated tolerance. Where a
+section falls short of that, it says what is missing.
+
+Code excerpts are real, at most 15 lines, and labelled with their file and the commit they
+were copied from. The Python package is called `tkit`. Every number links to its row in the
+[claims register](../claims.qmd); deliberate shortcuts are listed under
+[known ceilings](../ceilings.qmd).
+
+## Sections
+
+In roughly the order you would build the system:
+
+1. [Invariants and environment](invariants.qmd): precision, units, coordinates, purity, the
+   open/gated split and how each rule is enforced; versions and build notes.
+2. [Core state and interfaces](core-state.qmd): the data structures, the model contract,
+   input domains and features.
+3. [Transport solver](transport-solver.qmd): the implicit finite-volume step.
+4. [Coupling loop](coupling-loop.qmd): the fixed point per time step, Newton and Picard, the
+   corrector solve, and the fixed-step driver over TORAX.
+5. [Backends](backends.qmd): TORAX, FreeGSNKE, ASCOT5, Aurora.
+6. [Physics models](physics-models.qmd): the analytic Tier A models and the Gaussian RF source.
+7. [Guard and fallback](guard.qmd): the per-point decision, in the core loop and inside TORAX.
+8. [IMAS adapters](imas-adapters.qmd): mapping tables and conversions.
+9. [Provenance and tracking](provenance.qmd).
+10. [Tests](tests.qmd): what each category proves, with counts.
+11. [Datasets](datasets.qmd): TGLF, the sampling space per machine, the version 1 datasets
+    and their domain against the measured equilibria.
+
+Not yet built (one line each until their milestone arrives):
+
+- **Surrogates** (M3): ensembles of 5–10 networks with physics structure built in (zero flux
+  below threshold, positivity, monotonicity in gradients). An `MLPEnsemble` class exists from
+  M0 (see [core state](core-state.qmd#ensembles)) but nothing is trained.
+- **Verification** (M4): properties proved over input boxes, conformal calibration,
+  closed-loop comparison against the Tier A model, one certificate per surrogate.
+- **Uncertainty propagation** (M5): Monte Carlo over ensemble members and sampled inputs,
+  linearised propagation cross-checked against it, sensitivity ranking, Bayesian calibration.
+
+## Notation
+
+| symbol | meaning | unit |
+|---|---|---|
+| $\rho$ | normalised toroidal-flux radius, `rho_tor_norm`, 0 on axis, 1 at the boundary | – |
+| $\rho_{t,b}$ | toroidal-flux radius at the boundary, $\sqrt{\Phi_b/(\pi B_0)}$ | m |
+| $a$ | geometric minor radius (half-width of the boundary) | m |
+| $R_0$ | major radius | m |
+| $B_0$ | vacuum toroidal field at $R_0$ | T |
+| $T_e, T_i$ | electron and ion temperature | eV |
+| $n_e$ | electron density | m⁻³ |
+| $V$, $V' = \partial V/\partial\rho$ | enclosed volume and its derivative with respect to $\rho$ | m³ |
+| $G = \langle\lvert\nabla\rho\rvert^2\rangle$ | flux-surface average (IMAS `gm3` times $\rho_{t,b}^2$) | m⁻² |
+| $\chi_e, \chi_i$ | heat diffusivities | m² s⁻¹ |
+| $D_e$, $v_e$ | particle diffusivity, pinch velocity (negative inward) | m² s⁻¹, m s⁻¹ |
+| $q_e, q_i$, $s_n$ | heating densities, particle source | W m⁻³, m⁻³ s⁻¹ |
+| $\psi$ | poloidal flux (COCOS 11, as in IMAS) | Wb |
+| $R/L_u$ | normalised gradient $-R_0\,(\partial u/\partial\rho)/(a\,u)$ | – |
+| $e$ | elementary charge; converts eV to J | C |
+
+Profiles and sources live on $n$ cell centres; transport coefficients live on the $n+1$ cell
+faces, with face 0 on the axis and face $n$ at the boundary.

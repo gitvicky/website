@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Claims register – Vignesh Gopakumar</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../Images/dy_dx.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="tokamak-toolkit.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Vignesh Gopakumar</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../research.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../talks.html"> 
+<span class="menu-text">Talks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../Blog/blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content column-page" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Claims register</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Every number quoted anywhere in this log has a row here, and pages show it from this register, so it cannot drift between pages. Claims are never deleted: a wrong one is marked <em>retracted</em> and kept, with a link to the erratum.</p>
+<p>Status:</p>
+<ul>
+<li><strong>tested</strong>: asserted by a named test in the suite at the stated commit</li>
+<li><strong>measured</strong>: from a recorded run or study at the stated commit</li>
+<li><strong>preliminary</strong>: measured, with a caveat named in the row</li>
+<li><strong>reviewed</strong>: passed a human review gate</li>
+<li><strong>superseded</strong>: replaced by a newer claim</li>
+<li><strong>retracted</strong>: wrong; see the errata</li>
+</ul>
+<p><code>tested</code> claims are checked by the test suite, which is run in full, and again with every UKAEA-gated code disabled, before each publish. The code is in a private repository whose continuous-integration results are not part of this log, so a claim is <code>tested</code> at its stated commit, not re-checked automatically between publishes. <code>reviewed</code> claims passed the M1 physicist review (1 Oct 2026), which the owner did as reviewer of record; the gate and the tolerances it set are on the <a href="../../Blog/tokamak-toolkit/decisions.html#m1-review">decisions page</a>.</p>
+<table class="claims caption-top table" data-quarto-postprocess="true">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">ID</th>
+<th data-quarto-table-cell-role="th">Claim</th>
+<th data-quarto-table-cell-role="th">Value</th>
+<th data-quarto-table-cell-role="th">Status</th>
+<th data-quarto-table-cell-role="th">Evidence</th>
+<th data-quarto-table-cell-role="th">Commit</th>
+</tr>
+</thead>
+<tbody>
+<tr id="c-001" class="odd">
+<td class="cid-cell">C-001</td>
+<td>Toy Tier A scenario runs 100 coupled steps under jit<br>
+<span class="tol">exact; profiles finite and positive, edge condition respected</span></td>
+<td class="val">100 steps</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/regression/test_toy_loop.py::test_100_steps_under_jit</td>
+<td><code>79285af</code></td>
+</tr>
+<tr id="c-002" class="even">
+<td class="cid-cell">C-002</td>
+<td>Final fixed-point residual per step, toy scenario, relaxed Picard iteration<br>
+<span class="tol">order of magnitude; 6 iterations at relaxation 0.7</span></td>
+<td class="val">3 × 10<sup>-5</sup></td>
+<td><span class="badge st-measured">measured</span></td>
+<td>solver comparison, entry 01<br>
+<code>tkit run configs/scenarios/toy.yaml with loop.solver=picard</code></td>
+<td><code>91d4e55</code></td>
+</tr>
+<tr id="c-003" class="odd">
+<td class="cid-cell">C-003</td>
+<td>Final fixed-point residual per step, toy scenario, Newton-Raphson with line search<br>
+<span class="tol">order of magnitude; 4 iterations; test asserts &lt; 1e-9</span></td>
+<td class="val">10<sup>-14</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/regression/test_toy_loop.py::test_newton_converges_quadratically</td>
+<td><code>91d4e55</code></td>
+</tr>
+<tr id="c-004" class="even">
+<td class="cid-cell">C-004</td>
+<td>Cost of Newton relative to Picard per run, toy scenario, 100 steps on CPU<br>
+<span class="tol">8.8 s vs 0.04 s; dominated by the dense 150x150 Jacobian (ceiling K-002)</span></td>
+<td class="val">200× slower</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>solver comparison, entry 01</td>
+<td><code>91d4e55</code></td>
+</tr>
+<tr id="c-005" class="odd">
+<td class="cid-cell">C-005</td>
+<td>Final residual on the stiff toy settings where Picard stalls (Picard 2e-2, Newton 3e-11)<br>
+<span class="tol">Picard stalls at 2e-2 and is reported, not hidden</span></td>
+<td class="val">3 × 10<sup>-11</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/regression/test_toy_loop.py::test_newton_converges_where_picard_stalls</td>
+<td><code>91d4e55</code></td>
+</tr>
+<tr id="c-006" class="even">
+<td class="cid-cell">C-006</td>
+<td>Agreement between the fixed-step scan over the transport code's step function and that code's own driver, same configuration<br>
+<span class="tol">test asserts &lt; 1e-10</span></td>
+<td class="val">10<sup>-13</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/regression/test_torax_loop.py::test_scan_matches_torax_driver</td>
+<td><code>61aa774</code></td>
+</tr>
+<tr id="c-007" class="odd">
+<td class="cid-cell">C-007</td>
+<td>Stored ITER hybrid ramp-up reference reproduced by the fixed-step loop at the reference's own 2 s step<br>
+<span class="tol">test asserts &lt; 1e-10</span></td>
+<td class="val">10<sup>-14</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/regression/test_torax_loop.py::test_rampup_reference_steps_reproduced</td>
+<td><code>61aa774</code></td>
+</tr>
+<tr id="c-008" class="even">
+<td class="cid-cell">C-008</td>
+<td>Reverse-mode gradient of stored energy through three coupled transport steps, checked against central finite differences<br>
+<span class="tol">forward and reverse mode agree to 1e-9</span></td>
+<td class="val">10<sup>-6</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/diff/test_torax_gradients.py::test_grad_through_torax_steps_fd_checked</td>
+<td><code>61aa774</code></td>
+</tr>
+<tr id="c-009" class="odd">
+<td class="cid-cell">C-009</td>
+<td>Stored thermal energy from the converted profiles versus the transport code's own value, ITER hybrid (impurity pressure included)<br>
+<span class="tol">test asserts 1e-10 at every output time</span></td>
+<td class="val">10<sup>-16</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/regression/test_torax_backend.py::test_stored_energy_identity</td>
+<td><code>3ae5531</code></td>
+</tr>
+<tr id="c-010" class="even">
+<td class="cid-cell">C-010</td>
+<td>Total heating power from the converted sources versus the transport code's own value<br>
+<span class="tol">test tolerance; agreement observed to 5 significant figures</span></td>
+<td class="val">better than 10<sup>−8</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/regression/test_torax_backend.py::test_heating_power_identity</td>
+<td><code>3ae5531</code></td>
+</tr>
+<tr id="c-011" class="odd">
+<td class="cid-cell">C-011</td>
+<td>Effect on stored energy at t = 80 s of removing the non-converged steps in the ITER hybrid ramp-up by lowering the line-search floor (53.998 vs 53.999 MJ)<br>
+<span class="tol">6 non-converged steps at dt = 0.5 s become 0; residual tolerance unchanged</span></td>
+<td class="val">2 × 10<sup>−5</sup> relative</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>line-search study, entry 05</td>
+<td><code>ae294c9</code></td>
+</tr>
+<tr id="c-012" class="even">
+<td class="cid-cell">C-012</td>
+<td>Core electron temperature difference between 1 s and 0.25 s fixed steps at t = 2 s of the ITER hybrid ramp-up (initial transient; falls to 0.4% by t = 80 s)<br>
+<span class="tol">first-order convergence in dt</span></td>
+<td class="val">18%</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>time-convergence study, entry 03</td>
+<td><code>61aa774</code></td>
+</tr>
+<tr id="c-013" class="odd">
+<td class="cid-cell">C-013</td>
+<td>Departure of the published adaptive-step ITER hybrid flat-top reference from the dt -&gt; 0 answer at t = 2 s<br>
+<span class="tol">5% at t = 5 s; reference steps up to 0.42 s</span><br>
+<span class="caveat">Caveat: the benchmark tolerance and whether to compare at the published or a converged step are still open (decision pending)</span></td>
+<td class="val">34%</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>time-convergence study, entry 03</td>
+<td><code>61aa774</code></td>
+</tr>
+<tr id="c-014" class="even">
+<td class="cid-cell">C-014</td>
+<td>Guarded transport with an always-open guard reproduces the unwrapped neural transport model<br>
+<span class="tol">bit-identical on T_e and n_e over 8 steps; fallback fraction 0</span></td>
+<td class="val">bit-identical</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/regression/test_torax_guard.py::test_open_guard_reproduces_plain_qlknn_exactly</td>
+<td><code>26f89fb</code></td>
+</tr>
+<tr id="c-015" class="odd">
+<td class="cid-cell">C-015</td>
+<td>Guarded transport with an always-closed guard reproduces the pure fallback model<br>
+<span class="tol">fallback fraction 1</span></td>
+<td class="val">10<sup>-12</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/regression/test_torax_guard.py::test_empty_guard_equals_pure_fallback</td>
+<td><code>26f89fb</code></td>
+</tr>
+<tr id="c-016" class="even">
+<td class="cid-cell">C-016</td>
+<td>Error introduced by wrapping the neural transport model before the post-processing defaults were carried to the wrapper (a bug, since fixed)<br>
+<span class="tol">cause: a radial smoothing width injected by the model's own configuration validator</span></td>
+<td class="val">5%</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>identity check, entry 04</td>
+<td><code>26f89fb</code></td>
+</tr>
+<tr id="c-017" class="odd">
+<td class="cid-cell">C-017</td>
+<td>Absorbed power of the analytic Gaussian radio-frequency heating model versus the requested power<br>
+<span class="tol">deposition and driven current peak within one grid cell of the requested radius</span></td>
+<td class="val">10<sup>-6</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/physics/test_rf_deposition.py::test_absorbed_power_equals_request</td>
+<td><code>ae294c9</code></td>
+</tr>
+<tr id="c-018" class="even">
+<td class="cid-cell">C-018</td>
+<td>Plasma current of the MAST-U-like free-boundary equilibrium versus the requested 620 kA<br>
+<span class="tol">magnetic axis at R = 0.99 m, Z = -0.05 m</span></td>
+<td class="val">10<sup>-3</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/physics/test_freegsnke_mastu.py::test_solve_reproduces_requested_plasma</td>
+<td><code>8dc8425</code></td>
+</tr>
+<tr id="c-019" class="odd">
+<td class="cid-cell">C-019</td>
+<td>Free-boundary solver convergence for the MAST-U-like diverted plasma<br>
+<span class="tol">26 of 100 allowed iterations; about 43 s on one CPU</span></td>
+<td class="val">4 × 10<sup>-10</sup></td>
+<td><span class="badge st-measured">measured</span></td>
+<td>MAST-U forward solve, entry 06</td>
+<td><code>8dc8425</code></td>
+</tr>
+<tr id="c-020" class="even">
+<td class="cid-cell">C-020</td>
+<td>Integral of dV/drho over the MAST-U-like equilibrium recovers the enclosed volume<br>
+<span class="tol">test asserts 2%; area reconstruction ceiling K-004</span></td>
+<td class="val">2%</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/physics/test_freegsnke_mastu.py::test_ids_is_complete_and_valid</td>
+<td><code>8dc8425</code></td>
+</tr>
+<tr id="c-021" class="odd">
+<td class="cid-cell">C-021</td>
+<td>Toroidal-flux radius versus geometric minor radius for the MAST-U-like equilibrium (0.83 m vs 0.55 m), which must not be conflated on a spherical tokamak<br>
+<span class="tol">ordering asserted by test</span></td>
+<td class="val">a factor of 1.52</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/physics/test_freegsnke_mastu.py::test_adapter_round_trip_and_resampling</td>
+<td><code>8dc8425</code></td>
+</tr>
+<tr id="c-022" class="even">
+<td class="cid-cell">C-022</td>
+<td>Error in the outermost flux-surface area when reconstructed by counting grid cells inside the surface, for a diverted plasma (why the volume-based formula is used instead)<br>
+<span class="tol">2% agreement at mid-radius</span></td>
+<td class="val">32%</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>area reconstruction check, entry 06</td>
+<td><code>8dc8425</code></td>
+</tr>
+<tr id="c-023" class="odd">
+<td class="cid-cell">C-023</td>
+<td>Wall-clock time to simulate 80 s of the ITER hybrid ramp-up on one datacentre GPU, after compilation<br>
+<span class="tol">90 s wall time in total, of which about 70 s is one-off compilation; reference run reproduces bit for bit</span></td>
+<td class="val">under 4 s</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reference generation, entry 02</td>
+<td><code>3ae5531</code></td>
+</tr>
+<tr id="c-024" class="even">
+<td class="cid-cell">C-024</td>
+<td>IMAS round trip (data structure -&gt; IDS -&gt; data structure) preserves values and coordinates for the equilibrium, core_profiles, core_transport and core_sources records, including a netCDF file round trip<br>
+<span class="tol">test asserts rtol 1e-14; each IDS also passes the Data Dictionary's validate()</span></td>
+<td class="val">10<sup>-14</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/unit/test_adapters_roundtrip.py</td>
+<td><code>dfc01a7</code></td>
+</tr>
+<tr id="c-025" class="odd">
+<td class="cid-cell">C-025</td>
+<td>Toy scenario, 100 coupled steps, wall time once compiled on one datacentre GPU (M0, relaxed Picard iteration)<br>
+<span class="tol">2.5 s including compilation</span></td>
+<td class="val">0.4 s</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>M0 report<br>
+<code>tkit run configs/scenarios/toy.yaml</code></td>
+<td><code>79285af</code></td>
+</tr>
+<tr id="c-026" class="even">
+<td class="cid-cell">C-026</td>
+<td>Single-step particle and energy balance of the implicit transport solve (change in content equals integrated source minus edge loss)<br>
+<span class="tol">test tolerance</span></td>
+<td class="val">10<sup>-10</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/conservation/test_balance.py::test_particle_balance_single_step, ::test_energy_balance_single_step</td>
+<td><code>dfc01a7</code></td>
+</tr>
+<tr id="c-027" class="odd">
+<td class="cid-cell">C-027</td>
+<td>Per-step particle and energy balance reconstructed from the recorded trace of a full coupled run, whether or not the nonlinear iteration converged<br>
+<span class="tol">test tolerance; holds because of the corrector solve</span></td>
+<td class="val">10<sup>-9</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/conservation/test_balance.py::test_loop_balance_exact_from_trace</td>
+<td><code>dfc01a7</code></td>
+</tr>
+<tr id="c-028" class="even">
+<td class="cid-cell">C-028</td>
+<td>Reverse-mode gradient of stored energy with respect to heating power and transport stiffness through 20 coupled toy steps, checked against central finite differences<br>
+<span class="tol">forward and reverse mode agree to 1e-9</span></td>
+<td class="val">2 × 10<sup>-5</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/diff/test_gradients.py::test_grad_finite_and_fd_checked</td>
+<td><code>dfc01a7</code></td>
+</tr>
+<tr id="c-029" class="odd">
+<td class="cid-cell">C-029</td>
+<td>Tests passing at the close of M0, run in full and again with every gated code disabled<br>
+<span class="tol">same 42 in both modes; lint and type checks clean</span></td>
+<td class="val">42 tests</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>M0 report</td>
+<td><code>79285af</code></td>
+</tr>
+<tr id="c-030" class="even">
+<td class="cid-cell">C-030</td>
+<td>Toroidal-flux radius at the boundary versus geometric minor radius, ITER hybrid reference runs (2.747 m vs 2.000 m)<br>
+<span class="tol">read from the stored reference runs</span></td>
+<td class="val">a factor of 1.37</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>ITER hybrid reference runs (rho_b and a_minor outputs)</td>
+<td><code>3ae5531</code></td>
+</tr>
+<tr id="c-031" class="odd">
+<td class="cid-cell">C-031</td>
+<td>ASCOT5 smoke test, analytic ITER field at R = 7 m versus the vacuum 1/R value from 5.3 T at 6.2 m<br>
+<span class="tol">confirms the compiled library loads, builds inputs and evaluates fields</span></td>
+<td class="val">2%</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/unit/test_external_codes.py::test_ascot5_library</td>
+<td><code>ae294c9</code></td>
+</tr>
+<tr id="c-032" class="even">
+<td class="cid-cell">C-032</td>
+<td>Normalised electron temperature gradient R/L_Te at rho = 0.26 on the ITER hybrid ramp-up at t = 80 s, the Tokamak Toolkit's feature convention versus QLKNN's (6.80 vs 5.73); at rho = 0.90 the two are 16.89 vs 25.22 (-33%)<br>
+<span class="tol">rho = 0.50: 7.76 vs 7.26; rho = 0.74: 9.03 vs 10.47</span></td>
+<td class="val">+19%</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>feature-convention comparison on the stored ITER hybrid ramp-up reference, 2026-09-30</td>
+<td><code>8dc8425</code></td>
+</tr>
+<tr id="c-033" class="odd">
+<td class="cid-cell">C-033</td>
+<td>Exported boundary flux radius versus the source code's own value, for TORAX (ITER hybrid, 2.746910 m; minor radius 2.0 m) and FreeGSNKE (MAST-U-like, 0.83 m; minor radius 0.55 m), after the K-007 fix<br>
+<span class="tol">test tolerance, both codes</span></td>
+<td class="val">10<sup>-12</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/regression/test_torax_backend.py::test_equilibrium_export_matches_torax_flux_radius, tests/physics/test_freegsnke_mastu.py::test_equilibrium_export_matches_source_flux_radius</td>
+<td><code>6b0845c</code></td>
+</tr>
+<tr id="c-034" class="even">
+<td class="cid-cell">C-034</td>
+<td>Shortfall in stored thermal energy computed from the converted profiles before the impurity ions' pressure was included, ITER hybrid<br>
+<span class="tol">consistent across output times; falls to C-009 once impurity pressure is added</span></td>
+<td class="val">0.3% low</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>conversion check, entry 2</td>
+<td><code>3ae5531</code></td>
+</tr>
+<tr id="c-035" class="odd">
+<td class="cid-cell">C-035</td>
+<td>Per-step global energy balance of TORAX's discrete equations, rebuilt from TORAX's own coefficients, ITER hybrid ramp-up benchmark at its reference settings (Newton, 2 s steps); relative residual = |residual| / (|storage| + |edge| + |sources| + |pinning|)<br>
+<span class="tol">test bound on fine-tolerance steps (8 steps); measured over the full 80 s (40 steps): max 1.2e-7, median 2e-10; 8e-5 on the 3 steps where Newton reached only its coarse tolerance</span></td>
+<td class="val">better than 10<sup>-6</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/conservation/test_torax_balance.py::test_rampup_benchmark_balance</td>
+<td><code>fb5a0b5</code></td>
+</tr>
+<tr id="c-036" class="even">
+<td class="cid-cell">C-036</td>
+<td>Per-step global particle (electron) balance, same reconstruction and runs as C-035<br>
+<span class="tol">test bound; measured max 1.4e-11 over the 80 s ramp-up, 7e-12 on the flat-top</span></td>
+<td class="val">better than 10<sup>-10</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/conservation/test_torax_balance.py::test_rampup_benchmark_balance, ::test_newton_step_conserves_energy_and_particles</td>
+<td><code>fb5a0b5</code></td>
+</tr>
+<tr id="c-037" class="odd">
+<td class="cid-cell">C-037</td>
+<td>Share of the per-step energy balance left unaccounted for by the flat-top reference's solver (linear, one predictor-corrector step), ITER hybrid flat-top, 0.05 s steps, median of the first 6 steps; five corrector steps reduce it to 0.09%<br>
+<span class="tol">per step 0.6-2.1%; test asserts 0.1-5% and a reduction by more than 5x with five corrector steps</span></td>
+<td class="val">about 0.8%</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/conservation/test_torax_balance.py::test_linear_predictor_corrector_energy_defect_is_coefficient_lag</td>
+<td><code>fb5a0b5</code></td>
+</tr>
+<tr id="c-038" class="even">
+<td class="cid-cell">C-038</td>
+<td>Share of the heating power removed by the pedestal model's adaptive pinning source, ITER hybrid ramp-up, every step from t = 4 s to 80 s (20.6 of 23.5 MW at t = 80 s); the power conducted through the last closed flux surface is 1.5-10% of the heating over the same steps<br>
+<span class="tol">range over 39 steps; test asserts more than 50% on 7 steps</span></td>
+<td class="val">87–98%</td>
+<td><span class="badge st-reviewed">reviewed</span></td>
+<td>run_balance over the 80 s ramp-up (40 fixed 2 s steps), 2026-09-30; bound in tests/conservation/test_torax_balance.py::test_rampup_benchmark_balance</td>
+<td><code>fb5a0b5</code></td>
+</tr>
+<tr id="c-039" class="odd">
+<td class="cid-cell">C-039</td>
+<td>Edge term of the rebuilt TORAX balance versus the flux through the last face computed separately from the face gradient, all four evolving channels<br>
+<span class="tol">test tolerance; measured agreement about 1e-14</span></td>
+<td class="val">10<sup>-10</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/conservation/test_torax_balance.py::test_edge_term_is_the_last_face_flux</td>
+<td><code>fb5a0b5</code></td>
+</tr>
+<tr id="c-040" class="even">
+<td class="cid-cell">C-040</td>
+<td>Per-step metric records received by the tracking server's client, toy scenario of 100 steps run end to end through the command line with the Simvue mirror in offline mode (no network); the local record holds the same 100, one per step, stamped with the simulation time<br>
+<span class="tol">exact</span></td>
+<td class="val">100 of 100 steps</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/regression/test_cli_tracking.py::test_run_with_simvue_offline, ::test_run_logs_every_step</td>
+<td><code>e8e1d6f</code></td>
+</tr>
+<tr id="c-041" class="odd">
+<td class="cid-cell">C-041</td>
+<td>Share of the heating power conducted out through the last closed flux surface (the balance's edge term), ITER hybrid ramp-up, every step from t = 4 s to 80 s (2.3 of 23.5 MW at t = 80 s); the rest of the C-038 balance is the change in stored energy (0.1-2.9%)<br>
+<span class="tol">range over 39 steps</span></td>
+<td class="val">1.5–10%</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>run_balance over the 80 s ramp-up (40 fixed 2 s steps), 2026-09-30</td>
+<td><code>fb5a0b5</code></td>
+</tr>
+<tr id="c-042" class="even">
+<td class="cid-cell">C-042</td>
+<td>ASCOT5's D-T alpha birth rate (AFSI, thermal reactants) on TORAX's profiles over TORAX's own birth rate (P_alpha / 3.5 MeV), ITER hybrid flat-top at t = 5 s<br>
+<span class="tol">AFSI Monte Carlo, 1600 samples per cell; the test asserts 2% with 400 samples</span></td>
+<td class="val">1.002</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/physics/test_ascot_alpha.py::test_afsi_birth_rate_matches_torax; job 2257707</td>
+<td><code>d81df2d</code></td>
+</tr>
+<tr id="c-043" class="odd">
+<td class="cid-cell">C-043</td>
+<td>Share of alpha markers lost across the separatrix before slowing down, 640 markers, guiding-centre orbit tolerance (ADAPTIVE_TOL_ORBIT) 1e-5 versus 1e-6, same markers<br>
+<span class="tol">113 and 4 of 640 markers</span></td>
+<td class="val">18% at 10<sup>-5</sup>, 0.6% at 10<sup>-6</sup></td>
+<td><span class="badge st-measured">measured</span></td>
+<td>cluster job 2257707, runs CHECK_TOL_PROD and CHECK_TOL_TIGHT</td>
+<td><code>d81df2d</code></td>
+</tr>
+<tr id="c-044" class="even">
+<td class="cid-cell">C-044</td>
+<td>Alpha heating of ions computed by ASCOT5 at orbit tolerance 1e-5 versus 1e-6, same 640 markers, ITER hybrid flat-top at t = 5 s<br>
+<span class="tol">Monte Carlo, 640 markers</span></td>
+<td class="val">13.2 MW at 10<sup>-5</sup>, 25.0 MW at 10<sup>-6</sup> (TORAX: 24.8 MW)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>cluster job 2257707, runs CHECK_TOL_PROD and CHECK_TOL_TIGHT</td>
+<td><code>d81df2d</code></td>
+</tr>
+<tr id="c-045" class="odd">
+<td class="cid-cell">C-045</td>
+<td>Total alpha heating on TORAX's cells, ASCOT5 (640 markers, tolerance 1e-6) versus TORAX's local alpha model, ITER hybrid flat-top at t = 5 s; electron fraction 0.649 in both<br>
+<span class="tol">+4.4%: +0.7% alpha energy (3.52 vs 3.5 MeV) and birth-rate noise, about +2% from the deposition moments over-closing the energy books, +1.6% from interpolation onto TORAX's cells; preliminary (640 markers, tolerance convergence not shown, OQ-11)</span><br>
+Superseded by <a href="#c-059">C-059</a></td>
+<td class="val">73.6 MW vs 70.5 MW</td>
+<td><span class="badge st-superseded">superseded</span></td>
+<td>job 2257707 run CHECK_TOL_TIGHT; tkit ascot-apply apply_summary.json</td>
+<td><code>ac911c3</code></td>
+</tr>
+<tr id="c-046" class="even">
+<td class="cid-cell">C-046</td>
+<td>Stored thermal energy after continuing TORAX from t = 5 s to 7 s with the ASCOT5 alpha profiles held fixed, relative to TORAX's own t = 5 s alpha profiles held fixed<br>
+<span class="tol">T_e profile 0.3%, T_i 0.6% (relative L2); ASCOT5 profiles from 640 markers</span></td>
+<td class="val">-0.005%</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>tkit ascot-apply on job 2257707 CHECK_TOL_TIGHT, duration 2 s</td>
+<td><code>ac911c3</code></td>
+</tr>
+<tr id="c-047" class="odd">
+<td class="cid-cell">C-047</td>
+<td>Effect of holding the alpha heating fixed for 2 s (TORAX's own t = 5 s profiles) instead of evolving it with TORAX's local model, on stored thermal energy at t = 7 s; the local model's alpha power rises from 70.5 to 77.5 MW over those 2 s<br>
+<span class="tol">single run</span></td>
+<td class="val">-0.3% (central T_e -1.0%)</td>
+<td><span class="badge st-reviewed">reviewed</span></td>
+<td>tkit ascot-apply, restart_frozen vs restart_local</td>
+<td><code>ac911c3</code></td>
+</tr>
+<tr id="c-048" class="even">
+<td class="cid-cell">C-048</td>
+<td>NRMSD between the paper's TORAX and RAPTOR curves, recomputed from the curves read out of the vector paths of Fig. 6 of the TORAX paper (arXiv:2406.06718v4), against the value printed in each panel (T_i, T_e, n_e, psi, q)<br>
+<span class="tol">to the printed precision; axes calibrated from tick marks to 6e-5 of the axis range</span></td>
+<td class="val">all five printed values reproduced (1.102, 0.712, 0.026, 0.414, 0.701% vs 1.1, 0.71, 0.03, 0.41, 0.70%)</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/regression/test_raptor_benchmark.py::test_extracted_curves_reproduce_the_printed_nrmsd</td>
+<td><code>1d64c0c</code></td>
+</tr>
+<tr id="c-049" class="odd">
+<td class="cid-cell">C-049</td>
+<td>Agreement between the Tokamak Toolkit's fixed-step scan over TORAX's step function and TORAX's own driver on the RAPTOR L-mode benchmark (200 steps of 0.05 s; T_e, T_i, n_e, psi; relative L2, max over output times)<br>
+<span class="tol">agreed tolerance 1e-10 (OQ-5); same at dt = 0.025, 0.0125, 0.00625 s</span></td>
+<td class="val">better than 10<sup>-13</sup></td>
+<td><span class="badge st-measured">measured</span></td>
+<td>tkit benchmark-raptor --dt 0.05 (runs/raptor/dt0.05.json)<br>
+<code>python -m tkit.cli benchmark-raptor --dt 0.05 --balance</code></td>
+<td><code>1d64c0c</code></td>
+</tr>
+<tr id="c-050" class="even">
+<td class="cid-cell">C-050</td>
+<td>NRMSD of the Tokamak Toolkit's run (TORAX 1.4.3, published settings) against RAPTOR at t = 10 s, ITER L-mode benchmark of the TORAX paper, for T_i, T_e, n_e, psi, q; the paper's own TORAX run against RAPTOR in brackets<br>
+<span class="tol">M1 acceptance gate (physicist review, OQ-5, 1 Oct 2026): &lt;= 2% for T_i, T_e, psi, q and &lt;= 0.1% for n_e, n_i; extraction error below 0.01 percentage points (C-048)</span></td>
+<td class="val">T_i 1.23% (1.1%), T_e 0.28% (0.71%), n_e 0.03% (0.03%), psi 0.49% (0.41%), q 0.69% (0.70%)</td>
+<td><span class="badge st-reviewed">reviewed</span></td>
+<td>tests/regression/test_raptor_benchmark.py::test_published_settings_pass_the_m1_acceptance_gate</td>
+<td><code>1d64c0c</code></td>
+</tr>
+<tr id="c-051" class="odd">
+<td class="cid-cell">C-051</td>
+<td>NRMSD of the Tokamak Toolkit's run (TORAX 1.4.3) against the paper's own TORAX run at t = 10 s, same case and settings, i.e. the change between TORAX versions plus the config translation<br>
+<span class="tol">regression test bound 0.6% on the six profiles</span></td>
+<td class="val">T_i 0.13%, T_e 0.50%, n_e 0.01%, psi 0.08%, q 0.16%; Ohmic power density 3.6%</td>
+<td><span class="badge st-reviewed">reviewed</span></td>
+<td>tests/regression/test_raptor_benchmark.py::test_published_settings_against_fig6</td>
+<td><code>1d64c0c</code></td>
+</tr>
+<tr id="c-052" class="even">
+<td class="cid-cell">C-052</td>
+<td>Change in the t = 10 s NRMSD against RAPTOR (T_i, T_e, n_e, psi, q) between the published time step 0.05 s and 0.00625 s (three halvings, no non-converged steps)<br>
+<span class="tol">first-order convergence; t = 10 s is close to stationary</span></td>
+<td class="val">at most 0.006 percentage points</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>tkit benchmark-raptor --dt 0.05, 0.025, 0.0125, 0.00625 (runs/raptor/dt*.json)</td>
+<td><code>1d64c0c</code></td>
+</tr>
+<tr id="c-053" class="odd">
+<td class="cid-cell">C-053</td>
+<td>Largest relative deviation of the line-averaged ion temperature from RAPTOR's during the transient (at t = 0.2 s), at the published time step 0.05 s and at 0.00625 s; the paper reports a maximum transient deviation of about 2.5% for its TORAX run<br>
+<span class="tol">M1 acceptance gate on the line-averaged traces: &lt;= 5% (physicist review, OQ-5, 1 Oct 2026); the paper's TORAX run used dt = 0.05 s; the Tokamak Toolkit at 0.05 s follows it to 0.14%</span></td>
+<td class="val">2.4% at dt = 0.05 s, 2.9% at dt = 0.00625 s (1.0% at t = 10 s)</td>
+<td><span class="badge st-reviewed">reviewed</span></td>
+<td>tkit benchmark-raptor (runs/raptor/dt0.05.json, dt0.00625.json)</td>
+<td><code>df8ee7d</code></td>
+</tr>
+<tr id="c-054" class="even">
+<td class="cid-cell">C-054</td>
+<td>Per-step global energy and particle balance on the RAPTOR L-mode benchmark at its published settings (Newton, 5 corrector steps, dt = 0.05 s), every one of 200 steps converged<br>
+<span class="tol">agreed 1e-6 per converged step (OQ-5); test covers 20 steps, run covers 200</span></td>
+<td class="val">energy 1.1 × 10<sup>-7</sup>, particles 3 × 10<sup>-13</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/conservation/test_torax_balance.py::test_raptor_lmode_benchmark_balance</td>
+<td><code>1d64c0c</code></td>
+</tr>
+<tr id="c-055" class="odd">
+<td class="cid-cell">C-055</td>
+<td>Reverse-mode gradient of stored energy with respect to the initial electron temperature through three Newton-solved TORAX steps of the RAPTOR L-mode benchmark, against central finite differences<br>
+<span class="tol">test asserts 1e-7; forward mode equals it since 8aa70ee (C-062, K-009 lifted)</span></td>
+<td class="val">6 × 10<sup>-9</sup></td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/diff/test_torax_gradients.py::test_grad_through_newton_benchmark_steps_fd_checked</td>
+<td><code>df8ee7d</code></td>
+</tr>
+<tr id="c-056" class="even">
+<td class="cid-cell">C-056</td>
+<td>NRMSD of the ion density against the paper's TORAX run at t = 10 s with TORAX 1.4's temperature-dependent neon charge (8.1 at the edge) versus neon fixed at Z = 10 as in the paper's Table II<br>
+<span class="tol">single runs</span></td>
+<td class="val">0.35% with the computed charge, 0.009% with Z = 10</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>TORAX driver on configs/benchmarks/raptor_lmode with and without impurity Z_override</td>
+<td><code>1d64c0c</code></td>
+</tr>
+<tr id="c-057" class="odd">
+<td class="cid-cell">C-057</td>
+<td>Alpha markers of the 6400-marker production run (orbit tolerance 1e-6, second cluster job) stopped by ASCOT5's per-marker time cap of 600 s while still energetic, and the share of the birth power left in them; ASCOT5 charges each marker the wall time of its whole vectorised batch, so the cap did not mean CPU time per marker<br>
+<span class="tol">exact count; the run's profiles are discarded</span></td>
+<td class="val">2823 of 6400 markers, 18% of the birth power</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>cluster job 2286956, run PROD, end condition CPUMAX</td>
+<td><code>d7318f7</code></td>
+</tr>
+<tr id="c-058" class="even">
+<td class="cid-cell">C-058</td>
+<td>Share of the alpha birth power deposited to ions, ASCOT5 orbit tolerance 1e-6 versus 1e-7 (two complete 640-marker runs from separate jobs, different marker samples), ITER hybrid flat-top at t = 5 s; the electron share is 0.660 versus 0.661, and deposited plus lost power exceeds the birth power by 2.2% versus 0.4%<br>
+<span class="tol">640 markers per run; Monte Carlo noise not measured separately</span></td>
+<td class="val">0.348 at 10<sup>-6</sup>, 0.331 at 10<sup>-7</sup></td>
+<td><span class="badge st-reviewed">reviewed</span></td>
+<td>job 2257707 CHECK_TOL_TIGHT (1e-6) and job 2286956 CHECK_TOL_TIGHT (1e-7)</td>
+<td><code>c8eaf6e</code></td>
+</tr>
+<tr id="c-059" class="odd">
+<td class="cid-cell">C-059</td>
+<td>Total alpha heating on TORAX's cells, ASCOT5 (640 markers, tolerance 1e-7, all markers finished) versus TORAX's local alpha model, ITER hybrid flat-top at t = 5 s; electron fraction 0.667 versus 0.649<br>
+<span class="tol">+2.4%, equal to the markers' birth power excess over TORAX's alpha power, of which 1.0% is explained (AFSI rate +0.4%, 3.52 vs 3.5 MeV +0.6%) and 1.4% is not; radial shape not resolved by 640 markers (heating centroid 0.376 vs 0.355 at 1e-6, TORAX 0.362)</span><br>
+Superseded by <a href="#c-064">C-064</a></td>
+<td class="val">72.2 MW vs 70.5 MW</td>
+<td><span class="badge st-reviewed">reviewed</span></td>
+<td>job 2286956 CHECK_TOL_TIGHT; tkit ascot-profiles + ascot-apply (apply_tol1e-7)</td>
+<td><code>c8eaf6e</code></td>
+</tr>
+<tr id="c-060" class="even">
+<td class="cid-cell">C-060</td>
+<td>Effect on TORAX of the ASCOT5 alpha heating (tolerance 1e-7, 640 markers) held fixed from t = 5 s to 7 s, against TORAX's own t = 5 s alpha profiles held fixed, ITER hybrid flat-top; stored thermal energy, with central T_e and the temperature profiles<br>
+<span class="tol">single run</span><br>
+Superseded by <a href="#c-067">C-067</a></td>
+<td class="val">+0.03% in stored energy (central T_e +0.5%, T_e and T_i profiles 0.6%)</td>
+<td><span class="badge st-reviewed">reviewed</span></td>
+<td>tkit ascot-apply on job 2286956 CHECK_TOL_TIGHT, duration 2 s</td>
+<td><code>c8eaf6e</code></td>
+</tr>
+<tr id="c-061" class="odd">
+<td class="cid-cell">C-061</td>
+<td>M1 acceptance tolerance against RAPTOR on the published ITER L-mode case, set at the M1 physicist review; NRMSD of the t = 10 s profiles (T_i, T_e, psi, q; densities), and the maximum relative deviation of the line-averaged T_e, T_i, n_e traces over 0-10 s; fusion and Ohmic powers reported, not gated<br>
+<span class="tol">a limit, not a measurement: owner as physicist reviewer, OQ-5, 1 Oct 2026</span></td>
+<td class="val">profiles ≤ 2% (densities ≤ 0.1%), traces ≤ 5%</td>
+<td><span class="badge st-reviewed">reviewed</span></td>
+<td>tkit.physics.raptor_benchmark.ACCEPTANCE; tests/regression/test_raptor_benchmark.py::test_published_settings_pass_the_m1_acceptance_gate</td>
+<td><code>023d5db</code></td>
+</tr>
+<tr id="c-062" class="even">
+<td class="cid-cell">C-062</td>
+<td>Forward-mode (jacfwd) versus reverse-mode gradient of stored energy with respect to the initial electron temperature through three Newton-solved TORAX steps of the RAPTOR L-mode benchmark, with tkit's value-preserving patch to TORAX's trapped-particle fraction (before it, forward mode returned NaN); stored energy with and without the patch identical to the last bit<br>
+<span class="tol">test asserts 1e-12</span></td>
+<td class="val">2 × 10<sup>-15</sup> (NaN before the fix)</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/diff/test_torax_gradients.py::test_forward_mode_through_newton_matches_reverse</td>
+<td><code>8aa70ee</code></td>
+</tr>
+<tr id="c-063" class="odd">
+<td class="cid-cell">C-063</td>
+<td>Weighted mean birth energy of the ASCOT5 alpha markers (6400 markers, third cluster job), drawn from AFSI's birth distribution for the ITER hybrid flat-top at t = 5 s, against the 3.52 MeV used for the expected birth power; the marker weights sum to AFSI's birth rate exactly, so this ratio is the whole of the markers' birth-power excess (K-011)<br>
+<span class="tol">±0.004 MeV (standard error of the mean over 6400 markers); the 640-marker samples give 3.565-3.586 MeV, which is why earlier jobs put the excess at 1.3-1.4%</span></td>
+<td class="val">3.573 MeV, 1.5% above 3.52 MeV</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>cluster job 2287778, run PROD; tkit ascot-profiles prints the mean<br>
+<code>python -m tkit.cli ascot-profiles alpha_t5.h5 data/reference/iterhybrid_predictor_corrector.nc --run PROD --out prod.npz</code></td>
+<td><code>fcd8ce5</code></td>
+</tr>
+<tr id="c-064" class="even">
+<td class="cid-cell">C-064</td>
+<td>Total alpha heating on TORAX's cells, ASCOT5 production run (6400 markers, orbit tolerance 1e-7, all markers finished) versus TORAX's local alpha model, ITER hybrid flat-top at t = 5 s; electron fraction 0.664 versus 0.649<br>
+<span class="tol">+1.8%. Birth power is 2.5% above TORAX's alpha power, fully accounted for: AFSI rate +0.4%, 3.52 vs 3.5 MeV +0.6%, mean birth energy above 3.52 MeV +1.5% (C-063). Then losses -0.7%, thermalised markers -0.8%, energy books +0.6%, interpolation onto TORAX's cells +0.2%</span></td>
+<td class="val">71.8 MW vs 70.5 MW</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>job 2287778 PROD; tkit ascot-apply (apply_prod)<br>
+<code>python -m tkit.cli ascot-apply alpha_t5.npz data/reference/iterhybrid_predictor_corrector.nc --duration 2 --out apply_prod</code></td>
+<td><code>fcd8ce5</code></td>
+</tr>
+<tr id="c-065" class="odd">
+<td class="cid-cell">C-065</td>
+<td>Radial position of the alpha heating on TORAX's cells, ASCOT5 production run versus TORAX's local model, ITER hybrid flat-top at t = 5 s; power-weighted mean radius and the radius inside which half the power is deposited (normalised toroidal flux radius)<br>
+<span class="tol">the three 640-marker samples give centroids 0.371-0.376 and half-power radii 0.329-0.343, outside TORAX's in every sample; inside rho_tor_norm 0.3 the profile is not resolved cell by cell (K-012)</span></td>
+<td class="val">centroid 0.370 vs 0.362, half-power radius 0.331 vs 0.325</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>job 2287778 PROD and CHECK_TOL_*, job 2286956 CHECK_TOL_TIGHT; tkit ascot-apply heating summary<br>
+<code>python blog/figures/make_ascot_alpha_profile.py JOBDIR PREVJOBDIR</code></td>
+<td><code>fcd8ce5</code></td>
+</tr>
+<tr id="c-066" class="even">
+<td class="cid-cell">C-066</td>
+<td>Change in alpha heating from tightening the ASCOT5 orbit tolerance from 1e-7 to 1e-8, the same 640 markers, ITER hybrid flat-top at t = 5 s; electron and ion heating<br>
+<span class="tol">single pair of runs; lost markers 5 vs 6. Energy books 1.0049 at 1e-7 and 1.0057 at 1e-8: the remaining 0.5% overshoot does not shrink with the tolerance</span></td>
+<td class="val">electrons -0.16%, ions +0.08%</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>cluster job 2287778, runs CHECK_TOL_PROD (1e-7) and CHECK_TOL_TIGHT (1e-8)</td>
+<td><code>fcd8ce5</code></td>
+</tr>
+<tr id="c-067" class="odd">
+<td class="cid-cell">C-067</td>
+<td>Effect on TORAX of the ASCOT5 production alpha heating (6400 markers, tolerance 1e-7) held fixed from t = 5 s to 7 s, against TORAX's own t = 5 s alpha profiles held fixed, ITER hybrid flat-top; stored thermal energy, with central T_e and the temperature profiles<br>
+<span class="tol">single run</span></td>
+<td class="val">-0.009% in stored energy (central T_e +0.3%, T_e and T_i profiles 0.4% and 0.5%)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>tkit ascot-apply on job 2287778 PROD, duration 2 s<br>
+<code>python -m tkit.cli ascot-apply alpha_t5.npz data/reference/iterhybrid_predictor_corrector.nc --duration 2 --out apply_prod</code></td>
+<td><code>2138b3c</code></td>
+</tr>
+<tr id="c-068" class="even">
+<td class="cid-cell">C-068</td>
+<td>Cost of one TGLF case (SAT2, both magnetic-field perturbations, three species) on inputs drawn from the M2 MAST-U and ITER sampling spaces, one AMD EPYC core per case<br>
+<span class="tol">512 cases, single job; the 256-worker dataset jobs measured 3.3 s per case (C-074)</span></td>
+<td class="val">2.2-2.5 s per case alone, 2.6 s median in a 64-worker pool; about 700 core-hours per 10^6 cases</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>cluster job 2293936 (OQ-14), scripts/oq14_tglf_timing.py<br>
+<code>python scripts/oq14_tglf_timing.py</code></td>
+<td><code>3fb1fe2</code></td>
+</tr>
+<tr id="c-069" class="odd">
+<td class="cid-cell">C-069</td>
+<td>Install checks of the GACODE build (commit f34a9dd) on the cluster's CPU nodes; TGLF and CGYRO regression suites, TORAX's in-process TGLF wrapper and TORAX's TGLF transport-model tests<br>
+<span class="tol">each suite's own tolerances</span></td>
+<td class="val">TGLF 9/9 regression cases; tglf2py wrapper 11/11; TORAX TGLF transport-model tests 3/3; CGYRO 21/21</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>login-node builds 2026-10-02 and cluster job 2293936 (OQ-14)</td>
+<td><code>3fb1fe2</code></td>
+</tr>
+<tr id="c-070" class="even">
+<td class="cid-cell">C-070</td>
+<td>TGLF as TORAX's transport model on TORAX's iterhybrid_predictor_corrector case, TORAX 1.4.3 with the upstream TGLF patch, legacy TGLF defaults, no transport radial domain<br>
+<span class="tol">single run</span></td>
+<td class="val">fails at the first step: NaN fluxes on the axis face, about 10^6 gyro-Bohm units on the edge face (K-015)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>cluster job 2293936 (OQ-14), scripts/oq14_torax_tglf.py</td>
+<td><code>3fb1fe2</code></td>
+</tr>
+<tr id="c-071" class="odd">
+<td class="cid-cell">C-071</td>
+<td>TGLF dataset tglf-mastu-v1, 10^5 Latin-hypercube points of the approved MAST-U region (sampling space version 2) under the alpha_MHD cap; cases that TGLF completed with finite fluxes<br>
+<span class="tol">exact count</span></td>
+<td class="val">100000 of 100000 cases completed, all six fluxes finite</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>cluster job 2300218; dataset sha256 104e3015...; Simvue run tglf-dataset-mastu, tag dataset-m2-tglf-mastu-v1<br>
+<code>python -m tkit.datasets.tglf_dataset mastu --n 100000 --workers 256</code></td>
+<td><code>887245e</code></td>
+</tr>
+<tr id="c-072" class="even">
+<td class="cid-cell">C-072</td>
+<td>TGLF dataset tglf-iter-v1, 10^5 Latin-hypercube points of the approved ITER region (sampling space version 2) under the alpha_MHD cap; cases that TGLF completed with finite fluxes<br>
+<span class="tol">exact count</span></td>
+<td class="val">100000 of 100000 cases completed, all six fluxes finite</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>cluster job 2300314; dataset sha256 3f6ee151...; Simvue run tglf-dataset-iter, tag dataset-m2-tglf-iter-v1<br>
+<code>python -m tkit.datasets.tglf_dataset iter --n 100000 --workers 256</code></td>
+<td><code>887245e</code></td>
+</tr>
+<tr id="c-073" class="odd">
+<td class="cid-cell">C-073</td>
+<td>Fraction of Latin-hypercube draws kept under the fixed alpha_MHD cap (MAST-U 4, ITER 2), and what the cap does to the kept q and beta_e<br>
+<span class="tol">exact for these datasets</span></td>
+<td class="val">MAST-U 0.490 kept (220936 drawn), ITER 0.425 (258597 drawn); kept mean beta_e 23-25% below the box mean on both; kept median q 1.90 (MAST-U) and 1.73 (ITER, sampled log-uniform over 1.02-11.1)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>dataset metadata (sampling) and inputs of C-071, C-072</td>
+<td><code>887245e</code></td>
+</tr>
+<tr id="c-074" class="even">
+<td class="cid-cell">C-074</td>
+<td>Cost of generating each 10^5-case TGLF dataset on one 256-core CPU node<br>
+<span class="tol">two jobs</span></td>
+<td class="val">91.6 core-h (MAST-U) and 92.4 core-h (ITER); 3.3 s per case mean; 35 min wall per job</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>per-case wall times stored in C-071, C-072; jobs 2300218, 2300314</td>
+<td><code>887245e</code></td>
+</tr>
+<tr id="c-075" class="odd">
+<td class="cid-cell">C-075</td>
+<td>Fraction of dataset cases whose total heat flux Q_e + Q_i exceeds 10^4 gyro-Bohm units (TGLF's normalisation)<br>
+<span class="tol">exact for these datasets; not yet explained (K-019)</span></td>
+<td class="val">MAST-U 0.283 above 10<sup>4 and 0.122 above 10</sup>5; ITER 0.097 above 10<sup>4 and 0.0065 above 10</sup>5</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>outputs of C-071, C-072</td>
+<td><code>887245e</code></td>
+</tr>
+<tr id="c-076" class="even">
+<td class="cid-cell">C-076</td>
+<td>Fraction of each dataset's points whose geometry input lies inside the 1st-99th percentile envelope of the same input measured on the equilibria's flux surfaces, per input<br>
+<span class="tol">exact for these datasets; per-input table in tglf_domain.csv</span></td>
+<td class="val">MAST-U 0.72 (triangularity) to 0.94 (q); ITER 0.63 (q) to 0.94 (triangularity shear)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>blog/figures/make_tglf_domain.py on C-071, C-072<br>
+<code>python blog/figures/make_tglf_domain.py</code></td>
+<td><code>887245e</code></td>
+</tr>
+</tbody>
+</table>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2026 Vignesh Gopakumar</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<div class="tk-footer">
+Code and first draft by Claude (Anthropic), working to a brief by Vignesh Gopakumar,
+who reviewed and approved this page.
+<a href="../../Blog/tokamak-toolkit/about.html">How this is built</a> ·
+<a href="../../Blog/tokamak-toolkit/index.html">Tokamak Toolkit home</a>
+</div>
+
+
+
+
+</body></html>

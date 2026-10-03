@@ -1,0 +1,75 @@
+---
+title: ITER L-mode benchmark against RAPTOR, from the TORAX paper
+date: '2026-10-01'
+categories:
+- measured
+entry: 11
+milestone: M1
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 11 · milestone M1
+:::
+
+M1 asks that the benchmark match *published profiles* within a tolerance set by a physicist
+(see the [Primer](../primer.qmd)). The ITER hybrid scenarios we have used so far have no
+published profiles from a second code, only TORAX's own output, which our loop reproduces to
+round-off. The TORAX paper (Citrin et al., arXiv:2406.06718) publishes one quantitative
+comparison with an independent code, RAPTOR: an ITER L-mode plasma with constant current,
+constant heating and constant transport coefficients, run until the profiles are steady. The owner chose this case as the
+M1 physics benchmark ([OQ-12](/Blog/tokamak-toolkit/decisions.qmd#oq-12)).
+
+## Method
+
+The paper gives the full TORAX configuration (its Table II), written for an early TORAX
+version. We translated it to TORAX 1.4.3 parameter names. One setting needed care: the paper
+fixes the neon impurity's charge at 10, while TORAX 1.4 computes it from the electron
+temperature. Leaving the computed charge in place changes the ion density: [0.35% with the computed charge, 0.009% with Z = 10]{.claim}[C-056](/Blog/tokamak-toolkit/claims.qmd#c-056){.cid .st-measured}.
+
+The comparison data come from the paper's Fig. 6. The figure is vector graphics, so the
+plotted points of both curves, RAPTOR and the paper's own TORAX run, are stored in the PDF.
+We read them out and mapped them to data units with each panel's tick marks. To check the
+read-out, we recomputed the paper's error measure (normalised root-mean-square deviation,
+NRMSD) between its two curves: [all five printed values reproduced (1.102, 0.712, 0.026, 0.414, 0.701% vs 1.1, 0.71, 0.03, 0.41, 0.70%)]{.claim}[C-048](/Blog/tokamak-toolkit/claims.qmd#c-048){.cid .st-tested}.
+
+The run goes through the Tokamak Toolkit's fixed-step loop over TORAX's time step. It matches TORAX's own
+driver to [better than 10^-13^]{.claim}[C-049](/Blog/tokamak-toolkit/claims.qmd#c-049){.cid .st-measured}, so the comparison below tests the physics, not the wrapper.
+
+## Results
+
+![Top: profiles at the end of the run. Bottom: difference from RAPTOR in percent of RAPTOR's mean. Look
+at the bottom row: the Tokamak Toolkit and the paper's TORAX run differ from RAPTOR in the same
+way.](../figures/raptor_lmode.svg)
+
+Against RAPTOR, NRMSD at the end of the run (the paper's TORAX in brackets):
+[T_i 1.23% (1.1%), T_e 0.28% (0.71%), n_e 0.03% (0.03%), psi 0.49% (0.41%), q 0.69% (0.70%)]{.claim}[C-050](/Blog/tokamak-toolkit/claims.qmd#c-050){.cid .st-reviewed}. Against the paper's TORAX run: [T_i 0.13%, T_e 0.50%, n_e 0.01%, psi 0.08%, q 0.16%; Ohmic power density 3.6%]{.claim}[C-051](/Blog/tokamak-toolkit/claims.qmd#c-051){.cid .st-reviewed}. That second line
+measures how much TORAX has changed between the paper's version and 1.4.3, plus any
+translation error. It is largest for the electron temperature and the Ohmic heating, which
+depend on the plasma's electrical conductivity.
+
+Halving the time step three times changes these end-of-run numbers by [at most 0.006 percentage points]{.claim}[C-052](/Blog/tokamak-toolkit/claims.qmd#c-052){.cid .st-measured}, so the
+published step is fine for the end state. The transient differs more; that is on the
+technical page.
+
+The other M1 criteria hold on this case as well. Energy and particle balance close on every
+step: [energy 1.1 × 10^-7^, particles 3 × 10^-13^]{.claim}[C-054](/Blog/tokamak-toolkit/claims.qmd#c-054){.cid .st-tested}. The gradient of stored energy through three steps matches finite
+differences to [6 × 10^-9^]{.claim}[C-055](/Blog/tokamak-toolkit/claims.qmd#c-055){.cid .st-tested}. Forward-mode derivatives through TORAX's Newton
+solver came out as NaN at first (ceiling [K-009](/Blog/tokamak-toolkit/ceilings.qmd#k-009), since fixed in [entry 14](14-forward-mode-nan.qmd)).
+
+::: {.callout-note collapse="true"}
+## Provenance
+Run: `tkit benchmark-raptor --dt 0.05` at commit `d689def` (clean tree), config hash
+`c9f9626e`, TORAX 1.4.3, JAX 0.10.2, Python 3.11.7, float64, tier A, 2026-10-01. Reference curves: arXiv:2406.06718v4 Fig. 6 (CC BY 4.0), read from the PDF's vector
+paths. Figure: `blog/figures/make_raptor_lmode.py`; data in `raptor_lmode.csv`.
+:::
+
+**Where this stands**: M1 in progress. All four acceptance criteria now have results on a
+published benchmark. The tolerance against RAPTOR is the physicist reviewer's ([OQ-5](/Blog/tokamak-toolkit/decisions.qmd#oq-5)); the
+review is the M1 gate.
+
+Technical details → [Backends: the RAPTOR L-mode benchmark](../technical/backends.qmd#raptor-benchmark)
+
+::: {.entry-links}
+**Technical details →** [Backends › raptor benchmark](/Blog/tokamak-toolkit/technical/backends.qmd#raptor-benchmark)  
+**Decisions →** [OQ-12](/Blog/tokamak-toolkit/decisions.qmd#oq-12) · [OQ-5](/Blog/tokamak-toolkit/decisions.qmd#oq-5)
+:::

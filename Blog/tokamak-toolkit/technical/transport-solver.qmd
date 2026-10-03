@@ -1,0 +1,96 @@
+---
+title: Transport solver
+toc: true
+toc-depth: 3
+date-modified: '2026-09-30'
+---
+
+## Purpose
+
+Advance the profiles by one time step with the transport coefficients and sources held fixed.
+This is the operator $\mathcal S$ inside the [coupling loop](coupling-loop.qmd), used by the
+toy Tier A models (runs through TORAX use TORAX's own solver). It is written so that particles
+and energy are conserved exactly by the discrete equations, not just approximately.
+
+## Method
+
+For a cell-centred quantity $u$ with capacity $c$, in conservative form on $\rho$:
+
+$$c\,V' \frac{\partial u}{\partial t} = -\frac{\partial \Gamma}{\partial \rho} + V' S,
+\qquad \Gamma = V' G\left(-D\,\frac{\partial u}{\partial \rho} + v\,u\right),
+\qquad G = \langle\lvert\nabla\rho\rvert^2\rangle .$$
+
+Boundary conditions: zero flux on the axis (Neumann, automatic because $V'=0$ there), and a
+fixed value $u = u_\text{edge}$ at $\rho = 1$ (Dirichlet).
+
+The three profiles use this one form:
+
+| equation | $u$ | $c$ | $D$ | $v$ | $S$ |
+|---|---|---|---|---|---|
+| density | $n_e$ | 1 | $D_e$ | $v_e$ | $s_n$ |
+| electron energy | $T_e$ | $\tfrac32 e\, n_e$ | $e\, n_{e,\text{face}}\, \chi_e$ | 0 | $q_e$ |
+| ion energy | $T_i$ | $\tfrac32 e\, n_e$ | $e\, n_{e,\text{face}}\, \chi_i$ | 0 | $q_i$ |
+
+With $T$ in eV and $e$ the elementary charge, $\tfrac32 e\,n_e$ is the energy density per eV
+(J m⁻³ eV⁻¹) and $\Gamma$ is a heat flow in watts. A single ion species with $n_i = n_e$ is
+assumed at this stage.
+
+## Discretisation
+
+Cell-centred finite volumes on the grid of [core state](core-state.qmd). With $\Delta c_j$ the
+distance between the centres either side of face $j$ (and, at the boundary face, from the last
+centre to $\rho = 1$), define face coefficients
+
+$$a_j = -\frac{V'_j G_j D_j}{\Delta c_j}, \qquad b_j = \tfrac12 V'_j G_j v_j, \qquad a_0 = b_0 = 0 .$$
+
+Central differencing of the convective face value gives the interior flux
+
+$$\Gamma_j = (b_j - a_j)\,u_{j-1} + (a_j + b_j)\,u_j ,$$
+
+and at the boundary face, where the face value is the Dirichlet value,
+
+$$\Gamma_n = -a_n\,u_{n-1} + (a_n + 2 b_n)\,u_\text{edge} .$$
+
+Backward Euler ($\theta = 1$): with cell weight $w_i = c_i V'_i \Delta\rho_i$,
+
+$$\frac{w_i}{\Delta t}\left(u_i - u_i^\text{old}\right) + \Gamma_{i+1} - \Gamma_i = V'_i\,\Delta\rho_i\,S_i ,$$
+
+a tridiagonal system in the new values, solved directly. Implicit, deliberately: transport is
+stiff and an explicit step would need a time step orders of magnitude smaller.
+
+**Gauss-Seidel ordering, deliberately.** Density is solved first; the two energy equations then
+use the *new* density in both their capacity and their diffusivity. Consequently the returned
+profiles satisfy the discrete particle and energy balances exactly for the coefficients used,
+which is what the [conservation tests](tests.qmd) check: [10^−10^]{.claim}[C-026](/Blog/tokamak-toolkit/claims.qmd#c-026){.cid .st-tested} for a single step.
+
+```python
+# tkit/core/solvers.py @ e5c23a9 (trimmed)
+ne = implicit_step(eq, p_old.ne, jnp.ones_like(p_old.ne), fl.d_e, fl.v_e, src.s_n, edge.ne, dt)
+ne_face = g.to_face(ne)
+cap = 1.5 * E_CHARGE * ne
+te = implicit_step(eq, p_old.te, cap, E_CHARGE * ne_face * fl.chi_e, zero_v, src.q_e, edge.te, dt)
+ti = implicit_step(eq, p_old.ti, cap, E_CHARGE * ne_face * fl.chi_i, zero_v, src.q_i, edge.ti, dt)
+```
+
+## Design decisions
+
+- **Dense solve, for now.** The tridiagonal system is solved with a dense `linalg.solve`, fine
+  for a few hundred cells and simple to differentiate. A Thomas-algorithm scan is the upgrade
+  ([K-001](/Blog/tokamak-toolkit/ceilings.qmd#k-001)).
+- **No convective heat flux**: $v = 0$ in the energy equations. Heat pinches, if needed, will
+  come in through the transport model's diffusivity or a later extension.
+- **Central, not upwind, convection.** Adequate at the pinch velocities of the toy model; a
+  large cell Péclet number would call for upwinding.
+
+## Parameters
+
+Grid size ($n$, from the scenario config), time step ($\Delta t$), boundary values. No
+tunable numerical parameters beyond these.
+
+## Ceilings
+
+[K-001](/Blog/tokamak-toolkit/ceilings.qmd#k-001) (dense solve).
+
+## Changelog
+
+- 2026-09-30: first published version.

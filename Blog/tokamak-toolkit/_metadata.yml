@@ -1,0 +1,10 @@
+# Applies to every page under Blog/tokamak-toolkit/ (Quarto directory metadata).
+css: tokamak-toolkit.css
+include-after-body:
+  - text: |
+      <div class="tk-footer">
+      Code and first draft by Claude (Anthropic), working to a brief by Vignesh Gopakumar,
+      who reviewed and approved this page.
+      <a href="/Blog/tokamak-toolkit/about.html">How this is built</a> ·
+      <a href="/Blog/tokamak-toolkit/index.html">Tokamak Toolkit home</a>
+      </div>

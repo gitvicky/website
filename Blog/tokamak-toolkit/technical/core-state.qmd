@@ -1,0 +1,122 @@
+---
+title: Core state and interfaces
+toc: true
+toc-depth: 3
+date-modified: '2026-09-30'
+---
+
+## Purpose
+
+The data that flows around the coupling loop, and the contract every physics model and every
+surrogate must satisfy. Serves invariants 4 (purity) and 5 (every surrogate behind a guard): the
+contract makes "was this answer inside the model's domain?" part of every model's output.
+
+## State objects
+
+All state is immutable JAX pytrees (Equinox modules). Updating means building a new object;
+nothing is mutated. That is what lets the whole simulation be compiled, vectorised over
+ensemble members or samples with `vmap`, and differentiated.
+
+| object | fields (unit) | lives on |
+|---|---|---|
+| `Grid` | `rho` ($n$), `rho_face` ($n+1$; first 0, last 1) | – |
+| `Profiles` | `te` (eV), `ti` (eV), `ne` (m⁻³) | cells |
+| `Equilibrium` | `psi` (Wb), `q`, `vprime` $=V'$ (m³), `g1` $=G$ (m⁻²), `volume` (m³), `area` (m²); scalars `ip` (A), `b0` (T), `r0` (m), `a_minor` (m) | cells |
+| `Fluxes` | `chi_e`, `chi_i`, `d_e` (m² s⁻¹), `v_e` (m s⁻¹, negative inward), `std` | faces |
+| `Sources` | `q_e`, `q_i` (W m⁻³), `s_n` (m⁻³ s⁻¹), `std` | cells |
+| `State` | `profiles`, `t` (s) | – |
+| `Trace` | per step: `t`, `profiles`, `fluxes`, `flux_std`, `sources`, `ok_transport` ($n+1$), `ok_sources` ($n$), `picard_residual` (per iteration, plus the corrector) | – |
+
+Face values of cell quantities are linear interpolation with constant extrapolation at the ends;
+$V'$ on faces is forced to zero on the axis, which is what makes the axis a zero-flux boundary
+in the [transport solver](transport-solver.qmd).
+
+**The equilibrium is quasi-static**: recomputed once per time step from the profiles, not
+evolved.
+
+### Uncertainty travels with the data, deliberately
+
+`Fluxes` and `Sources` each carry an optional `std` with *the same structure* as themselves:
+the ensemble spread of a surrogate, or `None` for a physics model. The loop records it every
+step in `Trace.flux_std` (zeros for physics models), the [guard](guard.qmd) zeroes it wherever
+the fallback was used, and the [IMAS adapters](imas-adapters.qmd) export it as error bars. The
+alternative, a separate uncertainty channel beside the data, makes it easy for the two to
+drift apart.
+
+### Headline metric
+
+`Trace.fallback_fraction()` is the fraction of (step, face) points where the guard handed over
+to the fallback: `1 - mean(ok_transport)`. Reported for every run.
+
+## The model contract
+
+Every model returns its output *and* a boolean mask saying where it was inside its declared
+domain. Physics models return all-true; guarded surrogates return the guard's decision per
+evaluation point.
+
+```python
+# tkit/core/interfaces.py @ e5c23a9 (trimmed)
+class TransportModel(Protocol):
+    tier: Literal["A", "B"]
+    domain: Domain
+    def __call__(self, eq: Equilibrium, p: Profiles) -> tuple[Fluxes, Array]:
+        """Transport coefficients on faces and ok mask of shape (n+1,)."""
+
+class SourceModel(Protocol):          # -> (Sources, ok mask of shape (n,))
+class EquilibriumSolver(Protocol):    # Profiles -> Equilibrium (coil currents later)
+class SawtoothModel(Protocol):        # (Equilibrium, Profiles) -> Profiles, smoothed trigger
+```
+
+The set of four models is itself a pytree (`Models`), so a whole configuration of interacting
+models, including trained surrogate weights, can be batched with `vmap`.
+
+## Input domains
+
+A `Domain` is an axis-aligned box in feature space, optionally intersected with a convex hull
+stored as half-spaces $A x \le b$. Membership is pure, broadcasts over leading axes, and so works
+inside `jit` and `vmap`:
+
+$$x \in \mathcal D \iff \ell \le x \le u \ \text{(componentwise)} \ \wedge\ A x \le b .$$
+
+Constructors: `box(lower, upper)`, `unbounded(d)` (everything inside; physics models), and
+`from_samples(x, margin)` (the tight box around training samples, widened by `margin` times the
+range). `normalise` maps the box to $[-1,1]^d$, leaving unbounded axes alone. *Tested by*
+`tests/unit/test_domain.py` (box and hull membership under `vmap` and `jit`).
+
+## Transport features
+
+The standard feature vector on each face, in order, shared by the toy transport model, the
+guard and future surrogates:
+
+| feature | definition |
+|---|---|
+| `rlte`, `rlti`, `rlne` | $R/L_u = -R_0\,(\partial u/\partial\rho)/(a\,u)$ for $T_e$, $T_i$, $n_e$ |
+| `q` | safety factor, interpolated to faces |
+| `te_over_ti` | $T_e/T_i$ on faces |
+| `rho` | face position |
+
+Gradients are differences between neighbouring cell centres; zero on the axis face, and the
+last interior value repeated on the boundary face.
+
+**Known issue ([K-008](/Blog/tokamak-toolkit/ceilings.qmd#k-008)): this is not QLKNN's convention.** QLKNN, as TORAX feeds it, takes
+$R/L_u = -R_0\,(\partial u/\partial r_\text{mid})/u$, with $r_\text{mid}$ the midplane minor radius
+of each flux surface. The two agree only for circular geometry. On the ITER hybrid scenario
+they differ from [+19%]{.claim}[C-032](/Blog/tokamak-toolkit/claims.qmd#c-032){.cid .st-measured} in the core to about a third at the edge. No published
+number depends on it, because every guard used so far has an open box or an arbitrary
+demonstration box. It matters from M4 on, when the guard's box is a *verified* domain and must
+live in the surrogate's own input space. Which convention the features should use is a
+modelling choice; the owner has deferred it to M3, when the first trained surrogate exists
+([OQ-10](/Blog/tokamak-toolkit/decisions.qmd#oq-10)).
+
+## Ensembles {#ensembles}
+
+`MLPEnsemble` stacks $M$ independent multilayer perceptrons (default 5 members, width 64, depth
+2, GELU) along a leading axis and evaluates them with `vmap`. Inputs and outputs are normalised
+by fitted means and standard deviations; a mask applies softplus to chosen output columns so
+positivity is structural rather than learned. It returns the member mean and standard
+deviation, which is exactly what the guard consumes. It exists and is tested for shapes and
+spread (`tests/unit/test_ensemble.py`), but nothing has been trained yet: that is M3.
+
+## Changelog
+
+- 2026-09-30: first published version.

@@ -150,7 +150,7 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>superseded</strong>: replaced by a newer claim</li>
 <li><strong>retracted</strong>: wrong; see the errata</li>
 </ul>
-<p><code>tested</code> claims are checked by the test suite, which is run in full, and again with every UKAEA-gated code disabled, before each publish. Continuous integration is not yet set up (the code has no hosted repository), so a claim is <code>tested</code> at its stated commit, not re-checked automatically between publishes. <code>reviewed</code> claims passed the M1 physicist review (1 Oct 2026), which the owner did as reviewer of record; the gate and the tolerances it set are on the <a href="../../Blog/toktoit/decisions.html#m1-review">decisions page</a>.</p>
+<p><code>tested</code> claims are checked by the test suite, which is run in full, and again with every UKAEA-gated code disabled, before each publish. The code is in a private repository whose continuous-integration results are not part of this log, so a claim is <code>tested</code> at its stated commit, not re-checked automatically between publishes. <code>reviewed</code> claims passed the M1 physicist review (1 Oct 2026), which the owner did as reviewer of record; the gate and the tolerances it set are on the <a href="../../Blog/toktoit/decisions.html#m1-review">decisions page</a>.</p>
 <table class="claims caption-top table" data-quarto-postprocess="true">
 <colgroup>
 <col style="width: 16%">
@@ -784,6 +784,91 @@ Superseded by <a href="#c-067">C-067</a></td>
 <td>tkit ascot-apply on job 2287778 PROD, duration 2 s<br>
 <code>python -m tkit.cli ascot-apply alpha_t5.npz data/reference/iterhybrid_predictor_corrector.nc --duration 2 --out apply_prod</code></td>
 <td><code>2138b3c</code></td>
+</tr>
+<tr id="c-068" class="even">
+<td class="cid-cell">C-068</td>
+<td>Cost of one TGLF case (SAT2, both magnetic-field perturbations, three species) on inputs drawn from the M2 MAST-U and ITER sampling spaces, one AMD EPYC core per case<br>
+<span class="tol">512 cases, single job; the 256-worker dataset jobs measured 3.3 s per case (C-074)</span></td>
+<td class="val">2.2-2.5 s per case alone, 2.6 s median in a 64-worker pool; about 700 core-hours per 10^6 cases</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>cluster job 2293936 (OQ-14), scripts/oq14_tglf_timing.py<br>
+<code>python scripts/oq14_tglf_timing.py</code></td>
+<td><code>3fb1fe2</code></td>
+</tr>
+<tr id="c-069" class="odd">
+<td class="cid-cell">C-069</td>
+<td>Install checks of the GACODE build (commit f34a9dd) on the cluster's CPU nodes; TGLF and CGYRO regression suites, TORAX's in-process TGLF wrapper and TORAX's TGLF transport-model tests<br>
+<span class="tol">each suite's own tolerances</span></td>
+<td class="val">TGLF 9/9 regression cases; tglf2py wrapper 11/11; TORAX TGLF transport-model tests 3/3; CGYRO 21/21</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>login-node builds 2026-10-02 and cluster job 2293936 (OQ-14)</td>
+<td><code>3fb1fe2</code></td>
+</tr>
+<tr id="c-070" class="even">
+<td class="cid-cell">C-070</td>
+<td>TGLF as TORAX's transport model on TORAX's iterhybrid_predictor_corrector case, TORAX 1.4.3 with the upstream TGLF patch, legacy TGLF defaults, no transport radial domain<br>
+<span class="tol">single run</span></td>
+<td class="val">fails at the first step: NaN fluxes on the axis face, about 10^6 gyro-Bohm units on the edge face (K-015)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>cluster job 2293936 (OQ-14), scripts/oq14_torax_tglf.py</td>
+<td><code>3fb1fe2</code></td>
+</tr>
+<tr id="c-071" class="odd">
+<td class="cid-cell">C-071</td>
+<td>TGLF dataset tglf-mastu-v1, 10^5 Latin-hypercube points of the approved MAST-U region (sampling space version 2) under the alpha_MHD cap; cases that TGLF completed with finite fluxes<br>
+<span class="tol">exact count</span></td>
+<td class="val">100000 of 100000 cases completed, all six fluxes finite</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>cluster job 2300218; dataset sha256 104e3015...; Simvue run tglf-dataset-mastu, tag dataset-m2-tglf-mastu-v1<br>
+<code>python -m tkit.datasets.tglf_dataset mastu --n 100000 --workers 256</code></td>
+<td><code>887245e</code></td>
+</tr>
+<tr id="c-072" class="even">
+<td class="cid-cell">C-072</td>
+<td>TGLF dataset tglf-iter-v1, 10^5 Latin-hypercube points of the approved ITER region (sampling space version 2) under the alpha_MHD cap; cases that TGLF completed with finite fluxes<br>
+<span class="tol">exact count</span></td>
+<td class="val">100000 of 100000 cases completed, all six fluxes finite</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>cluster job 2300314; dataset sha256 3f6ee151...; Simvue run tglf-dataset-iter, tag dataset-m2-tglf-iter-v1<br>
+<code>python -m tkit.datasets.tglf_dataset iter --n 100000 --workers 256</code></td>
+<td><code>887245e</code></td>
+</tr>
+<tr id="c-073" class="odd">
+<td class="cid-cell">C-073</td>
+<td>Fraction of Latin-hypercube draws kept under the fixed alpha_MHD cap (MAST-U 4, ITER 2), and what the cap does to the kept q and beta_e<br>
+<span class="tol">exact for these datasets</span></td>
+<td class="val">MAST-U 0.490 kept (220936 drawn), ITER 0.425 (258597 drawn); kept mean beta_e 23-25% below the box mean on both; kept median q 1.90 (MAST-U) and 1.73 (ITER, sampled log-uniform over 1.02-11.1)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>dataset metadata (sampling) and inputs of C-071, C-072</td>
+<td><code>887245e</code></td>
+</tr>
+<tr id="c-074" class="even">
+<td class="cid-cell">C-074</td>
+<td>Cost of generating each 10^5-case TGLF dataset on one 256-core CPU node<br>
+<span class="tol">two jobs</span></td>
+<td class="val">91.6 core-h (MAST-U) and 92.4 core-h (ITER); 3.3 s per case mean; 35 min wall per job</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>per-case wall times stored in C-071, C-072; jobs 2300218, 2300314</td>
+<td><code>887245e</code></td>
+</tr>
+<tr id="c-075" class="odd">
+<td class="cid-cell">C-075</td>
+<td>Fraction of dataset cases whose total heat flux Q_e + Q_i exceeds 10^4 gyro-Bohm units (TGLF's normalisation)<br>
+<span class="tol">exact for these datasets; not yet explained (K-019)</span></td>
+<td class="val">MAST-U 0.283 above 10<sup>4 and 0.122 above 10</sup>5; ITER 0.097 above 10<sup>4 and 0.0065 above 10</sup>5</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>outputs of C-071, C-072</td>
+<td><code>887245e</code></td>
+</tr>
+<tr id="c-076" class="even">
+<td class="cid-cell">C-076</td>
+<td>Fraction of each dataset's points whose geometry input lies inside the 1st-99th percentile envelope of the same input measured on the equilibria's flux surfaces, per input<br>
+<span class="tol">exact for these datasets; per-input table in tglf_domain.csv</span></td>
+<td class="val">MAST-U 0.72 (triangularity) to 0.94 (q); ITER 0.63 (q) to 0.94 (triangularity shear)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>blog/figures/make_tglf_domain.py on C-071, C-072<br>
+<code>python blog/figures/make_tglf_domain.py</code></td>
+<td><code>887245e</code></td>
 </tr>
 </tbody>
 </table>

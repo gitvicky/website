@@ -1,0 +1,59 @@
+---
+title: Run tracking with Simvue
+date: '2026-10-01'
+categories:
+- built
+entry: 9
+milestone: M1
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 9 · milestone M1
+:::
+
+Until now every result in this log came from a run started by hand and read from a terminal.
+That does not work for runs submitted to a cluster queue, overnight and in batches. The brief
+also requires solver stalls to be reported, not hidden, and a warning written into a batch
+job's output file is in practice hidden. Every command that runs physics now keeps a run
+record: its settings, one record per simulation step, alerts, and its final status. A copy can
+be sent to a tracking server with a dashboard and notifications. We use Simvue, an open-source
+tracking server.
+
+## Design
+
+The usual approach is to log during the run: after each step, write the temperature, the solver
+state, and whether the guard switched to the fallback model. Our simulation is compiled as a
+single program that runs the whole time loop. Logging from inside it would put file and network
+I/O inside compiled code, and would make the program's behaviour depend on whether a server
+responds. Both break rules the project is built on (see the [Primer](../primer.qmd)).
+
+So the record is written after the run. The compiled loop already returns its full trace, one
+row per step. After it returns, the host code writes one record per row, stamped with the
+simulation time. The dashboard is updated when each run ends, not during it. In exchange,
+tracking has no effect on the simulation and cannot change any result.
+
+The second decision concerns failures. The tracking server can be unreachable, and the
+cluster's compute nodes have no internet access. A local record is always written first, and
+the server copy is a mirror. Inside a batch job the mirror writes to a local cache, which is
+uploaded later from a machine with network access. If the server cannot be reached at all, the
+run continues with a warning. A run never fails because tracking failed.
+
+## Tests
+
+The tests run the real Simvue client in offline mode, with no network and a dummy credential,
+and count what is written to its cache: [100 of 100 steps]{.claim}[C-040](/Blog/tokamak-toolkit/claims.qmd#c-040){.cid .st-tested}. They also check failure handling: a
+run that crashes is marked failed, not left as running; a stall raises a named alert; if the
+mirror fails to start, the local record is still complete; and the client's error messages,
+which include the access token, are truncated before anything is printed.
+
+Not yet tested: a real batch job. Those wait on approval for the first cluster job ([OQ-9](/Blog/tokamak-toolkit/decisions.qmd#oq-9)), so
+the offline-then-upload path has only run on a login node so far.
+
+**Where this stands**: M1 in progress. Tracking is infrastructure, not an acceptance criterion;
+it is in place before the first cluster runs.
+
+Technical details → [Provenance and tracking: run tracking](../technical/provenance.qmd#run-tracking)
+
+::: {.entry-links}
+**Technical details →** [Provenance and tracking › run tracking](/Blog/tokamak-toolkit/technical/provenance.qmd#run-tracking)
+:::

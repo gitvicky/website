@@ -1,0 +1,70 @@
+---
+title: Solver stalls in the ITER ramp-up, analytic RF heating, Aurora and ASCOT5 builds
+date: '2026-09-22'
+categories:
+- measured
+- built
+entry: 5
+milestone: M1
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} [new component]{.chip .built} Entry 5 · milestone M1
+:::
+
+Entry 3 left an open issue: with small fixed time steps, the nonlinear solver reported
+non-converged steps late in the current ramp-up. Smaller steps should make the solve easier, so
+we investigated before building on these runs.
+
+## Checking the plasma
+
+First we checked whether anything changes physically in that time window. The plasma current,
+minimum safety factor, heating and ohmic power, density and internal inductance are all smooth.
+Stepping through one step at a time, the transport coefficients are also smooth, with no model
+switching on or off. Only the outermost grid points sit at their floor value, and they do so
+for the whole run.
+
+## Checking the solver
+
+The failing steps stop after three to five iterations, well below the limit of thirty. They
+stop because of the line search: when a proposed update increases the residual, the solver
+tries a shorter update, and gives up once the step length falls below one percent of the full
+step. Many neighbouring steps only reached TORAX's coarse tolerance. The residual is close to
+the convergence threshold, where the line search cannot reduce it further. The case is
+marginal: compiling the same steps differently changes which ones fail.
+
+| change | failed steps | stored energy at the end |
+|---|---|---|
+| defaults | 6 | baseline |
+| double the iteration limit | 6 | unchanged |
+| allow a ten-times shorter line-search step | 0 | changes by [2 × 10^−5^ relative]{.claim}[C-011](/Blog/tokamak-toolkit/claims.qmd#c-011){.cid .st-measured} |
+
+The failures are real, they barely change the result, and a solver setting removes them.
+Changing a solver setting to remove a warning is a decision the brief reserves for the owner,
+so the defaults are unchanged, the stalls are reported, and the owner decides ([OQ-5](/Blog/tokamak-toolkit/decisions.qmd#oq-5)). The
+published references do not show this, because TORAX's adaptive stepping, which we disabled,
+would have retried those steps with a smaller step.
+
+A converged step and one that stopped early with an acceptable answer give the same profiles.
+Only the solver's status flag distinguishes them, which is why the flag is recorded in the
+trace.
+
+## RF heating and two builds
+
+The milestone asks for an analytic model of radio-frequency heating: a Gaussian deposition
+profile at a chosen radius. It will be the fallback when a learned heating model is added.
+TORAX already has one, so ours is a typed wrapper over it, not a reimplementation. Tests check
+that the absorbed power matches the request to [10^−6^]{.claim}[C-017](/Blog/tokamak-toolkit/claims.qmd#c-017){.cid .st-tested}, that deposition peaks at
+the requested radius, and that the temperature rises where the power is deposited.
+
+Two open-source codes that failed to build in M0 now build: Aurora, for impurity transport,
+and ASCOT5, for fast-particle orbits. Both needed workarounds for compiler and packaging
+problems, recorded in the technical notes. One installation downgraded two shared libraries
+and broke TORAX; every install is now pinned.
+
+**Where this stands**: M1 in progress.
+
+::: {.entry-links}
+**Technical details →** [Coupling loop › post mortem stalls](/Blog/tokamak-toolkit/technical/coupling-loop.qmd#post-mortem-stalls) · [Physics models › gaussian rf](/Blog/tokamak-toolkit/technical/physics-models.qmd#gaussian-rf) · [Invariants and environment › external builds](/Blog/tokamak-toolkit/technical/invariants.qmd#external-builds)  
+**Decisions →** [OQ-5](/Blog/tokamak-toolkit/decisions.qmd#oq-5)
+:::

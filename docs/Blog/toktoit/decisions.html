@@ -125,6 +125,9 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#awaiting-a-decision" id="toc-awaiting-a-decision" class="nav-link active" data-scroll-target="#awaiting-a-decision">Awaiting a decision</a></li>
   <li><a href="#settled" id="toc-settled" class="nav-link" data-scroll-target="#settled">Settled</a>
   <ul class="collapse">
+  <li><a href="#oq-16" id="toc-oq-16" class="nav-link" data-scroll-target="#oq-16">OQ-16 · Kinetic ranges, ITER shapes and the α<sub>MHD</sub> cap for the M2 datasets</a></li>
+  <li><a href="#oq-15" id="toc-oq-15" class="nav-link" data-scroll-target="#oq-15">OQ-15 · Sampling ranges and TGLF settings for MAST-U</a></li>
+  <li><a href="#oq-14" id="toc-oq-14" class="nav-link" data-scroll-target="#oq-14">OQ-14 · One cluster job to check TGLF and time it</a></li>
   <li><a href="#m1-review" id="toc-m1-review" class="nav-link" data-scroll-target="#m1-review">M1 physicist review</a></li>
   <li><a href="#oq-1" id="toc-oq-1" class="nav-link" data-scroll-target="#oq-1">OQ-1 · The fallback transport model</a></li>
   <li><a href="#oq-13" id="toc-oq-13" class="nav-link" data-scroll-target="#oq-13">OQ-13 · A third ASCOT5 job, for the production run</a></li>
@@ -169,10 +172,25 @@ ul.task-list li input[type="checkbox"] {
 <p>The brief lists the decisions that belong to a human: physics modelling choices, licence and data questions, which properties to prove, use of the compute cluster, and benchmark failures that aren’t explained by a bug. When the agent reaches one, it writes the question down with context and a recommended answer, carries on with whatever isn’t blocked, and waits. Numbers (OQ-<em>n</em>) match the project’s internal record. Newest first within each group.</p>
 <section id="awaiting-a-decision" class="level2">
 <h2 class="anchored" data-anchor-id="awaiting-a-decision">Awaiting a decision</h2>
-<p>None.</p>
+<ul>
+<li><strong><a href="../../Blog/toktoit/decisions.html#oq-17">OQ-17</a></strong>: what licence text the package metadata should carry while no release licence is chosen. It blocks nothing while the code is private.</li>
+</ul>
 </section>
 <section id="settled" class="level2">
 <h2 class="anchored" data-anchor-id="settled">Settled</h2>
+<section id="oq-16" class="level3">
+<h3 class="anchored" data-anchor-id="oq-16">OQ-16 · Kinetic ranges, ITER shapes and the α<sub>MHD</sub> cap for the M2 datasets</h3>
+<p><em>Decided 2 Oct 2026.</em> The owner set one dataset per machine, MAST-U and ITER. The geometry ranges were measured (<a href="../../Blog/toktoit/decisions.html#oq-15">OQ-15</a>); the kinetic ranges, the ion species and a cap on the normalised pressure gradient α<sub>MHD</sub> were proposed by the agent from memory and needed a decision before any data was generated. Three questions: (a) do the kinetic ranges and ions stand per machine; (b) is one ITER plasma shape with the current ramp-up’s q profiles enough, or should 15 MA baseline equilibria be added first; (c) a fixed cap, a cap that depends on the magnetic shear, or sampling α<sub>MHD</sub> in place of β<sub>e</sub>.</p>
+<p><strong>Decision.</strong> (a) Approved as proposed for both machines: D and carbon for MAST-U, D-T as one ion of mean mass and neon for ITER (ranges in <a href="../../Blog/toktoit/technical/datasets.html#sampling-space">datasets</a>). (b) One shape is enough for version 1; the missing baseline is recorded as a limit (<a href="../../Blog/toktoit/ceilings.html#k-016">K-016</a>) and baseline shapes come before an ITER version 2. (c) Fixed caps for version 1 (MAST-U 4, ITER 2), a shear-dependent cap to follow (<a href="../../Blog/toktoit/ceilings.html#k-017">K-017</a>). The two datasets were generated the same day (<a href="../../Blog/toktoit/log/17-tglf-datasets-mastu-iter.html">entry 17</a>).</p>
+</section>
+<section id="oq-15" class="level3">
+<h3 class="anchored" data-anchor-id="oq-15">OQ-15 · Sampling ranges and TGLF settings for MAST-U</h3>
+<p><em>Decided 2 Oct 2026.</em> MAST-U is outside both surrogates TORAX ships with (aspect ratio fixed at 3, or elongation up to 1.5). The agent proposed ranges from memory, not checked against a source. <strong>Decision:</strong> the agent measures the geometry ranges on equilibria rather than choosing them, and the kinetic ranges go to a physics check (became <a href="../../Blog/toktoit/decisions.html#oq-16">OQ-16</a>); a second region besides MAST-U, each tagged so it can be selected alone or pooled (became the ITER dataset); TGLF with the SAT2 saturation rule and both magnetic perturbations; CGYRO spot checks of TGLF at M4. Measured, the MAST-U geometry is narrower in shape than the proposal (triangularity on interior surfaces at most 0.24, not 0.6).</p>
+</section>
+<section id="oq-14" class="level3">
+<h3 class="anchored" data-anchor-id="oq-14">OQ-14 · One cluster job to check TGLF and time it</h3>
+<p><em>Decided 2 Oct 2026.</em> TGLF’s licence was settled by the owner’s pointer to the public GACODE repository (Apache-2.0). The remaining install check, TGLF as TORAX’s transport model, could not run on a login node. <strong>Approved:</strong> one CPU node for at most 30 minutes, running TORAX’s TGLF tests, a TORAX step with TGLF, CGYRO’s regression suite, and TGLF on a few hundred points of the sampling space to measure the cost per case. <em>Outcome</em> (<a href="../../Blog/toktoit/log/16-tglf-build-and-cost.html">entry 16</a>): <span class="claim">TGLF 9/9 regression cases; tglf2py wrapper 11/11; TORAX TGLF transport-model tests 3/3; CGYRO 21/21</span><a href="../../Blog/toktoit/claims.html#c-069" class="cid st-measured">C-069</a>; <span class="claim">2.2-2.5 s per case alone, 2.6 s median in a 64-worker pool; about 700 core-hours per 10^6 cases</span><a href="../../Blog/toktoit/claims.html#c-068" class="cid st-measured">C-068</a>; the TORAX step with TGLF failed (<span class="claim">fails at the first step: NaN fluxes on the axis face, about 10^6 gyro-Bohm units on the edge face (<a href="../../Blog/toktoit/ceilings.html#k-015">K-015</a>)</span><a href="../../Blog/toktoit/claims.html#c-070" class="cid st-measured">C-070</a>, <a href="../../Blog/toktoit/ceilings.html#k-015">K-015</a>). The first submission failed at start-up on a shell setting in the job script, with no compute used, and was resubmitted.</p>
+</section>
 <section id="m1-review" class="level3">
 <h3 class="anchored" data-anchor-id="m1-review">M1 physicist review</h3>
 <p><em>Passed 1 Oct 2026.</em> The last M1 acceptance criterion is a review by a physicist. The owner did the review as reviewer of record. The agent set out six items, each with its evidence and a recommendation; <strong>the owner accepted all six recommendations as written.</strong></p>

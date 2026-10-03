@@ -211,7 +211,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">September 30, 2026</p>
+      <p class="date-modified">October 2, 2026</p>
     </div>
   </div>
     
@@ -237,21 +237,23 @@ window.Quarto = {
 <p><span class="math display">\[y_\text{out} = \begin{cases} y &amp; \text{ok} \\ y_\text{fallback} &amp; \text{otherwise}\end{cases}
 \qquad \sigma_\text{out} = \begin{cases} \sigma &amp; \text{ok} \\ 0 &amp; \text{otherwise.}\end{cases}\]</span></p>
 <p>The spread is zeroed where the fallback is used, deliberately: the fallback is a physics model with no ensemble, and carrying the rejected surrogate’s spread would attach an uncertainty to a number that didn’t produce it.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tkit/core/guard.py @ e5c23a9 (GuardedTransportSurrogate.__call__)</span></span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tkit/core/guard.py (GuardedTransportSurrogate.evaluate)</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="va">self</span>.features(eq, p)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>y, sigma <span class="op">=</span> <span class="va">self</span>.ensemble(x)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>finite <span class="op">=</span> jnp.<span class="bu">all</span>(jnp.isfinite(y), axis<span class="op">=-</span><span class="dv">1</span>) <span class="op">&amp;</span> jnp.<span class="bu">all</span>(jnp.isfinite(sigma), axis<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>y0, s0 <span class="op">=</span> jax.lax.stop_gradient(<span class="va">self</span>.ensemble(x))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>finite <span class="op">=</span> jnp.<span class="bu">all</span>(jnp.isfinite(y0), axis<span class="op">=-</span><span class="dv">1</span>) <span class="op">&amp;</span> jnp.<span class="bu">all</span>(jnp.isfinite(s0), axis<span class="op">=-</span><span class="dv">1</span>)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>ok <span class="op">=</span> (</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span>.domain.contains(x)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> jnp.<span class="bu">all</span>(sigma <span class="op">&lt;=</span> <span class="va">self</span>.tol, axis<span class="op">=-</span><span class="dv">1</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> <span class="va">self</span>.output_domain.contains(y)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span>.domain.contains(jax.lax.stop_gradient(x))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> jnp.<span class="bu">all</span>(s0 <span class="op">&lt;=</span> <span class="va">self</span>.tol, axis<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> <span class="va">self</span>.output_domain.contains(y0)</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> finite</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>y_fb, ok_fb <span class="op">=</span> <span class="va">self</span>.fallback(eq, p)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>y_out <span class="op">=</span> jnp.where(ok[..., <span class="va">None</span>], y, y_fb.to_array())</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>sigma_out <span class="op">=</span> jnp.where(ok[..., <span class="va">None</span>], sigma, <span class="fl">0.0</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> Fluxes.from_array(y_out, std<span class="op">=</span>Fluxes.from_array(sigma_out)), ok <span class="op">&amp;</span> ok_fb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Both branches are always evaluated and the choice is a <code>where</code>, not a Python <code>if</code>: the guard is a pure, differentiable function of its inputs and works inside <code>jit</code> and <code>vmap</code>. The returned mask also carries the fallback’s own mask, so a point where <em>neither</em> model is inside its domain shows up as not-ok. <em>Tested by</em> <code>tests/unit/test_guard.py</code>: surrogate used when every check passes; fallback when uncertain, outside the domain (per face), or unphysical; and the guard is a differentiable pytree.</p>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>y, sigma <span class="op">=</span> _masked_eval(<span class="va">self</span>.ensemble, x, ok)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>y_fb, ok_fb <span class="op">=</span> <span class="va">self</span>.fallback(eq, p)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>y_out <span class="op">=</span> jnp.where(ok[..., <span class="va">None</span>], y, y_fb.to_array())</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>sigma_out <span class="op">=</span> jnp.where(ok[..., <span class="va">None</span>], sigma, <span class="fl">0.0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Both branches are always evaluated and the choice is a <code>where</code>, not a Python <code>if</code>: the guard is a pure, differentiable function of its inputs and works inside <code>jit</code> and <code>vmap</code>.</p>
+<p>A <code>where</code> alone protects the values but not the derivatives. Where the surrogate is rejected because its output is not finite, its derivative there is usually not finite either, and in reverse mode the zero weight the <code>where</code> gives that face multiplies it: 0 × NaN is NaN, and the sum over faces carries it into every parameter. <code>_masked_eval</code> therefore evaluates the ensemble face by face with each face’s features and parameters passed through <code>where(ok, leaf, stop_gradient(leaf))</code>. The cotangent of a rejected face’s copy is then <em>selected</em> away before the faces are summed, so the derivative at a rejected face is the fallback’s alone. The values are unchanged.</p>
+<p>The returned mask is the guard decision: True where the surrogate’s output was used. The fallback’s own validity flag is reported separately (<code>evaluate</code> returns both), so a face the surrogate served is never counted as a fallback face. Construction checks the contract: a Tier A fallback, finite non-negative tolerances, and domains of the right width. <em>Tested by</em> <code>tests/unit/test_guard.py</code>: surrogate used when every check passes; fallback when uncertain, outside the domain (per face), or unphysical; the guard is a differentiable pytree; and with the surrogate rejected at all, none or some faces, reverse- and forward-mode derivatives stay finite even when the surrogate’s own derivative is NaN.</p>
 </section>
 <section id="inside-torax" class="level2">
 <h2 class="anchored" data-anchor-id="inside-torax">Inside TORAX</h2>
@@ -262,7 +264,7 @@ window.Quarto = {
 <li><strong>Features</strong> are computed from TORAX’s state with the same definitions as the core features, which are not the ones QLKNN itself receives (<a href="../../../Blog/toktoit/ceilings.html#k-008">K-008</a>, see <a href="../../../Blog/toktoit/technical/core-state.html#transport-features">core state</a>). Harmless while the domain box is open or arbitrary; to be settled before verified domains arrive.</li>
 <li><strong>Output bounds</strong> default to <span class="math inline">\(\chi_\max = 100\)</span> m² s⁻¹ and <span class="math inline">\(v_\max = 50\)</span> m s⁻¹.</li>
 <li><strong>Post-processing is applied once, to the combined result.</strong> TORAX transport models apply finishing steps (clipping to limits, inner and outer patches, radial smoothing). Those settings are moved from the wrapped models up to the wrapper, so they act on the guarded result rather than separately on each branch. Sub-channel breakdowns are not mixed between branches.</li>
-<li><strong>The mask is recomputed for the record.</strong> TORAX’s transport output has no slot for a mask, so the fixed-step loop recomputes it after each step with TORAX’s own pre-step and pedestal machinery, i.e.&nbsp;from exactly the inputs the surrogate will see on the next step, and records it in the trace. This works because the mask is a pure function of geometry, profiles and the surrogate’s output.</li>
+<li><strong>The recorded mask is a post-step diagnostic</strong> (<a href="../../../Blog/toktoit/ceilings.html#k-014">K-014</a>). TORAX evaluates transport inside its solver, at the start of the step and at each nonlinear iterate, and none of those decisions reach its outputs. The fixed-step loop records the guard decision re-evaluated on the accepted end-of-step state, with TORAX’s own pre-step and pedestal machinery. It says where that state lies relative to the guard’s domain; it is not a record of which model served each face during the step, and is labelled <code>rejected_fraction_poststep</code>, not a fallback fraction. With the domain always open or always closed (the first two rows below) the two coincide.</li>
 </ul>
 <p>Three identity tests pin the behaviour:</p>
 <table class="caption-top table">

@@ -259,6 +259,62 @@ ul.task-list li input[type="checkbox"] {
 <td>a binning study (equal-volume bins near the axis, or a smoothed moment) before ASCOT5 profiles are used cell by cell in the core</td>
 <td><span class="badge st-open">open</span></td>
 </tr>
+<tr id="k-013" class="odd">
+<td class="cid-cell">K-013</td>
+<td>equilibrium</td>
+<td>FreeGSNKE's IMAS writer gives the flux-surface triangularity that TORAX reads (delta_face), on FreeGSNKE's default 65 x 129 grid</td>
+<td>inside rho_tor_norm about 0.6 the triangularity is grid noise: on the MAST-U-like reference the 65 x 129 and 129 x 257 grids give 0.194 and 0.028 at rho 0.1 and 0.012 and 0.073 at rho 0.4, and the profile is not monotonic. They agree within 0.01 from rho 0.7 out; elongation agrees within 0.01 everywhere. Any TORAX run on FreeGSNKE geometry with a shape-dependent transport model (TGLF) sees this noise. The M2 sampling ranges take delta and its shear from r/a &gt;= 0.6 only</td>
+<td>a smooth Miller fit to FreeGSNKE's flux surfaces (or a finer grid checked for convergence) before TGLF-based transport runs on FreeGSNKE geometry</td>
+<td><span class="badge st-open">open</span></td>
+</tr>
+<tr id="k-014" class="even">
+<td class="cid-cell">K-014</td>
+<td>guard</td>
+<td>inside TORAX, the fixed-step loop records the guard decision re-evaluated on each accepted end-of-step state</td>
+<td>the decisions TORAX's solver takes at its own transport evaluations (start of step and each nonlinear iterate) never reach its outputs, so the trace cannot say which model served each face during a step. It records a post-step domain diagnostic, rejected_fraction_poststep, not a fraction served by the fallback. With the guard always open or always closed (C-014, C-015) the two coincide; for a partial guard they can differ</td>
+<td>per-evaluation guard decisions returned from TORAX's solver (an upstream hook), or tkit's own iteration around TORAX's transport call, before a fallback fraction is reported for a partial guard (code review 2 Oct 2026, R11)</td>
+<td><span class="badge st-open">open</span></td>
+</tr>
+<tr id="k-015" class="odd">
+<td class="cid-cell">K-015</td>
+<td>transport</td>
+<td>TGLF runs as a TORAX transport model (in-process wrapper) with TORAX's legacy TGLF defaults and no transport radial domain</td>
+<td>on TORAX's iterhybrid_predictor_corrector case the first step fails (job 2293936): TGLF gives NaN fluxes on the axis face and about 1e6 gyro-Bohm units on the edge face, and TGLF then stops on a zero impurity charge, most likely from the diverged step (TORAX's neon charge follows T_e). TORAX's own TGLF transport-model tests pass on the same node, and every single-face TGLF call outside TORAX runs</td>
+<td>a transport domain excluding the axis and the pedestal (as the QLKNN setup has), then a short TORAX run with TGLF, before TGLF-in-TORAX spot checks at M3/M4</td>
+<td><span class="badge st-open">open</span></td>
+</tr>
+<tr id="k-016" class="even">
+<td class="cid-cell">K-016</td>
+<td>datasets</td>
+<td>the ITER dataset (v1) takes its geometry from one plasma shape, TORAX's ITER hybrid equilibrium, plus the q profiles of TORAX's ITER current ramp-up example</td>
+<td>elongation and triangularity rows are narrow (LCFS kappa 1.87, delta 0.43); the 15 MA baseline scenario (q95 about 3) is not covered. The ramp-up widens q and magnetic shear only (owner, OQ-16 b)</td>
+<td>baseline-scenario equilibria, from EQDSK files of the ITER scenario database or from FreeGSNKE's ITER-like machine with inverse solves, before an ITER v2 dataset</td>
+<td><span class="badge st-open">open</span></td>
+</tr>
+<tr id="k-017" class="odd">
+<td class="cid-cell">K-017</td>
+<td>datasets</td>
+<td>points are rejected above a fixed alpha_MHD (MAST-U 4, ITER 2), independent of the magnetic shear</td>
+<td>about half the Latin-hypercube draws are rejected and the kept set is reshaped: kept beta_e mean 23-25% below the box mean, kept q concentrated at low q since alpha_MHD grows as q^2 (C-073). An s-alpha ballooning boundary depends on the shear, which a fixed cap ignores (owner, OQ-16 c: fixed caps for v1)</td>
+<td>a shear-dependent cap (s-alpha boundary times a margin) set by the physicist, or sampling alpha_MHD in place of beta_e</td>
+<td><span class="badge st-open">open</span></td>
+</tr>
+<tr id="k-018" class="even">
+<td class="cid-cell">K-018</td>
+<td>datasets</td>
+<td>geometry inputs are sampled independently, each over a range derived from the measured equilibria, not jointly from the measured flux surfaces</td>
+<td>the datasets contain combinations that no measured equilibrium has, for example high q at low magnetic shear on MAST-U (figure in the datasets section); 63-94% of points lie inside the measured 1st-99th percentile envelope input by input (C-076), fewer jointly</td>
+<td>joint sampling from the measured faces (a draw of face plus a perturbation), or a weighting of the training loss by distance to the measured set, decided before M3 training</td>
+<td><span class="badge st-open">open</span></td>
+</tr>
+<tr id="k-019" class="odd">
+<td class="cid-cell">K-019</td>
+<td>datasets</td>
+<td>the v1 datasets are stored with every TGLF output as computed; no filter on flux magnitude</td>
+<td>28% of MAST-U cases and 10% of ITER cases have Q_e + Q_i above 10^4 gyro-Bohm units (C-075), mostly at steep electron temperature gradients. Not yet established whether these are physical (far above threshold, electromagnetic modes at high beta_e) or come from the inputs as constructed</td>
+<td>a check of a sample of the high-flux cases with the electromagnetic terms off and against CGYRO spot checks, and a physicist decision on a flux range or loss weighting, before M3 training</td>
+<td><span class="badge st-open">open</span></td>
+</tr>
 </tbody>
 </table>
 

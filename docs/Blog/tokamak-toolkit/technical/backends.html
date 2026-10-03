@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Backends – Vignesh Gopakumar</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../Images/dy_dx.png" rel="icon" type="image/png">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../styles.css">
+<link rel="stylesheet" href="../tokamak-toolkit.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">Vignesh Gopakumar</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../research.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../talks.html"> 
+<span class="menu-text">Talks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../Blog/blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose">Purpose</a></li>
+  <li><a href="#transport-code" id="toc-transport-code" class="nav-link" data-scroll-target="#transport-code">TORAX: whole-code transport</a>
+  <ul class="collapse">
+  <li><a href="#running-a-scenario" id="toc-running-a-scenario" class="nav-link" data-scroll-target="#running-a-scenario">Running a scenario</a></li>
+  <li><a href="#translating-the-output" id="toc-translating-the-output" class="nav-link" data-scroll-target="#translating-the-output">Translating the output</a></li>
+  <li><a href="#reference-runs" id="toc-reference-runs" class="nav-link" data-scroll-target="#reference-runs">Reference runs</a></li>
+  <li><a href="#balance" id="toc-balance" class="nav-link" data-scroll-target="#balance">Energy and particle balance of a step</a></li>
+  <li><a href="#raptor-benchmark" id="toc-raptor-benchmark" class="nav-link" data-scroll-target="#raptor-benchmark">The RAPTOR L-mode benchmark</a></li>
+  </ul></li>
+  <li><a href="#equilibrium-code" id="toc-equilibrium-code" class="nav-link" data-scroll-target="#equilibrium-code">FreeGSNKE: free-boundary equilibrium</a>
+  <ul class="collapse">
+  <li><a href="#pipeline" id="toc-pipeline" class="nav-link" data-scroll-target="#pipeline">Pipeline</a></li>
+  <li><a href="#the-forward-solve" id="toc-the-forward-solve" class="nav-link" data-scroll-target="#the-forward-solve">The forward solve</a></li>
+  <li><a href="#completing-the-ids" id="toc-completing-the-ids" class="nav-link" data-scroll-target="#completing-the-ids">Completing the IDS</a></li>
+  <li><a href="#two-radii-kept-apart" id="toc-two-radii-kept-apart" class="nav-link" data-scroll-target="#two-radii-kept-apart">Two radii, kept apart</a></li>
+  <li><a href="#resampling" id="toc-resampling" class="nav-link" data-scroll-target="#resampling">Resampling</a></li>
+  </ul></li>
+  <li><a href="#ascot5" id="toc-ascot5" class="nav-link" data-scroll-target="#ascot5">ASCOT5: fast-particle sources</a>
+  <ul class="collapse">
+  <li><a href="#ascot5-alpha" id="toc-ascot5-alpha" class="nav-link" data-scroll-target="#ascot5-alpha">Fusion-alpha heating</a></li>
+  </ul></li>
+  <li><a href="#aurora" id="toc-aurora" class="nav-link" data-scroll-target="#aurora">Aurora: impurity transport</a></li>
+  <li><a href="#changelog" id="toc-changelog" class="nav-link" data-scroll-target="#changelog">Changelog</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Backends</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-left">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">October 1, 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="purpose" class="level2">
+<h2 class="anchored" data-anchor-id="purpose">Purpose</h2>
+<p>The open-source (Tier A) codes the Tokamak Toolkit drives, and exactly how their data is translated. Each translation is checked against a quantity the other code computes independently, because unit and grid mismatches produce plausible-looking plots.</p>
+</section>
+<section id="transport-code" class="level2">
+<h2 class="anchored" data-anchor-id="transport-code">TORAX: whole-code transport</h2>
+<p><a href="https://github.com/google-deepmind/torax">TORAX</a> (Google DeepMind, Apache-2.0) is a tokamak core transport simulator written in JAX: current diffusion, heat and particle transport, bootstrap current, fusion power, radiation, pedestal and sawtooth models, with QLKNN as its neural turbulent-transport model. The Tokamak Toolkit uses it in two ways: as a whole-code backend (TORAX’s own driver and adaptive time stepping, to produce references), and as the physics inside the Tokamak Toolkit’s fixed-step loop (see <a href="../../../Blog/tokamak-toolkit/technical/coupling-loop.html#fixed-step-driver">coupling loop</a>).</p>
+<section id="running-a-scenario" class="level3">
+<h3 class="anchored" data-anchor-id="running-a-scenario">Running a scenario</h3>
+<p>A scenario is one of TORAX’s example configurations (a Python <code>CONFIG</code> dict), with overrides deep-merged in (e.g.&nbsp;a shorter end time). The run is host-side, outside the Tokamak Toolkit’s compiled code, and returns TORAX’s output tree. Benchmarks in use: <code>iterhybrid_rampup</code> (80 s current ramp-up, QLKNN transport, Newton solver) and <code>iterhybrid_predictor_corrector</code> (5 s flat-top, the quicker check).</p>
+</section>
+<section id="translating-the-output" class="level3">
+<h3 class="anchored" data-anchor-id="translating-the-output">Translating the output</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>quantity</th>
+<th>TORAX</th>
+<th>Tokamak Toolkit</th>
+<th>conversion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>temperatures</td>
+<td>keV</td>
+<td>eV</td>
+<td>× 1000</td>
+</tr>
+<tr class="even">
+<td>profile arrays</td>
+<td>face 0, <span class="math inline">\(n\)</span> cells, face <span class="math inline">\(n\)</span></td>
+<td><span class="math inline">\(n\)</span> cells</td>
+<td>drop the two boundary points</td>
+</tr>
+<tr class="odd">
+<td>geometric factor</td>
+<td><code>g1</code> <span class="math inline">\(=\langle\lvert\nabla V\rvert^2\rangle\)</span></td>
+<td><span class="math inline">\(G = \langle\lvert\nabla\rho\rvert^2\rangle\)</span></td>
+<td><span class="math inline">\(G = g_1 / V'^2\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(V'\)</span></td>
+<td><code>vpr</code></td>
+<td><code>vprime</code></td>
+<td>none (<span class="math inline">\(\partial V/\partial\rho\)</span> in both)</td>
+</tr>
+<tr class="odd">
+<td>safety factor</td>
+<td>on faces</td>
+<td>on cells</td>
+<td>linear interpolation</td>
+</tr>
+<tr class="even">
+<td>heat diffusivity</td>
+<td>turbulent + neoclassical</td>
+<td><code>chi_e</code>, <code>chi_i</code></td>
+<td>sum</td>
+</tr>
+<tr class="odd">
+<td>particle pinch</td>
+<td>turbulent + neoclassical + Ware</td>
+<td><code>v_e</code></td>
+<td>sum</td>
+</tr>
+<tr class="even">
+<td>heating</td>
+<td>one array per source and species</td>
+<td><code>q_e</code>, <code>q_i</code></td>
+<td>sum of <code>p_*_e</code> and <code>p_*_i</code>, then electron-ion exchange moved from electrons to ions</td>
+</tr>
+<tr class="odd">
+<td>particle source</td>
+<td>one array per source</td>
+<td><code>s_n</code></td>
+<td>sum of <code>s_*</code></td>
+</tr>
+</tbody>
+</table>
+<p>Checked by recomputing two quantities TORAX reports independently, from the converted data, at every output time:</p>
+<ul>
+<li><strong>Total heating power</strong>, <span class="math inline">\(\sum_i (q_{e,i} + q_{i,i})\,V'_i\,\Delta\rho_i\)</span> against TORAX’s <code>P_heat_total</code>: <span class="claim">better than 10<sup>−8</sup></span><a href="../../../Blog/tokamak-toolkit/claims.html#c-010" class="cid st-tested">C-010</a>.</li>
+<li><strong>Stored thermal energy</strong> against TORAX’s <code>W_thermal_total</code>: <span class="claim">10<sup>−16</sup></span><a href="../../../Blog/tokamak-toolkit/claims.html#c-009" class="cid st-tested">C-009</a>. This first came out 0.3% low, consistently. Not a conversion bug: ITER scenarios include a neon impurity (to radiate power before it reaches the wall) whose pressure contributes to the stored energy. Including impurity pressure closed the gap to round-off. A discrepancy of that size is easy to wave away, and would otherwise have been absorbed into “surrogate error” later.</li>
+</ul>
+</section>
+<section id="reference-runs" class="level3">
+<h3 class="anchored" data-anchor-id="reference-runs">Reference runs</h3>
+<p>Both benchmark scenarios are stored as TORAX output files with a provenance record beside each (scenario, TORAX version, full resolved config, commit), and both reproduce bit for bit when re-run. The 80 s ramp-up takes <span class="claim">under 4 s</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-023" class="cid st-measured">C-023</a> once compiled on one datacentre GPU.</p>
+<p>For ITER, the toroidal-flux radius at the boundary and the geometric minor radius differ by <span class="claim">a factor of 1.37</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-030" class="cid st-measured">C-030</a>; see <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-007">K-007</a> on the <a href="../../../Blog/tokamak-toolkit/technical/imas-adapters.html">IMAS adapters</a> page for why that matters when exporting.</p>
+</section>
+<section id="balance" class="level3">
+<h3 class="anchored" data-anchor-id="balance">Energy and particle balance of a step</h3>
+<p><strong>Purpose.</strong> M1’s acceptance asks that energy and particles are conserved to a tolerance on the benchmark. The toy model’s balance is checked in the <a href="../../../Blog/tokamak-toolkit/technical/transport-solver.html">transport solver</a> tests; this is the same check for TORAX’s own discretisation.</p>
+<p><strong>Method.</strong> For each evolving channel <span class="math inline">\(x\)</span> (ion and electron temperature, electron density, poloidal flux), TORAX’s finite-volume step with <span class="math inline">\(\theta = 1\)</span> solves, on every cell,</p>
+<p><span class="math display">\[
+c_\text{out}^{\,n+1}\,\frac{c_\text{in}^{\,n+1} x^{n+1} - c_\text{in}^{\,n} x^{n}}{\Delta t}
+= \big(C\,x + c\big)^{n+1},
+\]</span></p>
+<p>where <span class="math inline">\(c_\text{out}, c_\text{in}\)</span> are TORAX’s transient coefficients (for temperature, <span class="math inline">\(c_\text{out} c_\text{in} = \tfrac32 n V'\)</span> in J/keV, written in the form <span class="math inline">\(V'^{-2/3}\partial_t(V'^{5/3} n T)\)</span> that accounts for a changing geometry) and <span class="math inline">\(C x + c\)</span> collects diffusion, convection and sources at the new time. Multiplying by the cell width <span class="math inline">\(\Delta\rho_i\)</span> and summing over cells turns the equation into a global balance, because the diffusion and convection terms telescope to the flux through the last face (the face on the magnetic axis carries none):</p>
+<p><span class="math display">\[
+\underbrace{\textstyle\sum_i \Delta\rho_i\,\text{LHS}_i}_\text{storage}
+= \underbrace{\text{edge}}_{-\text{flux out}}
++ \text{sources} + \text{pinning} + \text{residual}.
+\]</span></p>
+<p>Units are W for energy (<span class="math inline">\(T_i\)</span> and <span class="math inline">\(T_e\)</span> summed, so electron-ion exchange cancels) and electrons per second for particles.</p>
+<p><strong>Algorithm.</strong> Given the states before and after a step:</p>
+<ol type="1">
+<li>Rebuild the step’s inputs with TORAX’s own code: pre-step processing at <span class="math inline">\(t\)</span> (explicit sources, pedestal state), runtime parameters and geometry at <span class="math inline">\(t + \Delta t\)</span>, the boundary-condition update.</li>
+<li>Evaluate TORAX’s coefficients at the accepted new state, and at the old state for the transient term.</li>
+<li>Assemble <span class="math inline">\(C x + c\)</span> three times: complete; with the pedestal’s adaptive source switched off (its prefactors set to zero); and with every source term removed. The differences give <em>pinning</em> and <em>sources</em>; the last gives <em>edge</em>.</li>
+<li><em>residual</em> = storage − (edge + sources + pinning).</li>
+</ol>
+<p>Nothing re-implements TORAX’s physics: every coefficient comes from TORAX. The <em>residual</em> is zero exactly when the accepted state satisfies TORAX’s own discrete equation. Steps on which a sawtooth crash replaced the equation solve are flagged and not balanced (none occurred in the runs below).</p>
+<p><strong>The pinning term.</strong> TORAX’s <code>set_T_ped_n_ped</code> pedestal model holds the temperatures and density at the pedestal top (<span class="math inline">\(\rho = 0.9\)</span>) at prescribed values. It does so by adding a very large source <span class="math inline">\(k\,(x_\text{ped} - x)\)</span> on that cell (TORAX’s default <span class="math inline">\(k\)</span> is <span class="math inline">\(2\times10^{10}\)</span> for temperature and <span class="math inline">\(2\times10^{8}\)</span> for density): a numerical device, not a heating system. It injects or removes whatever power is needed to keep the pedestal where it is told to be. TORAX’s reported heating power does not include it, and the power it reports crossing the edge is heating minus <span class="math inline">\(\mathrm{d}W/\mathrm{d}t\)</span>, which therefore includes it.</p>
+<p><strong>Correctness.</strong></p>
+<ul>
+<li>The <em>edge</em> term equals <span class="math inline">\(D\,\partial x/\partial\rho\)</span> at the last face, computed separately from the face gradient: <span class="claim">10<sup>-10</sup></span><a href="../../../Blog/tokamak-toolkit/claims.html#c-039" class="cid st-tested">C-039</a>.</li>
+<li>Benchmark settings (ramp-up, Newton solver, 2 s steps): energy balance closes to <span class="claim">better than 10<sup>-6</sup></span><a href="../../../Blog/tokamak-toolkit/claims.html#c-035" class="cid st-tested">C-035</a> per step; particles to <span class="claim">better than 10<sup>-10</sup></span><a href="../../../Blog/tokamak-toolkit/claims.html#c-036" class="cid st-tested">C-036</a>.</li>
+<li>The flat-top benchmark’s own solver (linear, one predictor-corrector step, Pereverzev terms) leaves <span class="claim">about 0.8%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-037" class="cid st-tested">C-037</a> of the energy balance unaccounted for. The global sum is insensitive to the Pereverzev terms, which telescope like any other transport term. What does not cancel is the lag in the coefficients the solver froze one iterate earlier: the fusion, radiation, ohmic and exchange sources, and the diffusivity at the edge face. More corrector steps shrink it, so it is the solver’s convergence, not the discretisation. Particles close to round-off with either solver: their sources in these scenarios do not depend on the state.</li>
+</ul>
+<p><strong>What the balance shows about the ramp-up.</strong> At every step after the first, the pedestal pinning source removes almost all of the heating power, and conduction through the edge carries only a small fraction (<span class="claim">87–98%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-038" class="cid st-reviewed">C-038</a>). In this model, the heat that crosses the pedestal top leaves through the pinning source. Physically, that heat would flow through the pedestal and out. Conclusions about power crossing the edge (for example, L-H threshold margins) should be read with that in mind. It matters again at M5, where a discrepancy budget has to put the pinning power somewhere.</p>
+<p><strong>Design decisions.</strong></p>
+<ul>
+<li><em>Rebuilt from TORAX, not re-derived.</em> A second implementation of TORAX’s coefficients would test our copy, not TORAX. The one quantity computed independently is the edge flux (<a href="../../../Blog/tokamak-toolkit/claims.html#c-039">C-039</a>), because it is the step on which the balance leans.</li>
+<li><em>Relative residual</em> is |residual| divided by the sum of the magnitudes of the four terms, so a step with nearly cancelling large terms (the ramp-up) is not judged against a small net storage.</li>
+</ul>
+</section>
+<section id="raptor-benchmark" class="level3">
+<h3 class="anchored" data-anchor-id="raptor-benchmark">The RAPTOR L-mode benchmark</h3>
+<p><strong>Purpose.</strong> M1’s first acceptance criterion is a match to <em>published profiles</em>. The one quantitative cross-code comparison published for TORAX is section V of the TORAX paper (Citrin et al., arXiv:2406.06718v4, CC BY 4.0): TORAX against RAPTOR on an ITER-like L-mode, with the configuration in Table II and the profiles in Fig. 6. It is the M1 physics benchmark (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-12">OQ-12</a>). The ITER hybrid runs stay as the stiff-transport (QLKNN, Newton) and pedestal case.</p>
+<p><strong>Case.</strong> Constant <span class="math inline">\(I_p\)</span> = 11.5 MA; 50 MW Gaussian heating centred at <span class="math inline">\(\hat\rho\)</span> = 0.11, width 0.2, split equally between ions and electrons; constant transport <span class="math inline">\(\chi_i\)</span> = 2, <span class="math inline">\(\chi_e\)</span> = 1 m<sup>2</sup>/s, <span class="math inline">\(D_e\)</span> = 1 m<sup>2</sup>/s, <span class="math inline">\(V_e\)</span> = -0.15 m/s; Gaussian particle source 3 x 10<sup>21</sup> /s at 0.2; Ohmic, fusion, ion-electron exchange and Sauter bootstrap current; no pedestal; CHEASE ITER hybrid equilibrium and its <span class="math inline">\(\psi\)</span> as the initial condition; 50 cells; 10 s in fixed steps of 0.05 s; Newton-Raphson with 5 predictor-corrector steps. Table II uses an early TORAX’s parameter names; <code>tkit/benchmarks/raptor_lmode/torax_config.py</code> lists the translation line by line. Two points needed a choice:</p>
+<ul>
+<li><em>Impurity charge.</em> Table II fixes <span class="math inline">\(Z_\text{imp}\)</span> = 10. TORAX 1.4 computes neon’s charge from <span class="math inline">\(T_e\)</span> (8.1 at the edge) unless it is overridden. With the computed charge, <span class="math inline">\(n_i\)</span> differs from the paper’s TORAX curve by <span class="claim">0.35% with the computed charge, 0.009% with Z = 10</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-056" class="cid st-measured">C-056</a>. The config fixes it at 10.</li>
+<li><em>Defaults not in Table II</em> (implicit <span class="math inline">\(\theta\)</span> = 1, no Pereverzev terms, Sauter conductivity) are TORAX 1.4’s. Where these changed between versions, the difference lands in the version line of the budget below.</li>
+</ul>
+<p><strong>Reference curves.</strong> Fig. 6 is vector graphics: each curve is a polyline whose vertices are the plotted points (51 for RAPTOR, 50 cell centres for TORAX, 51 faces for TORAX’s <span class="math inline">\(q\)</span>). <code>scripts/extract_raptor_fig6.py</code> (pdfminer.six) reads every red (RAPTOR) and blue (TORAX) polyline inside each panel’s axes, names it from the legend entry with the same colour and dash pattern, and maps page to data coordinates with a least-squares line through the panel’s labelled tick marks. The largest tick residual is 6 x 10<sup>-5</sup> of an axis range. The curves are stored with the PDF’s sha256 in <code>fig6_curves.json</code>.</p>
+<p><strong>Error measure.</strong> The paper’s eq. (41), in percent:</p>
+<p><span class="math display">\[
+\text{NRMSD} = 100\,\frac{\sqrt{\tfrac{1}{N}\sum_i \big(y_i - y^\text{ref}(x_i)\big)^2}}{\tfrac{1}{N}\sum_i y_i}
+\]</span></p>
+<p>over the compared run’s own points <span class="math inline">\(x_i\)</span>, with the reference interpolated linearly onto them. Recomputing it between the paper’s two curves returns each printed value (<span class="claim">all five printed values reproduced (1.102, 0.712, 0.026, 0.414, 0.701% vs 1.1, 0.71, 0.03, 0.41, 0.70%)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-048" class="cid st-tested">C-048</a>). This checks the extraction and the convention together.</p>
+<p><strong>Results at t = 10 s, dt = 0.05 s</strong> (<code>python -m tkit.cli benchmark-raptor --dt 0.05</code>):</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>quantity</th>
+<th>Tokamak Toolkit vs RAPTOR</th>
+<th>Tokamak Toolkit vs paper’s TORAX</th>
+<th>paper’s TORAX vs RAPTOR</th>
+<th>printed in Fig. 6</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(T_i\)</span></td>
+<td>1.23%</td>
+<td>0.13%</td>
+<td>1.10%</td>
+<td>1.1%</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(T_e\)</span></td>
+<td>0.28%</td>
+<td>0.50%</td>
+<td>0.71%</td>
+<td>0.71%</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(n_e\)</span></td>
+<td>0.031%</td>
+<td>0.009%</td>
+<td>0.026%</td>
+<td>0.03%</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(n_i\)</span></td>
+<td>0.031%</td>
+<td>0.009%</td>
+<td>0.026%</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\psi\)</span></td>
+<td>0.49%</td>
+<td>0.08%</td>
+<td>0.41%</td>
+<td>0.41%</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(q\)</span></td>
+<td>0.69%</td>
+<td>0.16%</td>
+<td>0.70%</td>
+<td>0.70%</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(P_\text{fus,i}\)</span></td>
+<td>21.5%</td>
+<td>0.6%</td>
+<td>22.0%</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(P_\text{fus,e}\)</span></td>
+<td>13.3%</td>
+<td>0.09%</td>
+<td>13.3%</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(P_\text{ohm}\)</span></td>
+<td>5.1%</td>
+<td>3.6%</td>
+<td>2.4%</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>The fusion-power split differs from RAPTOR by 13-22% in both TORAX versions alike; the paper attributes this to the codes’ different formulas for the fraction of alpha power going to ions. The largest change between TORAX versions is in <span class="math inline">\(P_\text{ohm}\)</span> and <span class="math inline">\(T_e\)</span> on axis (+1.4% → +0.5% against RAPTOR), both set by the parallel conductivity.</p>
+<p><strong>Time traces</strong> (line averages, maximum relative deviation over 0-10 s, and at 10 s):</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>trace</th>
+<th>vs RAPTOR, max (time)</th>
+<th>vs RAPTOR at 10 s</th>
+<th>vs paper’s TORAX, max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\langle T_e \rangle\)</span></td>
+<td>2.3% (2.3 s)</td>
+<td>0.07%</td>
+<td>0.42%</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\langle T_i \rangle\)</span></td>
+<td>2.4% (0.2 s)</td>
+<td>1.0%</td>
+<td>0.14%</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\langle n_e \rangle\)</span></td>
+<td>3.7% (0 s)</td>
+<td>0.01%</td>
+<td>0.19%</td>
+</tr>
+</tbody>
+</table>
+<p>The paper reports a maximum transient deviation of about 2.5% between its codes’ temperature profiles. The 3.7% in density is the initial condition: RAPTOR’s average starts at 0.77, both TORAX runs at the requested 0.80 x 10<sup>20</sup> m<sup>-3</sup>.</p>
+<p><strong>Time-step convergence.</strong> The same case at dt = 0.05, 0.025, 0.0125 and 0.00625 s (every step converged; the loop matches TORAX’s driver to 10<sup>-13</sup> at each):</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>0.05 s</th>
+<th>0.025 s</th>
+<th>0.0125 s</th>
+<th>0.00625 s</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(T_i\)</span> vs RAPTOR, t = 10 s</td>
+<td>1.2256%</td>
+<td>1.2262%</td>
+<td>1.2266%</td>
+<td>1.2267%</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\psi\)</span> vs RAPTOR, t = 10 s</td>
+<td>0.4886%</td>
+<td>0.4865%</td>
+<td>0.4855%</td>
+<td>0.4850%</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(q\)</span> vs RAPTOR, t = 10 s</td>
+<td>0.6879%</td>
+<td>0.6849%</td>
+<td>0.6835%</td>
+<td>0.6827%</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\langle T_i \rangle\)</span> vs RAPTOR, max over 0-10 s</td>
+<td>2.40%</td>
+<td>2.68%</td>
+<td>2.84%</td>
+<td>2.92%</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\langle T_i \rangle\)</span> vs paper’s TORAX, max</td>
+<td>0.14%</td>
+<td>0.49%</td>
+<td>0.62%</td>
+<td>0.69%</td>
+</tr>
+</tbody>
+</table>
+<p>The end state is converged at the published step (<span class="claim">at most 0.006 percentage points</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-052" class="cid st-measured">C-052</a>). The transient is not: at dt → 0 the early ion temperature moves further from both published curves, which were made at 0.05 s. This is the time-discretisation line of the budget, reported separately as <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-5">OQ-5</a> asks.</p>
+<p><strong>Acceptance tolerance</strong> (set at the <a href="../../../Blog/tokamak-toolkit/decisions.html#m1-review">M1 physicist review</a>, 1 Oct 2026). Against RAPTOR: NRMSD of the t = 10 s profiles at most 2% for <span class="math inline">\(T_i\)</span>, <span class="math inline">\(T_e\)</span>, <span class="math inline">\(\psi\)</span> and <span class="math inline">\(q\)</span>, and at most 0.1% for <span class="math inline">\(n_e\)</span> and <span class="math inline">\(n_i\)</span>; the line-averaged traces within 5% of RAPTOR’s over 0-10 s. <span class="math inline">\(P_\text{fus,i}\)</span>, <span class="math inline">\(P_\text{fus,e}\)</span> and <span class="math inline">\(P_\text{ohm}\)</span> are reported, not gated. Every gated quantity passes at the published step and at 0.00625 s. The limits are <code>ACCEPTANCE</code> in <code>tkit.physics.raptor_benchmark</code>, checked by <code>test_published_settings_pass_the_m1_acceptance_gate</code> and printed by <code>tkit.cli benchmark-raptor</code>.</p>
+<p><strong>Discrepancy budget at t = 10 s</strong> (NRMSD, percent; what each line isolates):</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>line</th>
+<th>size</th>
+<th>how measured</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>wrapper: the Tokamak Toolkit’s loop vs TORAX’s driver</td>
+<td>&lt; 10<sup>-11</sup></td>
+<td>same config, same dt (<span class="claim">better than 10<sup>-13</sup></span><a href="../../../Blog/tokamak-toolkit/claims.html#c-049" class="cid st-measured">C-049</a>)</td>
+</tr>
+<tr class="even">
+<td>reading the figure</td>
+<td>&lt; 0.01</td>
+<td>printed NRMSD recovered to its last digit</td>
+</tr>
+<tr class="odd">
+<td>time discretisation (0.05 s → 0.00625 s)</td>
+<td>≤ 0.006</td>
+<td>dt series above</td>
+</tr>
+<tr class="even">
+<td>TORAX version and config translation</td>
+<td>≤ 0.5 (<span class="math inline">\(T_e\)</span>); 3.6 (<span class="math inline">\(P_\text{ohm}\)</span>)</td>
+<td>vs the paper’s TORAX curves</td>
+</tr>
+<tr class="odd">
+<td>physics and numerics, TORAX vs RAPTOR</td>
+<td>0.03-1.2 (profiles); 13-22 (alpha split)</td>
+<td>the paper’s TORAX vs RAPTOR</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Other criteria on this case.</strong> Every step’s energy and particle balance closes (<span class="claim">energy 1.1 × 10<sup>-7</sup>, particles 3 × 10<sup>-13</sup></span><a href="../../../Blog/tokamak-toolkit/claims.html#c-054" class="cid st-tested">C-054</a>; method in <a href="#balance">the balance section</a>). Reverse-mode gradients through Newton steps match central differences (<span class="claim">6 × 10<sup>-9</sup></span><a href="../../../Blog/tokamak-toolkit/claims.html#c-055" class="cid st-tested">C-055</a>). TORAX 1.4.3 solves each Newton step inside <code>jax.lax.custom_root</code>, so both modes differentiate the converged solution implicitly. Forward mode first returned NaN in every tangent (ceiling <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-009">K-009</a>, now lifted): the rule’s explicit zero tangents for the geometry met TORAX’s <span class="math inline">\(\sqrt{\epsilon}\)</span> at the magnetic axis. With tkit’s value-preserving patch, forward mode equals reverse mode to <span class="claim">2 × 10<sup>-15</sup> (NaN before the fix)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-062" class="cid st-tested">C-062</a>; see <a href="../../../Blog/tokamak-toolkit/technical/coupling-loop.html#forward-mode-nan">the coupling loop</a>.</p>
+<p><strong>Correctness.</strong> <code>tests/regression/test_raptor_benchmark.py</code>: NRMSD formula on analytic profiles; the printed NRMSD recovered from the extracted curves; the run at published settings within 0.6% of the paper’s TORAX and within 1.5x the paper’s TORAX-RAPTOR NRMSD of RAPTOR (regression pins, not the acceptance tolerance). <code>tests/conservation/test_torax_balance.py::test_raptor_lmode_benchmark_balance</code> and <code>tests/diff/test_torax_gradients.py</code> (reverse mode against finite differences; forward mode against reverse mode; the patch’s values and axis derivative).</p>
+<p><strong>Design decisions.</strong></p>
+<ul>
+<li><em>Compare with both published curves.</em> Against RAPTOR alone, a TORAX version change and a physics difference look the same; the paper’s TORAX curve separates them.</li>
+<li><em>Read the figure’s vector data, not a digitiser.</em> Hand digitising would add errors of order the NRMSD being measured (0.03-1%).</li>
+<li><em>Translate, don’t approximate.</em> Every Table II entry maps to a TORAX 1.4 setting; where 1.4 behaves differently by default (impurity charge), the paper’s behaviour is restored.</li>
+</ul>
+</section>
+</section>
+<section id="equilibrium-code" class="level2">
+<h2 class="anchored" data-anchor-id="equilibrium-code">FreeGSNKE: free-boundary equilibrium</h2>
+<p><a href="https://github.com/FusionComputingLab/freegsnke">FreeGSNKE</a> (LGPL-3.0) solves the free-boundary Grad-Shafranov problem: given coil currents and the conducting structures around the plasma, find the plasma’s shape and internal flux distribution. The machine is <strong>MAST-U</strong>, from the “MAST-U-like” description shipped in FreeGSNKE’s repository, credited to UKAEA (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-8">OQ-8</a>).</p>
+<section id="pipeline" class="level3">
+<h3 class="anchored" data-anchor-id="pipeline">Pipeline</h3>
+<pre><code>fetch machine description (pinned upstream commit, sha256 per file, provenance record)
+  -&gt; build the machine (active coils, passive structures, limiter, wall)
+  -&gt; static forward solve for given coil currents
+  -&gt; FreeGSNKE's own IMAS writer -&gt; equilibrium IDS
+  -&gt; complete the IDS (three missing quantities, below)
+  -&gt; the Tokamak Toolkit's IMAS adapter -&gt; Equilibrium on a uniform cell-centred grid</code></pre>
+<p>IMAS is the only interface between FreeGSNKE and the rest of the Tokamak Toolkit.</p>
+<p><strong>Machine files are Python pickles</strong>, which are executable content, so they are fetched only from FreeGSNKE’s upstream repository at a pinned commit (<code>678ff6b</code>), and each file’s sha256 goes into the provenance record.</p>
+</section>
+<section id="the-forward-solve" class="level3">
+<h3 class="anchored" data-anchor-id="the-forward-solve">The forward solve</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>parameter</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>computational domain</td>
+<td><span class="math inline">\(R \in [0.1, 2.0]\)</span> m, <span class="math inline">\(Z \in [-2.2, 2.2]\)</span> m</td>
+</tr>
+<tr class="even">
+<td>grid</td>
+<td>65 × 129</td>
+</tr>
+<tr class="odd">
+<td>current profile</td>
+<td>FreeGSNKE’s <code>ConstrainPaxisIp</code>: axis pressure 8.1 kPa and plasma current fixed, shape exponents <span class="math inline">\(\alpha_m = 1.8\)</span>, <span class="math inline">\(\alpha_n = 1.2\)</span>, <code>fvac</code> = 0.5</td>
+</tr>
+<tr class="even">
+<td>coil currents</td>
+<td>FreeGSNKE’s upstream example for a diverted plasma</td>
+</tr>
+<tr class="odd">
+<td>target relative tolerance</td>
+<td>10⁻⁹</td>
+</tr>
+<tr class="even">
+<td>requested plasma current</td>
+<td>620 kA</td>
+</tr>
+</tbody>
+</table>
+<p>Result: a diverted plasma converged to <span class="claim">4 × 10<sup>−10</sup></span><a href="../../../Blog/tokamak-toolkit/claims.html#c-019" class="cid st-measured">C-019</a> (26 of 100 allowed iterations, about 43 s on one CPU), with plasma current matching the request to <span class="claim">10<sup>−3</sup></span><a href="../../../Blog/tokamak-toolkit/claims.html#c-018" class="cid st-tested">C-018</a> and the magnetic axis at R = 0.99 m, Z = −0.05 m.</p>
+</section>
+<section id="completing-the-ids" class="level3">
+<h3 class="anchored" data-anchor-id="completing-the-ids">Completing the IDS</h3>
+<p>FreeGSNKE’s IDS omits three quantities the Tokamak Toolkit needs:</p>
+<ul>
+<li><strong>Toroidal-flux radius</strong> from the toroidal flux: <span class="math inline">\(\rho_t = \sqrt{\Phi/(\pi B_0)}\)</span>.</li>
+<li><strong><span class="math inline">\(\partial V/\partial\rho_t\)</span></strong> by differentiating the enclosed volume numerically.</li>
+<li><strong>Cross-sectional area</strong> as <span class="math inline">\(V/(2\pi R_\text{geo})\)</span> with <span class="math inline">\(R_\text{geo} = (R_\text{in} + R_\text{out})/2\)</span>: Pappus’s theorem with the centroid assumed at the geometric centre. The obvious alternative, counting grid cells inside each flux surface, fails for a diverted plasma: near the boundary the “inside” test also catches the private region below the X-point, inflating the outermost area by <span class="claim">32%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-022" class="cid st-measured">C-022</a>. The Pappus form is about 2% off at mid-radius (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-004">K-004</a>). Area is carried for export only; the transport solve never uses it.</li>
+</ul>
+<p>The identity that does matter is checked: integrating <span class="math inline">\(\partial V/\partial\rho\)</span> recovers the enclosed volume to <span class="claim">2%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-020" class="cid st-tested">C-020</a>.</p>
+</section>
+<section id="two-radii-kept-apart" class="level3">
+<h3 class="anchored" data-anchor-id="two-radii-kept-apart">Two radii, kept apart</h3>
+<p>On a spherical tokamak the toroidal-flux radius at the boundary and the geometric minor radius differ by <span class="claim">a factor of 1.52</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-021" class="cid st-tested">C-021</a> (0.83 m against 0.55 m here). The former scales <span class="math inline">\(V'\)</span> and <span class="math inline">\(G\)</span> when converting from <span class="math inline">\(\rho_t\)</span> to <span class="math inline">\(\rho\)</span>; the latter is <code>Equilibrium.a_minor</code>, which normalises gradients. Conflating them would put a 50% error into every normalised gradient, the quantity that decides whether turbulence switches on.</p>
+</section>
+<section id="resampling" class="level3">
+<h3 class="anchored" data-anchor-id="resampling">Resampling</h3>
+<p>FreeGSNKE’s radial grid is neither uniform nor cell-centred and starts away from the axis (innermost surface at <span class="math inline">\(\rho \approx 0.08\)</span> on the default grid). The adapter resamples onto a uniform grid of cell centres (25 cells by default) by linear interpolation, with constant extrapolation inside the innermost surface. The test compares the resampled values with the native ones interpolated independently, to 10⁻¹⁰.</p>
+<p><strong>Standalone, for now.</strong> The equilibrium does not yet drive the transport loop (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-006">K-006</a>): that needs a transport model valid on a spherical tokamak, which QLKNN is not.</p>
+</section>
+</section>
+<section id="ascot5" class="level2">
+<h2 class="anchored" data-anchor-id="ascot5">ASCOT5: fast-particle sources</h2>
+<p><a href="https://github.com/ascot4fusion/ascot5">ASCOT5</a> (LGPL-3.0) follows fast ions (neutral-beam ions, fusion alphas) along their orbits as they slow down, giving where their power and driven current are deposited. It is built and runs; a smoke test checks an analytic ITER field’s 1/R fall-off to <span class="claim">2%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-031" class="cid st-tested">C-031</a>. Build notes are on the <a href="../../../Blog/tokamak-toolkit/technical/invariants.html#external-builds">invariants</a> page.</p>
+<p><strong>Coupling.</strong> ASCOT5 is far too slow to call every time step. It runs at chosen times on the current equilibrium and profiles, and its heating profiles are handed to TORAX as prescribed sources until the next update. That is the same interface a heating surrogate will replace at M3. Fusion alphas first (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-9">OQ-9</a>); neutral beams once a physicist approves the injector geometry.</p>
+<section id="ascot5-alpha" class="level3">
+<h3 class="anchored" data-anchor-id="ascot5-alpha">Fusion-alpha heating</h3>
+<p><strong>Inputs.</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>input</th>
+<th>source</th>
+<th>conversion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>magnetic field</td>
+<td>the ITER hybrid EQDSK shipped with TORAX (the CHEASE equilibrium behind TORAX’s geometry, COCOS 11)</td>
+<td>poloidal flux scaled by TORAX’s plasma current / the file’s (10.5 / 11.77 MA), as TORAX does; flux on axis padded by 10<sup>-6</sup> of the axis-to-edge flux, without which the normalised radius is undefined exactly on the axis and every flux-surface volume with it</td>
+</tr>
+<tr class="even">
+<td>radial coordinate</td>
+<td>TORAX uses <span class="math inline">\(\rho_\text{tor}\)</span>, ASCOT5 <span class="math inline">\(\rho_\text{pol} = \sqrt{\psi_N}\)</span></td>
+<td><span class="math inline">\(\rho_\text{tor}(\psi_N)\)</span> from <span class="math inline">\(\Phi = \int q\,\mathrm{d}\psi\)</span> on the EQDSK’s own flux surfaces; it differs from TORAX’s evolved-flux mapping by at most 0.035</td>
+</tr>
+<tr class="odd">
+<td>plasma</td>
+<td>TORAX’s <span class="math inline">\(T_e\)</span>, <span class="math inline">\(T_i\)</span>, <span class="math inline">\(n_e\)</span>, main-ion and impurity densities</td>
+<td>D and T each half the main ions; neon fully ionised</td>
+</tr>
+<tr class="even">
+<td>wall</td>
+<td>the separatrix moved out by 10 cm</td>
+<td>markers stop at <span class="math inline">\(\rho_\text{pol} = 1\)</span> in any case</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Algorithm.</strong></p>
+<ol type="1">
+<li>Alpha source: ASCOT5’s fusion-source module (AFSI) integrates the D-T reaction rate of the two Maxwellian populations on a <span class="math inline">\((\rho_\text{pol}, \theta)\)</span> grid (50 x 18 cells, 1600 Monte Carlo samples per cell), giving the birth distribution in position and momentum. Its total, times TORAX’s 3.5 MeV per reaction, is compared with TORAX’s alpha power (<span class="claim">1.002</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-042" class="cid st-tested">C-042</a>).</li>
+<li>Markers: positions and momenta drawn with probability proportional to each cell’s birth rate, every marker carrying the same weight, total rate / N. a5py’s own weighting gives each marker its cell’s content divided by the markers in that cell, which drops every cell no marker lands in: with 32 markers on 2.8 x 10<sup>6</sup> cells it kept 0.03% of the source.</li>
+<li>Slowing down: guiding-centre orbits with Coulomb collisions on electrons, D, T and neon; adaptive step with orbit tolerance 10<sup>-6</sup>; a marker ends at twice the local ion temperature (at least 2 keV), at <span class="math inline">\(\rho_\text{pol} = 1\)</span>, at the wall, or after 10 s. ASCOT5’s separate simulated-time limit defaults to 1 s and must be raised with it, or core alphas stop before they have slowed down.</li>
+<li>Deposition: ASCOT5’s electron and ion power-deposition moments of the collected <span class="math inline">\((\rho_\text{pol}, p_\parallel, p_\perp)\)</span> distribution (50 x 100 x 50 bins), interpolated in <span class="math inline">\(\rho_\text{tor}\)</span> onto TORAX’s cells.</li>
+<li>Back into TORAX: the <code>fusion</code> source in PRESCRIBED mode with the ion and electron profiles, held until the next ASCOT5 update.</li>
+</ol>
+<p><strong>Energy books.</strong> Birth power = deposited + carried out by lost markers + left in markers at the thermal limit + left in unfinished markers. Closes to 0.5% when markers stop at 1.5 MeV (test), to 2.2% over (deposited too high) with full slowing down at 10<sup>-6</sup>, and to 0.4-0.6% over at 10<sup>-7</sup>. From 10<sup>-6</sup> to 10<sup>-7</sup> the overshoot is orbit-integration error (corrected 1 Oct 2026 after the second job). The 0.5% that remains at 10<sup>-7</sup> is not: the third job reran the same 640 markers at 10<sup>-8</sup> and the books closed to 0.57%, against 0.49% at 10<sup>-7</sup> (<span class="claim">electrons -0.16%, ions +0.08%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-066" class="cid st-measured">C-066</a>). Its source is not identified; the binning of the deposition moments is the remaining candidate and has not been tested.</p>
+<p><strong>Orbit tolerance.</strong> The first cluster job (one node, 34 minutes) ran 640 markers at 10<sup>-5</sup> and 10<sup>-6</sup>; the second (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-11">OQ-11</a>, 1 h 30 min) ran 640 different markers at 10<sup>-7</sup>. All three runs below are complete (every marker slowed down or was lost):</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>640 markers</th>
+<th>10<sup>-5</sup></th>
+<th>10<sup>-6</sup></th>
+<th>10<sup>-7</sup></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>lost across the separatrix</td>
+<td>113 (18%)</td>
+<td>4 (0.6%)</td>
+<td>4 (0.6%)</td>
+</tr>
+<tr class="even">
+<td>heating of electrons</td>
+<td>52.3 MW</td>
+<td>47.5 MW</td>
+<td>47.7 MW</td>
+</tr>
+<tr class="odd">
+<td>heating of ions</td>
+<td>13.2 MW</td>
+<td>25.0 MW</td>
+<td>23.9 MW</td>
+</tr>
+<tr class="even">
+<td>birth power</td>
+<td>71.9 MW</td>
+<td>71.9 MW</td>
+<td>72.2 MW</td>
+</tr>
+<tr class="odd">
+<td>energy books, (deposited + lost + thermalised) / born</td>
+<td>0.977</td>
+<td>1.022</td>
+<td>1.004</td>
+</tr>
+<tr class="even">
+<td>cost per marker (64 threads, wall x threads / markers)</td>
+<td>about 20 CPU-s</td>
+<td>about 78 CPU-s</td>
+<td>about 143 CPU-s</td>
+</tr>
+</tbody>
+</table>
+<p>At 10<sup>-5</sup> the orbit integration error moves alphas outward; they are lost before the late, ion-heating part of the slowing-down. From 10<sup>-6</sup> to 10<sup>-7</sup> the electron share of the birth power is unchanged (0.660, 0.661) and the ion share falls by 5% (<span class="claim">0.348 at 10<sup>-6</sup>, 0.331 at 10<sup>-7</sup></span><a href="../../../Blog/tokamak-toolkit/claims.html#c-058" class="cid st-reviewed">C-058</a>), with the energy books closing four times better: 10<sup>-6</sup> is not converged for ion heating. The two runs use different marker samples, and their Monte Carlo noise has not been measured separately. Thirteen of 6400 markers in the discarded 10<sup>-5</sup> run aborted: some left the EQDSK’s field grid, which extends only 0.2 m beyond the separatrix, and the rest exceeded ASCOT5’s collision-noise buffer.</p>
+<p><strong>The production run of the second job is discarded.</strong> Its 6400 markers at 10<sup>-6</sup> ran with a per-marker time cap of 600 s, sized from the 78 CPU-s average above. ASCOT5 charges each marker the <em>wall</em> time of every step of the vectorised batch it is in (<code>p.cputime[i] += A5_WTIME - cputime_last</code>), so the cap stopped <span class="claim">2823 of 6400 markers, 18% of the birth power</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-057" class="cid st-measured">C-057</a> while still energetic. tkit now defaults to no cap (the SLURM wall limit bounds the run), records the unfinished share with every profile, and <code>ascot-apply</code> refuses profiles with more than 1% of the birth power unfinished. The 640-marker check at 10<sup>-6</sup> in the same job (3.7% unfinished) is discarded too; the 10<sup>-7</sup> check, with a cap four times longer, finished every marker.</p>
+<p><strong>Comparison with TORAX’s local alpha model</strong> (t = 5 s, on TORAX’s cells):</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>TORAX local</th>
+<th>ASCOT5, 10<sup>-6</sup>, 640</th>
+<th>ASCOT5, 10<sup>-7</sup>, 640</th>
+<th>ASCOT5, 10<sup>-7</sup>, 6400 (production)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>total heating</td>
+<td>70.5 MW</td>
+<td>73.6 MW</td>
+<td>72.2 MW</td>
+<td>71.8 MW</td>
+</tr>
+<tr class="even">
+<td>electron fraction</td>
+<td>0.649</td>
+<td>0.649</td>
+<td>0.667</td>
+<td>0.664</td>
+</tr>
+<tr class="odd">
+<td>centroid / half-power radius (<span class="math inline">\(\rho_\text{tor}\)</span>)</td>
+<td>0.362 / 0.325</td>
+<td>0.355 / 0.303</td>
+<td>0.376 / 0.343</td>
+<td>0.370 / 0.331</td>
+</tr>
+</tbody>
+</table>
+<p>The 640-marker column at 10<sup>-7</sup> is <span class="claim">72.2 MW vs 70.5 MW</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-059" class="cid st-reviewed">C-059</a>, superseded by the production run below.</p>
+<p>At 10<sup>-7</sup> the total on TORAX’s cells equals the markers’ birth power, 2.4% above TORAX’s alpha power, by a near-cancellation: losses and thermalisation remove 1.2%, the energy books add 0.4%, and interpolating W/m<sup>3</sup> onto TORAX’s cells (which does not conserve the total) adds 0.8%. Of the 2.4% in birth power, AFSI’s higher reaction rate (+0.4%) and ASCOT5’s 3.52 MeV birth energy against TORAX’s 3.5 MeV (+0.6%) explain 1.0%; the remaining 1.4% (1.3% in the first job) was not explained at the time. The production run traced it to the markers’ mean birth energy (below). The radial shape moves from slightly inside TORAX’s (10<sup>-6</sup> run) to slightly outside it (10<sup>-7</sup> run): 640 markers resolve totals and the electron/ion split to a few percent, not shapes.</p>
+<p><strong>Effect on TORAX.</strong> Restarting the stored flat-top at 5 s and running to 7 s (<code>tkit ascot-apply</code>): ASCOT5’s profiles held fixed against TORAX’s own t = 5 s profiles held fixed differ by <span class="claim">-0.005%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-046" class="cid st-measured">C-046</a> in stored energy (temperature profiles 0.3-0.6%). Holding the heating fixed for 2 s at all, while TORAX’s local model raises it from 70.5 to 77.5 MW, costs <span class="claim">-0.3% (central T_e -1.0%)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-047" class="cid st-reviewed">C-047</a>. With the 10<sup>-7</sup> profiles the first comparison is <span class="claim">+0.03% in stored energy (central T_e +0.5%, T_e and T_i profiles 0.6%)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-060" class="cid st-reviewed">C-060</a>.</p>
+<section id="ascot5-production" class="level4">
+<h4 class="anchored" data-anchor-id="ascot5-production">Production run (third job, OQ-13)</h4>
+<p>The third cluster job (one node, 3 h 37 min) ran 6400 markers at 10<sup>-7</sup> with no time cap, and the 640-marker check at 10<sup>-7</sup> and 10<sup>-8</sup>. Every marker finished: 6353 slowed down to the thermal limit and 47 crossed the separatrix. The production run took 7943 s on 64 threads, about 79 CPU-s per marker.</p>
+<div id="fig-ascot-alpha-profile" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ascot-alpha-profile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/ascot_alpha_profile.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ascot-alpha-profile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Alpha heating of electrons (left) and ions (right) on TORAX’s cells at t = 5 s: TORAX’s local model (dashed), the 6400-marker ASCOT5 run (accent) and the three 640-marker samples (grey). Look at the core: inside <span class="math inline">\(\hat\rho \approx 0.3\)</span> the 6400-marker profile scatters as much as the 640-marker ones.
+</figcaption>
+</figure>
+</div>
+<p><em>CSV: <a href="../figures/ascot_alpha_profile.csv">ascot_alpha_profile.csv</a>. Provenance: profiles from <code>tkit ascot-alpha</code> at <code>fcd8ce5</code> (job 2287778) and <code>c8eaf6e</code> (job 2286956); TORAX reference run <code>iterhybrid_predictor_corrector</code> at t = 5 s; figure script <code>blog/figures/make_ascot_alpha_profile.py</code>.</em></p>
+<p><strong>Results.</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>ASCOT5 production run vs TORAX’s local model, t = 5 s</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>total heating on TORAX’s cells</td>
+<td><span class="claim">71.8 MW vs 70.5 MW</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-064" class="cid st-measured">C-064</a></td>
+</tr>
+<tr class="even">
+<td>radial position</td>
+<td><span class="claim">centroid 0.370 vs 0.362, half-power radius 0.331 vs 0.325</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-065" class="cid st-measured">C-065</a></td>
+</tr>
+<tr class="odd">
+<td>effect on TORAX after 2 s, heating held fixed</td>
+<td><span class="claim">-0.009% in stored energy (central T_e +0.3%, T_e and T_i profiles 0.4% and 0.5%)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-067" class="cid st-measured">C-067</a></td>
+</tr>
+<tr class="even">
+<td>orbit tolerance 10<sup>-8</sup> vs 10<sup>-7</sup>, same markers</td>
+<td><span class="claim">electrons -0.16%, ions +0.08%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-066" class="cid st-measured">C-066</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Birth power accounted for.</strong> The marker weights sum to AFSI’s birth rate to the last digit, so the markers’ birth power is the rate times their mean birth energy. That mean is <span class="claim">3.573 MeV, 1.5% above 3.52 MeV</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-063" class="cid st-measured">C-063</a>. With the AFSI rate (+0.4% over TORAX’s) and the 3.52 against 3.5 MeV per alpha (+0.6%), it accounts for the whole 2.5% by which the birth power exceeds TORAX’s alpha power. The 1.3-1.4% “unexplained” excess of the first two jobs was the same quantity measured on 640 markers, whose mean birth energy scatters by ±0.012 MeV (±0.35%). Thermal motion of the reacting D and T raises the mean alpha energy above 3.52 MeV; whether that accounts for all of the 1.5% has not been computed (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-011">K-011</a> stays open until it has, and before ASCOT5 is used for neutral-beam ions).</p>
+<p><strong>Totals and shape.</strong> From birth power to TORAX’s cells: losses across the separatrix remove 0.7%, markers stopped at the thermal limit 0.8%, the energy books add 0.6%, and the interpolation onto TORAX’s cells 0.2%. The heating lies slightly further out than TORAX’s local model puts it, which deposits each alpha’s energy where it is born: the centroid and the half-power radius are larger in the production run and in each of the three 640-marker samples.</p>
+<p><strong>The core is not resolved cell by cell</strong> (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-012">K-012</a>). Outside <span class="math inline">\(\hat\rho = 0.3\)</span> every sample agrees with TORAX’s local model to 2-5% (NRMSD, normalised by the peak). Inside it, neighbouring cells of the production run differ by up to 21% (electrons) and 41% (ions), and its NRMSD from TORAX’s model there (13% for electrons, 20% for ions) is no smaller than the 640-marker samples’ (10-11% and 12-22%). If the scatter were sampling noise it would fall by about three with ten times the markers; it did not. Near the axis the equal-width <span class="math inline">\(\rho_\text{pol}\)</span> bins hold little volume, which is the candidate cause; it has not been tested. Ion heating in the innermost cell is below TORAX’s local value in all four samples (110-186 kW/m<sup>3</sup> against 211); electron heating is not consistently below. Neither is used: the totals, the electron/ion split and the shape moments are what M1 takes from ASCOT5.</p>
+<p><strong>Effect on TORAX.</strong> Held fixed from 5 s to 7 s, the production profiles change stored energy by <span class="claim">-0.009% in stored energy (central T_e +0.3%, T_e and T_i profiles 0.4% and 0.5%)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-067" class="cid st-measured">C-067</a>, within the 640-marker result. The coupling-interval error of holding the heating fixed at all (<span class="claim">-0.3% (central T_e -1.0%)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-047" class="cid st-reviewed">C-047</a>) is thirty times larger.</p>
+<p><strong>Correctness.</strong> <code>tests/physics/test_ascot_alpha.py</code>: the AFSI birth rate matches TORAX’s to 2%; markers carry the whole source with equal weights; the energy books close to 3% (markers stopped at 1.5 MeV); profiles handed to TORAX arrive cell by cell to 10<sup>-12</sup>; a restart with held profiles keeps the alpha power fixed. <code>tests/regression/test_cli_ascot_apply.py</code>: the comparison reproduces TORAX’s totals and is exactly zero for identical profiles.</p>
+<p><strong>Design decisions.</strong></p>
+<ul>
+<li><em>Equal marker weights, not a5py’s per-cell weights</em>, so the source is complete at any marker count.</li>
+<li><em>The tolerance was set by a check, not by speed.</em> The job reran a marker subset at a tighter tolerance; that check is what showed 10<sup>-5</sup> fails.</li>
+<li><em>Prescribed, not rescaled.</em> Between updates the heating is held at ASCOT5’s profiles, not rescaled with TORAX’s fusion power, so the coupling error is measured directly (<a href="../../../Blog/tokamak-toolkit/claims.html#c-047">C-047</a>).</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="aurora" class="level2">
+<h2 class="anchored" data-anchor-id="aurora">Aurora: impurity transport</h2>
+<p><a href="https://github.com/fsciortino/Aurora">Aurora</a> (MIT) models impurity transport and radiation. It builds and its Fortran core runs (smoke test); atomic data is not downloaded yet and it is not used by any run so far.</p>
+</section>
+<section id="changelog" class="level2">
+<h2 class="anchored" data-anchor-id="changelog">Changelog</h2>
+<ul>
+<li>2026-09-30: first published version (TORAX, FreeGSNKE, ASCOT5, Aurora).</li>
+<li>2026-09-30: TORAX step energy and particle balance, and the pedestal pinning term (entry 8).</li>
+<li>2026-10-01: ASCOT5 fusion-alpha heating, the orbit-tolerance check and the comparison with TORAX’s local model (entry 10).</li>
+<li>2026-10-01: the RAPTOR L-mode benchmark from the TORAX paper, its discrepancy budget and time-step convergence; reverse-mode-only gradients through Newton (entry 11).</li>
+<li>2026-10-01: second ASCOT5 job: orbit tolerance 10<sup>-7</sup>, the per-marker time cap that stopped the production run, the energy-book overshoot reattributed to orbit tolerance (entry 12).</li>
+<li>2026-10-02: third ASCOT5 job: the 6400-marker production run, the birth-power excess traced to the markers’ mean birth energy, the 10<sup>-8</sup> check, the unresolved core profile (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-012">K-012</a>) (entry 15).</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2026 Vignesh Gopakumar</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<div class="tk-footer">
+Code and first draft by Claude (Anthropic), working to a brief by Vignesh Gopakumar,
+who reviewed and approved this page.
+<a href="../../../Blog/tokamak-toolkit/about.html">How this is built</a> ·
+<a href="../../../Blog/tokamak-toolkit/index.html">Tokamak Toolkit home</a>
+</div>
+
+
+
+
+</body></html>

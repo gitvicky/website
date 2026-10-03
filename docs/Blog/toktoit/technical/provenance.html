@@ -146,7 +146,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">October 1, 2026</p>
+      <p class="date-modified">October 2, 2026</p>
     </div>
   </div>
     
@@ -190,29 +190,41 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="even">
 <td><code>config_hash</code></td>
-<td>sha256 of the canonical (sorted-key) JSON of the config</td>
+<td>sha256 of the canonical JSON of the config (sorted keys, no whitespace, arrays as nested lists of numbers)</td>
 </tr>
 <tr class="odd">
-<td><code>inputs</code></td>
-<td>name → sha256 of each input file</td>
+<td><code>artifact</code></td>
+<td>name, sha256 and size of the artifact itself</td>
 </tr>
 <tr class="even">
+<td><code>inputs</code></td>
+<td>name → sha256 of each parent artifact</td>
+</tr>
+<tr class="odd">
+<td><code>input_info</code></td>
+<td>name → where each parent was read from, and its tier</td>
+</tr>
+<tr class="even">
+<td><code>schema_version</code></td>
+<td>2 since 2 Oct 2026</td>
+</tr>
+<tr class="odd">
 <td><code>git_sha</code>, <code>git_dirty</code></td>
 <td>commit of the code the process imported, and whether the working tree had uncommitted changes then (read once, at import)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>package</code>, <code>package_version</code>, <code>python</code>, <code>jax</code>, <code>platform</code></td>
 <td>software environment</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>created</code></td>
 <td>UTC timestamp</td>
 </tr>
 </tbody>
 </table>
 <p><strong>The commit is read at import, not at write time</strong> (since 2 Oct 2026). A cluster job runs from the repository’s working copy, and commits can land there while it runs. Read at write time, <code>git_sha</code> named whatever the working copy’s HEAD had become: the third ASCOT5 job started at <code>fcd8ce5</code> and its files record <code>2138b3c</code> (<a href="../../../Blog/toktoit/log/15-ascot5-production-run.html">entry 15</a>). The process’s code is fixed when it is imported, so that is when the commit is read. The earlier ASCOT5 jobs may carry the same error; each job log prints the commit it started at.</p>
-<p>Validation checks that every key is present, <code>tier</code> is <code>A</code> or <code>B</code>, and <code>inputs</code> is a mapping. <em>Tested by</em> <code>tests/unit/test_tracking.py</code>, including <code>test_provenance_records_the_commit_the_process_imported</code>.</p>
-<p>Examples in use: TORAX reference runs (scenario, TORAX version, the full resolved TORAX config); the MAST-U machine description (upstream URL at the pinned commit, licence, sha256 of each file); saved FreeGSNKE equilibria (machine, FreeGSNKE version, upstream commit).</p>
+<p><strong>Validation recomputes, not just inspects</strong> (since 2 Oct 2026, after a code review). Reading a record recomputes the config hash from the stored config, checks that every input digest is a sha256, and checks the artifact’s bytes against the recorded digest; an edited config or a replaced file is an error. A derived artifact’s tier is computed from its parents: B if any parent is B or of unknown tier, so gated data cannot pass on a Tier A label. Because each parent is recorded by content hash with its path and tier, an artifact copied elsewhere still names what it was made from. Records written before schema 2 are still read, under the hash convention they were written with, but they carry no artifact digest; a consumer that needs the binding (handing ASCOT5 heating back to TORAX) refuses them unless told explicitly, and then records the lineage as acknowledged, not verified. <em>Tested by</em> <code>tests/unit/test_tracking.py</code> and <code>tests/unit/test_provenance_integrity.py</code>.</p>
+<p>Examples in use: TORAX reference runs (scenario, TORAX version, the full resolved TORAX config); the MAST-U machine description (upstream URL at the pinned commit, licence, sha256 of each file, checked against pinned digests before the files are loaded); saved FreeGSNKE equilibria (machine, FreeGSNKE version, upstream commit, the solve settings and coil currents, and the machine files by hash); ASCOT5 alpha heating profiles (the TORAX state’s time, and the TORAX run, ASCOT5 file and EQDSK they came from, by hash, with the ASCOT5 build).</p>
 </section>
 <section id="run-tracking" class="level2">
 <h2 class="anchored" data-anchor-id="run-tracking">Run tracking</h2>
@@ -289,7 +301,7 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
-<p>A run is a context manager: if the simulation raises, the exception is logged as an event, the run ends with status <code>failed</code>, and the exception still propagates. A failed benchmark also ends the run <code>failed</code>.</p>
+<p>A run is a context manager: if the simulation raises, the exception is logged as an event, the run ends with status <code>failed</code>, and the exception still propagates. A failed benchmark also ends the run <code>failed</code>: a profile or trace outside the agreed tolerance, a non-finite value, an incomplete simulation, or a failed balance check gives a nonzero exit and a <code>failed</code> run, and a comparison with no common output at the requested end time is an error, not a zero. Run directories are unique even for same-name runs started in the same second.</p>
 <p><strong>Mirrors.</strong> The local record can be mirrored to <a href="https://simvue.io">Simvue</a> (Apache-2.0), a run-tracking server with a web dashboard, metric plots and alert notifications, or to MLflow. The mirror gets the same parameters, per-step metrics against simulation time, events, alerts, configuration, provenance (flattened into searchable metadata) and artifacts. Runs are filed by command and tagged with the tier, and the mirror’s run name matches the local directory, so the two can always be matched.</p>
 <p>Compute nodes on the cluster have no internet access. Inside a batch job the mirror therefore runs in offline mode, caching everything locally; a script run later from a login node uploads the cache, and a run uploaded in several goes still lands as one run on the server.</p>
 <p><strong>Design decisions.</strong></p>
@@ -306,6 +318,7 @@ ul.task-list li input[type="checkbox"] {
 <li>2026-09-30: first published version.</li>
 <li>2026-10-01: run tracking rewritten: every command tracked, per-step series, events and alerts, Simvue mirror with offline mode (entry 9).</li>
 <li>2026-10-02: <code>git_sha</code> and <code>git_dirty</code> read once at import, not at write time (entry 15).</li>
+<li>2026-10-02: run tags sent to Simvue once each; the server refused a run whose tags repeated (the dataset regions list their command’s tag), and its upload stopped (entry 17).</li>
 </ul>
 
 

@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Datasets – Vignesh Gopakumar</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../Images/dy_dx.png" rel="icon" type="image/png">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../styles.css">
+<link rel="stylesheet" href="../tokamak-toolkit.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">Vignesh Gopakumar</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../research.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../talks.html"> 
+<span class="menu-text">Talks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../Blog/blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose">Purpose</a></li>
+  <li><a href="#tglf" id="toc-tglf" class="nav-link" data-scroll-target="#tglf">TGLF</a></li>
+  <li><a href="#sampling-space" id="toc-sampling-space" class="nav-link" data-scroll-target="#sampling-space">Sampling space</a>
+  <ul class="collapse">
+  <li><a href="#inputs" id="toc-inputs" class="nav-link" data-scroll-target="#inputs">Inputs</a></li>
+  <li><a href="#the-αmhd-cap" id="toc-the-αmhd-cap" class="nav-link" data-scroll-target="#the-αmhd-cap">The α<sub>MHD</sub> cap</a></li>
+  <li><a href="#algorithm-1-sampling-a-region-as-in-tkit.datasets.tglf_dataset.sample_region" id="toc-algorithm-1-sampling-a-region-as-in-tkit.datasets.tglf_dataset.sample_region" class="nav-link" data-scroll-target="#algorithm-1-sampling-a-region-as-in-tkit.datasets.tglf_dataset.sample_region">Algorithm 1: sampling a region (as in <code>tkit.datasets.tglf_dataset.sample_region</code>)</a></li>
+  </ul></li>
+  <li><a href="#generation-and-storage" id="toc-generation-and-storage" class="nav-link" data-scroll-target="#generation-and-storage">Generation and storage</a></li>
+  <li><a href="#datasets-v1" id="toc-datasets-v1" class="nav-link" data-scroll-target="#datasets-v1">Datasets, version 1</a></li>
+  <li><a href="#correctness" id="toc-correctness" class="nav-link" data-scroll-target="#correctness">Correctness</a></li>
+  <li><a href="#design-decisions" id="toc-design-decisions" class="nav-link" data-scroll-target="#design-decisions">Design decisions</a></li>
+  <li><a href="#ceilings" id="toc-ceilings" class="nav-link" data-scroll-target="#ceilings">Ceilings</a></li>
+  <li><a href="#changelog" id="toc-changelog" class="nav-link" data-scroll-target="#changelog">Changelog</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Datasets</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-left">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">October 2, 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="purpose" class="level2">
+<h2 class="anchored" data-anchor-id="purpose">Purpose</h2>
+<p>Training data for the transport surrogates of M3: TGLF fluxes on points that cover the operating space of each machine, written once, versioned, with provenance that binds each file to the sampling space and the equilibria it came from (brief invariant 6, immutable versioned datasets). The M2 acceptance criteria are: the dataset loads, its provenance validates, and its sampled domain is documented and plotted against the intended operating space.</p>
+<p>Two datasets, one per machine (owner, 2026-10-02): <strong>MAST-U</strong> and <strong>ITER</strong>. They share the code, the TGLF settings and the file format, and differ in geometry, species and kinetic ranges. Each carries its own tags on the run tracker, so either can be selected alone or both pooled at training time.</p>
+</section>
+<section id="tglf" class="level2">
+<h2 class="anchored" data-anchor-id="tglf">TGLF</h2>
+<p>TGLF is a quasilinear model of drift-wave turbulence from General Atomics’ GACODE suite, <a href="https://github.com/gafusion/gacode">github.com/gafusion/gacode</a>, Apache-2.0 (Tier A). For each point it solves a gyro-fluid eigenvalue problem over a grid of binormal wavenumbers and maps the linear growth rates to fluxes through a saturation rule. We use GACODE commit <code>f34a9dd</code>, built for the cluster’s CPU nodes (Zen 4), and call TGLF in-process through <code>tglf2py</code>, the wrapper TORAX uses, so the datasets and any later TGLF run inside TORAX use the same binary. CGYRO, the nonlinear gyrokinetic code from the same suite, is built from the same commit for spot checks of TGLF at M4 (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-15">OQ-15</a> c).</p>
+<p><strong>Install checks</strong> (<span class="claim">TGLF 9/9 regression cases; tglf2py wrapper 11/11; TORAX TGLF transport-model tests 3/3; CGYRO 21/21</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-069" class="cid st-measured">C-069</a>). TGLF’s regression cases run through the standalone binary and through the wrapper; TORAX’s TGLF transport-model tests; CGYRO’s regression suite. TORAX 1.4.3 needs one upstream TGLF fix, applied as a patch to the installed package and reapplied whenever the environment is rebuilt.</p>
+<p><strong>Settings.</strong> One fixed set for all datasets, chosen to match the TGLF-based network that ships with TORAX so the two can be compared:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>setting</th>
+<th>value</th>
+<th>meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>SAT_RULE</code></td>
+<td>2</td>
+<td>saturation rule SAT2</td>
+</tr>
+<tr class="even">
+<td><code>USE_BPER</code>, <code>USE_BPAR</code></td>
+<td>on, on</td>
+<td>perpendicular and parallel magnetic perturbations (electromagnetic)</td>
+</tr>
+<tr class="odd">
+<td><code>USE_MHD_RULE</code></td>
+<td>off</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>UNITS</code></td>
+<td>CGYRO</td>
+<td>normalisation by B<sub>unit</sub></td>
+</tr>
+<tr class="odd">
+<td><code>GEOMETRY_FLAG</code></td>
+<td>1</td>
+<td>Miller geometry</td>
+</tr>
+<tr class="even">
+<td><code>NS</code></td>
+<td>3</td>
+<td>electrons, main ion, one impurity</td>
+</tr>
+<tr class="odd">
+<td><code>KYGRID_MODEL</code>, <code>NKY</code></td>
+<td>4, 19</td>
+<td>wavenumber grid</td>
+</tr>
+<tr class="even">
+<td><code>NMODES</code>, <code>NBASIS_MIN</code>, <code>NBASIS_MAX</code>, <code>NXGRID</code></td>
+<td>5, 2, 6, 16</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>XNU_MODEL</code></td>
+<td>3</td>
+<td>collision model</td>
+</tr>
+<tr class="even">
+<td><code>ALPHA_ZF</code>, <code>ALPHA_E</code>, <code>ALPHA_P</code></td>
+<td>1, 1, 1</td>
+<td>zonal-flow mixing, E×B and parallel-flow shear on</td>
+</tr>
+</tbody>
+</table>
+<p>All other inputs take TGLF’s defaults.</p>
+<p><strong>Cost</strong> (<span class="claim">2.2-2.5 s per case alone, 2.6 s median in a 64-worker pool; about 700 core-hours per 10^6 cases</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-068" class="cid st-measured">C-068</a>). Measured on 512 points drawn from the sampling spaces below, one case per core. In the 256-worker dataset jobs the mean was 3.3 s per case (<span class="claim">91.6 core-h (MAST-U) and 92.4 core-h (ITER); 3.3 s per case mean; 35 min wall per job</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-074" class="cid st-measured">C-074</a>), about a quarter above the 64-worker figure; the cause on a fully loaded node was not measured.</p>
+<p><strong>TGLF inside TORAX</strong> (<span class="claim">fails at the first step: NaN fluxes on the axis face, about 10^6 gyro-Bohm units on the edge face (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-015">K-015</a>)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-070" class="cid st-measured">C-070</a>, ceiling <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-015">K-015</a>). On TORAX’s ITER hybrid example with TGLF as the transport model, the first step fails: NaN on the axis face and about 10<sup>6</sup> gyro-Bohm units on the edge face, after which TGLF stops on a zero impurity charge. TORAX’s QLKNN setup restricts transport to a radial domain that excludes the axis and the pedestal; the TGLF run did not. The datasets do not depend on this, since they call TGLF directly.</p>
+</section>
+<section id="sampling-space" class="level2">
+<h2 class="anchored" data-anchor-id="sampling-space">Sampling space</h2>
+<section id="inputs" class="level3">
+<h3 class="anchored" data-anchor-id="inputs">Inputs</h3>
+<p>A point is TGLF’s local input set at one radius, in TGLF’s names and TORAX’s conventions: lengths normalised to the minor radius <span class="math inline">\(a\)</span> of the last closed flux surface, species 1 = electrons, 2 = main ion, 3 = impurity, masses relative to the deuteron. The inputs fall into three groups.</p>
+<p><strong>Geometry, measured.</strong> <code>RMAJ_LOC</code>, <code>DRMAJDX_LOC</code>, <code>KAPPA_LOC</code>, <code>S_KAPPA_LOC</code>, <code>DELTA_LOC</code>, <code>S_DELTA_LOC</code>, <code>Q_LOC</code>, <code>SHAT</code>. These are computed exactly as TORAX computes them from its geometry object when it builds TGLF inputs (checked against TORAX’s own input builder), on every flux-surface face with <span class="math inline">\(0.1 \le r/a \le 0.9\)</span>, for a set of equilibria per machine:</p>
+<ul>
+<li><strong>MAST-U</strong>: a 60-point Latin hypercube over FreeGSNKE’s MAST-U-like machine (plasma current, pressure scaling, vacuum field, profile exponents and three coil-current multipliers); 42 equilibria accepted (10 did not converge, 5 rejected, 3 timed out). LCFS elongation 1.71–2.28, aspect ratio 1.53–1.77, q<sub>95</sub> 3.8–9.8. Triangularity and its shear are taken from <span class="math inline">\(r/a \ge 0.6\)</span> only: inside that, FreeGSNKE’s triangularity on its default grid is grid noise (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-013">K-013</a>).</li>
+<li><strong>ITER</strong>: TORAX’s ITER hybrid equilibrium (EQDSK) at flat top, plus the q profiles of TORAX’s current ramp-up example (plasma current 3 to 10.5 MA, 41 output times) on the same shape. One shape only (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-016">K-016</a>).</li>
+</ul>
+<p>Each sampling range is the measured 1st–99th percentile, widened by 5% of its span on each side, rounded outward to 0.01, with triangularity and its shear floored at 0, elongation at 1 and q at 0.7. A unit test re-derives the ranges from the stored envelope, so the configuration cannot drift from the measurement.</p>
+<p><strong>Kinetic, approved.</strong> Proposed by the agent, approved per machine by the owner (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-16">OQ-16</a> a). The generator refuses to write a dataset for a region whose kinetic block is not marked approved.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>input (lengths over <span class="math inline">\(a\)</span>)</th>
+<th>MAST-U</th>
+<th>ITER</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(a/L_{T_e}\)</span>, <span class="math inline">\(a/L_{T_i}\)</span> (<code>RLTS_1</code>, <code>RLTS_2</code>)</td>
+<td>0–12</td>
+<td>0–6</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(a/L_{n_e}\)</span> (<code>RLNS_1</code>)</td>
+<td>−2 to 8</td>
+<td>−1 to 3</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(T_i/T_e\)</span> (<code>TAUS_2</code>)</td>
+<td>0.5–3</td>
+<td>0.7–1.5</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\beta_e\)</span> (<code>BETAE</code>)</td>
+<td>0–0.04</td>
+<td>0–0.03</td>
+</tr>
+<tr class="odd">
+<td>collisionality <code>XNUE</code>, log-uniform</td>
+<td>10<sup>−2</sup>–3</td>
+<td>10<sup>−3</sup>–0.1</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(Z_\mathrm{eff}\)</span></td>
+<td>1–3</td>
+<td>1.2–2.5</td>
+</tr>
+<tr class="odd">
+<td>E×B shear <code>VEXB_SHEAR</code></td>
+<td>−1 to 1</td>
+<td>−0.2 to 0.2</td>
+</tr>
+<tr class="even">
+<td>main ion; impurity</td>
+<td>D; C</td>
+<td>D-T as one ion of mass 2.515 u; Ne</td>
+</tr>
+<tr class="odd">
+<td><code>Q_LOC</code> sampling</td>
+<td>uniform</td>
+<td>log-uniform</td>
+</tr>
+<tr class="even">
+<td>α<sub>MHD</sub> cap</td>
+<td>4</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>The radius <code>RMIN_LOC</code> (<span class="math inline">\(r/a\)</span>) is sampled uniformly over 0.1–0.9.</p>
+<p><strong>Derived, never sampled.</strong> From quasi-neutrality with a main ion of charge 1 and one impurity of charge <span class="math inline">\(Z\)</span>: <span class="math inline">\(n_3/n_e = (Z_\mathrm{eff}-1)/(Z(Z-1))\)</span>, <span class="math inline">\(n_2/n_e = 1 - Z\,n_3/n_e\)</span>. Ion and impurity gradients equal the main-ion ones, and <span class="math inline">\(T_3 = T_2\)</span> (TORAX does not evolve the impurity temperature either). Then</p>
+<p><span class="math display">\[
+\texttt{Q\_PRIME\_LOC} = \frac{q^2}{(r/a)^2}\,\hat s, \qquad
+\texttt{P\_PRIME\_LOC} = -\frac{q}{r/a}\,\frac{\beta_e}{8\pi}\sum_s \frac{n_s}{n_e}\frac{T_s}{T_e}
+\left(\frac{a}{L_{n_s}} + \frac{a}{L_{T_s}}\right),
+\]</span></p>
+<p><span class="math display">\[
+\alpha_\mathrm{MHD} = q^2\,\frac{R}{a}\,\beta_e \sum_s \frac{n_s}{n_e}\frac{T_s}{T_e}
+\left(\frac{a}{L_{n_s}} + \frac{a}{L_{T_s}}\right) = -q^2 R\,\frac{d\beta}{dr},
+\]</span></p>
+<p>with <span class="math inline">\(\beta\)</span> on B<sub>unit</sub>. The <code>P_PRIME_LOC</code> expression is TORAX’s <span class="math inline">\(10^{-7}\,(dp/dr)\,q a^2/(r B_\mathrm{unit}^2)\)</span> written in TGLF’s dimensionless inputs, checked against TORAX in a physics test.</p>
+</section>
+<section id="the-αmhd-cap" class="level3">
+<h3 class="anchored" data-anchor-id="the-αmhd-cap">The α<sub>MHD</sub> cap</h3>
+<p>Drawn independently, high <span class="math inline">\(\beta_e\)</span> and steep gradients combine into pressure gradients far beyond ballooning stability. In the timing run, four MAST-U points of this kind returned 10<sup>4</sup>–10<sup>5</sup> gyro-Bohm units. Over the uncapped box, α<sub>MHD</sub> has median 4.1 (MAST-U) and 2.9 (ITER), and 99th percentile 49 and 81. Version 1 rejects points above a fixed cap per machine (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-16">OQ-16</a> c). The cap does not depend on the magnetic shear, although an <span class="math inline">\(s\)</span>–<span class="math inline">\(\alpha\)</span> ballooning boundary does (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-017">K-017</a>). Because α<sub>MHD</sub> grows as <span class="math inline">\(q^2\)</span>, the cap also removes most high-q points on ITER (<span class="claim">MAST-U 0.490 kept (220936 drawn), ITER 0.425 (258597 drawn); kept mean beta_e 23-25% below the box mean on both; kept median q 1.90 (MAST-U) and 1.73 (ITER, sampled log-uniform over 1.02-11.1)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-073" class="cid st-measured">C-073</a>).</p>
+</section>
+<section id="algorithm-1-sampling-a-region-as-in-tkit.datasets.tglf_dataset.sample_region" class="level3">
+<h3 class="anchored" data-anchor-id="algorithm-1-sampling-a-region-as-in-tkit.datasets.tglf_dataset.sample_region">Algorithm 1: sampling a region (as in <code>tkit.datasets.tglf_dataset.sample_region</code>)</h3>
+<pre><code>input: region ranges R (geometry + kinetic), log-uniform set L, cap A, seed s, target n
+kept = [], drawn = 0, k = 0
+while |kept| &lt; n:
+    acc = |kept| / drawn  (1 if drawn = 0)
+    m   = max(64, ceil(1.2 (n - |kept|) / max(acc, 1e-3)))
+    U   = LatinHypercube(dim = 1 + |R|, seed = 1000 s + k).random(m)
+    for u in U:
+        x = map u to [0.1, 0.9] for r/a and to R (log scale for inputs in L)
+        if alpha_MHD(x) &lt;= A: kept.append(x)
+    drawn += m, k += 1
+return kept[:n], acceptance = |kept| / drawn</code></pre>
+<p>Each batch is a separate Latin hypercube, so the union is stratified within batches but not across them. The result is reproducible from the seed (MAST-U 0, ITER 1).</p>
+</section>
+</section>
+<section id="generation-and-storage" class="level2">
+<h2 class="anchored" data-anchor-id="generation-and-storage">Generation and storage</h2>
+<ol type="1">
+<li>Sample the region (Algorithm 1) and save the points.</li>
+<li>Run TGLF on the points in chunks of 4096, one process per core, each case with <code>OMP_NUM_THREADS = 1</code>. A case records the six fluxes, a status (0 finite, 1 non-finite, 2 TGLF error) and its wall time. A chunk file appears only once complete, so a job cut by its time limit resumes at the next chunk when resubmitted.</li>
+<li>When all chunks exist, write <code>tglf-&lt;region&gt;-v&lt;k&gt;.npz</code>: inputs (sampled and derived, by name), outputs, status, wall times and the metadata (spec, sampling space version, region block, GACODE commit, TGLF settings, species, sampling statistics). Write the provenance record beside it: git commit and dirty flag, package versions, configuration hash, and the SHA-256 of the dataset file, the sampling-space file and the geometry record. Make the file read-only. A finished dataset is never rewritten; a change makes version <span class="math inline">\(k+1\)</span>.</li>
+<li>Log per-chunk metrics (completed fraction, cases per second, mean wall time) and the final file with its provenance to the run tracker (Simvue). Inside a cluster job the tracker writes offline; the cache is uploaded from a login node, and the upload is checked by comparing the server’s checksum with the local SHA-256.</li>
+</ol>
+<p><strong>Outputs</strong>: <span class="math inline">\(\Gamma_e, \Gamma_i, \Gamma_\mathrm{imp}\)</span> (particle fluxes) and <span class="math inline">\(Q_e, Q_i,
+Q_\mathrm{imp}\)</span> (heat fluxes), in TGLF’s gyro-Bohm units with <code>UNITS = CGYRO</code>. Loading a dataset recomputes the file’s SHA-256 and refuses it if it differs from the provenance record.</p>
+</section>
+<section id="datasets-v1" class="level2">
+<h2 class="anchored" data-anchor-id="datasets-v1">Datasets, version 1</h2>
+<p>Generated 2 Oct 2026 at commit <code>887245e</code> (clean tree), one 256-core CPU node per dataset.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><code>tglf-mastu-v1</code> and <code>tglf-iter-v1</code></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>cases</td>
+<td><span class="claim">100000 of 100000 cases completed, all six fluxes finite</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-071" class="cid st-measured">C-071</a> (MAST-U); <span class="claim">100000 of 100000 cases completed, all six fluxes finite</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-072" class="cid st-measured">C-072</a> (ITER)</td>
+</tr>
+<tr class="even">
+<td>acceptance under the cap</td>
+<td><span class="claim">MAST-U 0.490 kept (220936 drawn), ITER 0.425 (258597 drawn); kept mean beta_e 23-25% below the box mean on both; kept median q 1.90 (MAST-U) and 1.73 (ITER, sampled log-uniform over 1.02-11.1)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-073" class="cid st-measured">C-073</a></td>
+</tr>
+<tr class="odd">
+<td>cost</td>
+<td><span class="claim">91.6 core-h (MAST-U) and 92.4 core-h (ITER); 3.3 s per case mean; 35 min wall per job</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-074" class="cid st-measured">C-074</a></td>
+</tr>
+</tbody>
+</table>
+<div id="fig-tglf-domain" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tglf-domain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/tglf_domain.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tglf-domain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Sampled points (grey, a random subset of 400 per panel) against the flux surfaces of the measured equilibria (accent, at most 300 faces per panel), MAST-U top, ITER bottom. Left: q against magnetic shear. Middle: elongation against triangularity (MAST-U surfaces from r/a ≥ 0.6, <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-013">K-013</a>). Right: a/L<sub>Te</sub> against β<sub>e</sub>, with the approved kinetic box (dashed). Look at the left column: the measured surfaces lie on curves, the sampled points fill the box around them.
+</figcaption>
+</figure>
+</div>
+<p><em>CSV: <a href="../figures/tglf_domain.csv">tglf_domain.csv</a> (per input: sampled range, measured 1st–99th percentile, fraction of sampled points inside it). Provenance: datasets of <span class="claim">100000 of 100000 cases completed, all six fluxes finite</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-071" class="cid st-measured">C-071</a> and <span class="claim">100000 of 100000 cases completed, all six fluxes finite</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-072" class="cid st-measured">C-072</a> at <code>887245e</code>; geometry records named in the sampling space; figure script <code>blog/figures/make_tglf_domain.py</code>.</em></p>
+<p><strong>Against the operating space.</strong> Input by input, 63–94% of the sampled points lie inside the measured 1st–99th percentile envelope (<span class="claim">MAST-U 0.72 (triangularity) to 0.94 (q); ITER 0.63 (q) to 0.94 (triangularity shear)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-076" class="cid st-measured">C-076</a>). Jointly the coverage is wider than the measured set: the geometry inputs are sampled independently, so the datasets contain combinations no measured equilibrium has, for example high q at low shear on MAST-U (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-018">K-018</a>). The kinetic inputs have no measured counterpart here; their box is the approved one, minus the corner the cap removes (right column).</p>
+<p><strong>Flux distribution.</strong> Every case completed with finite fluxes. The distributions have long tails:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>quantity, gyro-Bohm units</th>
+<th>MAST-U median</th>
+<th>MAST-U 99th pct</th>
+<th>ITER median</th>
+<th>ITER 99th pct</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(Q_e\)</span></td>
+<td>471</td>
+<td>7.2×10<sup>5</sup></td>
+<td>28.8</td>
+<td>4.1×10<sup>4</sup></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(Q_i\)</span></td>
+<td>84</td>
+<td>8.8×10<sup>5</sup></td>
+<td>12</td>
+<td>4.0×10<sup>4</sup></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\Gamma_e\)</span></td>
+<td>1.2</td>
+<td>1.2×10<sup>5</sup></td>
+<td>0.17</td>
+<td>7.4×10<sup>3</sup></td>
+</tr>
+</tbody>
+</table>
+<p>Fractions above 10<sup>4</sup> and 10<sup>5</sup> units: <span class="claim">MAST-U 0.283 above 10^4 and 0.122 above 10^5; ITER 0.097 above 10^4 and 0.0065 above 10^5</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-075" class="cid st-preliminary">C-075</a>. Over the dataset, the logarithm of <span class="math inline">\(Q_e + Q_i\)</span> correlates most with <span class="math inline">\(a/L_{T_e}\)</span> (correlation 0.45 MAST-U, 0.47 ITER), then with q (MAST-U, negatively) and α<sub>MHD</sub> (ITER). Negative heat fluxes occur in 2.5–3% of cases for electrons and about 10% for ions. Whether the high-flux tail is physical (far above threshold, or electromagnetic modes at high <span class="math inline">\(\beta_e\)</span>) or comes from how the inputs are constructed is not yet established (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-019">K-019</a>). The data are stored as computed; any filtering or loss weighting is a decision for M3, after a check of a sample of these cases.</p>
+</section>
+<section id="correctness" class="level2">
+<h2 class="anchored" data-anchor-id="correctness">Correctness</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>property</th>
+<th>how it is checked</th>
+<th>status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>geometry inputs equal TORAX’s own TGLF inputs on the same geometry</td>
+<td>physics test against TORAX’s input builder</td>
+<td>tested</td>
+</tr>
+<tr class="even">
+<td><code>P_PRIME_LOC</code> equals TORAX’s pressure-gradient input</td>
+<td>physics test</td>
+<td>tested</td>
+</tr>
+<tr class="odd">
+<td>sampling ranges re-derive from the stored envelope</td>
+<td>unit test</td>
+<td>tested</td>
+</tr>
+<tr class="even">
+<td>the sampler keeps only points under the cap, and is reproducible from its seed</td>
+<td>unit test</td>
+<td>tested</td>
+</tr>
+<tr class="odd">
+<td>α<sub>MHD</sub> equals <code>P_PRIME_LOC</code> rescaled, <span class="math inline">\(-8\pi\,q\,(R/a)(r/a)\,\)</span><code>P_PRIME_LOC</code></td>
+<td>unit test</td>
+<td>tested</td>
+</tr>
+<tr class="even">
+<td>no dataset under <code>data/</code> for an unapproved region</td>
+<td>unit test (generator refuses)</td>
+<td>tested</td>
+</tr>
+<tr class="odd">
+<td>a dataset whose bytes differ from its provenance record does not load</td>
+<td>unit test</td>
+<td>tested</td>
+</tr>
+<tr class="even">
+<td>finished datasets are read-only and never rewritten</td>
+<td>unit test</td>
+<td>tested</td>
+</tr>
+<tr class="odd">
+<td>every case completed with finite fluxes</td>
+<td>stored status, <span class="claim">100000 of 100000 cases completed, all six fluxes finite</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-071" class="cid st-measured">C-071</a>, <span class="claim">100000 of 100000 cases completed, all six fluxes finite</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-072" class="cid st-measured">C-072</a></td>
+<td>measured</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="design-decisions" class="level2">
+<h2 class="anchored" data-anchor-id="design-decisions">Design decisions</h2>
+<ul>
+<li><strong>Geometry measured, not chosen</strong> (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-15">OQ-15</a> a). The agent’s first proposal, written from memory, had MAST-U triangularity up to 0.6 (an LCFS value); measured on interior surfaces it is at most 0.24.</li>
+<li><strong>One dataset per machine, not one pooled space</strong> (owner, 2026-10-02). Pooling is a training choice, made at M3 from the tags.</li>
+<li><strong>α<sub>MHD</sub> cap, fixed per machine for version 1</strong> (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-16">OQ-16</a> c), not a shear-dependent boundary, until the physicist sets one.</li>
+<li><strong>D-T as one ion of mean mass</strong> for ITER, and <strong>neon</strong> as the impurity (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-16">OQ-16</a> a); beryllium and tungsten are left out of version 1.</li>
+<li><strong>Outputs stored as computed.</strong> No flux filter at generation time, so the decision about the tail (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-019">K-019</a>) can be made and changed without regenerating.</li>
+</ul>
+</section>
+<section id="ceilings" class="level2">
+<h2 class="anchored" data-anchor-id="ceilings">Ceilings</h2>
+<p><a href="../../../Blog/tokamak-toolkit/ceilings.html#k-015">K-015</a> (TGLF inside TORAX), <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-016">K-016</a> (one ITER shape), <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-017">K-017</a> (fixed cap), <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-018">K-018</a> (independent geometry sampling), <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-019">K-019</a> (unexplained high-flux cases). See <a href="../../../Blog/tokamak-toolkit/ceilings.html">known ceilings</a>.</p>
+</section>
+<section id="changelog" class="level2">
+<h2 class="anchored" data-anchor-id="changelog">Changelog</h2>
+<ul>
+<li>2026-10-02: first version: TGLF build, install checks and cost; the sampling space with measured geometry and approved kinetic ranges; datasets <code>tglf-mastu-v1</code> and <code>tglf-iter-v1</code>; domain plot (entries 16, 17).</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2026 Vignesh Gopakumar</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<div class="tk-footer">
+Code and first draft by Claude (Anthropic), working to a brief by Vignesh Gopakumar,
+who reviewed and approved this page.
+<a href="../../../Blog/tokamak-toolkit/about.html">How this is built</a> ·
+<a href="../../../Blog/tokamak-toolkit/index.html">Tokamak Toolkit home</a>
+</div>
+
+
+
+
+</body></html>

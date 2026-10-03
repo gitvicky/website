@@ -1,0 +1,61 @@
+---
+title: 'Fix: wrong minor radius in the IMAS export'
+date: '2026-09-30'
+categories:
+- fixed
+entry: 7
+milestone: M1
+---
+
+::: {.entry-meta}
+[bug fix]{.chip .fixed} Entry 7 · milestone M1
+:::
+
+This log requires the technical pages to be detailed enough for someone to re-implement the
+code from them. Writing those pages for the first time found a bug in the IMAS export.
+
+## What was wrong
+
+Every code in this project gives radial position as a normalised radius from 0 to 1. IMAS, the
+fusion data standard we use at the code's boundaries, also requires the radius in metres. The
+conversion multiplies by the plasma's radius at the edge. There are two candidates for that
+radius: the geometric half-width of the plasma, and a radius defined from the magnetic flux it
+encloses. IMAS uses the second. Our export used the first.
+
+For the circular test plasma used in M0 the two are equal, so every test passed. For shaped
+plasmas they differ:
+
+| plasma | flux radius vs half-width |
+|---|---|
+| ITER hybrid scenario | [a factor of 1.37]{.claim}[C-030](/Blog/tokamak-toolkit/claims.qmd#c-030){.cid .st-measured} |
+| MAST-U (spherical tokamak) | [a factor of 1.52]{.claim}[C-021](/Blog/tokamak-toolkit/claims.qmd#c-021){.cid .st-tested} |
+
+Every exported equilibrium therefore had its radius in metres too small by that factor, the
+derivative of the volume with respect to radius too large by the same factor, and one
+geometric average off by its square.
+
+## Why the tests did not catch it
+
+The adapter test converts data to IMAS and back and checks that nothing changed. It passed to
+fourteen decimal places. The import used the same wrong radius as the export, so the two errors
+cancelled exactly. A round-trip test shows that two functions are inverses of each other; it
+does not show that the data in between matches the standard's definitions.
+
+## How it was found, and the fix
+
+Writing the conversion as an equation, with each symbol defined, showed that the two radii are
+different quantities. The fix stores the flux radius explicitly in the equilibrium. New tests
+compare the exported value with each source code's own value, not with our import. They agree
+to [10^−12^]{.claim}[C-033](/Blog/tokamak-toolkit/claims.qmd#c-033){.cid .st-tested}. This comparison does not depend on our import code, and would have
+failed from the start.
+
+No published result depended on the exported values: the simulation used the correct quantities
+internally. The same review found a related issue in the inputs the guard checks, which has
+gone to the owner as a modelling decision ([OQ-10](/Blog/tokamak-toolkit/decisions.qmd#oq-10)).
+
+**Where this stands**: M1 in progress.
+
+::: {.entry-links}
+**Technical details →** [IMAS adapters › post mortem export](/Blog/tokamak-toolkit/technical/imas-adapters.qmd#post-mortem-export) · [Core state and interfaces › transport features](/Blog/tokamak-toolkit/technical/core-state.qmd#transport-features)  
+**Decisions →** [OQ-10](/Blog/tokamak-toolkit/decisions.qmd#oq-10)
+:::
