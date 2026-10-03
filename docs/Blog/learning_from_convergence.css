@@ -1,0 +1,29 @@
+/* Keep long equations readable on narrow screens without widening the page. */
+main.content {
+  min-width: 0;
+  width: 100%;
+}
+.math.display {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.35rem 0;
+}
+.quarto-figure img {
+  max-width: 100%;
+  height: auto;
+}
+#refs {
+  overflow-wrap: anywhere;
+}
+main.content .table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+@media (max-width: 600px) {
+  .page-layout-full main.content {
+    padding-inline: 0;
+  }
+}

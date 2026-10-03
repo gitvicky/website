@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Blog – Vignesh Gopakumar</title>
+<title>allocation_table – Vignesh Gopakumar</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,23 +23,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="../Images/dy_dx.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../Images/dy_dx.png" rel="icon" type="image/png">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,8 +68,37 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../styles.css">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -79,7 +108,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../../index.html">
     <span class="navbar-title">Vignesh Gopakumar</span>
     </a>
   </div>
@@ -90,19 +119,19 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="../../../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../research.html"> 
+    <a class="nav-link" href="../../../research.html"> 
 <span class="menu-text">Research</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../talks.html"> 
+    <a class="nav-link" href="../../../talks.html"> 
 <span class="menu-text">Talks</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../Blog/blog.html" aria-current="page"> 
+    <a class="nav-link" href="../../../Blog/blog.html"> 
 <span class="menu-text">Blog</span></a>
   </li>  
 </ul>
@@ -120,60 +149,35 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content column-page" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Blog</h1>
-</div>
 
 
 
-<div class="quarto-title-meta column-page">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<hr>
-<div class="blog-grid">
-<div class="blog-card">
-<p><a href="../Blog/learning_from_convergence.html">Learning from Convergence</a></p>
-</div>
-<div class="blog-card">
-<p><a href="../Blog/research_arc.html">Learning Physics You Can Trust: Seven Years in One Page</a></p>
-</div>
-<div class="blog-card">
-<p><a href="../Blog/Upgrade_viva_Review.pdf">A Review on UQ and Surrogate Modelling for Neural PDE Solvers</a></p>
-</div>
-<div class="blog-card">
-<p><a href="../Blog/Inverse_kernel.html">Convolution as a Form of Integration</a></p>
-</div>
-<div class="blog-card">
-<p><a href="../Blog/iterative_solvers.html">Iterative Solvers for Linear Systems</a></p>
-</div>
-<div class="blog-card">
-<p><a href="../Blog/UPE.html">Universal Physics Engine</a></p>
-</div>
-<div class="blog-card">
-<p><a href="../Blog/geometry.html">Geometry for Neural PDEs</a></p>
-</div>
-<div class="blog-card">
-<p><a href="../Blog/SPDEs.html">Stochastic PDEs</a></p>
-</div>
-<div class="blog-card">
-<p><a href="../Blog/tokamak-toolkit/index.html">Tokamak Integrated Modelling</a></p>
-</div>
-</div>
-<!-- [Neural ODE](/Blog/Neural_ODE.qmd) -->
-<!-- [Neural Operators](/Blog/Neural_Operators.qmd) -->
-<div class="blog-note">
-<p>Some of these blogposts might seem rather crude as they may be written as notes to self. You can find some of my earlier writing on <a href="https://medium.com/@engineoutcompletely">Medium</a>.</p>
-</div>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Configurations <span class="math inline">\(M\)</span></th>
+<th style="text-align: right;">Samples <span class="math inline">\(N\)</span></th>
+<th style="text-align: right;">Test MSE (mean ± SD)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">4,096</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0607 ± 0.0856</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">512</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.0922 ± 0.1182</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">0.0414 ± 0.0282</td>
+</tr>
+</tbody>
+</table>
 
 
 

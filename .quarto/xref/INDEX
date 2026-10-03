@@ -577,5 +577,11 @@
   },
   "Blog/tokamak-toolkit/technical/datasets.qmd": {
     "datasets.html": "012db019"
+  },
+  "Blog/assets/learning_from_convergence/allocation_table.md": {
+    "allocation_table.html": "040df00f"
+  },
+  "Blog/learning_from_convergence.qmd": {
+    "learning_from_convergence.html": "b1a87a40"
   }
 }

@@ -7,6 +7,10 @@ title: "Blog"
 <div class="blog-grid">
 
 <div class="blog-card">
+<a href="/Blog/learning_from_convergence.qmd">Learning from Convergence</a>
+</div>
+
+<div class="blog-card">
 <a href="/Blog/research_arc.qmd">Learning Physics You Can Trust: Seven Years in One Page</a>
 </div>
 
