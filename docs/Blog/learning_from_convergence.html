@@ -194,6 +194,10 @@ window.Quarto = {
     <a class="nav-link" href="../Blog/blog.html"> 
 <span class="menu-text">Blog</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../Blog/tokamak-toolkit/index.html"> 
+<span class="menu-text">Tokamak Toolkit</span></a>
+  </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -251,11 +255,11 @@ F(a)=\mathbb E_{\xi\sim p(\cdot\mid a)}[f(a,\xi)].
 \hat F_N(a)=\frac{1}{N}\sum_{i=1}^{N}f(a,\xi_i),
 \qquad \xi_i\overset{\mathrm{iid}}\sim p(\cdot\mid a).
 \]</span></p>
-<p>Under standard integrability assumptions, increasing <span class="math inline">\(N\)</span> makes this estimate converge to <span class="math inline">\(F(a)\)</span>. The computational objective is local: spend enough samples to resolve one expectation. With finite variance, its root-mean-squared error decreases as <span class="math inline">\(N^{-1/2}\)</span>.</p>
-<p>The objective changes when we need <span class="math inline">\(F(a)\)</span> across many configurations. We might evaluate different material properties, source distributions, or model parameters, then fit a surrogate <span class="math inline">\(G_\theta(a)\)</span> for repeated use. Generating a converged label at every configuration can dominate the entire cost. Under a fixed simulation budget, we can instead generate accurate labels at a few configurations or noisy labels at many.</p>
+<p>With finite variance, the estimator’s root-mean-squared error decreases as <span class="math inline">\(N^{-1/2}\)</span>. Resolving each expectation independently can therefore be expensive.</p>
+<p>To learn a surrogate <span class="math inline">\(G_\theta(a)\)</span> across material properties, source distributions, or model parameters, a fixed budget can buy accurate labels at a few configurations or noisy labels at many.</p>
 <p><strong>Must each Monte Carlo estimate converge before it becomes useful training data?</strong></p>
-<p>For squared-error regression, the answer is no, provided the estimator is conditionally unbiased. The relevant object is the expectation of the label given the configuration, rather than the accuracy of any individual label. This permits convergence to be shared across related problems when the model can exploit their common structure.</p>
-<p>We encountered this question while training neural operators from noisy particle-transport simulations in PTNO <span class="citation" data-cites="cao2026ptno">(<a href="#ref-cao2026ptno" role="doc-biblioref">Cao et al. 2026</a>)</span>. Here, we develop the general statistical argument, its finite-budget implications, and the complication introduced by nonlinear targets. The premise is that the map <span class="math inline">\(a\mapsto F(a)\)</span> has learnable structure; unbiasedness alone does not supply that structure.</p>
+<p>For squared-error regression, conditionally unbiased labels preserve the clean population optimum, even when individual estimates are poor. Learning can pool evidence across configurations when their expectation map has shared structure.</p>
+<p>Motivated by noisy particle-transport supervision in PTNO <span class="citation" data-cites="cao2026ptno">(<a href="#ref-cao2026ptno" role="doc-biblioref">Cao et al. 2026</a>)</span>, we examine this equivalence, simulation allocation, and nonlinear target bias.</p>
 </section>
 <section id="learning-from-an-unconverged-estimator" class="level2">
 <h2 class="anchored" data-anchor-id="learning-from-an-unconverged-estimator">Learning from an unconverged estimator</h2>
@@ -264,7 +268,7 @@ F(a)=\mathbb E_{\xi\sim p(\cdot\mid a)}[f(a,\xi)].
 \hat F_N(a)=F(a)+\epsilon_N(a),
 \qquad \mathbb E[\epsilon_N\mid a]=0.
 \]</span></p>
-<p>Let configurations follow a fixed distribution <span class="math inline">\(\rho\)</span>. Assume finite second moments and that <span class="math inline">\(G_\theta\)</span> receives <span class="math inline">\(a\)</span>, without access to the random draws used to produce its label. Define the noisy and clean population risks over the same model class:</p>
+<p>For a fixed configuration distribution <span class="math inline">\(\rho\)</span>, assume finite second moments and that the model receives <span class="math inline">\(a\)</span> without access to its label’s random draws. Define</p>
 <p><span class="math display">\[
 \begin{aligned}
 \mathcal L_N(\theta)
@@ -273,84 +277,78 @@ F(a)=\mathbb E_{\xi\sim p(\cdot\mid a)}[f(a,\xi)].
 &amp;=\mathbb E_a\big[(G_\theta(a)-F(a))^2\big].
 \end{aligned}
 \]</span></p>
-<p>Expanding the square gives</p>
+<p>Expanding the square, the cross term vanishes because <span class="math inline">\(\mathbb E[\epsilon_N\mid a]=0\)</span>, giving</p>
 <p><span class="math display">\[
 \begin{aligned}
 \mathcal L_N(\theta)
-&amp;=\mathcal L_{\mathrm{clean}}(\theta)
-+\mathbb E[\epsilon_N^2]\\
-&amp;\quad-2\mathbb E[(G_\theta(a)-F(a))\epsilon_N].
+&amp;=\mathcal L_{\mathrm{clean}}(\theta)\\
+&amp;\quad+\mathbb E[\epsilon_N^2].
 \end{aligned}
 \]</span></p>
-<p>The cross term vanishes by conditioning on <span class="math inline">\(a\)</span>:</p>
-<p><span class="math display">\[
-\mathbb E[(G_\theta(a)-F(a))\epsilon_N]
-=\mathbb E_a[(G_\theta(a)-F(a))\mathbb E[\epsilon_N\mid a]]=0.
-\]</span></p>
-<p>Hence <span class="math inline">\(\mathcal L_N=\mathcal L_{\mathrm{clean}}+\mathbb E[\epsilon_N^2]\)</span>. The additional term does not depend on <span class="math inline">\(\theta\)</span>, so, whenever minimizers exist,</p>
+<p>The noise term is independent of <span class="math inline">\(\theta\)</span>. Thus, over the same model class and whenever minimizers exist,</p>
 <p><span class="math display">\[
 \boxed{\begin{gathered}
 \arg\min_\theta\mathcal L_N(\theta)\\
 =\arg\min_\theta\mathcal L_{\mathrm{clean}}(\theta).
 \end{gathered}}
 \]</span></p>
-<p>This identity holds even for a restricted model class. Such a class may approximate <span class="math inline">\(F\)</span> imperfectly, but noisy supervision introduces no additional displacement of its population optimum. For vector or field outputs, replacing the scalar square by a squared Euclidean or Hilbert-space norm gives the same argument, assuming finite expected squared norm.</p>
-<p>The result concerns a population objective. It neither guarantees that a finite dataset identifies <span class="math inline">\(F\)</span> nor that an optimizer reaches the optimum. High-variance labels can increase gradient variability, and a sufficiently flexible model can memorize their noise. The training distribution also matters: the identity gives no assurance of extrapolation beyond its support.</p>
-<p>Noise2Noise established this learning principle in image restoration, including MC rendering <span class="citation" data-cites="lehtinen2018noise2noise">(<a href="#ref-lehtinen2018noise2noise" role="doc-biblioref">Lehtinen et al. 2018</a>)</span>. Its denoising setting also involves corrupted inputs; here the input is a configuration and the output is its deterministic expectation. In both cases, the mean-preserving condition must hold given the information actually supplied to the model. Unconditional zero-mean noise is insufficient if its conditional mean varies with the input.</p>
+<p>The identity holds for restricted model classes and squared vector or field norms. It preserves the best approximation within the class, rather than guaranteeing exact recovery of <span class="math inline">\(F\)</span>.</p>
+<p>Finite-data accuracy, optimization, and extrapolation remain separate questions. High-variance labels can destabilize gradients or be memorized by a flexible model.</p>
+<p>Noise2Noise established this principle in image restoration, including MC rendering <span class="citation" data-cites="lehtinen2018noise2noise">(<a href="#ref-lehtinen2018noise2noise" role="doc-biblioref">Lehtinen et al. 2018</a>)</span>. Here, the input is a configuration. In both settings, unbiasedness must hold conditional on the model’s input; unconditional zero-mean noise is insufficient.</p>
 </section>
 <section id="two-deliberately-noisy-monte-carlo-examples" class="level2">
 <h2 class="anchored" data-anchor-id="two-deliberately-noisy-monte-carlo-examples">Two deliberately noisy Monte Carlo examples</h2>
-<p>First consider an analytical expectation:</p>
+<p>Consider</p>
 <p><span class="math display">\[
 X\mid a\sim\mathcal N(a,1),\qquad
 F(a)=\mathbb E[X^2\mid a]=a^2+1.
 \]</span></p>
-<p>The training label is the sample mean of <span class="math inline">\(X^2\)</span>. Even with <span class="math inline">\(N=1\)</span>, it is unbiased:</p>
+<p>The sample mean of <span class="math inline">\(X^2\)</span> is unbiased, even with <span class="math inline">\(N=1\)</span>:</p>
 <p><span class="math display">\[
 \hat F_1(a)=X^2,\qquad
 \operatorname{Var}[\hat F_N(a)\mid a]=\frac{2+4a^2}{N}.
 \]</span></p>
-<p>At <span class="math inline">\(a=3\)</span>, one label has standard deviation <span class="math inline">\(\sqrt{38}\)</span> around a mean of <span class="math inline">\(10\)</span>. At <span class="math inline">\(a=0\)</span>, its standard deviation is <span class="math inline">\(\sqrt{2}\)</span> around a mean of <span class="math inline">\(1\)</span>. Individual labels are therefore poor approximations, with noise that changes across the configuration space.</p>
-<p>We draw <span class="math inline">\(4,096\)</span> configurations uniformly from <span class="math inline">\([-3,3]\)</span>, generate one sample at each, and train a two-hidden-layer MLP with 32 tanh units per layer. Training uses only these noisy labels: full-batch Adam, learning rate <span class="math inline">\(0.01\)</span>, and 800 updates on CPU. Fixed linear input and output rescaling improves conditioning without changing the population optimum. The analytical target is used only for plotting and evaluation; there is no clean-label stopping rule or hyperparameter sweep.</p>
+<p>At <span class="math inline">\(a=3\)</span>, a single label has standard deviation <span class="math inline">\(\sqrt{38}\)</span> around a mean of <span class="math inline">\(10\)</span>: substantial, configuration-dependent noise.</p>
+<p>We train a <span class="math inline">\(1\to32\to32\to1\)</span> MLP with tanh hidden layers and a linear output on one sample at each of 4,096 configurations drawn uniformly from <span class="math inline">\([-3,3]\)</span>. Training uses full-batch Adam, learning rate <span class="math inline">\(0.01\)</span>, 800 CPU updates, and fixed linear rescaling. Exact targets enter only evaluation and plotting, with no clean-label tuning or stopping.</p>
 <div id="fig-noisy-expectation" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Grey one-sample squared-Gaussian labels scatter around a quadratic. A blue dashed learned curve closely follows the black exact expectation.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-noisy-expectation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="assets/learning_from_convergence/noisy_expectation.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: A network trained on 4,096 one-sample labels follows the exact quadratic expectation despite substantial scatter in the labels. All training points are shown. The displayed run uses seed 0; its relative L_2 error on the evaluation grid is 3.63%."><img src="assets/learning_from_convergence/noisy_expectation.svg" class="img-fluid figure-img" style="width:100.0%" alt="Grey one-sample squared-Gaussian labels scatter around a quadratic. A blue dashed learned curve closely follows the black exact expectation."></a>
+<a href="assets/learning_from_convergence/noisy_expectation.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: All 4,096 one-sample labels and the learned expectation. The seed-0 model has 3.63% relative L_2 error on the evaluation grid."><img src="assets/learning_from_convergence/noisy_expectation.svg" class="img-fluid figure-img" style="width:100.0%" alt="Grey one-sample squared-Gaussian labels scatter around a quadratic. A blue dashed learned curve closely follows the black exact expectation."></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-noisy-expectation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: A network trained on 4,096 one-sample labels follows the exact quadratic expectation despite substantial scatter in the labels. All training points are shown. The displayed run uses seed 0; its relative <span class="math inline">\(L_2\)</span> error on the evaluation grid is 3.63%.
+Figure&nbsp;1: All 4,096 one-sample labels and the learned expectation. The seed-0 model has 3.63% relative <span class="math inline">\(L_2\)</span> error on the evaluation grid.
 </figcaption>
 </figure>
 </div>
-<p>The model pools evidence through a shared function of <span class="math inline">\(a\)</span>. It does not estimate each configuration independently, and it has no information about which realization of <span class="math inline">\(X\)</span> produced a particular label. Its useful prediction is the conditional mean. This pooling is possible because the expectation map is simple relative to the information available across configurations.</p>
+<p>The shared model pools noisy observations to learn a simple conditional-mean map.</p>
 <section id="from-individual-trajectories-to-transport-expectations" class="level3">
 <h3 class="anchored" data-anchor-id="from-individual-trajectories-to-transport-expectations">From individual trajectories to transport expectations</h3>
-<p>A symmetric random walk supplies a discrete transport example. Start at an integer site <span class="math inline">\(x\in\{1,\ldots,L-1\}\)</span>, move left or right with equal probability, and stop at the first visit to either boundary. Let <span class="math inline">\(\tau\)</span> be this exit time and <span class="math inline">\(H=\mathbf 1\{X_\tau=L\}\)</span>. Their expectations are <span class="citation" data-cites="aldous2002walks">(<a href="#ref-aldous2002walks" role="doc-biblioref">Aldous and Fill 2002, sec. 5.1</a>)</span></p>
+<p>For a discrete transport example, start a symmetric random walk at <span class="math inline">\(x\in\{1,\ldots,L-1\}\)</span> and stop at boundary <span class="math inline">\(0\)</span> or <span class="math inline">\(L\)</span>. The exit time <span class="math inline">\(\tau\)</span> and right-exit indicator <span class="math inline">\(H=\mathbf 1\{X_\tau=L\}\)</span> satisfy <span class="citation" data-cites="aldous2002walks">(<a href="#ref-aldous2002walks" role="doc-biblioref">Aldous and Fill 2002, sec. 5.1</a>)</span></p>
 <p><span class="math display">\[
 \mathbb E[H\mid x]=\frac{x}{L},
 \qquad
 \mathbb E[\tau\mid x]=x(L-x).
 \]</span></p>
-<p>One complete trajectory therefore provides two unbiased labels: a binary exit outcome and a noisy duration. Their sample averages estimate the escape probability and mean exit time at a given starting site. Generating these labels requires neither analytical expectation.</p>
+<p>One complete trajectory supplies two unbiased labels without evaluating either expectation:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> walk_label(x, rng, length<span class="op">=</span><span class="dv">32</span>):</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    steps <span class="op">=</span> <span class="dv">0</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="dv">0</span> <span class="op">&lt;</span> x <span class="op">&lt;</span> length:</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        x <span class="op">+=</span> rng.choice([<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>])</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        steps <span class="op">+=</span> <span class="dv">1</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">int</span>(x <span class="op">==</span> length), steps</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>We set <span class="math inline">\(L=32\)</span> and generate 4,096 independent trajectories, with starting sites sampled uniformly from the 31 interior sites. Sites recur: these are 4,096 observations, rather than 4,096 distinct configurations. A two-output <span class="math inline">\(1\to32\to32\to2\)</span> tanh MLP learns both expectations using the same Adam settings and 800 updates as above. The input is scaled by <span class="math inline">\(L\)</span> and the duration label by <span class="math inline">\(L^2\)</span>, using fixed linear transformations. Exact solutions enter only evaluation and plotting.</p>
+<p>With <span class="math inline">\(L=32\)</span>, we generate 4,096 independent trajectories from uniformly sampled starting sites among the 31 interior positions. Sites recur. A <span class="math inline">\(1\to32\to32\to2\)</span> MLP learns both expectations with the same hidden layers and optimizer settings, dividing the input by <span class="math inline">\(L\)</span> and duration labels by <span class="math inline">\(L^2\)</span>. Exact formulas are evaluation references.</p>
 <div id="fig-random-walk" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Two panels compare exact and learned random-walk expectations across starting sites: a linear escape probability and a parabolic mean exit time, with scattered site-wise mean labels.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-random-walk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="assets/learning_from_convergence/random_walk.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: The seed-0 model learns escape probability and mean exit time from complete trajectories. Grey points show the mean training labels at each starting site; dashed curves show the learned maps. Relative L_2 errors across the 31 sites are 1.32% and 3.91%, respectively."><img src="assets/learning_from_convergence/random_walk.svg" class="img-fluid figure-img" style="width:100.0%" alt="Two panels compare exact and learned random-walk expectations across starting sites: a linear escape probability and a parabolic mean exit time, with scattered site-wise mean labels."></a>
+<a href="assets/learning_from_convergence/random_walk.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Site-wise mean labels and learned expectations. Seed-0 relative L_2 errors are 1.32% for escape probability and 3.91% for mean exit time."><img src="assets/learning_from_convergence/random_walk.svg" class="img-fluid figure-img" style="width:100.0%" alt="Two panels compare exact and learned random-walk expectations across starting sites: a linear escape probability and a parabolic mean exit time, with scattered site-wise mean labels."></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-random-walk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: The seed-0 model learns escape probability and mean exit time from complete trajectories. Grey points show the mean training labels at each starting site; dashed curves show the learned maps. Relative <span class="math inline">\(L_2\)</span> errors across the 31 sites are 1.32% and 3.91%, respectively.
+Figure&nbsp;2: Site-wise mean labels and learned expectations. Seed-0 relative <span class="math inline">\(L_2\)</span> errors are 1.32% for escape probability and 3.91% for mean exit time.
 </figcaption>
 </figure>
 </div>
-<p>Across seeds 0–7, the relative errors are <span class="math inline">\(1.66\pm0.45\%\)</span> for escape probability and <span class="math inline">\(3.87\pm1.07\%\)</span> for mean exit time (mean ± sample SD). This finite configuration space illustrates pooling across sites; it does not establish an efficiency advantage over direct simulation. Trajectory counts also conceal variable costs: the seed-0 dataset contains 716,131 transitions. Every trajectory reaches a boundary without a time cutoff.</p>
-<p>The explorer below uses the saved weights from all eight fits. Change the starting site, trajectory count, or displayed quantity; resample to see MC variability, or animate the addition of complete trajectories. The selected learned map stays fixed while the MC estimate changes.</p>
+<p>Across seeds 0–7, these errors are <span class="math inline">\(1.66\pm0.45\%\)</span> and <span class="math inline">\(3.87\pm1.07\%\)</span> (mean ± sample SD). This illustrates pooling across a finite set of sites, without establishing an efficiency advantage. No trajectory is truncated; seed 0 uses 716,131 transitions, showing why trajectory counts alone obscure simulation cost.</p>
+<p>Explore starting sites, trajectory counts, and both quantities below. Resampling and animation change MC estimates while the selected model’s saved weights remain fixed.</p>
 <link rel="stylesheet" href="assets/learning_from_convergence/walk_demo.css">
 <section id="walk-explorer" aria-labelledby="walk-explorer-title">
   <h4 id="walk-explorer-title" class="anchored">Explore complete random walks</h4>
@@ -411,26 +409,26 @@ Figure&nbsp;2: The seed-0 model learns escape probability and mean exit time fro
 </section>
 <section id="where-should-the-simulation-budget-go" class="level2">
 <h2 class="anchored" data-anchor-id="where-should-the-simulation-budget-go">Where should the simulation budget go?</h2>
-<p>Let <span class="math inline">\(M\)</span> denote distinct configurations, <span class="math inline">\(N\)</span> samples per estimator, and <span class="math inline">\(K\)</span> independent estimators at each configuration. If each simulated sample has equal cost, the simulation budget is</p>
+<p>For <span class="math inline">\(M\)</span> distinct configurations, <span class="math inline">\(N\)</span> samples per label, and <span class="math inline">\(K\)</span> independent labels per configuration, an equal-cost sample budget is</p>
 <p><span class="math display">\[
 \boxed{B=MKN.}
 \]</span></p>
-<p>More computation can buy convergence within a configuration or coverage across configurations. If one sample has conditional variance <span class="math inline">\(\sigma^2(a)\)</span>, then</p>
+<p>If one sample has conditional variance <span class="math inline">\(\sigma^2(a)\)</span>, averaging the <span class="math inline">\(K\)</span> labels gives</p>
 <p><span class="math display">\[
 \operatorname{Var}\!\left[
 \frac{1}{K}\sum_{k=1}^{K}\hat F_N^{(k)}(a)\,\middle|\,a
 \right]=\frac{\sigma^2(a)}{NK}.
 \]</span></p>
-<p>For an ordinary sample mean, <span class="math inline">\(N\)</span> and <span class="math inline">\(K\)</span> therefore buy precision at known locations. Increasing <span class="math inline">\(M\)</span> exposes more of the shape of <span class="math inline">\(F\)</span>. At fixed predictions, the sum of squared residuals against <span class="math inline">\(K\)</span> labels equals <span class="math inline">\(K\)</span> times the residual against their average, plus a term independent of the prediction. Their squared-loss information at that location is thus captured by the average, although stochastic optimization can depend on how those labels are presented.</p>
-<p>This is the established <strong>replication versus exploration</strong> problem in stochastic simulation. Stochastic kriging separates simulator noise from uncertainty about a response surface <span class="citation" data-cites="ankenman2010kriging">(<a href="#ref-ankenman2010kriging" role="doc-biblioref">Ankenman, Nelson, and Staum 2010</a>)</span>. Sequential design methods explicitly decide whether to repeat an existing configuration or evaluate a new one <span class="citation" data-cites="binois2019replication">(<a href="#ref-binois2019replication" role="doc-biblioref">Binois et al. 2019</a>)</span>. Neural expectation-map learning changes the surrogate class, while retaining this design question.</p>
-<p>We compare three allocations with <span class="math inline">\(B=4,096\)</span> and <span class="math inline">\(K=1\)</span>, using the same Gaussian problem, architecture, and training settings. Each allocation is run for seeds 0–7. Within each seed, model initialization and the underlying random-number streams are shared across allocations, while grouping into configurations changes. Every fit consumes exactly 4,096 simulated samples. Reusing the resulting labels during optimization incurs training computation but no additional simulation draws.</p>
+<p>Thus <span class="math inline">\(N\)</span> and <span class="math inline">\(K\)</span> improve precision at known locations; <span class="math inline">\(M\)</span> increases coverage. At fixed predictions, summing squared losses against <span class="math inline">\(K\)</span> labels is equivalent to fitting their average, up to a constant and factor <span class="math inline">\(K\)</span>. Stochastic optimization can still depend on their presentation.</p>
+<p>This is the established <strong>replication versus exploration</strong> problem: stochastic kriging separates simulator noise from response-surface uncertainty <span class="citation" data-cites="ankenman2010kriging">(<a href="#ref-ankenman2010kriging" role="doc-biblioref">Ankenman, Nelson, and Staum 2010</a>)</span>, while sequential design chooses between repeated and new configurations <span class="citation" data-cites="binois2019replication">(<a href="#ref-binois2019replication" role="doc-biblioref">Binois et al. 2019</a>)</span>.</p>
+<p>For the Gaussian problem, we compare three allocations with <span class="math inline">\(B=4,096\)</span>, <span class="math inline">\(K=1\)</span>, identical training settings, and seeds 0–7. Within each seed, initialization and random-number streams are shared across allocations, with draws regrouped into configurations. Stored-label reuse adds training cost but no simulation draws.</p>
 <div id="fig-budget-allocation" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Three groups of seed-wise mean-squared errors compare allocations 4096 by 1, 512 by 8, and 64 by 64. Their errors overlap; the last allocation has the lowest mean.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-budget-allocation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="assets/learning_from_convergence/budget_allocation.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Equal simulation budgets yield different errors. Grey points show all eight seeds and blue diamonds show their means. Error is evaluated against the exact expectation on 1,001 equally spaced configurations in [-3,3]. This is a comparison of simulation allocations, not equal training wall time."><img src="assets/learning_from_convergence/budget_allocation.svg" class="img-fluid figure-img" style="width:100.0%" alt="Three groups of seed-wise mean-squared errors compare allocations 4096 by 1, 512 by 8, and 64 by 64. Their errors overlap; the last allocation has the lowest mean."></a>
+<a href="assets/learning_from_convergence/budget_allocation.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Test MSE on 1,001 equally spaced configurations in [-3,3]. Grey points show eight seeds; blue diamonds show means. Simulation budgets are equal; training wall times are not."><img src="assets/learning_from_convergence/budget_allocation.svg" class="img-fluid figure-img" style="width:100.0%" alt="Three groups of seed-wise mean-squared errors compare allocations 4096 by 1, 512 by 8, and 64 by 64. Their errors overlap; the last allocation has the lowest mean."></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-budget-allocation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Equal simulation budgets yield different errors. Grey points show all eight seeds and blue diamonds show their means. Error is evaluated against the exact expectation on 1,001 equally spaced configurations in <span class="math inline">\([-3,3]\)</span>. This is a comparison of simulation allocations, not equal training wall time.
+Figure&nbsp;3: Test MSE on 1,001 equally spaced configurations in <span class="math inline">\([-3,3]\)</span>. Grey points show eight seeds; blue diamonds show means. Simulation budgets are equal; training wall times are not.
 </figcaption>
 </figure>
 </div>
@@ -460,23 +458,23 @@ Figure&nbsp;3: Equal simulation budgets yield different errors. Grey points show
 </tr>
 </tbody>
 </table>
-<p>Here, <span class="math inline">\(N=1\)</span> produces an accurate expectation map, but the lowest mean error occurs at <span class="math inline">\((M,N)=(64,64)\)</span>. The distributions overlap substantially, and eight seeds provide limited evidence for ranking allocations. This smooth, one-dimensional problem offers little basis for assuming that 64 configurations leave a severe coverage deficit. The experiment illustrates the feasibility of noisy supervision and the dependence of finite-budget performance on the learning setup.</p>
-<p>PTNO reports that broader coverage improves its controlled transport allocation study until coverage saturates <span class="citation" data-cites="cao2026ptno">(<a href="#ref-cao2026ptno" role="doc-biblioref">Cao et al. 2026</a>)</span>. CTMC moment-map learning similarly distinguishes the allocation needs of mean and transformed covariance targets <span class="citation" data-cites="pratt2026moments">(<a href="#ref-pratt2026moments" role="doc-biblioref">Pratt and Prosper-Feldman 2026</a>)</span>. These observations motivate studying coverage; they do not imply that <span class="math inline">\(N=1\)</span> is universally optimal.</p>
-<p><strong>Unbiasedness tells us where the population optimum is. It does not tell us the most efficient finite-budget path for reaching it.</strong> That path depends on map complexity, input dimension, heteroskedasticity, model capacity, optimization, and whether additional configurations remain informative. Configuration setup costs and variable trajectory lengths can also make <span class="math inline">\(MKN\)</span> an incomplete measure of actual compute.</p>
+<p>One-sample labels learn an accurate map, but <span class="math inline">\((M,N)=(64,64)\)</span> gives the lowest mean error. Seed distributions overlap, and this smooth, one-dimensional problem may need little coverage. Eight seeds provide limited evidence for ranking allocations.</p>
+<p>PTNO finds benefits from broader coverage until saturation <span class="citation" data-cites="cao2026ptno">(<a href="#ref-cao2026ptno" role="doc-biblioref">Cao et al. 2026</a>)</span>; CTMC moment-map learning finds different allocation needs for means and transformed covariances <span class="citation" data-cites="pratt2026moments">(<a href="#ref-pratt2026moments" role="doc-biblioref">Pratt and Prosper-Feldman 2026</a>)</span>. Neither implies that <span class="math inline">\(N=1\)</span> is universally optimal.</p>
+<p><strong>Unbiasedness locates the population optimum; efficient allocation depends on coverage, noise, model capacity, optimization, and simulation costs.</strong></p>
 </section>
 <section id="unbiasedness-is-fragile-under-nonlinear-transformations" class="level2">
 <h2 class="anchored" data-anchor-id="unbiasedness-is-fragile-under-nonlinear-transformations">Unbiasedness is fragile under nonlinear transformations</h2>
-<p>Suppose the desired output is <span class="math inline">\(g(F(a))\)</span>. Regressing directly against <span class="math inline">\(g(\hat F_N(a))\)</span> gives the squared-loss population target</p>
+<p>For a desired output <span class="math inline">\(g(F(a))\)</span>, squared-loss regression against transformed labels targets</p>
 <p><span class="math display">\[
 \mathbb E[g(\hat F_N(a))\mid a],
 \]</span></p>
-<p>which generally differs from <span class="math inline">\(g(F(a))\)</span>. Increasing the number of configurations can improve estimation of this transformed conditional mean while leaving its discrepancy from the desired target intact.</p>
-<p>For a positive estimator and an integrable logarithm, Jensen’s inequality gives</p>
+<p>which generally differs from <span class="math inline">\(g(F(a))\)</span>. More configurations do not remove this gap.</p>
+<p>For positive estimates with an integrable logarithm, Jensen’s inequality gives</p>
 <p><span class="math display">\[
 \mathbb E[\log\hat F_N(a)\mid a]
 \leq \log F(a).
 \]</span></p>
-<p>The inequality is strict for a nonconstant estimator. The Gaussian example makes the difference explicit without fitting another model. At <span class="math inline">\(a=0\)</span> and <span class="math inline">\(N=1\)</span>, <span class="math inline">\(\hat F_1=Z^2\)</span> for <span class="math inline">\(Z\sim\mathcal N(0,1)\)</span>. Since <span class="math inline">\(Z^2\)</span> has a chi-squared distribution with one degree of freedom,</p>
+<p>At <span class="math inline">\(a=0\)</span> and <span class="math inline">\(N=1\)</span> in the Gaussian example, <span class="math inline">\(\hat F_1=Z^2\)</span> with <span class="math inline">\(Z\sim\mathcal N(0,1)\)</span>, so</p>
 <p><span class="math display">\[
 \begin{aligned}
 \log\mathbb E[\hat F_1]&amp;=0,\\
@@ -484,13 +482,13 @@ Figure&nbsp;3: Equal simulation budgets yield different errors. Grey points show
 &amp;=-\gamma-\log 2\approx-1.27036,
 \end{aligned}
 \]</span></p>
-<p>where <span class="math inline">\(\gamma\)</span> is the Euler–Mascheroni constant and <span class="math inline">\(\log\)</span> denotes the natural logarithm.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Using 200,000 independent diagnostic draws, the companion code obtains <span class="math inline">\(0.00003\)</span> for the log of the sample mean and <span class="math inline">\(-1.27193\)</span> for the mean log, with standard error <span class="math inline">\(0.00497\)</span> for the latter. These draws are separate from the training budgets.</p>
-<p>PTNO retains noisy targets in physical space to avoid this label-transformation bias; its prediction-normalized, stop-gradient loss requires a separate gradient analysis from ordinary squared-loss risk equivalence <span class="citation" data-cites="cao2026ptno">(<a href="#ref-cao2026ptno" role="doc-biblioref">Cao et al. 2026</a>)</span>. Nonlinear Noise2Noise studies how nonlinear maps and loss choices affect the Jensen gap in MC denoising <span class="citation" data-cites="tinits2025nonlinear">(<a href="#ref-tinits2025nonlinear" role="doc-biblioref">Tinits and Mann 2025</a>)</span>. Positivity of a prediction and transformation of a noisy target are different operations: a positive output parameterization can still be compared to the original unbiased label.</p>
-<p>The logarithm also requires care when an estimator can be zero or negative. Adding a floor makes it defined but changes the target again. A nonlinear transformation may be computationally useful; it simply needs its own statistical justification.</p>
+<p>where <span class="math inline">\(\gamma\)</span> is the Euler–Mascheroni constant.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> With 200,000 independent diagnostic draws, the log sample mean is <span class="math inline">\(0.00003\)</span>, while the mean natural log is <span class="math inline">\(-1.27193\)</span> (SE <span class="math inline">\(0.00497\)</span>). These draws are separate from training.</p>
+<p>PTNO retains physical-space targets to avoid this bias; its prediction-normalized, stop-gradient loss requires a separate gradient analysis <span class="citation" data-cites="cao2026ptno">(<a href="#ref-cao2026ptno" role="doc-biblioref">Cao et al. 2026</a>)</span>. Nonlinear Noise2Noise examines nonlinear maps and losses in MC denoising <span class="citation" data-cites="tinits2025nonlinear">(<a href="#ref-tinits2025nonlinear" role="doc-biblioref">Tinits and Mann 2025</a>)</span>. A positive output parameterization can still be trained against unbiased, untransformed labels.</p>
+<p>Clipping zero or negative estimates before taking logs changes the target again.</p>
 </section>
 <section id="learn-primitive-expectations-first" class="level2">
 <h2 class="anchored" data-anchor-id="learn-primitive-expectations-first">Learn primitive expectations first</h2>
-<p>A nonlinear formula can turn unbiased MC estimates into a biased training label. When the desired quantity combines several expectations, a useful alternative is to learn those expectations separately and apply the formula to their predictions. We call these component expectations <strong>primitives</strong>:</p>
+<p><strong>Primitives</strong> are the component expectations of a derived quantity. Learn them from unbiased labels, then apply the desired formula to their predictions:</p>
 <p><span class="math display">\[
 \boxed{\begin{gathered}
 \text{Learn primitives}\\
@@ -498,7 +496,7 @@ Figure&nbsp;3: Equal simulation budgets yield different errors. Grey points show
 \text{compose afterwards.}
 \end{gathered}}
 \]</span></p>
-<p>Variance makes the importance of this order explicit. Its primitives are the mean and second raw moment:</p>
+<p>For variance, these are the first two raw moments:</p>
 <p><span class="math display">\[
 \begin{aligned}
 m_1(a)&amp;=\mathbb E[X\mid a],\\
@@ -506,7 +504,7 @@ m_2(a)&amp;=\mathbb E[X^2\mid a],\\
 V(a)&amp;=m_2(a)-m_1(a)^2.
 \end{aligned}
 \]</span></p>
-<p>Given <span class="math inline">\(N\)</span> independent draws at <span class="math inline">\(a\)</span>, the sample averages <span class="math inline">\(\hat m_1=N^{-1}\sum_i X_i\)</span> and <span class="math inline">\(\hat m_2=N^{-1}\sum_i X_i^2\)</span> are unbiased labels for their respective moments. Combining them into a variance label introduces bias. Writing <span class="math inline">\(m_1=m_1(a)\)</span> and <span class="math inline">\(V=V(a)\)</span>, squaring the noisy mean adds its sampling variance:</p>
+<p>For <span class="math inline">\(N\)</span> independent draws, <span class="math inline">\(\hat m_1=N^{-1}\sum_i X_i\)</span> and <span class="math inline">\(\hat m_2=N^{-1}\sum_i X_i^2\)</span> are unbiased. Squaring the noisy mean introduces bias. Writing <span class="math inline">\(m_1=m_1(a)\)</span> and <span class="math inline">\(V=V(a)\)</span>,</p>
 <p><span class="math display">\[
 \begin{aligned}
 \mathbb E[\hat m_1^2\mid a]
@@ -517,67 +515,47 @@ V(a)&amp;=m_2(a)-m_1(a)^2.
 \]</span></p>
 <p><strong>With one sample, the plug-in variance label is always zero</strong>, even when the true variance is positive:</p>
 <p><span class="math display">\[
-\begin{aligned}
-\hat m_1&amp;=X,\qquad \hat m_2=X^2,\\
-\hat m_2-\hat m_1^2&amp;=X^2-X^2=0.
-\end{aligned}
+\hat m_2-\hat m_1^2=X^2-X^2=0.
 \]</span></p>
-<p>Squared-loss training on these variance labels therefore targets zero at every configuration. Increasing the number of training observations cannot repair this target bias.</p>
-<p>Instead, use <span class="math inline">\(X\)</span> and <span class="math inline">\(X^2\)</span> as two separate labels, with <span class="math inline">\(a\)</span> as the model input. Their conditional means remain <span class="math inline">\(m_1(a)\)</span> and <span class="math inline">\(m_2(a)\)</span>, even for <span class="math inline">\(N=1\)</span>. Learning pools noisy observations across configurations to estimate these means. Only then form</p>
+<p>Squared-loss training therefore targets zero, regardless of how many observations we collect.</p>
+<p>Instead, train on <span class="math inline">\(X\)</span> and <span class="math inline">\(X^2\)</span> as separate labels, using <span class="math inline">\(a\)</span> as input. Pool observations to learn their conditional means, then form</p>
 <p><span class="math display">\[
 V_\theta(a)=G_2(a)-G_1(a)^2.
 \]</span></p>
-<p>For the Gaussian example, the exact learned targets would be <span class="math inline">\(G_1(a)=a\)</span> and <span class="math inline">\(G_2(a)=a^2+1\)</span>, recovering <span class="math inline">\(V(a)=1\)</span>. The distinction is between applying the variance formula to individual noisy estimates and applying it to learned conditional expectations.</p>
-<p>An unbiased direct variance label is also valid. For <span class="math inline">\(N&gt;1\)</span>, the usual sample variance with Bessel’s correction can be learned directly. In the CTMC moment-map paper, the additional bias arises from preprocessing and Cholesky factorization of an unbiased sample covariance <span class="citation" data-cites="pratt2026moments">(<a href="#ref-pratt2026moments" role="doc-biblioref">Pratt and Prosper-Feldman 2026</a>)</span>. Learning primitives is an option when the proposed label construction is biased.</p>
-<p>The same reasoning applies to a ratio <span class="math inline">\(R(a)=A(a)/D(a)\)</span>. Even with unbiased component estimates, generally</p>
-<p><span class="math display">\[
-\mathbb E\!\left[\frac{\hat A}{\hat D}\,\middle|\,a\right]
-\ne\frac{A(a)}{D(a)}.
-\]</span></p>
-<p>Learn the numerator and denominator expectations separately, then evaluate <span class="math inline">\(R_\theta(a)=G_A(a)/G_D(a)\)</span>. This avoids using the random ratio as the training label. Approximation error remains: if <span class="math inline">\(G_A=A+e_A\)</span> and <span class="math inline">\(G_D=D+e_D\)</span>, then</p>
+<p>For the Gaussian example, the exact targets <span class="math inline">\(G_1(a)=a\)</span> and <span class="math inline">\(G_2(a)=a^2+1\)</span> give variance <span class="math inline">\(1\)</span>. One-sample supervision preserves these population targets.</p>
+<p>Unbiased direct labels remain valid: for <span class="math inline">\(N&gt;1\)</span>, Bessel-corrected sample variance can be learned directly. CTMC moment-map bias arises from preprocessing and Cholesky factorization of an unbiased sample covariance <span class="citation" data-cites="pratt2026moments">(<a href="#ref-pratt2026moments" role="doc-biblioref">Pratt and Prosper-Feldman 2026</a>)</span>.</p>
+<p>For a ratio <span class="math inline">\(R=A/D\)</span>, unbiased component estimates generally yield a biased ratio label. Learn <span class="math inline">\(A\)</span> and <span class="math inline">\(D\)</span> separately, then evaluate <span class="math inline">\(R_\theta=G_A/G_D\)</span>. If <span class="math inline">\(G_A=A+e_A\)</span> and <span class="math inline">\(G_D=D+e_D\)</span>,</p>
 <p><span class="math display">\[
 R_\theta-\frac{A}{D}
 =\frac{D e_A-A e_D}{D(D+e_D)}.
 \]</span></p>
-<p>Small denominator errors can therefore be amplified when <span class="math inline">\(D\)</span> is small. Likewise, approximate raw moments can produce negative variances or lose precision through cancellation. <strong>Learning primitives avoids this source of label bias; it does not guarantee an accurate composed prediction.</strong> Unbiased labels preserve the population target, while finite models still require accuracy and structural checks for the final quantity.</p>
+<p>Small denominators amplify errors; approximate moments can produce negative variances or lose precision through cancellation. <strong>Avoiding label bias does not guarantee an accurate composed prediction.</strong></p>
 </section>
 <section id="where-the-simple-theory-breaks" class="level2">
 <h2 class="anchored" data-anchor-id="where-the-simple-theory-breaks">Where the simple theory breaks</h2>
-<p>The key assumption is conditional unbiasedness for the quantity we actually want. Four common cases violate it or require additional analysis.</p>
+<p>Conditional unbiasedness fails or needs additional analysis in four common settings:</p>
 <ol type="1">
-<li><p><strong>Ordinary finite-run MCMC.</strong> A chain initialized away from stationarity generally produces biased finite-run averages. Starting in stationarity removes that initialization bias, although correlations change variance. Coupled MCMC methods can construct unbiased alternatives under suitable conditions <span class="citation" data-cites="jacob2020couplings">(<a href="#ref-jacob2020couplings" role="doc-biblioref">Jacob, O’Leary, and Atchadé 2020</a>)</span>.</p></li>
-<li><p><strong>Self-normalized or ratio estimators.</strong> Dividing random numerator and denominator estimates generally introduces finite-sample bias, even when each component is unbiased. More configurations do not remove a conditional bias that remains at every configuration.</p></li>
-<li><p><strong>Nested Monte Carlo.</strong> For <span class="math inline">\(\mathbb E_X[g(\mathbb E[Y\mid X])]\)</span>, replacing the inner expectation by a finite sample average before applying <span class="math inline">\(g\)</span> usually creates bias. Increasing only the outer sample count can converge to the wrong quantity. Valid convergence conditions and budget allocations depend on the nesting structure <span class="citation" data-cites="rainforth2018nesting">(<a href="#ref-rainforth2018nesting" role="doc-biblioref">Rainforth et al. 2018</a>)</span>.</p></li>
-<li><p><strong>Biased simulators.</strong> A discretized SDE solver, truncated trajectory, or approximate physical model may estimate a different expectation. The model can learn that simulator’s mean accurately without recovering the intended continuum or physical target. PTNO explicitly identifies truncation and approximate-physics bias as limitations <span class="citation" data-cites="cao2026ptno">(<a href="#ref-cao2026ptno" role="doc-biblioref">Cao et al. 2026</a>)</span>.</p></li>
+<li><p><strong>Finite-run MCMC.</strong> Initialization away from stationarity generally biases averages. Stationary initialization removes this bias; correlations still affect variance. Coupled methods can construct unbiased alternatives <span class="citation" data-cites="jacob2020couplings">(<a href="#ref-jacob2020couplings" role="doc-biblioref">Jacob, O’Leary, and Atchadé 2020</a>)</span>.</p></li>
+<li><p><strong>Self-normalized estimators.</strong> Random normalization generally introduces finite-sample bias, as in the ratio example.</p></li>
+<li><p><strong>Nested MC.</strong> In <span class="math inline">\(\mathbb E_X[g(\mathbb E[Y\mid X])]\)</span>, a finite inner average followed by nonlinear <span class="math inline">\(g\)</span> generally introduces bias. Increasing only outer samples can converge to the wrong target <span class="citation" data-cites="rainforth2018nesting">(<a href="#ref-rainforth2018nesting" role="doc-biblioref">Rainforth et al. 2018</a>)</span>.</p></li>
+<li><p><strong>Biased simulators.</strong> Discretization, trajectory truncation, or approximate physics can shift the simulated mean away from the intended target, as PTNO notes <span class="citation" data-cites="cao2026ptno">(<a href="#ref-cao2026ptno" role="doc-biblioref">Cao et al. 2026</a>)</span>.</p></li>
 </ol>
-<p>The appropriate decomposition becomes</p>
+<p>With systematic bias,</p>
 <p><span class="math display">\[
 \hat F_N(a)=F(a)+b_N(a)+\epsilon_N(a),
 \qquad \mathbb E[\epsilon_N\mid a]=0.
 \]</span></p>
-<p>Squared-loss learning now targets <span class="math inline">\(F+b_N\)</span>, or its best approximation in the chosen model class. Coverage can reduce error in learning this biased mean, but cannot identify <span class="math inline">\(F\)</span> separately from <span class="math inline">\(b_N\)</span> without additional information. Increasing fidelity, constructing a debiased estimator, or supplying a model of the bias changes the statistical problem; collecting more labels at unchanged fidelity does not.</p>
+<p>Squared-loss learning targets <span class="math inline">\(F+b_N\)</span>, or its best approximation in the model class. More coverage cannot separate <span class="math inline">\(F\)</span> from <span class="math inline">\(b_N\)</span> without additional information. Recovering <span class="math inline">\(F\)</span> requires higher fidelity, debiasing, or a model of the bias.</p>
 </section>
 <section id="how-this-connects-to-existing-work" class="level2">
 <h2 class="anchored" data-anchor-id="how-this-connects-to-existing-work">How this connects to existing work</h2>
-<p>The literature separates naturally by what is learned. Noise2Noise learns restoration from noisy supervision, and stochastic metamodeling learns a simulator response surface while accounting for observation noise <span class="citation" data-cites="lehtinen2018noise2noise ankenman2010kriging binois2019replication">(<a href="#ref-lehtinen2018noise2noise" role="doc-biblioref">Lehtinen et al. 2018</a>; <a href="#ref-ankenman2010kriging" role="doc-biblioref">Ankenman, Nelson, and Staum 2010</a>; <a href="#ref-binois2019replication" role="doc-biblioref">Binois et al. 2019</a>)</span>. These supply the statistical and experimental-design foundations.</p>
-<p>Learned Monte Carlo methods instead improve the estimator used at inference. Amortized MC Integration learns proposals tailored to components of an expectation, and Target-Aware Bayesian Inference exploits the function being integrated <span class="citation" data-cites="golinski2019amortized rainforth2020target">(<a href="#ref-golinski2019amortized" role="doc-biblioref">Goliński, Wood, and Rainforth 2019</a>; <a href="#ref-rainforth2020target" role="doc-biblioref">Rainforth et al. 2020</a>)</span>. Neural Control Variates learns an integrable approximation and samples a residual correction to reduce variance <span class="citation" data-cites="mueller2020control">(<a href="#ref-mueller2020control" role="doc-biblioref">Müller et al. 2020</a>)</span>. These approaches retain a stochastic computation at inference, with estimator properties determined by their correction and normalization schemes.</p>
-<p>Direct expectation-map learning produces an approximate deterministic response at inference. Its closest recent precedents here are WoS-NO, which uses stochastic walk-on-spheres supervision for PDE solution operators, CTMC moment-map learning, and PTNO <span class="citation" data-cites="viswanath2026wos pratt2026moments cao2026ptno">(<a href="#ref-viswanath2026wos" role="doc-biblioref">Viswanath et al. 2026</a>; <a href="#ref-pratt2026moments" role="doc-biblioref">Pratt and Prosper-Feldman 2026</a>; <a href="#ref-cao2026ptno" role="doc-biblioref">Cao et al. 2026</a>)</span>. WoS-NO also reports implementation bias from early termination and caching, underscoring the distinction between an ideal stochastic representation and its implemented estimator.</p>
-<p>The broader viewpoint proposed here connects these settings through conditional means and budget allocation. It makes no novelty claim for noisy regression, replication versus exploration, or amortized integration. Its open question is when shared structure makes learning the expectation itself an efficient use of stochastic computation.</p>
+<p>Learned MC methods improve estimators used at inference. Amortized MC Integration learns function-aware proposals; Target-Aware Bayesian Inference uses the integrand to guide sampling <span class="citation" data-cites="golinski2019amortized rainforth2020target">(<a href="#ref-golinski2019amortized" role="doc-biblioref">Goliński, Wood, and Rainforth 2019</a>; <a href="#ref-rainforth2020target" role="doc-biblioref">Rainforth et al. 2020</a>)</span>. Neural Control Variates learns an integrable approximation and samples a residual correction <span class="citation" data-cites="mueller2020control">(<a href="#ref-mueller2020control" role="doc-biblioref">Müller et al. 2020</a>)</span>. These retain stochastic inference, with guarantees determined by their correction and normalization schemes.</p>
+<p>Expectation-map learning produces approximate deterministic predictions. Recent examples include WoS-NO’s stochastic PDE supervision, CTMC moment maps, and PTNO <span class="citation" data-cites="viswanath2026wos pratt2026moments cao2026ptno">(<a href="#ref-viswanath2026wos" role="doc-biblioref">Viswanath et al. 2026</a>; <a href="#ref-pratt2026moments" role="doc-biblioref">Pratt and Prosper-Feldman 2026</a>; <a href="#ref-cao2026ptno" role="doc-biblioref">Cao et al. 2026</a>)</span>. WoS-NO also reports bias from early termination and caching, illustrating the gap between an ideal stochastic representation and its implementation.</p>
+<p>Noisy regression and replication versus exploration are established foundations. The open question is when shared structure makes learning the expectation itself computationally efficient.</p>
 </section>
 <section id="a-broader-hypothesis" class="level2">
 <h2 class="anchored" data-anchor-id="a-broader-hypothesis">A broader hypothesis</h2>
-<p>The favorable case is a primitive expectation <span class="math inline">\(F(a)=\mathbb E[X\mid a]\)</span> with unbiased, finite-variance labels and a learnable configuration map. Nonlinear quantities introduce further questions:</p>
-<p><span class="math display">\[
-\begin{gathered}
-\mathbb E[X\mid a],\\
-g(\mathbb E[X\mid a]),\\
-g(\mathbb E[X_1\mid a],\ldots,\mathbb E[X_k\mid a]),\\
-\mathbb E_{X\mid a}[g(\mathbb E[Y\mid X,a])],\\
-\hat F_N(a)=F(a)+b_N(a)+\epsilon_N(a).
-\end{gathered}
-\]</span></p>
-<p>Learning primitive expectations can help with the middle cases, provided composition is stable. Nested expectations and simulator bias require additional assumptions or constructions. Across this hierarchy, unbiasedness, learnability, numerical stability, and computational efficiency remain separate requirements.</p>
-<p>The research hypothesis is that convergence can sometimes be amortized across a family of configurations instead of achieved independently within each one. Establishing when this is beneficial requires a theory of allocation that accounts for coverage, estimator noise and bias, approximation error, and training cost. Can such a theory tell us when stochastic computation should converge locally, and when its convergence can be shared across related problems?</p>
+<p>The hypothesis is that convergence can be shared across configurations when their expectation map has learnable structure. Establishing when this is beneficial requires an allocation theory that accounts for coverage, estimator noise and bias, approximation, optimization, and training cost. When should stochastic computation converge locally, and when can its convergence be shared across related problems?</p>
 <p><a href="https://github.com/gitvicky/learning-from-convergence">Reproduce the figures and numerical checks</a> · <a href="../Blog/blog.html">Back to the blog</a></p>
 </section>
 <section id="references" class="level2">
@@ -1073,7 +1051,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"selector":".lightbox","loop":false,"openEffect":"zoom","closeEffect":"zoom","descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","closeEffect":"zoom","descPosition":"bottom","loop":false});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

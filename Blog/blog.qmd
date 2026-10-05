@@ -37,12 +37,6 @@ title: "Blog"
 <div class="blog-card">
 <a href="/Blog/SPDEs.qmd">Stochastic PDEs</a>
 </div>
-
-
-<div class="blog-card">
-<a href="/Blog/tokamak-toolkit/index.qmd">Tokamak Integrated Modelling</a>
-</div>
-
 </div>
 
 <!-- [Neural ODE](/Blog/Neural_ODE.qmd) -->
