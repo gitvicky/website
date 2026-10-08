@@ -583,5 +583,17 @@
   },
   "Blog/learning_from_convergence.qmd": {
     "learning_from_convergence.html": "b1a87a40"
+  },
+  "Blog/tokamak-toolkit/action-plan.qmd": {
+    "action-plan.html": "21ec7aad"
+  },
+  "Blog/tokamak-toolkit/milestones/M3.qmd": {
+    "M3.html": "ea67eb2b"
+  },
+  "Blog/tokamak-toolkit/log/18-tglf-surrogates-baseline.qmd": {
+    "18-tglf-surrogates-baseline.html": "847008b3"
+  },
+  "Blog/tokamak-toolkit/log/20-heat-flux-positivity-monotonicity.qmd": {
+    "20-heat-flux-positivity-monotonicity.html": "0a60c7cc"
   }
 }

@@ -44,6 +44,8 @@
   {
     "listing": "/Blog/tokamak-toolkit/index.html",
     "items": [
+      "/Blog/tokamak-toolkit/log/20-heat-flux-positivity-monotonicity.html",
+      "/Blog/tokamak-toolkit/log/18-tglf-surrogates-baseline.html",
       "/Blog/tokamak-toolkit/log/17-tglf-datasets-mastu-iter.html",
       "/Blog/tokamak-toolkit/log/16-tglf-build-and-cost.html",
       "/Blog/tokamak-toolkit/log/15-ascot5-production-run.html",

@@ -5,6 +5,7 @@ toc: false
 
 | term | meaning |
 |---|---|
+| **active learning** | choosing the next training points with the help of the current model, instead of sampling them in advance |
 | **ASCOT5** | open-source code that follows fast particles (beam ions, fusion alphas) through the plasma to work out where they deposit heat and drive current |
 | **Aurora** | open-source code for impurity transport and radiation |
 | **benchmark** | a published simulation that a new code must reproduce before its own results are believed |
@@ -23,6 +24,7 @@ toc: false
 | **flat-top** | the steady phase of a plasma discharge, after the current has ramped up |
 | **FreeGSNKE** | open-source free-boundary equilibrium solver (LGPL-3.0) |
 | **guard** | the per-point check that decides whether a surrogate's answer may be used |
+| **gyro-Bohm unit (gB)** | the normalisation TGLF reports its fluxes in, built from the local temperature, density, magnetic field and minor radius |
 | **IMAS / IDS** | the fusion community's standard data model; an IDS is one record type in it (e.g. `equilibrium`, `core_profiles`) |
 | **ITER** | the international tokamak under construction in France; its "hybrid scenario" is the benchmark here |
 | **JAX** | numerical library that compiles and differentiates array programs |
@@ -39,6 +41,7 @@ toc: false
 | **spherical tokamak** | a tokamak with a very small central hole relative to its size, like MAST-U |
 | **stiff** | a system where small input changes cause large output changes; hard for simple solvers |
 | **surrogate** | a fast model (here a neural network) trained to reproduce a slow one |
+| **TGLF** | quasilinear model of plasma turbulence from General Atomics' GACODE suite (Apache-2.0); the source of the training data for the transport surrogates |
 | **Tier A / Tier B** | open-source codes the toolkit may depend on / UKAEA-access-gated codes it may only learn from |
 | **TORAX** | open-source tokamak transport simulator in JAX, from Google DeepMind (Apache-2.0) |
 | **transport** | the leakage of heat and particles across the magnetic surfaces |

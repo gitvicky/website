@@ -1,0 +1,117 @@
+---
+title: Action plan
+subtitle: Complete M3, then begin verification
+toc: true
+disclosure:
+  class: green
+  approved_by: null
+  approved_on: null
+---
+
+## Current position
+
+M3 remains in progress. The final monotone transport ensembles meet the agreed held-out
+accuracy target ([MAST-U: Q_e 17.8%, Q_i 25.2%; ITER: Q_e 7.2%, Q_i 10.8%; all meet the 30% target]{.claim}[C-129](/Blog/tokamak-toolkit/claims.qmd#c-129){.cid .st-measured}). Local derivative, fallback and conservation checks
+cover RAPTOR L-mode and ITER hybrid ([15 gradient, JIT, fallback and discrete-balance checks pass across RAPTOR and ITER hybrid in each mode]{.claim}[C-146](/Blog/tokamak-toolkit/claims.qmd#c-146){.cid .st-tested}). The ITER hybrid derivative checks
+use an explicit Newton solver override; the existing linear-solver timing scenario is separate.
+
+Guards, grouped response datasets and a baseline trainer are built for radio-frequency (RF) and pedestal
+responses. Their software checks use synthetic numerical fixtures
+([25 synthetic contract tests pass in full and Tier-A-only modes]{.claim}[C-143](/Blog/tokamak-toolkit/claims.qmd#c-143){.cid .st-tested}, [26 synthetic baseline-pipeline tests pass in full and Tier-A-only modes]{.claim}[C-145](/Blog/tokamak-toolkit/claims.qmd#c-145){.cid .st-tested}). No new RF or pedestal model is trained.
+The owner-selected pretrained ITER pedestal model now has a JAX port with numeric checks
+([12 upstream scalar regression values agree within relative tolerance 1e-12]{.claim}[C-149](/Blog/tokamak-toolkit/claims.qmd#c-149){.cid .st-measured}, [12 focused tests pass in full and Tier-A-only modes]{.claim}[C-150](/Blog/tokamak-toolkit/claims.qmd#c-150){.cid .st-tested}); coupled acceptance remains unfinished.
+Final-model matched speed-up remains unmeasured.
+
+## Complete the performance comparison {#performance}
+
+Resolve the cancelled compute run, then agree a fresh bounded submission. Compare TGLF,
+the final monotone surrogate and QLKNN using matched scenario, grid and solver settings.
+Record compilation separately from execution, resource allocation, finite profiles, solver
+status, profile errors and accepted-state guard rejection. Every output carries provenance.
+
+Profile Newton separately to distinguish ensemble inference, transport/geometry work and
+Jacobian construction. Keep unresolved overlap visible ([K-022](/Blog/tokamak-toolkit/ceilings.qmd#k-022)). Historical speed-up belongs
+to the original model; timings from different hosts or drivers cannot establish final-model
+speed-up.
+
+**Done when:** a reproducible final-model runtime comparison and discrepancy report exist,
+with allocation and solver settings stated.
+
+The expanded scheduler audit still gives no cancellation cause. A bounded replacement
+request has been reviewed and awaits that explanation/remedy and fresh approval. The runner
+now rejects coarse-tolerance results, records effective CPU allocation, separates warm-up
+from execution and records final-state guard diagnostics after timing. Focused checks pass
+([11 performance-tool checks pass in full and Tier-A-only modes]{.claim}[C-147](/Blog/tokamak-toolkit/claims.qmd#c-147){.cid .st-tested}). The offline saved-trace audit records unresolved component attribution
+([72059 complete HLO events with about 5.369 s of covered trace time]{.claim}[C-148](/Blog/tokamak-toolkit/claims.qmd#c-148){.cid .st-preliminary}); [K-022](/Blog/tokamak-toolkit/ceilings.qmd#k-022) remains open. Draft entry 28 is in the private review copy.
+
+## Complete the EC and ITER pedestal contracts {#references}
+
+The owner has selected the reference, pedestal model and EC channels in [OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21). EC
+labelling and the ITER pedestal port proceed independently. The prescribed MAST-U pedestal
+remains, with predictive closure deferred; IC is deferred.
+
+Complete the EC launch/current-drive prescription, power convention and coordinate/units
+mapping. For ITER, choose the pedestal solution and map pressure/width to supplied density,
+temperature and boundary conditions. Retain explicit Tier A fallbacks and acceptance criteria.
+
+The native EC output reader preserves separate channels and SI units; its focused
+checks pass ([24 focused tests pass in full and Tier-A-only modes]{.claim}[C-151](/Blog/tokamak-toolkit/claims.qmd#c-151){.cid .st-tested}). The original ITER deck is selected for the
+numerical pilot only; production launch and current-drive settings remain open.
+
+The saved upstream ITER output also passes the reader/accounting check
+([200 native bins in the saved upstream ITER EC output pass reader and accounting checks]{.claim}[C-152](/Blog/tokamak-toolkit/claims.qmd#c-152){.cid .st-measured}). The bounded pilot runner retains immutable inputs, outputs,
+logs and failures; its combined checks pass ([40 focused pilot, reader and Tier A checks pass in full and Tier-A-only modes]{.claim}[C-153](/Blog/tokamak-toolkit/claims.qmd#c-153){.cid .st-tested}). The external
+reference now builds with a replacement plotting library ([one external reference executable builds with verified artifacts and resolved runtime libraries]{.claim}[C-154](/Blog/tokamak-toolkit/claims.qmd#c-154){.cid .st-measured}).
+The corrected numerical pilot is complete with readable native profiles
+([the corrected EC reference completes in 83.16 s with readable native profiles]{.claim}[C-156](/Blog/tokamak-toolkit/claims.qmd#c-156){.cid .st-measured}). Native accounting and descriptive saved-reference
+comparison are retained; the rendered PostScript page is blank. Settle the
+production coupling contracts and grouped sampling before reviewing a separate
+labelling budget. No physical labels are produced.
+
+**Done when:** those contracts and required access are recorded. These workstreams can
+proceed while the transport performance blocker is investigated.
+
+## Train and integrate the response surrogates {#responses}
+
+Define physically related case groups and label a small baseline. Keep entire groups together
+in training and holdout sets. Inspect failed labels, sampled domains and physical integrals.
+After the baseline, agree held-out accuracy metrics and targets with the owner.
+
+Train structured EC ensembles and evaluate untouched holdouts. The selected pretrained
+ITER pedestal is ported directly; no second network needs to learn its outputs. Integrate source and boundary
+responses into TORAX behind guards with Tier A fallbacks. Supply channel adapters required
+by the selected targets. Check gradients, finite execution, energy/particle balance, physical
+rejection, fallback use and coupled cost. Pointwise profile errors alone do not establish
+absorbed-power accuracy.
+
+**Done when:** the reference datasets, checkpoints, accuracy results, guarded coupled checks
+and matched cost measurements have provenance and meet the agreed criteria.
+
+## Close M3, then start M4 {#verification}
+
+Audit the complete M3 criteria: held-out accuracy, differentiable guarded execution and
+measured end-to-end speed-up. Transport accuracy alone does not close the RF/pedestal tasks.
+Keep the ion-flux convention, monotonicity departure, default-root tolerance and domain limits
+visible ([K-024](/Blog/tokamak-toolkit/ceilings.qmd#k-024), [K-025](/Blog/tokamak-toolkit/ceilings.qmd#k-025), [K-026](/Blog/tokamak-toolkit/ceilings.qmd#k-026)).
+
+After M3 acceptance, agree verification properties and trajectory tolerances with the owner.
+Prove properties over declared input boxes, calibrate uncertainty on held-out data, compare
+trajectories against Tier A references and prepare per-surrogate verified-domain reports.
+Certification review closes M4. Sampled monotonicity and raw ensemble spread are not
+certificates.
+
+## Keep the build log current {#build-log}
+
+After each completed step, update its narrative entry, technical section, claims, ceilings,
+milestone state and executed statistics. Counts that reuse unchanged execution reports retain
+that qualification. Drafts and disclosure-held pages remain in the private review copy until
+the owner reviews them. The owner renders and publishes the separate website handoff.
+
+Immediate work: settle EC coupling and grouped sampling contracts, resolve the
+transport compute cancellation and complete the ITER pedestal boundary contract independently.
+See [M3 status](milestones/M3.qmd), [decisions](decisions.qmd#oq-21) and
+[known ceilings](ceilings.qmd).
+
+The current private review copy passes its checks. The normal export remains blocked by
+links to held active-learning and surrogates pages; the owner's disclosure and draft reviews
+are still pending.

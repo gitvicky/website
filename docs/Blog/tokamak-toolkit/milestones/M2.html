@@ -140,7 +140,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">M2 · Training data</h1>
-<p class="subtitle lead">In progress</p>
+<p class="subtitle lead">Done 3 Oct 2026</p>
 </div>
 
 
@@ -168,7 +168,7 @@ ul.task-list li input[type="checkbox"] {
 <li>Its provenance validates.</li>
 <li>The sampled domain is documented and plotted against the intended operating space.</li>
 </ol>
-<p>M2 has no human gate in the brief. The kinetic ranges were approved by the owner before any dataset was generated (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-16">OQ-16</a>).</p>
+<p>M2 has no human gate in the brief. The kinetic ranges were approved by the owner before any dataset was generated (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-16">OQ-16</a>). <strong>All three criteria were met on 3 Oct 2026, and the owner closed M2 (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-18">OQ-18</a>).</strong></p>
 </section>
 <section id="tasks" class="level2">
 <h2 class="anchored" data-anchor-id="tasks">Tasks</h2>
@@ -189,41 +189,41 @@ ul.task-list li input[type="checkbox"] {
 <tr class="even">
 <td>geometry ranges measured on MAST-U (FreeGSNKE) and ITER (TORAX) equilibria</td>
 <td>done (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-15">OQ-15</a>)</td>
-<td><a href="../log/17-tglf-datasets-mastu-iter.qmd">entry 17</a></td>
+<td><a href="../../../Blog/tokamak-toolkit/log/17-tglf-datasets-mastu-iter.html">entry 17</a></td>
 </tr>
 <tr class="odd">
 <td>kinetic ranges, species and α<sub>MHD</sub> cap per machine</td>
 <td>done, approved (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-16">OQ-16</a>)</td>
-<td><a href="../log/17-tglf-datasets-mastu-iter.qmd">entry 17</a></td>
+<td><a href="../../../Blog/tokamak-toolkit/log/17-tglf-datasets-mastu-iter.html">entry 17</a></td>
 </tr>
 <tr class="even">
 <td>Latin hypercube datasets, MAST-U and ITER, 10<sup>5</sup> cases each</td>
 <td>done (version 1)</td>
-<td><a href="../log/17-tglf-datasets-mastu-iter.qmd">entry 17</a></td>
+<td><a href="../../../Blog/tokamak-toolkit/log/17-tglf-datasets-mastu-iter.html">entry 17</a></td>
 </tr>
 <tr class="odd">
 <td>sampled domain plotted against the operating space</td>
 <td>done</td>
-<td><a href="../technical/datasets.qmd#datasets-v1">datasets</a></td>
+<td><a href="../../../Blog/tokamak-toolkit/technical/datasets.html#datasets-v1">datasets</a></td>
 </tr>
 <tr class="even">
-<td>high-flux cases explained (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-019">K-019</a>)</td>
-<td>open</td>
+<td>high-flux cases (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-019">K-019</a>)</td>
+<td>kept, learned in signed-log space at M3 (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-18">OQ-18</a>); not explained</td>
 <td></td>
 </tr>
 <tr class="odd">
 <td>active learning near critical gradients</td>
-<td>not started</td>
+<td>moved to M3 (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-18">OQ-18</a> a); round 1 in <a href="../log/19-active-learning-round-1.qmd">entry 19</a></td>
 <td></td>
 </tr>
 <tr class="even">
 <td>QuaLiKiz driver (Tier A)</td>
-<td>not started</td>
+<td>deferred (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-18">OQ-18</a> b)</td>
 <td></td>
 </tr>
 <tr class="odd">
-<td>Tier B drivers behind the tier flag</td>
-<td>not started; needs access</td>
+<td>driver interface; Tier B drivers behind the tier flag</td>
+<td>interface built; Tier B drivers are stubs that refuse to run without access (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-18">OQ-18</a> c)</td>
 <td></td>
 </tr>
 </tbody>
@@ -249,7 +249,7 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="odd">
 <td>domain plotted</td>
-<td><a href="../technical/datasets.qmd#fig-tglf-domain">figure</a>; input by input <span class="claim">MAST-U 0.72 (triangularity) to 0.94 (q); ITER 0.63 (q) to 0.94 (triangularity shear)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-076" class="cid st-measured">C-076</a>. Wider than the measured set jointly (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-018">K-018</a>)</td>
+<td><a href="../../../Blog/tokamak-toolkit/technical/datasets.html#fig-tglf-domain">figure</a>; input by input <span class="claim">MAST-U 0.72 (triangularity) to 0.94 (q); ITER 0.63 (q) to 0.94 (triangularity shear)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-076" class="cid st-measured">C-076</a>. Wider than the measured set jointly (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-018">K-018</a>)</td>
 </tr>
 </tbody>
 </table>
@@ -257,9 +257,9 @@ ul.task-list li input[type="checkbox"] {
 <section id="deviations" class="level2">
 <h2 class="anchored" data-anchor-id="deviations">Deviations</h2>
 <ul>
-<li><strong>TGLF only, so far.</strong> The brief lists drivers for TGLF and QuaLiKiz (Tier A) and for Tier B codes. Version 1 uses TGLF alone.</li>
 <li><strong>One dataset per machine</strong> (owner, 2026-10-02), rather than one sampling space.</li>
 <li><strong>Rejection by α<sub>MHD</sub></strong> in the sampler, not in the brief: without it, independent draws give pressure gradients far beyond ballooning stability (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-16">OQ-16</a>).</li>
+<li><strong>Latin hypercube only at M2.</strong> Active learning needs a model of where the thresholds are, so it moved to M3 (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-18">OQ-18</a> a). QuaLiKiz is deferred: its shifted-circle geometry does not represent the MAST-U shapes (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-18">OQ-18</a> b). The Tier B drivers are stubs (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-18">OQ-18</a> c).</li>
 </ul>
 
 
@@ -701,7 +701,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </footer>
 <div class="tk-footer">
-Code and first draft by Claude (Anthropic), working to a brief by Vignesh Gopakumar,
+Code and first draft by Claude (Anthropic) and Codex, working to a brief by Vignesh Gopakumar,
 who reviewed and approved this page.
 <a href="../../../Blog/tokamak-toolkit/about.html">How this is built</a> ·
 <a href="../../../Blog/tokamak-toolkit/index.html">Tokamak Toolkit home</a>

@@ -33,12 +33,11 @@ In roughly the order you would build the system:
 10. [Tests](tests.qmd): what each category proves, with counts.
 11. [Datasets](datasets.qmd): TGLF, the sampling space per machine, the version 1 datasets
     and their domain against the measured equilibria.
+12. [Surrogates](surrogates.qmd): the baseline ensembles, the recreated TGLF-NN network, output
+    scaling, learning curves, active learning round 1, and the heat-flux sign (M3, in progress).
 
 Not yet built (one line each until their milestone arrives):
 
-- **Surrogates** (M3): ensembles of 5–10 networks with physics structure built in (zero flux
-  below threshold, positivity, monotonicity in gradients). An `MLPEnsemble` class exists from
-  M0 (see [core state](core-state.qmd#ensembles)) but nothing is trained.
 - **Verification** (M4): properties proved over input boxes, conformal calibration,
   closed-loop comparison against the Tier A model, one certificate per surrogate.
 - **Uncertainty propagation** (M5): Monte Carlo over ensemble members and sampled inputs,

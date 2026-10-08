@@ -1,0 +1,84 @@
+---
+title: Heat-flux positivity and monotonicity of TGLF in the gradients
+date: '2026-10-03'
+categories:
+- built
+- measured
+entry: 20
+milestone: M3
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} [measurement]{.chip .measured} Entry 20 · milestone M3
+:::
+
+The brief asks for physics structure in the transport surrogates: zero heat flux below the
+instability threshold, no negative heat flux, and a heat flux that does not fall when its own
+temperature gradient rises. Without that structure a surrogate can return fluxes the transport
+solver treats as unphysical. The owner decided in [OQ-19](/Blog/tokamak-toolkit/decisions.qmd#oq-19) to put a ReLU on the electron and ion
+heat fluxes, $Q_e$ and $Q_i$, and to measure monotonicity on TGLF before imposing it.
+
+## Positivity: a clip in use, a penalty in training
+
+A ReLU inside the network passes no gradient for points it predicts as stable, so those points
+stop training. We follow QLKNN's approach instead: the output stays linear during training,
+and where TGLF's flux is zero or negative the loss only penalises a prediction above a small
+negative margin. In use, each member's $Q_e$ and $Q_i$ are clipped at zero. The particle fluxes
+keep their sign; inward particle flux is physical.
+
+The cost is that TGLF's own negative heat fluxes cannot be represented:
+[Q <= 0 in 4.6% (MAST-U) and 5.2% (ITER) of cases for Q_e, 11.8% and 13.2% for Q_i; Q < -1 gB in 0.8% and 0.7% (Q_e) and 6.5% and 4.3% (Q_i) of cases with |Q| > 1 gB; Q_e + Q_i changes by more than 10% in 0.9% and 1.0% of cases]{.claim}[C-104](/Blog/tokamak-toolkit/claims.qmd#c-104){.cid .st-measured}. This is ceiling [K-021](/Blog/tokamak-toolkit/ceilings.qmd#k-021). TORAX converts the flux to a diffusivity and clips that
+at a minimum, so the coupled loop already discards negative heat fluxes.
+
+To choose the training rule we ran short CPU trainings of the TGLF-NN network on a fifth of the
+v1 training data, one per rule and machine. The measure is how often the surrogate returns
+exactly zero where TGLF's flux is zero or negative, on the v1 test split:
+
+| training of $Q_e$, $Q_i$ | exact zero where TGLF's $Q \le 0$ |
+|---|---|
+| linear outputs, clipped afterwards | [Q_e 0.13 (MAST-U) and 0.17 (ITER); Q_i 0.16 and 0.20]{.claim}[C-105](/Blog/tokamak-toolkit/claims.qmd#c-105){.cid .st-preliminary} |
+| fitted to $\max(Q, 0)$ | [Q_e 0.10 (MAST-U) and 0.15 (ITER); Q_i 0.06 and 0.06]{.claim}[C-106](/Blog/tokamak-toolkit/claims.qmd#c-106){.cid .st-preliminary} |
+| stability penalty, margin 0 | [Q_e 0.18 (MAST-U) and 0.21 (ITER); Q_i 0.13 and 0.17]{.claim}[C-107](/Blog/tokamak-toolkit/claims.qmd#c-107){.cid .st-preliminary} |
+| stability penalty, margin 1 (adopted) | [Q_e 0.28 (MAST-U) and 0.40 (ITER); Q_i 0.25 and 0.43]{.claim}[C-108](/Blog/tokamak-toolkit/claims.qmd#c-108){.cid .st-preliminary} |
+| stability penalty, margin 0.5, weight 10 | [Q_e 0.45 (MAST-U) and 0.62 (ITER); Q_i 0.48 and 0.63]{.claim}[C-109](/Blog/tokamak-toolkit/claims.qmd#c-109){.cid .st-preliminary} |
+
+Fitting $\max(Q, 0)$ does worse than clipping afterwards. A larger penalty gives more zeros but
+starts to zero real fluxes and costs accuracy ([Q_i median relative error +0.03 (MAST-U) and +0.05 (ITER); 1.0% and 1.3% of cases with Q_i > 1 gB predicted as zero]{.claim}[C-111](/Blog/tokamak-toolkit/claims.qmd#c-111){.cid .st-preliminary}). The adopted setting costs
+little: [Q_i median relative error +0.005 (MAST-U) and +0.009 (ITER), Q_e within ±0.004; stable/unstable agreement +0.009 and +0.016; Q > 1 gB predicted zero in 0.1% (Q_e) and 0.3% (Q_i) of such cases]{.claim}[C-110](/Blog/tokamak-toolkit/claims.qmd#c-110){.cid .st-preliminary}. These are smoke runs, smaller than the production models, and are
+used to rank the rules, not to quote accuracy. The production variant (`tglfnn_symlog_relu`)
+is to be trained on GPUs and compared with the M3 results of [entry 18](18-tglf-surrogates-baseline.qmd).
+
+## Monotonicity: measured on TGLF first
+
+We scanned TGLF directly. Per machine, 35 points from the v1 test split with both heat fluxes
+above 1 gB were each scanned over $a/L_{T_e}$ and over $a/L_{T_i}$, all other inputs fixed:
+[560 cases per machine, all completed; the 70 re-run base cases per machine reproduce the dataset's fluxes bit for bit]{.claim}[C-112](/Blog/tokamak-toolkit/claims.qmd#c-112){.cid .st-measured}. TGLF is deterministic here, so any fall in the flux along a scan is TGLF's
+behaviour, not noise. The flux falls below its running maximum along most scans:
+[falls somewhere in 77% (Q_e) and 80% (Q_i) of MAST-U scans, 51% and 74% of ITER scans; by more than half in 40% and 57% (MAST-U), 34% and 57% (ITER)]{.claim}[C-113](/Blog/tokamak-toolkit/claims.qmd#c-113){.cid .st-measured}. The v1 ensemble, evaluated on the same scans, falls less often
+([falls somewhere in 20% (Q_e) and 49% (Q_i) of MAST-U scans, 23% and 37% of ITER scans; by more than half in 3% and 23% (MAST-U), 9% and 17% (ITER)]{.claim}[C-114](/Blog/tokamak-toolkit/claims.qmd#c-114){.cid .st-measured}), and its slope is negative at a minority of test points
+([Q_e 8% (MAST-U) and 11% (ITER); Q_i 25% and 22%]{.claim}[C-115](/Blog/tokamak-toolkit/claims.qmd#c-115){.cid .st-measured}). The ensemble is smoother than TGLF, so its non-monotone regions are not the
+same as TGLF's.
+
+We have not established why TGLF falls along these scans: whether the drops are changes of the
+dominant mode, or come from scanning one input with the others fixed, is not measured.
+
+## Decision OQ-20
+
+The owner was asked whether to drop monotonicity as a requirement, since TGLF does not satisfy
+it on these points. The decision ([OQ-20](/Blog/tokamak-toolkit/decisions.qmd#oq-20), 1): monotonicity stays a requirement for the TGLF
+surrogates, $Q_e$ non-decreasing in $a/L_{T_e}$ and $Q_i$ non-decreasing in $a/L_{T_i}$. Where
+TGLF decreases, the surrogate departs from TGLF by construction, and that departure is to be
+measured and reported as a ceiling. The same decision widened the ITER collisionality range for
+dataset v3 ([OQ-20](/Blog/tokamak-toolkit/decisions.qmd#oq-20), 2).
+
+M3 is in progress: the production ReLU variants, the monotone surrogate and the measured
+departure from TGLF are next.
+
+Technical details → [Surrogates: heat-flux sign](../technical/surrogates.qmd#heat-flux-sign),
+[monotonicity](../technical/surrogates.qmd#monotonicity).
+Decisions → [OQ-19](../decisions.qmd#oq-19), [OQ-20](../decisions.qmd#oq-20).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › heat flux sign](/Blog/tokamak-toolkit/technical/surrogates.qmd#heat-flux-sign) · [Surrogates › monotonicity](/Blog/tokamak-toolkit/technical/surrogates.qmd#monotonicity)  
+**Decisions →** [OQ-19](/Blog/tokamak-toolkit/decisions.qmd#oq-19) · [OQ-20](/Blog/tokamak-toolkit/decisions.qmd#oq-20)
+:::

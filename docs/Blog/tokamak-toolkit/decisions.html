@@ -68,6 +68,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
 <link rel="stylesheet" href="tokamak-toolkit.css">
@@ -126,9 +155,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#awaiting-a-decision" id="toc-awaiting-a-decision" class="nav-link active" data-scroll-target="#awaiting-a-decision">Awaiting a decision</a></li>
+  <li><a href="#awaiting-a-decision" id="toc-awaiting-a-decision" class="nav-link active" data-scroll-target="#awaiting-a-decision">Awaiting a decision</a>
+  <ul class="collapse">
+  <li><a href="#oq-21" id="toc-oq-21" class="nav-link" data-scroll-target="#oq-21">OQ-21 · RF and pedestal references</a></li>
+  <li><a href="#oq-17" id="toc-oq-17" class="nav-link" data-scroll-target="#oq-17">OQ-17 · Package licence metadata</a></li>
+  </ul></li>
   <li><a href="#settled" id="toc-settled" class="nav-link" data-scroll-target="#settled">Settled</a>
   <ul class="collapse">
+  <li><a href="#oq-20" id="toc-oq-20" class="nav-link" data-scroll-target="#oq-20">OQ-20 · Monotonicity where TGLF is not monotone; the ITER collisionality range</a></li>
+  <li><a href="#oq-19" id="toc-oq-19" class="nav-link" data-scroll-target="#oq-19">OQ-19 · What to sample next, the accuracy target, and the sign of the heat flux</a></li>
+  <li><a href="#oq-18" id="toc-oq-18" class="nav-link" data-scroll-target="#oq-18">OQ-18 · Close M2 without active learning, QuaLiKiz and the gated-code drivers?</a></li>
   <li><a href="#oq-16" id="toc-oq-16" class="nav-link" data-scroll-target="#oq-16">OQ-16 · Kinetic ranges, ITER shapes and the α<sub>MHD</sub> cap for the M2 datasets</a></li>
   <li><a href="#oq-15" id="toc-oq-15" class="nav-link" data-scroll-target="#oq-15">OQ-15 · Sampling ranges and TGLF settings for MAST-U</a></li>
   <li><a href="#oq-14" id="toc-oq-14" class="nav-link" data-scroll-target="#oq-14">OQ-14 · One cluster job to check TGLF and time it</a></li>
@@ -176,16 +212,36 @@ ul.task-list li input[type="checkbox"] {
 <p>The brief lists the decisions that belong to a human: physics modelling choices, licence and data questions, which properties to prove, use of the compute cluster, and benchmark failures that aren’t explained by a bug. When the agent reaches one, it writes the question down with context and a recommended answer, carries on with whatever isn’t blocked, and waits. Numbers (OQ-<em>n</em>) match the project’s internal record. Newest first within each group.</p>
 <section id="awaiting-a-decision" class="level2">
 <h2 class="anchored" data-anchor-id="awaiting-a-decision">Awaiting a decision</h2>
-<ul>
-<li><strong><a href="../../Blog/tokamak-toolkit/decisions.html#oq-17">OQ-17</a></strong>: what licence text the package metadata should carry while no release licence is chosen. It blocks nothing while the code is private.</li>
-</ul>
+<section id="oq-21" class="level3">
+<h3 class="anchored" data-anchor-id="oq-21">OQ-21 · RF and pedestal references</h3>
+<p>Reference, model and channel choices have been recorded. The EC baseline and ITER pedestal port can proceed independently; launch/current conventions and the coupled pedestal boundary mapping remain owner decisions. The prescribed MAST-U pedestal remains, with predictive closure deferred; IC is deferred.</p>
+<p>The original ITER deck was selected for a bounded numerical pilot, which is now complete (<span class="claim">the corrected EC reference completes in 83.16 s with readable native profiles</span><a href="../../Blog/tokamak-toolkit/claims.html#c-156" class="cid st-measured">C-156</a>). Its numerical accounting and saved-reference comparison precede any physical acceptance. Production source conversion, conservative radial mapping, fallback/rejection rules, grouped sampling and its budget still need to be recorded. The pilot write-up is draft entry 34 in the private review copy.</p>
+</section>
+<section id="oq-17" class="level3">
+<h3 class="anchored" data-anchor-id="oq-17">OQ-17 · Package licence metadata</h3>
+<p>What licence text the package metadata should carry while no release licence is chosen remains open. It blocks nothing while the code is private.</p>
+</section>
 </section>
 <section id="settled" class="level2">
 <h2 class="anchored" data-anchor-id="settled">Settled</h2>
+<section id="oq-20" class="level3">
+<h3 class="anchored" data-anchor-id="oq-20">OQ-20 · Monotonicity where TGLF is not monotone; the ITER collisionality range</h3>
+<p><em>Decided 3 Oct 2026.</em> <a href="../../Blog/tokamak-toolkit/decisions.html#oq-19">OQ-19</a> asked for monotonicity in the gradients to be measured on TGLF before it is imposed. On TGLF scans of <span class="math inline">\(a/L_{T_e}\)</span> and <span class="math inline">\(a/L_{T_i}\)</span> around v1 test points, the heat flux falls along most scans (<span class="claim">falls somewhere in 77% (Q_e) and 80% (Q_i) of MAST-U scans, 51% and 74% of ITER scans; by more than half in 40% and 57% (MAST-U), 34% and 57% (ITER)</span><a href="../../Blog/tokamak-toolkit/claims.html#c-113" class="cid st-measured">C-113</a>), and the v1 ensemble’s slope is negative at a minority of test points (<a href="../../Blog/tokamak-toolkit/log/20-heat-flux-positivity-monotonicity.html">entry 20</a>). Separately, the approved ITER collisionality range excluded part of the ITER loop’s radii from dataset v3, and the guard rejects them (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-023">K-023</a>). Two questions: (1) drop monotonicity as a requirement, or impose it although TGLF is not monotone; (2) widen the ITER collisionality range.</p>
+<p><strong>Decision.</strong> (1) Monotonicity is a requirement for the TGLF surrogates: <span class="math inline">\(Q_e\)</span> non-decreasing in <span class="math inline">\(a/L_{T_e}\)</span>, <span class="math inline">\(Q_i\)</span> non-decreasing in <span class="math inline">\(a/L_{T_i}\)</span>. Where TGLF decreases, the surrogate departs from TGLF by construction; the departure is measured and reported as a ceiling, not hidden. (2) The ITER collisionality range is widened for dataset v3 only; the M2 sampling space and the v1 and v2 datasets are unchanged. The owner also approved the GPU retraining of the structured variants and the cluster job that compares the surrogate with TGLF inside TORAX.</p>
+</section>
+<section id="oq-19" class="level3">
+<h3 class="anchored" data-anchor-id="oq-19">OQ-19 · What to sample next, the accuracy target, and the sign of the heat flux</h3>
+<p><em>Decided 3 Oct 2026.</em> On the M2 datasets, a uniform box in 17 inputs, the surrogates’ error falls slowly with more data, and the first round of active learning gained nothing over uniform points (<a href="log/19-active-learning-round-1.qmd">entry 19</a>). The configuration had no accuracy target. The brief asks for positivity, zero flux below threshold and monotonicity in the gradients, while TGLF’s own heat fluxes are negative in a minority of cases (<span class="claim">Q_e &lt; 0 in 2.0-6.5% of cases (below -1 gB in 0.5-1.5%; median of the negative values -0.03 to -0.09 gB); Q_i &lt; 0 in 9.4-14.1% (below -1 gB in 2.2-5.1%); particle fluxes negative in 33-54%</span><a href="../../Blog/tokamak-toolkit/claims.html#c-102" class="cid st-measured">C-102</a>). Three questions: (1) keep sampling the box, or sample elsewhere; (2) which held-out target; (3) a ReLU on the heat-flux outputs (the owner’s question).</p>
+<p><strong>Decision.</strong> The owner left (1) and (2) to the agent’s recommendation, which stands, and asked for (3). (1) Dataset v3 per machine is sampled where the coupled simulation goes: TGLF inputs from TORAX states along trajectories over a family of scenarios per machine, with the gradients and kinetic inputs perturbed around each state and the geometry from the same equilibrium as the profiles (this lifts <a href="../../Blog/tokamak-toolkit/ceilings.html#k-018">K-018</a> for v3). MAST-U profiles are simulated with TORAX on FreeGSNKE MAST-U equilibria; no experimental data are used. v1 and v2 stay as the broad set. The TGLF labelling job is approved as usual. (2) Median relative error of the ensemble mean at most 0.30 on Q<sub>e</sub> and on Q<sub>i</sub>, on cases with |Q| above 1 gyro-Bohm unit, on each machine’s v3 held-out split. Errors on the v1 split are reported, not gated; the closed-loop error is checked at M4. (3) Q<sub>e</sub> and Q<sub>i</sub> get a ReLU at the output: exactly zero below threshold, never negative. The particle fluxes keep their sign. Training must not let the ReLU block gradients for points predicted stable (a linear output in training with a penalty on positive predictions where TGLF’s flux is not positive, clipped in use, as QLKNN does). Setting TGLF’s negative heat fluxes to zero is a cost, to be listed as a ceiling. Monotonicity is measured on TGLF scans before it is imposed.</p>
+</section>
+<section id="oq-18" class="level3">
+<h3 class="anchored" data-anchor-id="oq-18">OQ-18 · Close M2 without active learning, QuaLiKiz and the gated-code drivers?</h3>
+<p><em>Decided 3 Oct 2026.</em> M2’s three acceptance criteria were met on the two version 1 datasets, but three of its tasks were not built: active learning near the critical gradients, a QuaLiKiz driver, and drivers for the gated (Tier B) codes. <strong>Decision.</strong> (a) Active learning moves to M3: it needs a model of where the thresholds are, and the M3 ensembles provide one; the new points become dataset version 2, v1 unchanged. (b) QuaLiKiz is deferred: its shifted-circle geometry does not represent the MAST-U shapes, and QLKNN already serves the conventional case. (c) A driver interface with stubs for the gated codes, which refuse to run without access, was built. M2 closed (<a href="../../Blog/tokamak-toolkit/milestones/M2.html">M2 page</a>). For M3 the owner set: train on every case, with the fluxes in a sign-preserving log space and no filtering; one ensemble per machine; training on GPUs, each cluster job approved; the accuracy target to be set after a first baseline (<a href="../../Blog/tokamak-toolkit/log/18-tglf-surrogates-baseline.html">entry 18</a>).</p>
+</section>
 <section id="oq-16" class="level3">
 <h3 class="anchored" data-anchor-id="oq-16">OQ-16 · Kinetic ranges, ITER shapes and the α<sub>MHD</sub> cap for the M2 datasets</h3>
 <p><em>Decided 2 Oct 2026.</em> The owner set one dataset per machine, MAST-U and ITER. The geometry ranges were measured (<a href="../../Blog/tokamak-toolkit/decisions.html#oq-15">OQ-15</a>); the kinetic ranges, the ion species and a cap on the normalised pressure gradient α<sub>MHD</sub> were proposed by the agent from memory and needed a decision before any data was generated. Three questions: (a) do the kinetic ranges and ions stand per machine; (b) is one ITER plasma shape with the current ramp-up’s q profiles enough, or should 15 MA baseline equilibria be added first; (c) a fixed cap, a cap that depends on the magnetic shear, or sampling α<sub>MHD</sub> in place of β<sub>e</sub>.</p>
-<p><strong>Decision.</strong> (a) Approved as proposed for both machines: D and carbon for MAST-U, D-T as one ion of mean mass and neon for ITER (ranges in <a href="technical/datasets.qmd#sampling-space">datasets</a>). (b) One shape is enough for version 1; the missing baseline is recorded as a limit (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-016">K-016</a>) and baseline shapes come before an ITER version 2. (c) Fixed caps for version 1 (MAST-U 4, ITER 2), a shear-dependent cap to follow (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-017">K-017</a>). The two datasets were generated the same day (<a href="log/17-tglf-datasets-mastu-iter.qmd">entry 17</a>).</p>
+<p><strong>Decision.</strong> (a) Approved as proposed for both machines: D and carbon for MAST-U, D-T as one ion of mean mass and neon for ITER (ranges in <a href="../../Blog/tokamak-toolkit/technical/datasets.html#sampling-space">datasets</a>). (b) One shape is enough for version 1; the missing baseline is recorded as a limit (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-016">K-016</a>) and baseline shapes come before an ITER version 2. (c) Fixed caps for version 1 (MAST-U 4, ITER 2), a shear-dependent cap to follow (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-017">K-017</a>). The two datasets were generated the same day (<a href="../../Blog/tokamak-toolkit/log/17-tglf-datasets-mastu-iter.html">entry 17</a>).</p>
 </section>
 <section id="oq-15" class="level3">
 <h3 class="anchored" data-anchor-id="oq-15">OQ-15 · Sampling ranges and TGLF settings for MAST-U</h3>
@@ -260,6 +316,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="oq-2" class="level3">
 <h3 class="anchored" data-anchor-id="oq-2">OQ-2 · Where to run</h3>
 <p><em>Decided 21 Sep 2026.</em> Tests and the early milestones run on an interactive node with one datacentre GPU. Anything longer goes through the cluster’s batch system on an allocation the owner named, and every job is announced to the owner before it is submitted.</p>
+<p>The corrected original ITER numerical pilot completes with readable native heating and signed-current profiles (<span class="claim">the corrected EC reference completes in 83.16 s with readable native profiles</span><a href="../../Blog/tokamak-toolkit/claims.html#c-156" class="cid st-measured">C-156</a>). Native accounting and descriptive saved-reference comparisons are retained; the rendered PostScript page is blank. Production EC coupling contracts, grouped sampling and ITER boundary choices remain open.</p>
 
 
 </section>
@@ -701,7 +758,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </footer>
 <div class="tk-footer">
-Code and first draft by Claude (Anthropic), working to a brief by Vignesh Gopakumar,
+Code and first draft by Claude (Anthropic) and Codex, working to a brief by Vignesh Gopakumar,
 who reviewed and approved this page.
 <a href="../../Blog/tokamak-toolkit/about.html">How this is built</a> ·
 <a href="../../Blog/tokamak-toolkit/index.html">Tokamak Toolkit home</a>

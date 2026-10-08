@@ -13,10 +13,85 @@ context and a recommended answer, carries on with whatever isn't blocked, and wa
 
 ## Awaiting a decision
 
-- **[OQ-17](/Blog/tokamak-toolkit/decisions.qmd#oq-17)**: what licence text the package metadata should carry while no release licence is
-  chosen. It blocks nothing while the code is private.
+### OQ-21 · RF and pedestal references {#oq-21}
+
+Reference, model and channel choices have been recorded. The EC baseline and ITER pedestal
+port can proceed independently; launch/current conventions and the coupled pedestal
+boundary mapping remain owner decisions. The prescribed MAST-U pedestal remains, with
+predictive closure deferred; IC is deferred.
+
+The original ITER deck was selected for a bounded numerical pilot, which is now
+complete ([the corrected EC reference completes in 83.16 s with readable native profiles]{.claim}[C-156](/Blog/tokamak-toolkit/claims.qmd#c-156){.cid .st-measured}). Its numerical accounting and saved-reference
+comparison precede any physical acceptance. Production source conversion,
+conservative radial mapping, fallback/rejection rules, grouped sampling and its
+budget still need to be recorded. The pilot write-up is draft entry 34 in the
+private review copy.
+
+### OQ-17 · Package licence metadata {#oq-17}
+
+What licence text the package metadata should carry while no release licence is chosen
+remains open. It blocks nothing while the code is private.
 
 ## Settled
+
+### OQ-20 · Monotonicity where TGLF is not monotone; the ITER collisionality range {#oq-20}
+
+*Decided 3 Oct 2026.* [OQ-19](/Blog/tokamak-toolkit/decisions.qmd#oq-19) asked for monotonicity in the gradients to be measured on TGLF
+before it is imposed. On TGLF scans of $a/L_{T_e}$ and $a/L_{T_i}$ around v1 test points, the
+heat flux falls along most scans ([falls somewhere in 77% (Q_e) and 80% (Q_i) of MAST-U scans, 51% and 74% of ITER scans; by more than half in 40% and 57% (MAST-U), 34% and 57% (ITER)]{.claim}[C-113](/Blog/tokamak-toolkit/claims.qmd#c-113){.cid .st-measured}), and the v1 ensemble's slope is negative at a
+minority of test points ([entry 20](log/20-heat-flux-positivity-monotonicity.qmd)). Separately,
+the approved ITER collisionality range excluded part of the ITER loop's radii from dataset v3,
+and the guard rejects them ([K-023](/Blog/tokamak-toolkit/ceilings.qmd#k-023)). Two questions: (1) drop monotonicity as a requirement, or
+impose it although TGLF is not monotone; (2) widen the ITER collisionality range.
+
+**Decision.** (1) Monotonicity is a requirement for the TGLF surrogates: $Q_e$ non-decreasing in
+$a/L_{T_e}$, $Q_i$ non-decreasing in $a/L_{T_i}$. Where TGLF decreases, the surrogate departs
+from TGLF by construction; the departure is measured and reported as a ceiling, not hidden.
+(2) The ITER collisionality range is widened for dataset v3 only; the M2 sampling space and the
+v1 and v2 datasets are unchanged. The owner also approved the GPU retraining of the structured
+variants and the cluster job that compares the surrogate with TGLF inside TORAX.
+
+### OQ-19 · What to sample next, the accuracy target, and the sign of the heat flux {#oq-19}
+
+*Decided 3 Oct 2026.* On the M2 datasets, a uniform box in 17 inputs, the surrogates' error
+falls slowly with more data, and the first round of active learning gained nothing over
+uniform points ([entry 19](log/19-active-learning-round-1.qmd)). The configuration had no
+accuracy target. The brief asks for positivity, zero flux below threshold and monotonicity in
+the gradients, while TGLF's own heat fluxes are negative in a minority of cases
+([Q_e < 0 in 2.0-6.5% of cases (below -1 gB in 0.5-1.5%; median of the negative values -0.03 to -0.09 gB); Q_i < 0 in 9.4-14.1% (below -1 gB in 2.2-5.1%); particle fluxes negative in 33-54%]{.claim}[C-102](/Blog/tokamak-toolkit/claims.qmd#c-102){.cid .st-measured}). Three questions: (1) keep sampling the box, or sample elsewhere; (2) which
+held-out target; (3) a ReLU on the heat-flux outputs (the owner's question).
+
+**Decision.** The owner left (1) and (2) to the agent's recommendation, which stands, and asked
+for (3).
+(1) Dataset v3 per machine is sampled where the coupled simulation goes: TGLF inputs from
+TORAX states along trajectories over a family of scenarios per machine, with the gradients and
+kinetic inputs perturbed around each state and the geometry from the same equilibrium as the
+profiles (this lifts [K-018](/Blog/tokamak-toolkit/ceilings.qmd#k-018) for v3). MAST-U profiles are simulated with TORAX on FreeGSNKE
+MAST-U equilibria; no experimental data are used. v1 and v2 stay as the broad set. The TGLF
+labelling job is approved as usual.
+(2) Median relative error of the ensemble mean at most 0.30 on Q~e~ and on Q~i~, on cases with
+|Q| above 1 gyro-Bohm unit, on each machine's v3 held-out split. Errors on the v1 split are
+reported, not gated; the closed-loop error is checked at M4.
+(3) Q~e~ and Q~i~ get a ReLU at the output: exactly zero below threshold, never negative. The
+particle fluxes keep their sign. Training must not let the ReLU block gradients for points
+predicted stable (a linear output in training with a penalty on positive predictions where
+TGLF's flux is not positive, clipped in use, as QLKNN does). Setting TGLF's negative heat fluxes
+to zero is a cost, to be listed as a ceiling. Monotonicity is measured on TGLF scans before it
+is imposed.
+
+### OQ-18 · Close M2 without active learning, QuaLiKiz and the gated-code drivers? {#oq-18}
+
+*Decided 3 Oct 2026.* M2's three acceptance criteria were met on the two version 1 datasets,
+but three of its tasks were not built: active learning near the critical gradients, a QuaLiKiz
+driver, and drivers for the gated (Tier B) codes. **Decision.** (a) Active learning moves to M3:
+it needs a model of where the thresholds are, and the M3 ensembles provide one; the new points
+become dataset version 2, v1 unchanged. (b) QuaLiKiz is deferred: its shifted-circle geometry
+does not represent the MAST-U shapes, and QLKNN already serves the conventional case. (c) A
+driver interface with stubs for the gated codes, which refuse to run without access, was built.
+M2 closed ([M2 page](milestones/M2.qmd)). For M3 the owner set: train on every case, with the
+fluxes in a sign-preserving log space and no filtering; one ensemble per machine; training on
+GPUs, each cluster job approved; the accuracy target to be set after a first baseline
+([entry 18](log/18-tglf-surrogates-baseline.qmd)).
 
 ### OQ-16 · Kinetic ranges, ITER shapes and the α~MHD~ cap for the M2 datasets {#oq-16}
 
@@ -203,3 +278,9 @@ iteration count, keeping Picard as the fallback, and stall reporting for both
 *Decided 21 Sep 2026.* Tests and the early milestones run on an interactive node with one
 datacentre GPU. Anything longer goes through the cluster's batch system on an allocation the
 owner named, and every job is announced to the owner before it is submitted.
+
+The corrected original ITER numerical pilot completes with readable native
+heating and signed-current profiles ([the corrected EC reference completes in 83.16 s with readable native profiles]{.claim}[C-156](/Blog/tokamak-toolkit/claims.qmd#c-156){.cid .st-measured}). Native accounting
+and descriptive saved-reference comparisons are retained; the rendered
+PostScript page is blank. Production EC coupling contracts, grouped sampling
+and ITER boundary choices remain open.

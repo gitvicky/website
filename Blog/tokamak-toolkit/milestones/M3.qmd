@@ -1,0 +1,86 @@
+---
+title: M3 · Surrogates
+subtitle: In progress
+toc: true
+---
+
+## Goal
+
+Train neural surrogates for the expensive physics, starting with turbulent transport: deep
+ensembles in JAX with physics structure built in (zero flux below threshold, positivity,
+monotonicity in the gradients), running inside the M1 coupling loop behind the guard. Then RF
+deposition and the pedestal. The transport surrogates learn TGLF from the M2 datasets, one
+ensemble per machine, MAST-U and ITER.
+
+## Acceptance criteria (fixed in the brief before work started)
+
+1. Held-out accuracy meets the target in the configuration.
+2. The surrogate is differentiable and runs inside the M1 loop.
+3. The end-to-end speed-up is measured and reported.
+
+M3 has no human gate in the brief. The brief left the accuracy target to the configuration; the
+owner chose to set it after a first baseline ([OQ-18](/Blog/tokamak-toolkit/decisions.qmd#oq-18)). It was set on 3 Oct 2026 ([OQ-19](/Blog/tokamak-toolkit/decisions.qmd#oq-19)): median
+relative error of the ensemble mean at most 0.30 on Q~e~ and on Q~i~ (cases with |Q| above 1
+gyro-Bohm unit), on each machine's held-out split of dataset v3. The final monotone transport
+ensembles now pass that target: [MAST-U: Q_e 17.8%, Q_i 25.2%; ITER: Q_e 7.2%, Q_i 10.8%; all meet the 30% target]{.claim}[C-129](/Blog/tokamak-toolkit/claims.qmd#c-129){.cid .st-measured}. The milestone remains in progress.
+
+## Tasks
+
+| task | state | log |
+|---|---|---|
+| baseline deep ensemble per machine on the M2 datasets, signed-log targets | done | [entry 18](../log/18-tglf-surrogates-baseline.qmd) |
+| TGLF-NN network (GA, TurbulentTransport.jl) recreated as a variant | done | [entry 18](../log/18-tglf-surrogates-baseline.qmd) |
+| learning curves | done | [entry 18](../log/18-tglf-surrogates-baseline.qmd) |
+| active learning near the threshold, round 1 (moved from M2, [OQ-18](/Blog/tokamak-toolkit/decisions.qmd#oq-18)) | done; no gain over uniform sampling | [entry 19](../log/19-active-learning-round-1.qmd) |
+| accuracy target in the configuration | set ([OQ-19](/Blog/tokamak-toolkit/decisions.qmd#oq-19)) | [entry 19](../log/19-active-learning-round-1.qmd) |
+| dataset v3 sampled along TORAX trajectories ([OQ-19](/Blog/tokamak-toolkit/decisions.qmd#oq-19), [OQ-20](/Blog/tokamak-toolkit/decisions.qmd#oq-20) 2) | complete; labels and split reproducibility audited | |
+| $Q_e$, $Q_i$ clipped at zero in use, stability penalty in training ([OQ-19](/Blog/tokamak-toolkit/decisions.qmd#oq-19)) | production models trained; reference-stable points are not all predicted zero | [entry 20](../log/20-heat-flux-positivity-monotonicity.qmd) |
+| monotonicity measured on TGLF scans and on the v1 ensemble | done | [entry 20](../log/20-heat-flux-positivity-monotonicity.qmd) |
+| monotone surrogate, departure from TGLF measured ([OQ-20](/Blog/tokamak-toolkit/decisions.qmd#oq-20) 1) | built; sampled checks pass, departure recorded | |
+| surrogate inside the M1 loop, behind the guard | validated on RAPTOR and ITER hybrid with explicit Newton settings; strict gradients and balance pass | draft entry 26 |
+| end-to-end speed-up | measured for v1; matched final v3 timing awaits compute ([K-022](/Blog/tokamak-toolkit/ceilings.qmd#k-022)) | |
+| compute request and saved-trace review | bounded request reviewed; cancellation cause and fresh approval pending; trace component attribution unresolved | draft entry 28 |
+| RF deposition and pedestal surrogates | corrected EC numerical pilot complete with native accounting and descriptive comparison; pretrained pedestal port passes raw checks; production labels/coupling and boundary contracts pending; MAST-U predictive pedestal and IC deferred ([OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21)) | draft entries 24–25, 29–34 |
+
+## Against the criteria
+
+| criterion | where it stands |
+|---|---|
+| held-out transport accuracy | passes on v3: [MAST-U: Q_e 17.8%, Q_i 25.2%; ITER: Q_e 7.2%, Q_i 10.8%; all meet the 30% target]{.claim}[C-129](/Blog/tokamak-toolkit/claims.qmd#c-129){.cid .st-measured}; dataset/model provenance and scores audited |
+| differentiable, inside the loop | ITER v1 and v3 strict gradients pass ([v1 and v3 pass: three-step derivative FD tolerance 1e-7, forward/reverse tolerance 1e-12; guard masks unchanged over the stencil]{.claim}[C-138](/Blog/tokamak-toolkit/claims.qmd#c-138){.cid .st-tested}), as does discrete balance ([v1 and v3 pass: energy residual below 1e-6 and particle residual below 1e-10, with fine solver convergence]{.claim}[C-139](/Blog/tokamak-toolkit/claims.qmd#c-139){.cid .st-tested}); extended RAPTOR/ITER hybrid checks pass ([15 gradient, JIT, fallback and discrete-balance checks pass across RAPTOR and ITER hybrid in each mode]{.claim}[C-146](/Blog/tokamak-toolkit/claims.qmd#c-146){.cid .st-tested}); [K-026](/Blog/tokamak-toolkit/ceilings.qmd#k-026) records the default-tolerance limitation |
+| speed-up | historical v1 comparison: [TGLF 540.38 s, v1 surrogate 0.780 s, QLKNN 0.126 s; v1 is about 693 times faster than TGLF]{.claim}[C-132](/Blog/tokamak-toolkit/claims.qmd#c-132){.cid .st-measured}; final v3 matched timing has no result because the scheduler cancelled its job before execution |
+
+## Plan to completion
+
+Follow the [action plan](../action-plan.qmd): resolve the performance blocker and complete
+the EC production and ITER pedestal boundary contracts independently. Then label EC cases, agree accuracy
+targets, train EC ensembles and integrate both responses. Prescribed MAST-U pedestal and
+deferred IC follow the owner's revised scope. Close M3 only when all required tasks meet its criteria. M4 begins
+after that acceptance.
+
+## Deviations so far
+
+- **ITER pedestal uses the owner-selected pretrained single network.** Its JAX port has
+  numerical parity and derivative checks ([12 upstream scalar regression values agree within relative tolerance 1e-12]{.claim}[C-149](/Blog/tokamak-toolkit/claims.qmd#c-149){.cid .st-measured}, [12 focused tests pass in full and Tier-A-only modes]{.claim}[C-150](/Blog/tokamak-toolkit/claims.qmd#c-150){.cid .st-tested}), with
+  no ensemble uncertainty inferred. MAST-U predictive closure and IC are deferred.
+- **20 members for the TGLF-NN variants** (as in GA's model files), above the brief's 5–10. The
+  baseline has 10.
+- **Active learning moved from M2 to M3** ([OQ-18](/Blog/tokamak-toolkit/decisions.qmd#oq-18) a), since it needs a trained ensemble to choose
+  the points.
+- **Monotonicity imposed where TGLF itself is not monotone** ([OQ-20](/Blog/tokamak-toolkit/decisions.qmd#oq-20) 1): the surrogate departs
+  from TGLF there by construction: [MAST-U: Q_e 3.14, Q_i 3.36; ITER: Q_e 2.51, Q_i 2.11 signed-log units]{.claim}[C-131](/Blog/tokamak-toolkit/claims.qmd#c-131){.cid .st-preliminary}. Sampled monotonicity checks are not
+  a formal certificate.
+- **Accuracy target measured on dataset v3**, not on the M2 datasets ([OQ-19](/Blog/tokamak-toolkit/decisions.qmd#oq-19)); errors on the M2
+  test splits are reported, not gated.
+
+Technical details → [Surrogates](../technical/surrogates.qmd).
+
+The corrected original ITER numerical pilot completes with readable native
+heating and signed-current profiles ([the corrected EC reference completes in 83.16 s with readable native profiles]{.claim}[C-156](/Blog/tokamak-toolkit/claims.qmd#c-156){.cid .st-measured}). Native accounting
+and descriptive saved-reference comparisons are retained; the rendered
+PostScript page is blank. Production EC coupling contracts, grouped sampling
+and ITER boundary choices remain open.
+
+Repository checks: [56 focused checks pass in full and Tier-A-only modes]{.claim}[C-157](/Blog/tokamak-toolkit/claims.qmd#c-157){.cid .st-tested}. The generated status combines fresh
+affected-file reports with retained reports for unchanged tests; it is not a
+fresh full-suite execution.

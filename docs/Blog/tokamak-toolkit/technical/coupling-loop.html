@@ -231,7 +231,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">September 30, 2026</p>
+      <p class="date-modified">October 7, 2026</p>
     </div>
   </div>
     
@@ -366,8 +366,9 @@ emit  trace(profiles, fluxes, sources, ok_masks, residual)</code></pre>
 <li><code>Models(equilibrium, transport, sources, sawtooth)</code> — each returns <code>(output, ok_mask)</code>.</li>
 <li><code>LoopConfig(dt [s], n_steps, solver ∈ {newton, picard}, n_picard, relax, n_newton,   n_line_search, stall_tol)</code>.</li>
 <li><code>simulate(models, edge, cfg, state0) -&gt; (State, Trace)</code>, jit-compiled and differentiable.</li>
-<li><code>Trace(t, profiles, fluxes, flux_std, sources, ok_transport, ok_sources, picard_residual)</code>.</li>
+<li><code>Trace(t, profiles, fluxes, flux_std, sources, ok_transport, ok_sources, picard_residual,   source_std=None)</code>.</li>
 </ul>
+<p>The core loop retains ensemble source spread in <code>source_std</code>, with the same units as <code>Sources</code>. Its time series includes the fraction of cells served by a source fallback in at least one evaluation of the step, alongside the existing transport fallback fraction. Zero spread at a fallback cell records unused surrogate spread, not calibrated fallback uncertainty.</p>
 </section>
 <section id="parameters-and-defaults" class="level2">
 <h2 class="anchored" data-anchor-id="parameters-and-defaults">Parameters and defaults</h2>
@@ -918,7 +919,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </footer>
 <div class="tk-footer">
-Code and first draft by Claude (Anthropic), working to a brief by Vignesh Gopakumar,
+Code and first draft by Claude (Anthropic) and Codex, working to a brief by Vignesh Gopakumar,
 who reviewed and approved this page.
 <a href="../../../Blog/tokamak-toolkit/about.html">How this is built</a> ·
 <a href="../../../Blog/tokamak-toolkit/index.html">Tokamak Toolkit home</a>

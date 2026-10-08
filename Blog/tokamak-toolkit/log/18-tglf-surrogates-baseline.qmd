@@ -1,0 +1,79 @@
+---
+title: Baseline TGLF surrogates for MAST-U and ITER, including a recreated TGLF-NN
+date: '2026-10-03'
+categories:
+- built
+entry: 18
+milestone: M3
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 18 · milestone M3
+:::
+
+M2 closed on 3 October with its three acceptance criteria met ([M2 page](../milestones/M2.qmd));
+active learning moved into M3 ([OQ-18](/Blog/tokamak-toolkit/decisions.qmd#oq-18)). M3 trains the surrogates: neural networks that return
+TGLF's turbulent fluxes from TGLF's local inputs, fast enough to call at every radius and time
+step (see the [Primer](../primer.qmd)). The owner set one ensemble per machine, every TGLF case
+kept, and the fluxes learned in a signed-log space, $\mathrm{sign}(Q)\ln(1+|Q|)$ with $Q$ in
+gyro-Bohm units (gB), because the heat fluxes in the datasets span many orders of magnitude
+([K-019](/Blog/tokamak-toolkit/ceilings.qmd#k-019)). The accuracy target was to be set after a first baseline.
+
+## Two networks
+
+The baseline is a deep ensemble of 10 multilayer perceptrons (MLPs), each with four hidden
+layers of 256 units, trained on the same cases and differing in initialisation and minibatch
+order. The members' mean is the prediction; their spread is the uncertainty.
+
+The owner then asked for a recreation of TGLF-NN, the neural-network version of TGLF developed
+at General Atomics (GA) and distributed in TurbulentTransport.jl under Apache-2.0 (Neiser et
+al., APS-DPP 2022). GA's training procedure is not published; the model files are, and we read
+the architecture from them. Each of 20 members is a residual network of width 32: an input
+layer, five blocks of four dense layers with a skip connection around each block, and a linear
+output layer. It takes GA's choice of inputs, including the pressure and q gradients, and
+standardises its outputs linearly. We train it with our loss, optimiser and data. GA's trained
+weights are not used.
+
+## Held-out errors and learning curves
+
+Each machine's 10^5^ cases are split at random into training, validation and test sets
+(80/10/10). The test cases are used once, at the end; the error is that of the ensemble mean
+against TGLF, on cases with |Q| above 1 gB.
+
+| network | outputs | median relative error of Q~e~ and Q~i~ |
+|---|---|---|
+| MLP ensemble | signed-log | [MAST-U 0.77 (Q_e) and 0.80 (Q_i); ITER 0.61 and 0.62]{.claim}[C-077](/Blog/tokamak-toolkit/claims.qmd#c-077){.cid .st-measured} |
+| TGLF-NN, as distributed | linear, standardised | [MAST-U 9.1 (Q_e) and 17.7 (Q_i); ITER 6.8 and 7.0; R² of Q_e in signed-log space -0.30 (MAST-U) and -0.35 (ITER)]{.claim}[C-078](/Blog/tokamak-toolkit/claims.qmd#c-078){.cid .st-measured} |
+| TGLF-NN | signed-log | [MAST-U 0.75 (Q_e) and 0.77 (Q_i); ITER 0.60 and 0.58]{.claim}[C-079](/Blog/tokamak-toolkit/claims.qmd#c-079){.cid .st-measured} |
+
+GA's linear output scaling fails on these datasets. Standardising divides each flux by its
+standard deviation over the training set, and the high-flux tail sets that value:
+[2.5 × 10^5^ gB (MAST-U) and 1.1 × 10^4^ gB (ITER); the median |Q_e|, 473 and 29 gB, is 0.0019 and 0.0027 standard deviations]{.claim}[C-085](/Blog/tokamak-toolkit/claims.qmd#c-085){.cid .st-measured}. A squared-error loss in those units is decided by the largest cases, and
+the typical case is not learned. GA's training fluxes come from measured profiles and stay in
+a bounded range ([GA's MAST-U model -1.5 × 10^4^ to 5.2 × 10^4^ gB; tglf-mastu-v1 -2.4 × 10^6^ to 2.8 × 10^7^ gB]{.claim}[C-086](/Blog/tokamak-toolkit/claims.qmd#c-086){.cid .st-measured}), where the same scaling works. On signed-log targets the
+same network matches the MLP ensemble with about a tenth of the parameters per member
+([21 827 per member (TGLF-NN network) against 203 526 (MLP)]{.claim}[C-080](/Blog/tokamak-toolkit/claims.qmd#c-080){.cid .st-measured}), and its spread covers the TGLF value more often ([TGLF-NN network 0.63 (MAST-U) and 0.66 (ITER); MLP ensemble 0.54 and 0.57]{.claim}[C-081](/Blog/tokamak-toolkit/claims.qmd#c-081){.cid .st-measured}).
+Neither spread is calibrated; calibration is part of M4.
+
+Retraining on a quarter and on half of the training split gives learning curves that are still
+falling at 80000 cases, with slopes [-0.10 (MAST-U) and -0.19 (ITER) for the TGLF-NN network; -0.07 and -0.14 for the MLP]{.claim}[C-083](/Blog/tokamak-toolkit/claims.qmd#c-083){.cid .st-measured}. A median error of 0.30 would need, by
+extrapolation, [about 3 × 10^6^ cases (ITER) and about 10^9^ (MAST-U)]{.claim}[C-084](/Blog/tokamak-toolkit/claims.qmd#c-084){.cid .st-preliminary} drawn as in the M2 datasets. Both networks give nearly the
+same curves, so we suspect the sampling (a uniform box, mostly far above the instability
+threshold) more than the network; that is not yet tested.
+
+What checks these numbers: the test cases took no part in training or in choosing the
+parameters each member keeps (that used the validation set). The blog's figure script
+recomputes the medians from the saved models with its own code and reproduces the stored
+values. The comparison with GA is not independent: the network, training code and metrics
+are ours, and only the architecture is GA's.
+
+M3 is in progress. The active-learning round that followed, and the accuracy target set
+afterwards ([OQ-19](/Blog/tokamak-toolkit/decisions.qmd#oq-19)), are in [entry 19](19-active-learning-round-1.qmd).
+
+Technical details → [Surrogates](../technical/surrogates.qmd).
+Decisions → [OQ-18](../decisions.qmd#oq-18), [OQ-19](../decisions.qmd#oq-19).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › baseline ensemble](/Blog/tokamak-toolkit/technical/surrogates.qmd#baseline-ensemble) · [Surrogates › tglf nn](/Blog/tokamak-toolkit/technical/surrogates.qmd#tglf-nn) · [Surrogates › output scaling](/Blog/tokamak-toolkit/technical/surrogates.qmd#output-scaling) · [Surrogates › learning curves](/Blog/tokamak-toolkit/technical/surrogates.qmd#learning-curves)  
+**Decisions →** [OQ-18](/Blog/tokamak-toolkit/decisions.qmd#oq-18) · [OQ-19](/Blog/tokamak-toolkit/decisions.qmd#oq-19)
+:::

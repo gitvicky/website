@@ -5,9 +5,8 @@ toc: true
 
 ## Who does what
 
-**The code is written by an AI.** The Tokamak Toolkit is implemented by Claude, an AI model made by
-Anthropic, working as a coding agent. Claude also writes the tests and drafts every page of
-this log, including this one.
+**The code is written by AI coding agents.** The Tokamak Toolkit is implemented with Claude
+(Anthropic) and Codex. The agents also write tests and draft this log.
 
 **A human owns it.** Vignesh Gopakumar wrote the brief the agent works to, and makes every
 decision the brief reserves for a human:

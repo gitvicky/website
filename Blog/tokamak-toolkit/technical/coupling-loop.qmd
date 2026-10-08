@@ -2,7 +2,7 @@
 title: Coupling loop
 toc: true
 toc-depth: 3
-date-modified: '2026-09-30'
+date-modified: '2026-10-07'
 ---
 
 ## Purpose
@@ -211,7 +211,13 @@ Public signatures:
 - `LoopConfig(dt [s], n_steps, solver ∈ {newton, picard}, n_picard, relax, n_newton,
   n_line_search, stall_tol)`.
 - `simulate(models, edge, cfg, state0) -> (State, Trace)`, jit-compiled and differentiable.
-- `Trace(t, profiles, fluxes, flux_std, sources, ok_transport, ok_sources, picard_residual)`.
+- `Trace(t, profiles, fluxes, flux_std, sources, ok_transport, ok_sources, picard_residual,
+  source_std=None)`.
+
+The core loop retains ensemble source spread in `source_std`, with the same units as `Sources`.
+Its time series includes the fraction of cells served by a source fallback in at least one
+evaluation of the step, alongside the existing transport fallback fraction. Zero spread at a
+fallback cell records unused surrogate spread, not calibrated fallback uncertainty.
 
 ## Parameters and defaults
 

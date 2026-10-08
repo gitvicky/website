@@ -1,6 +1,6 @@
 ---
 title: M2 · Training data
-subtitle: In progress
+subtitle: Done 3 Oct 2026
 toc: true
 ---
 
@@ -19,7 +19,8 @@ and does not.
 3. The sampled domain is documented and plotted against the intended operating space.
 
 M2 has no human gate in the brief. The kinetic ranges were approved by the owner before any
-dataset was generated ([OQ-16](/Blog/tokamak-toolkit/decisions.qmd#oq-16)).
+dataset was generated ([OQ-16](/Blog/tokamak-toolkit/decisions.qmd#oq-16)). **All three criteria were met on 3 Oct 2026, and the owner
+closed M2 ([OQ-18](/Blog/tokamak-toolkit/decisions.qmd#oq-18)).**
 
 ## Tasks
 
@@ -30,10 +31,10 @@ dataset was generated ([OQ-16](/Blog/tokamak-toolkit/decisions.qmd#oq-16)).
 | kinetic ranges, species and α~MHD~ cap per machine | done, approved ([OQ-16](/Blog/tokamak-toolkit/decisions.qmd#oq-16)) | [entry 17](../log/17-tglf-datasets-mastu-iter.qmd) |
 | Latin hypercube datasets, MAST-U and ITER, 10^5^ cases each | done (version 1) | [entry 17](../log/17-tglf-datasets-mastu-iter.qmd) |
 | sampled domain plotted against the operating space | done | [datasets](../technical/datasets.qmd#datasets-v1) |
-| high-flux cases explained ([K-019](/Blog/tokamak-toolkit/ceilings.qmd#k-019)) | open | |
-| active learning near critical gradients | not started | |
-| QuaLiKiz driver (Tier A) | not started | |
-| Tier B drivers behind the tier flag | not started; needs access | |
+| high-flux cases ([K-019](/Blog/tokamak-toolkit/ceilings.qmd#k-019)) | kept, learned in signed-log space at M3 ([OQ-18](/Blog/tokamak-toolkit/decisions.qmd#oq-18)); not explained | |
+| active learning near critical gradients | moved to M3 ([OQ-18](/Blog/tokamak-toolkit/decisions.qmd#oq-18) a); round 1 in [entry 19](../log/19-active-learning-round-1.qmd) | |
+| QuaLiKiz driver (Tier A) | deferred ([OQ-18](/Blog/tokamak-toolkit/decisions.qmd#oq-18) b) | |
+| driver interface; Tier B drivers behind the tier flag | interface built; Tier B drivers are stubs that refuse to run without access ([OQ-18](/Blog/tokamak-toolkit/decisions.qmd#oq-18) c) | |
 
 ## Against the criteria
 
@@ -45,8 +46,9 @@ dataset was generated ([OQ-16](/Blog/tokamak-toolkit/decisions.qmd#oq-16)).
 
 ## Deviations
 
-- **TGLF only, so far.** The brief lists drivers for TGLF and QuaLiKiz (Tier A) and for Tier B
-  codes. Version 1 uses TGLF alone.
 - **One dataset per machine** (owner, 2026-10-02), rather than one sampling space.
 - **Rejection by α~MHD~** in the sampler, not in the brief: without it, independent draws give
   pressure gradients far beyond ballooning stability ([OQ-16](/Blog/tokamak-toolkit/decisions.qmd#oq-16)).
+- **Latin hypercube only at M2.** Active learning needs a model of where the thresholds are, so
+  it moved to M3 ([OQ-18](/Blog/tokamak-toolkit/decisions.qmd#oq-18) a). QuaLiKiz is deferred: its shifted-circle geometry does not represent
+  the MAST-U shapes ([OQ-18](/Blog/tokamak-toolkit/decisions.qmd#oq-18) b). The Tier B drivers are stubs ([OQ-18](/Blog/tokamak-toolkit/decisions.qmd#oq-18) c).

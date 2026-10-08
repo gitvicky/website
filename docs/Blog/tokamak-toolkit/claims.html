@@ -874,6 +874,790 @@ Superseded by <a href="#c-067">C-067</a></td>
 <code>python blog/figures/make_tglf_domain.py</code></td>
 <td><code>887245e</code></td>
 </tr>
+<tr id="c-077" class="odd">
+<td class="cid-cell">C-077</td>
+<td>Held-out median relative error of Q_e and Q_i (cases with |Q| &gt; 1 gyro-Bohm unit), baseline deep ensemble of 10 MLP members (4 hidden layers of 256, GELU), 17 sampled TGLF inputs to six fluxes in signed-log space, trained on 80000 cases of each M2 dataset and tested on 10000 held-out cases<br>
+<span class="tol">single training run; the 95% bootstrap interval of such a median over the 10000 test cases is about ±0.015 (measured for C-079); spread over training seeds not measured</span></td>
+<td class="val">MAST-U 0.77 (Q_e) and 0.80 (Q_i); ITER 0.61 and 0.62</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>GPU job 2318567; meta.json of tglf-mastu-ens-v1 and tglf-iter-ens-v1 (provenance records commit 50d9e38 with a dirty tree); blog/figures/m3_metrics.csv<br>
+<code>python -m tkit.surrogates.train mastu; python -m tkit.surrogates.train iter</code></td>
+<td><code>50d9e38</code></td>
+</tr>
+<tr id="c-078" class="even">
+<td class="cid-cell">C-078</td>
+<td>Held-out median relative error of Q_e and Q_i, the recreated TGLF-NN member network (GA, TurbulentTransport.jl) with GA's linear standardisation of the outputs, same data and split as C-077; and the coefficient of determination of Q_e in signed-log space<br>
+<span class="tol">single training run</span></td>
+<td class="val">MAST-U 9.1 (Q_e) and 17.7 (Q_i); ITER 6.8 and 7.0; R² of Q_e in signed-log space -0.30 (MAST-U) and -0.35 (ITER)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>GPU job 2319237; meta.json of tglf-&lt;machine&gt;-tglfnn-v1; blog/figures/m3_metrics.csv<br>
+<code>python -m tkit.surrogates.train mastu --variant tglfnn</code></td>
+<td><code>f4da0c0</code></td>
+</tr>
+<tr id="c-079" class="odd">
+<td class="cid-cell">C-079</td>
+<td>Held-out median relative error of Q_e and Q_i, the recreated TGLF-NN member network (20 members) trained on the signed-log targets, same data and split as C-077<br>
+<span class="tol">single training run; 95% paired-bootstrap interval over the 10000 test cases (1000 resamples): Q_e 0.73-0.76 (MAST-U) and 0.59-0.62 (ITER)</span></td>
+<td class="val">MAST-U 0.75 (Q_e) and 0.77 (Q_i); ITER 0.60 and 0.58</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>GPU job 2319237; meta.json of tglf-&lt;machine&gt;-tglfnn_symlog-v1; bootstrap in blog/figures/m3_metrics.csv<br>
+<code>python -m tkit.surrogates.train mastu --variant tglfnn_symlog; python blog/figures/make_m3_surrogates.py</code></td>
+<td><code>f4da0c0</code></td>
+</tr>
+<tr id="c-080" class="even">
+<td class="cid-cell">C-080</td>
+<td>Trainable parameters per ensemble member; the TGLF-NN network with 18 inputs and 3 outputs (20 members), and the baseline MLP with 17 inputs and 6 outputs (10 members)<br>
+<span class="tol">exact, counted on the saved models</span></td>
+<td class="val">21 827 per member (TGLF-NN network) against 203 526 (MLP)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>array leaves of model.eqx in tglf-mastu-tglfnn_symlog-v1 and tglf-mastu-ens-v1; layer sizes in configs/surrogates/m3_tglf.yaml</td>
+<td><code>f4da0c0</code></td>
+</tr>
+<tr id="c-081" class="odd">
+<td class="cid-cell">C-081</td>
+<td>Fraction of held-out cases whose TGLF Q_e lies within the ensemble mean ± 2 member standard deviations, in signed-log space (Q_i in the tolerance)<br>
+<span class="tol">single runs; Q_i 0.66 and 0.72 (TGLF-NN), 0.58 and 0.63 (MLP). A calibrated Gaussian spread would give 0.95; no calibration is applied yet (M4)</span></td>
+<td class="val">TGLF-NN network 0.63 (MAST-U) and 0.66 (ITER); MLP ensemble 0.54 and 0.57</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>jobs 2318567 and 2319237; coverage_2std in blog/figures/m3_metrics.csv</td>
+<td><code>f4da0c0</code></td>
+</tr>
+<tr id="c-082" class="even">
+<td class="cid-cell">C-082</td>
+<td>Fraction of held-out cases on which the ensemble and TGLF agree whether a case is stable, defined as Q_e + Q_i &lt; 1 gyro-Bohm unit (15% of MAST-U and 17% of ITER test cases are stable)<br>
+<span class="tol">single runs</span></td>
+<td class="val">TGLF-NN, signed-log 0.91 (MAST-U) and 0.92 (ITER); MLP 0.91 and 0.92; TGLF-NN, linear outputs 0.79 and 0.77</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>jobs 2318567 and 2319237; stable_agreement in blog/figures/m3_metrics.csv</td>
+<td><code>f4da0c0</code></td>
+</tr>
+<tr id="c-083" class="odd">
+<td class="cid-cell">C-083</td>
+<td>Slope of the learning curve, log of the held-out median relative error of Q_e against log of the number of training cases, least-squares fit over 20000, 40000 and 80000 cases (fractions of the same training split; validation and test splits fixed)<br>
+<span class="tol">three points over a factor 4 in training-set size, one run each</span></td>
+<td class="val">-0.10 (MAST-U) and -0.19 (ITER) for the TGLF-NN network; -0.07 and -0.14 for the MLP</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>job 2319237 (fractions 0.25 and 0.5) and the full models; blog/figures/m3_learning_curves.csv<br>
+<code>python -m tkit.surrogates.train iter --variant tglfnn_symlog --train-frac 0.25; python blog/figures/make_m3_surrogates.py</code></td>
+<td><code>f4da0c0</code></td>
+</tr>
+<tr id="c-084" class="even">
+<td class="cid-cell">C-084</td>
+<td>Training-set size at which the fitted learning curves of C-083 (TGLF-NN network) reach a median relative error of 0.30 on Q_e, with points drawn as in the M2 datasets<br>
+<span class="tol">an extrapolation of a power law fitted over a factor 4 in N to a factor 40 (ITER) and 10^4 (MAST-U) beyond its range; it gives the scale, not a prediction</span></td>
+<td class="val">about 3 × 10<sup>6</sup> cases (ITER) and about 10<sup>9</sup> (MAST-U)</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>n_for_target_extrapolated in blog/figures/m3_learning_curves.csv<br>
+<code>python blog/figures/make_m3_surrogates.py</code></td>
+<td><code>f4da0c0</code></td>
+</tr>
+<tr id="c-085" class="odd">
+<td class="cid-cell">C-085</td>
+<td>Standard deviation of Q_e over each machine's training split, the scale a linear output standardisation divides by, and the median |Q_e| expressed in that scale<br>
+<span class="tol">exact for these training splits</span></td>
+<td class="val">2.5 × 10<sup>5</sup> gB (MAST-U) and 1.1 × 10<sup>4</sup> gB (ITER); the median |Q_e|, 473 and 29 gB, is 0.0019 and 0.0027 standard deviations</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>train_Qe_std, train_Qe_median_abs in blog/figures/m3_datasets.csv, from tglf-&lt;machine&gt;-v1 and the saved split<br>
+<code>python blog/figures/make_m3_surrogates.py</code></td>
+<td><code>f4da0c0</code></td>
+</tr>
+<tr id="c-086" class="even">
+<td class="cid-cell">C-086</td>
+<td>Range of Q_e in the training data of GA's MAST-U TGLF-NN model, as recorded in its model file, against the range in the tglf-mastu-v1 dataset<br>
+<span class="tol">GA's range as read from the model file for the M3 report; dataset range exact</span></td>
+<td class="val">GA's MAST-U model -1.5 × 10<sup>4</sup> to 5.2 × 10<sup>4</sup> gB; tglf-mastu-v1 -2.4 × 10<sup>6</sup> to 2.8 × 10<sup>7</sup> gB</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>model file sat2_em_mastu_azf+-1, github.com/ProjectTorreyPines/TurbulentTransport.jl at 212a9a7 (M3 report, commit 2cbbe9f); Qe_min, Qe_max in blog/figures/m3_datasets.csv</td>
+<td><code>2cbbe9f</code></td>
+</tr>
+<tr id="c-087" class="odd">
+<td class="cid-cell">C-087</td>
+<td>Epoch at which the members' mean validation loss is lowest (counted from 0); training stops when no member has improved for 60 epochs, and each member keeps its own best-validation parameters<br>
+<span class="tol">80000-case models, one run each; the validation loss rises afterwards while the training loss falls</span></td>
+<td class="val">epochs 16-25 for the MLP and the TGLF-NN network with linear outputs; 161-224 for the TGLF-NN network on signed-log targets</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>training histories in meta.json (jobs 2318567, 2319237); best_mean_val_epoch in blog/figures/m3_metrics.csv</td>
+<td><code>f4da0c0</code></td>
+</tr>
+<tr id="c-088" class="even">
+<td class="cid-cell">C-088</td>
+<td>Training time of one ensemble on one NVIDIA H100 GPU, as recorded by the training loop<br>
+<span class="tol">one run each; job wall times 1 min 21 s (two ensembles, job 2318567), 3 min 33 s (12 runs on 4 GPUs, job 2319237), 3 min 44 s (4 runs, job 2321323)</span></td>
+<td class="val">13 s (MLP, 10 members, 80000 cases); 39-53 s (TGLF-NN, 20 members, 80000 cases); 70-109 s (TGLF-NN, 170000 cases)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>train_seconds in meta.json; job logs 2318567, 2319237, 2321323</td>
+<td><code>352f879</code></td>
+</tr>
+<tr id="c-089" class="odd">
+<td class="cid-cell">C-089</td>
+<td>Rank correlation (Spearman) between the members' standard deviation and the absolute error of the ensemble mean, both in signed-log space, on the 10000-case v1 test split, over Q_e and Q_i and both machines<br>
+<span class="tol">Pearson correlation 0.42-0.49 (MLP) and 0.50-0.57 (TGLF-NN)</span></td>
+<td class="val">0.39-0.51 for the MLP ensemble and 0.53-0.62 for the TGLF-NN network</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>re-evaluation of the saved v1 models; spearman_std_vs_abs_err in blog/figures/m3_metrics.csv<br>
+<code>python blog/figures/make_m3_surrogates.py</code></td>
+<td><code>f4da0c0</code></td>
+</tr>
+<tr id="c-090" class="even">
+<td class="cid-cell">C-090</td>
+<td>TGLF labelling of active-learning round 1, a selected batch and a uniform batch of 10^5 points each per machine, one 256-core CPU node per machine<br>
+<span class="tol">exact count</span></td>
+<td class="val">4 × 10<sup>5</sup> cases, all completed with finite fluxes; 1 h 16 min (MAST-U) and 1 h 15 min (ITER)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>cluster jobs 2319519 (MAST-U) and 2319520 (ITER); datasets tglf-&lt;machine&gt;-v2-al and -v2-random, sha256 in blog/figures/m3_datasets.csv<br>
+<code>python -m tkit.datasets.tglf_active mastu --workers 256</code></td>
+<td><code>352f879</code></td>
+</tr>
+<tr id="c-091" class="odd">
+<td class="cid-cell">C-091</td>
+<td>Fraction of cases by TGLF's Q_e + Q_i, below 1 gB / 1-100 gB / above 10^4 gB, in dataset v1 and in the batch selected by active learning (v2-al)<br>
+<span class="tol">exact for these datasets. The uniform batch is drawn from the pool minus the selected batch, so it has fewer low-flux cases than v1: 13% (MAST-U) and 16% (ITER) below 1 gB</span></td>
+<td class="val">MAST-U 16% / 18% / 28% in v1 against 45% / 31% / 5% in the selected batch; ITER 17% / 39% / 10% against 35% / 47% / 2%</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>tglf_frac_* in blog/figures/m3_datasets.csv (datasets of C-071, C-072, C-090)<br>
+<code>python blog/figures/make_m3_surrogates.py</code></td>
+<td><code>352f879</code></td>
+</tr>
+<tr id="c-092" class="even">
+<td class="cid-cell">C-092</td>
+<td>For the selected batch, the share the selecting ensemble predicted below 1 gB in Q_e + Q_i at selection time, and the batch's mean member disagreement against the pool's (signed- log space, mean over Q_e and Q_i)<br>
+<span class="tol">exact for these selections</span></td>
+<td class="val">predicted below 1 gB: 24% (MAST-U) and 19% (ITER), against 45% and 35% from TGLF; mean disagreement 0.58 against 0.69 for the pool (MAST-U), 0.46 against 0.51 (ITER)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>selection-&lt;machine&gt;-v2.npz (q_tot, std); predicted_frac_*, mean_member_std_* in blog/figures/m3_datasets.csv</td>
+<td><code>352f879</code></td>
+</tr>
+<tr id="c-093" class="odd">
+<td class="cid-cell">C-093</td>
+<td>Median relative error of Q_e (|Q_e| &gt; 1 gB), TGLF-NN ensemble trained on v1 only (80000 cases), MAST-U, on the v1 test split / the selected batch's holdout / the uniform batch's holdout (10000 cases each)<br>
+<span class="tol">95% bootstrap intervals about ±0.015 (m3_metrics.csv)</span></td>
+<td class="val">0.75 / 0.85 / 0.76</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>tglf-mastu-tglfnn_symlog-v1 (job 2319237), scored on the v2 holdouts by tkit.surrogates.evaluate (evals/tglf-mastu-tglfnn_symlog-v1.json)<br>
+<code>python -m tkit.surrogates.evaluate data/m3/surrogates/tglf-mastu-tglfnn_symlog-v1</code></td>
+<td><code>352f879</code></td>
+</tr>
+<tr id="c-094" class="even">
+<td class="cid-cell">C-094</td>
+<td>As C-093, TGLF-NN ensemble trained on v1 plus the selected batch (170000 cases), MAST-U<br>
+<span class="tol">95% bootstrap intervals about ±0.015 (m3_metrics.csv)</span></td>
+<td class="val">0.72 / 0.81 / 0.73</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>GPU job 2321323; meta.json of tglf-mastu-tglfnn_symlog_al-v1<br>
+<code>python -m tkit.surrogates.train mastu --variant tglfnn_symlog_al</code></td>
+<td><code>352f879</code></td>
+</tr>
+<tr id="c-095" class="odd">
+<td class="cid-cell">C-095</td>
+<td>As C-093, TGLF-NN ensemble trained on v1 plus the uniform batch (170000 cases), MAST-U<br>
+<span class="tol">95% bootstrap intervals about ±0.015 (m3_metrics.csv)</span></td>
+<td class="val">0.69 / 0.81 / 0.70</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>GPU job 2321323; meta.json of tglf-mastu-tglfnn_symlog_random-v1<br>
+<code>python -m tkit.surrogates.train mastu --variant tglfnn_symlog_random</code></td>
+<td><code>352f879</code></td>
+</tr>
+<tr id="c-096" class="even">
+<td class="cid-cell">C-096</td>
+<td>As C-093, TGLF-NN ensemble trained on v1 only (80000 cases), ITER<br>
+<span class="tol">95% bootstrap intervals about ±0.02 (m3_metrics.csv)</span></td>
+<td class="val">0.60 / 0.69 / 0.59</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>tglf-iter-tglfnn_symlog-v1 (job 2319237), scored on the v2 holdouts by tkit.surrogates.evaluate (evals/tglf-iter-tglfnn_symlog-v1.json)<br>
+<code>python -m tkit.surrogates.evaluate data/m3/surrogates/tglf-iter-tglfnn_symlog-v1</code></td>
+<td><code>352f879</code></td>
+</tr>
+<tr id="c-097" class="odd">
+<td class="cid-cell">C-097</td>
+<td>As C-093, TGLF-NN ensemble trained on v1 plus the selected batch (170000 cases), ITER<br>
+<span class="tol">95% bootstrap intervals about ±0.02 (m3_metrics.csv)</span></td>
+<td class="val">0.57 / 0.64 / 0.55</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>GPU job 2321323; meta.json of tglf-iter-tglfnn_symlog_al-v1<br>
+<code>python -m tkit.surrogates.train iter --variant tglfnn_symlog_al</code></td>
+<td><code>352f879</code></td>
+</tr>
+<tr id="c-098" class="even">
+<td class="cid-cell">C-098</td>
+<td>As C-093, TGLF-NN ensemble trained on v1 plus the uniform batch (170000 cases), ITER<br>
+<span class="tol">95% bootstrap intervals about ±0.02 (m3_metrics.csv)</span></td>
+<td class="val">0.55 / 0.62 / 0.52</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>GPU job 2321323; meta.json of tglf-iter-tglfnn_symlog_random-v1<br>
+<code>python -m tkit.surrogates.train iter --variant tglfnn_symlog_random</code></td>
+<td><code>352f879</code></td>
+</tr>
+<tr id="c-099" class="odd">
+<td class="cid-cell">C-099</td>
+<td>Difference in the median relative error of Q_e, model trained with the uniform batch minus model trained with the selected batch, with its 95% paired-bootstrap interval over the test cases (1000 resamples); negative means the uniform batch did better<br>
+<span class="tol">the interval covers test-set sampling only; one training run per model</span></td>
+<td class="val">on the selected batch's holdout 0.000 (-0.013 to 0.009) for MAST-U and -0.015 (-0.028 to -0.003) for ITER; on the v1 test split -0.023 (-0.033 to -0.014) and -0.027 (-0.040 to -0.015)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>re-evaluation of the round-1 models; rows 'rel_err_median_all_bootstrap' in blog/figures/m3_metrics.csv<br>
+<code>python blog/figures/make_m3_surrogates.py</code></td>
+<td><code>352f879</code></td>
+</tr>
+<tr id="c-100" class="even">
+<td class="cid-cell">C-100</td>
+<td>Median relative error near threshold (cases with 1 &lt; |Q| &lt;= 100 gB) on the selected batch's holdout, model trained with the selected batch against model trained with the uniform batch<br>
+<span class="tol">paired-bootstrap 95% intervals of the difference (uniform minus selected): Q_e -0.009 to 0.029 (MAST-U) and -0.021 to 0.006 (ITER), so no difference resolved; Q_i -0.037 to -0.001 and -0.036 to -0.009, in favour of the uniform batch</span></td>
+<td class="val">MAST-U Q_e 0.77 against 0.78, Q_i 0.74 against 0.73; ITER Q_e 0.58 against 0.57, Q_i 0.54 against 0.52</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>job 2321323; rel_err_median_near and the bootstrap rows in blog/figures/m3_metrics.csv<br>
+<code>python blog/figures/make_m3_surrogates.py</code></td>
+<td><code>352f879</code></td>
+</tr>
+<tr id="c-101" class="odd">
+<td class="cid-cell">C-101</td>
+<td>Median relative error of Q_e on the v1 test split that the fitted learning curve of the TGLF-NN network (C-083) gives at 170000 training cases, against the two round-1 models<br>
+<span class="tol">the fit is an extrapolation by a factor 2.1 beyond its largest point</span></td>
+<td class="val">fit 0.70 (MAST-U) and 0.52 (ITER); measured 0.72 and 0.57 with the selected batch, 0.69 and 0.55 with the uniform batch</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>fit_at_170000 in blog/figures/m3_learning_curves.csv; C-094, C-095, C-097, C-098<br>
+<code>python blog/figures/make_m3_surrogates.py</code></td>
+<td><code>352f879</code></td>
+</tr>
+<tr id="c-102" class="even">
+<td class="cid-cell">C-102</td>
+<td>Fraction of cases with a negative TGLF flux, over the six M2/M3 TGLF datasets (v1, v2-al and v2-random for MAST-U and ITER)<br>
+<span class="tol">exact for these datasets</span></td>
+<td class="val">Q_e &lt; 0 in 2.0-6.5% of cases (below -1 gB in 0.5-1.5%; median of the negative values -0.03 to -0.09 gB); Q_i &lt; 0 in 9.4-14.1% (below -1 gB in 2.2-5.1%); particle fluxes negative in 33-54%</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>frac_* and median_negative_Qe in blog/figures/m3_datasets.csv<br>
+<code>python blog/figures/make_m3_surrogates.py</code></td>
+<td><code>352f879</code></td>
+</tr>
+<tr id="c-103" class="odd">
+<td class="cid-cell">C-103</td>
+<td>TGLF cases with Q_i &lt; -1 gB in the v1 datasets; share with Q_e &gt; 0, median ratio Q_e / |Q_i|, and the lowest Q_i<br>
+<span class="tol">exact for these datasets</span></td>
+<td class="val">Q_e &gt; 0 in 97% (MAST-U) and 95% (ITER) of them, with median Q_e / |Q_i| of 69 and 34; lowest Q_i -6.9 × 10<sup>6</sup> gB (MAST-U) and -6.5 × 10<sup>4</sup> gB (ITER)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>blog/figures/m3_datasets.csv (v1 rows)<br>
+<code>python blog/figures/make_m3_surrogates.py</code></td>
+<td><code>887245e</code></td>
+</tr>
+<tr id="c-104" class="even">
+<td class="cid-cell">C-104</td>
+<td>What clipping Q_e and Q_i at zero costs on the v1 test splits (10000 cases per machine), whatever the model; TGLF's share of cases with Q &lt;= 0, the share of cases with |Q| &gt; 1 gB that have Q &lt; -1 gB (a clipped prediction has relative error &gt;= 1 there), and the change of Q_e + Q_i where it is at least 1 gB<br>
+<span class="tol">exact for these splits. The negative part is 0.14% and 0.04% of the summed |Q_e|, 0.86% and 0.77% of the summed |Q_i| (MAST-U, ITER)</span></td>
+<td class="val">Q &lt;= 0 in 4.6% (MAST-U) and 5.2% (ITER) of cases for Q_e, 11.8% and 13.2% for Q_i; Q &lt; -1 gB in 0.8% and 0.7% (Q_e) and 6.5% and 4.3% (Q_i) of cases with |Q| &gt; 1 gB; Q_e + Q_i changes by more than 10% in 0.9% and 1.0% of cases</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>blog/figures/m3_clip_cost.csv, from tglf-&lt;machine&gt;-v1 and the saved test split<br>
+<code>python blog/figures/make_m3_structure.py</code></td>
+<td><code>887245e</code></td>
+</tr>
+<tr id="c-105" class="odd">
+<td class="cid-cell">C-105</td>
+<td>Share of the test cases with TGLF's Q &lt;= 0 that the surrogate predicts as exactly zero, TGLF-NN network trained with linear outputs and clipped at zero afterwards; CPU smoke run (16000 training cases, 5 members, 150 epochs), v1 test split<br>
+<span class="tol">smoke runs, one each, smaller than the production models; the comparison between rows is the point, not the values</span></td>
+<td class="val">Q_e 0.13 (MAST-U) and 0.17 (ITER); Q_i 0.16 and 0.20</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>smoke models tglf-&lt;machine&gt;-smk_linear-v1-f0.2 (session scratch storage, commit 1010da1 with the ReLU code uncommitted, later 9a036a6); blog/figures/m3_relu_variants.csv<br>
+<code>python -m tkit.surrogates.train &lt;machine&gt; --variant tglfnn_symlog --train-frac 0.2 (5 members, 150 epochs); python blog/figures/make_m3_structure.py SMOKE_DIR</code></td>
+<td><code>9a036a6</code></td>
+</tr>
+<tr id="c-106" class="even">
+<td class="cid-cell">C-106</td>
+<td>As C-105, network trained on max(Q, 0) for Q_e and Q_i and clipped in use<br>
+<span class="tol">smoke runs, as C-105</span></td>
+<td class="val">Q_e 0.10 (MAST-U) and 0.15 (ITER); Q_i 0.06 and 0.06</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>smoke models tglf-&lt;machine&gt;-smk_relu_ct-v1-f0.2; blog/figures/m3_relu_variants.csv</td>
+<td><code>9a036a6</code></td>
+</tr>
+<tr id="c-107" class="odd">
+<td class="cid-cell">C-107</td>
+<td>As C-105, network trained with QLKNN's stability penalty (where TGLF's Q &lt;= 0 only a prediction above -margin costs), margin 0, weight 1, clipped in use<br>
+<span class="tol">smoke runs, as C-105</span></td>
+<td class="val">Q_e 0.18 (MAST-U) and 0.21 (ITER); Q_i 0.13 and 0.17</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>smoke models tglf-&lt;machine&gt;-smk_relu_sp-v1-f0.2; blog/figures/m3_relu_variants.csv</td>
+<td><code>9a036a6</code></td>
+</tr>
+<tr id="c-108" class="even">
+<td class="cid-cell">C-108</td>
+<td>As C-105, stability penalty with margin 1 in signed-log units (Q = -1.7 gB), weight 1, clipped in use; the setting adopted for the variant tglfnn_symlog_relu<br>
+<span class="tol">smoke runs, as C-105</span></td>
+<td class="val">Q_e 0.28 (MAST-U) and 0.40 (ITER); Q_i 0.25 and 0.43</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>smoke models tglf-&lt;machine&gt;-smk_relu_sp_m1-v1-f0.2; blog/figures/m3_relu_variants.csv</td>
+<td><code>9a036a6</code></td>
+</tr>
+<tr id="c-109" class="odd">
+<td class="cid-cell">C-109</td>
+<td>As C-105, stability penalty with margin 0.5 and weight 10, clipped in use<br>
+<span class="tol">smoke runs, as C-105</span></td>
+<td class="val">Q_e 0.45 (MAST-U) and 0.62 (ITER); Q_i 0.48 and 0.63</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>smoke models tglf-&lt;machine&gt;-smk_relu_sp_w10-v1-f0.2; blog/figures/m3_relu_variants.csv</td>
+<td><code>9a036a6</code></td>
+</tr>
+<tr id="c-110" class="even">
+<td class="cid-cell">C-110</td>
+<td>What the adopted stability penalty (margin 1, weight 1; C-108) changes against the linear network clipped afterwards (C-105), smoke runs on the v1 test split; and the share of cases with TGLF's Q &gt; 1 gB that it predicts as exactly zero<br>
+<span class="tol">smoke runs, one each; differences between variants trained on the same data and seeds</span></td>
+<td class="val">Q_i median relative error +0.005 (MAST-U) and +0.009 (ITER), Q_e within ±0.004; stable/unstable agreement +0.009 and +0.016; Q &gt; 1 gB predicted zero in 0.1% (Q_e) and 0.3% (Q_i) of such cases</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>blog/figures/m3_relu_variants.csv (rows smk_linear+clip and smk_relu_sp_m1)<br>
+<code>python blog/figures/make_m3_structure.py SMOKE_DIR</code></td>
+<td><code>9a036a6</code></td>
+</tr>
+<tr id="c-111" class="odd">
+<td class="cid-cell">C-111</td>
+<td>The cost of the weight-10 penalty (C-109) against the linear network clipped afterwards, smoke runs on the v1 test split<br>
+<span class="tol">smoke runs, as C-110</span></td>
+<td class="val">Q_i median relative error +0.03 (MAST-U) and +0.05 (ITER); 1.0% and 1.3% of cases with Q_i &gt; 1 gB predicted as zero</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>blog/figures/m3_relu_variants.csv (rows smk_linear+clip and smk_relu_sp_w10)</td>
+<td><code>9a036a6</code></td>
+</tr>
+<tr id="c-112" class="even">
+<td class="cid-cell">C-112</td>
+<td>TGLF gradient scans for monotonicity, per machine 35 base points from the v1 test split with Q_e and Q_i above 1 gB, each scanned over a/L_Te and over a/L_Ti at 8 values (base value ± a third of the approved range, cut at the range and the alpha_MHD cap); re-runs of the base points against the dataset's flux<br>
+<span class="tol">exact; 3 (MAST-U) and 6 (ITER) scans are shortened by the alpha_MHD cap</span></td>
+<td class="val">560 cases per machine, all completed; the 70 re-run base cases per machine reproduce the dataset's fluxes bit for bit</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>data/m3/scans/tglf-mono-v1 (summary.json; provenance records commit 476875d with a dirty tree); blog/figures/m3_monotonicity.csv<br>
+<code>python -m tkit.surrogates.monotonicity plan; ... run-chunk N; ... finish</code></td>
+<td><code>476875d</code></td>
+</tr>
+<tr id="c-113" class="odd">
+<td class="cid-cell">C-113</td>
+<td>Share of TGLF scans (C-112) along which the heat flux falls below its running maximum as its own gradient rises (Q_e in a/L_Te, Q_i in a/L_Ti), at all and by more than half<br>
+<span class="tol">35 scans per entry. The largest drops exceed 100% where Q_i turns negative</span></td>
+<td class="val">falls somewhere in 77% (Q_e) and 80% (Q_i) of MAST-U scans, 51% and 74% of ITER scans; by more than half in 40% and 57% (MAST-U), 34% and 57% (ITER)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>fraction_decreasing_above_noise, fraction_drop_above_50pct in data/m3/scans/tglf-mono-v1/summary.json; blog/figures/m3_monotonicity.csv<br>
+<code>python blog/figures/make_m3_structure.py</code></td>
+<td><code>476875d</code></td>
+</tr>
+<tr id="c-114" class="even">
+<td class="cid-cell">C-114</td>
+<td>As C-113, for the v1 TGLF-NN ensemble (signed-log targets) evaluated on the same scans<br>
+<span class="tol">35 scans per entry</span></td>
+<td class="val">falls somewhere in 20% (Q_e) and 49% (Q_i) of MAST-U scans, 23% and 37% of ITER scans; by more than half in 3% and 23% (MAST-U), 9% and 17% (ITER)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>ensemble.scans in data/m3/scans/tglf-mono-v1/summary.json; blog/figures/m3_monotonicity.csv</td>
+<td><code>476875d</code></td>
+</tr>
+<tr id="c-115" class="odd">
+<td class="cid-cell">C-115</td>
+<td>Share of v1 test points (heat flux above 1 gB) at which the v1 TGLF-NN ensemble mean has a negative slope of the heat flux in its own gradient, total derivative with P_PRIME_LOC moving with the gradient<br>
+<span class="tol">6800-8200 test points per entry; per member 13-14% (Q_e) and 24-27% (Q_i)</span></td>
+<td class="val">Q_e 8% (MAST-U) and 11% (ITER); Q_i 25% and 22%</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>ensemble.test_slopes in data/m3/scans/tglf-mono-v1/summary.json; blog/figures/m3_monotonicity.csv</td>
+<td><code>476875d</code></td>
+</tr>
+<tr id="c-116" class="even">
+<td class="cid-cell">C-116</td>
+<td>Derivatives through the TGLF surrogate inside TORAX, M1 benchmark case (RAPTOR L-mode) with the guarded surrogate; reverse mode against central differences (step 1e-4) and against forward mode, for the summed guarded chi_e + chi_i on the initial state and for core T_e after 3 Newton steps, with respect to a T_e perturbation<br>
+<span class="tol">the guard's per-face decision is asserted unchanged across the difference stencil</span></td>
+<td class="val">reverse mode within 10<sup>−6</sup> (coefficients) and 10<sup>−7</sup> (after 3 Newton steps) of central differences, and within 10<sup>−9</sup> and 10<sup>−12</sup> of forward mode</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/diff/test_torax_surrogate_gradients.py::test_guarded_coefficients_gradient_fd_checked, ::test_grad_through_newton_steps_with_the_surrogate_fd_checked</td>
+<td><code>7ec2569</code></td>
+</tr>
+<tr id="c-117" class="odd">
+<td class="cid-cell">C-117</td>
+<td>Cost of one call of the TGLF surrogate (20-member TGLF-NN ensemble, ITER, signed-log) on the 51 faces of a TORAX state, one CPU core, after compilation<br>
+<span class="tol">mean over repeated calls; 0.31 s for 5100 faces; compilation and first call 0.52 s</span></td>
+<td class="val">3.1 ms</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>scripts/m3_surrogate_loop.py percall, login-node run 2026-10-03 (percall.json)<br>
+<code>python scripts/m3_surrogate_loop.py percall raptor_surrogate.npz --tglf-cases 20</code></td>
+<td><code>7ec2569</code></td>
+</tr>
+<tr id="c-118" class="even">
+<td class="cid-cell">C-118</td>
+<td>Cost of TGLF on the same 51 faces (M2 dataset settings, one CPU core), from 20 faces timed and scaled to 51<br>
+<span class="tol">20 faces, 1.94-2.57 s each; 3.3 × 10^4^ times the surrogate's call (C-117)</span></td>
+<td class="val">about 103 s (2.0 s per face)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>as C-117 (tglf_wall_s in percall.json)</td>
+<td><code>7ec2569</code></td>
+</tr>
+<tr id="c-119" class="odd">
+<td class="cid-cell">C-119</td>
+<td>The surrogate against TGLF on the same inputs, the final state of the RAPTOR L-mode run with the guarded surrogate, on the first 20 faces inside the surrogate's domain; median absolute relative difference where TGLF's flux exceeds 1 gB<br>
+<span class="tol">one state, one case; not a held-out statistic</span></td>
+<td class="val">Q_e 0.28 (11 faces) and Q_i 0.44 (12 faces); the surrogate is below TGLF on 10 of the 11 and on all 12</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>surrogate_gb and tglf_gb in percall.json (as C-117)</td>
+<td><code>7ec2569</code></td>
+</tr>
+<tr id="c-120" class="even">
+<td class="cid-cell">C-120</td>
+<td>Wall time of the RAPTOR L-mode case (M1 benchmark, Newton solver, 200 steps of 0.05 s) with the guarded TGLF surrogate as TORAX's transport model, one CPU core, compilation excluded; and the solver's step record<br>
+<span class="tol">two runs on a shared login node</span></td>
+<td class="val">374 s and 405 s (two runs); no stalled step, 57 steps accepted at the coarse tolerance</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>scripts/m3_surrogate_loop.py run --case raptor --transport surrogate, two login-node runs 2026-10-03 (raptor_surrogate.npz meta)<br>
+<code>python scripts/m3_surrogate_loop.py run --case raptor --transport surrogate --out s.npz</code></td>
+<td><code>7ec2569</code></td>
+</tr>
+<tr id="c-121" class="odd">
+<td class="cid-cell">C-121</td>
+<td>As C-120, with TORAX's QLKNN (TORAX's defaults on this case) as the transport model<br>
+<span class="tol">two runs; QLKNN is not this case's own transport model and its solver record shows it</span></td>
+<td class="val">29 s and 30 s (two runs); 179 of 200 steps stalled, 6 at the coarse tolerance</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>scripts/m3_surrogate_loop.py run --case raptor --transport qlknn (raptor_qlknn.npz meta)</td>
+<td><code>7ec2569</code></td>
+</tr>
+<tr id="c-122" class="even">
+<td class="cid-cell">C-122</td>
+<td>Further wall times, one CPU core, compilation excluded; RAPTOR L-mode with the linear solver, and TORAX's ITER hybrid predictor-corrector case (50 steps of 0.1 s)<br>
+<span class="tol">one run each</span></td>
+<td class="val">RAPTOR L-mode, linear solver: surrogate 5.2 s, QLKNN 0.57 s; Newton with the published constant transport 0.35 s, with Bohm/gyro-Bohm 1.6 s. ITER hybrid: surrogate 0.56 s, QLKNN 0.066 s, Bohm/gyro-Bohm 0.030 s</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>scripts/m3_surrogate_loop.py run outputs (login-node runs 2026-10-03)</td>
+<td><code>7ec2569</code></td>
+</tr>
+<tr id="c-123" class="odd">
+<td class="cid-cell">C-123</td>
+<td>Fraction of (face, step) points at which the guard rejected the surrogate and served Bohm/gyro-Bohm<br>
+<span class="tol">one run each; the domain is the box of the v1 training inputs (K-023)</span></td>
+<td class="val">0.51 on the RAPTOR L-mode case and 0.27 on the ITER hybrid case</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>rejected_fraction in the run outputs of C-120 and C-122</td>
+<td><code>7ec2569</code></td>
+</tr>
+<tr id="c-124" class="even">
+<td class="cid-cell">C-124</td>
+<td>TORAX runs of the dataset v3 scenario families; MAST-U, 8 FreeGSNKE MAST-U-like equilibria x 2 Bohm/gyro-Bohm multipliers x 2 heating powers x 2 densities x with and without a pedestal; ITER, TORAX's RAPTOR L-mode, ITER hybrid flat-top and ITER current ramp-up examples with scaled heating power and density<br>
+<span class="tol">exact. The MAST-U test runs are all runs on 2 of the 8 equilibria, shapes not seen in training</span></td>
+<td class="val">128 MAST-U runs and 39 ITER runs, all completed; 32 and 8 of them held out for the test split</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>record of data/m3/v3/&lt;machine&gt;/points.npz (provenance: commit dfdf677 MAST-U, 648bab0 ITER, clean trees)<br>
+<code>python -m tkit.datasets.tglf_trajectory trajectories &lt;machine&gt;; python -m tkit.datasets.tglf_trajectory assemble &lt;machine&gt;</code></td>
+<td><code>648bab0</code></td>
+</tr>
+<tr id="c-125" class="odd">
+<td class="cid-cell">C-125</td>
+<td>Faces of the dataset v3 TORAX states inside the radial window r/a 0.1-0.9, and the share inside the approved M2 region (kinetic ranges with the ITER collisionality widened by OQ-20, alpha_MHD cap), which become v3 states<br>
+<span class="tol">exact</span></td>
+<td class="val">MAST-U 115722 of 124032 faces (93%); ITER 68978 of 79344 (87%)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>faces_in_window, states_in_region in the record of data/m3/v3/&lt;machine&gt;/points.npz</td>
+<td><code>648bab0</code></td>
+</tr>
+<tr id="c-126" class="even">
+<td class="cid-cell">C-126</td>
+<td>Share of the v3 faces in the radial window whose input lies outside the M2 range of that input; geometry inputs counted against the measured M2 ranges but not excluded, kinetic inputs excluded<br>
+<span class="tol">exact; per-input table in the record</span></td>
+<td class="val">MAST-U: triangularity shear 41%, triangularity 12.5%, q 6.5%, magnetic shear 5.6%, collisionality 5%, beta_e 2%; ITER: a/L_Te 11%, a/L_Ti 10%, triangularity shear 5%, magnetic shear 3%, T_i/T_e 2%, collisionality 1%; every other input below 2%</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>fraction_outside in the record of data/m3/v3/&lt;machine&gt;/points.npz</td>
+<td><code>648bab0</code></td>
+</tr>
+<tr id="c-127" class="odd">
+<td class="cid-cell">C-127</td>
+<td>Dataset v3 points per machine; training points are unperturbed states and copies of states with their kinetic inputs perturbed (copies outside the region redrawn); test points are unperturbed states of the held-out runs<br>
+<span class="tol">exact</span></td>
+<td class="val">90000 training points (22500 unperturbed) and 10000 test points per machine; more than 99.99% of perturbed copies fell inside the region at the first draw</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>n_train, n_test, n_train_unperturbed, perturbed_acceptance in the record of data/m3/v3/&lt;machine&gt;/points.npz</td>
+<td><code>648bab0</code></td>
+</tr>
+<tr id="c-128" class="even">
+<td class="cid-cell">C-128</td>
+<td>Finished TGLF v3 labels, per machine; input rows match the trajectory points and artifact digests validate<br>
+<span class="tol">exact; trajectory assembly replayed from recorded plans and saved run files</span></td>
+<td class="val">90000 training cases and 10000 held-out test cases per machine, all completed with finite fluxes</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/m3-v3-validation.json (audit 2026-10-07, working tree at 522f028; artifact hashes in the sidecar)<br>
+<code>python scripts/m3_validate_v3.py &lt;machine&gt; --out data/m3/validation/&lt;machine&gt;-mono.json</code></td>
+<td><code>522f028</code></td>
+</tr>
+<tr id="c-129" class="odd">
+<td class="cid-cell">C-129</td>
+<td>Final monotone v3 ensembles: median absolute relative heat-flux error on the entire v3-test dataset, where |Q| &gt; 1 gB<br>
+<span class="tol">10000 test cases per machine; scores reproduced within relative tolerance 1e-8; test runs withheld from training</span></td>
+<td class="val">MAST-U: Q_e 17.8%, Q_i 25.2%; ITER: Q_e 7.2%, Q_i 10.8%; all meet the 30% target</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/m3-v3-validation.json (audit 2026-10-07, working tree at 522f028; artifact hashes in the sidecar)<br>
+<code>python scripts/m3_validate_v3.py &lt;machine&gt; --out data/m3/validation/&lt;machine&gt;-mono.json</code></td>
+<td><code>522f028</code></td>
+</tr>
+<tr id="c-130" class="even">
+<td class="cid-cell">C-130</td>
+<td>Empirical monotonicity of the final v3 ensembles, every member: heat flux in its own temperature gradient<br>
+<span class="tol">sampled points only, not a formal proof over the input domain; each scan-grid pair has 4900 member neighbour comparisons</span></td>
+<td class="val">no negative member slopes on the tested v1/v3 points or scan grids, and no negative neighbour differences on the scan grids</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>spec/reviews/m3-v3-validation.json (audit 2026-10-07, working tree at 522f028; artifact hashes in the sidecar)<br>
+<code>python -m tkit.surrogates.monotonicity check data/m3/surrogates/tglf-&lt;machine&gt;-tglfnn_symlog_relu_mono_v3-v1</code></td>
+<td><code>522f028</code></td>
+</tr>
+<tr id="c-131" class="odd">
+<td class="cid-cell">C-131</td>
+<td>Departure of the final monotone v3 ensembles from TGLF on broad v1 scan families where TGLF decreases: median of maximum per-scan signed-log difference<br>
+<span class="tol">signed-log scale 1 gB; this includes approximation error as well as the imposed monotonicity; broad scans differ from the v3 acceptance distribution</span></td>
+<td class="val">MAST-U: Q_e 3.14, Q_i 3.36; ITER: Q_e 2.51, Q_i 2.11 signed-log units</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>spec/reviews/m3-v3-validation.json (audit 2026-10-07, working tree at 522f028; artifact hashes in the sidecar)<br>
+<code>python -m tkit.surrogates.monotonicity check data/m3/surrogates/tglf-&lt;machine&gt;-tglfnn_symlog_relu_mono_v3-v1</code></td>
+<td><code>522f028</code></td>
+</tr>
+<tr id="c-132" class="even">
+<td class="cid-cell">C-132</td>
+<td>Historical matched end-to-end TGLF/v1-surrogate timing on RAPTOR L-mode: linear solver, host driver, 40 fixed steps of 0.05 s<br>
+<span class="tol">job 2354632, one CPU node, compilation excluded; zero stalled or coarse-tolerance steps; surrogate and QLKNN each use one core, TGLF uses 51 workers; this is v1 evidence, not v3 speed-up</span></td>
+<td class="val">TGLF 540.38 s, v1 surrogate 0.780 s, QLKNN 0.126 s; v1 is about 693 times faster than TGLF</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/m3-v3-validation.json (audit 2026-10-07, working tree at 522f028; artifact hashes in the sidecar)<br>
+<code>python scripts/m3_surrogate_loop.py run --case raptor --solver linear --driver host --steps 40 --transport surrogate --surrogate-variant tglfnn_symlog --out v1.npz</code></td>
+<td><code>522f028</code></td>
+</tr>
+<tr id="c-133" class="odd">
+<td class="cid-cell">C-133</td>
+<td>Final v1-surrogate profiles against TGLF in the historical matched comparison (job 2354632), at 2 s<br>
+<span class="tol">one scenario, linear solver; TORAX-paper NRMSD (eq. 41); no M4 closed-loop tolerance or certification is implied</span></td>
+<td class="val">T_e 18.52%, T_i 22.09%, n_e 10.25%, psi 0.44%</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>spec/reviews/m3-v3-validation.json (audit 2026-10-07, working tree at 522f028; artifact hashes in the sidecar)<br>
+<code>python scripts/m3_surrogate_loop.py compare tglf.npz surrogate.npz</code></td>
+<td><code>522f028</code></td>
+</tr>
+<tr id="c-134" class="even">
+<td class="cid-cell">C-134</td>
+<td>Final monotone v3 profiles from the local scan-driver run against the saved TGLF reference (job 2354632), at 2 s<br>
+<span class="tol">same RAPTOR case, grid, linear solver, dt and 40 steps; local scan driver vs historical host driver; profile comparison only, no matched v3 timing claim</span></td>
+<td class="val">T_e 7.72%, T_i 9.23%, n_e 11.36%, psi 0.32%</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>spec/reviews/m3-v3-validation.json (audit 2026-10-07, working tree at 522f028; artifact hashes in the sidecar)<br>
+<code>python scripts/m3_surrogate_loop.py compare tglf.npz data/m3/validation/loop/raptor-v3-scan.npz --out comparison.json</code></td>
+<td><code>522f028</code></td>
+</tr>
+<tr id="c-135" class="odd">
+<td class="cid-cell">C-135</td>
+<td>Local monotone v3 RAPTOR run: finite profiles and accepted-state guard diagnostics on 40 linear-solver steps<br>
+<span class="tol">one local CPU run; guard re-evaluated at each accepted end-of-step state, not the actual per-iterate usage; runtime cannot be divided into historical TGLF timing to claim matched speed-up</span></td>
+<td class="val">all profiles finite; no stalled or coarse-tolerance step; post-step guard rejection 33.1%; execution 1.62 s after compilation</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/m3-v3-validation.json (audit 2026-10-07, working tree at 522f028; artifact hashes in the sidecar)<br>
+<code>python scripts/m3_surrogate_loop.py run --case raptor --transport surrogate --solver linear --driver scan --steps 40 --out data/m3/validation/loop/raptor-v3-scan.npz</code></td>
+<td><code>522f028</code></td>
+</tr>
+<tr id="c-136" class="even">
+<td class="cid-cell">C-136</td>
+<td>Sum of recorded wall time over TGLF v3 cases, not elapsed cluster job time<br>
+<span class="tol">sum of per-case wall_s stored in the validated datasets; parallel workers mean these are not elapsed job durations</span></td>
+<td class="val">MAST-U: 58.03 case-hours (train), 5.45 (test); ITER: 63.43 (train), 5.62 (test)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/m3-v3-validation.json (audit 2026-10-07, working tree at 522f028; artifact hashes in the sidecar)</td>
+<td><code>522f028</code></td>
+</tr>
+<tr id="c-137" class="odd">
+<td class="cid-cell">C-137</td>
+<td>Final monotone v3 models: uncalibrated ensemble spread coverage and exact-zero behavior on v3-test<br>
+<span class="tol">coverage is measured in signed-log space, uncalibrated; nonnegative outputs do not identify every TGLF-stable point; M4 calibration remains required</span></td>
+<td class="val">mean ±2 standard deviations covers Q_e/Q_i at 75.3%/74.4% (MAST-U), 85.6%/80.8% (ITER); exact-zero predictions where TGLF is nonpositive: 44.0%/47.0% (MAST-U), 52.3%/21.1% (ITER)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/m3-v3-validation.json (audit 2026-10-07, working tree at 522f028; artifact hashes in the sidecar)</td>
+<td><code>522f028</code></td>
+</tr>
+<tr id="c-140" class="even">
+<td class="cid-cell">C-140</td>
+<td>At TORAX default Newton residual tolerance, implicit derivatives and discrete balance do not attain the stricter validation limits for guarded transport surrogates<br>
+<span class="tol">three RAPTOR Newton steps at residual_tol=1e-5; guard masks unchanged over the difference sweep, forward and reverse agree; the v3 difference persists from h=1e-4 to h=1e-8</span></td>
+<td class="val">v3 derivative discrepancy about 1.8e-5 relative; peak discrete energy residual 1.11e-5 (v1) and 1.36e-6 (v3)</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>spec/reviews/m3-v3-validation.json numerical_convergence; default-gradient diagnostic and initial conservation test reports</td>
+<td><code>522f028</code></td>
+</tr>
+<tr id="c-138" class="odd">
+<td class="cid-cell">C-138</td>
+<td>Guarded ITER v1 and final monotone v3 transport derivatives pass the strict finite-difference and forward/reverse checks in the RAPTOR loop<br>
+<span class="tol">three RAPTOR Newton steps with residual_tol=1e-10; initial guarded-coefficient checks also pass; four tests executed, none skipped</span></td>
+<td class="val">v1 and v3 pass: three-step derivative FD tolerance 1e-7, forward/reverse tolerance 1e-12; guard masks unchanged over the stencil</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>data/m3/validation/suites/full/tests/diff/test_torax_surrogate_gradients.xml; bound in spec/reviews/m3-v3-validation.json.provenance.json<br>
+<code>python -m pytest tests/diff/test_torax_surrogate_gradients.py tests/diff/test_torax_surrogate_v3_gradients.py; run one file per process on CPU-limited hosts</code></td>
+<td><code>0522ee6</code></td>
+</tr>
+<tr id="c-139" class="even">
+<td class="cid-cell">C-139</td>
+<td>Guarded ITER v1 and final monotone v3 surrogates pass the existing discrete energy and particle balance limits in the RAPTOR loop<br>
+<span class="tol">three RAPTOR Newton steps at residual_tol=1e-10; six loop, fallback and conservation tests executed, none skipped; this is local validation, not M4 certification</span></td>
+<td class="val">v1 and v3 pass: energy residual below 1e-6 and particle residual below 1e-10, with fine solver convergence</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>data/m3/validation/suites/full/tests/physics/test_torax_surrogate_loop.xml; bound in spec/reviews/m3-v3-validation.json.provenance.json<br>
+<code>python -m pytest tests/physics/test_torax_surrogate_loop.py</code></td>
+<td><code>0522ee6</code></td>
+</tr>
+<tr id="c-141" class="odd">
+<td class="cid-cell">C-141</td>
+<td>Local final monotone ITER v3 Newton loop execution and isolated ensemble inference cost on one CPU core<br>
+<span class="tol">RAPTOR case, residual_tol=1e-10, all four profiles finite, no stalled or coarse-tolerance steps; isolated inference is not a full transport/Jacobian call; local timings are not matched TGLF speed-up evidence</span></td>
+<td class="val">40 Newton steps in 60.58 s, median 1.47 s per step; isolated prediction on 51 faces takes 4.36 ms per call</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>data/m3/validation/loop/v3-performance.json; inputs bound in spec/reviews/m3-v3-validation.json.provenance.json<br>
+<code>python scripts/m3_surrogate_loop.py run --case raptor --transport surrogate --driver host --steps 40 --out newton.npz</code></td>
+<td><code>522f028</code></td>
+</tr>
+<tr id="c-142" class="even">
+<td class="cid-cell">C-142</td>
+<td>The final monotone v3 surrogate completes the ITER hybrid predictor-corrector scenario with finite profiles<br>
+<span class="tol">local CPU scan driver, case linear solver, fixed dt 0.1 s; guard checked on accepted states; no TGLF profile-error or speed-up bound</span></td>
+<td class="val">50 steps to 5 s, all four profiles finite, no stalled or coarse-tolerance steps; accepted-state guard rejection 26.9%</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>data/m3/validation/loop/iterhybrid-v3-scan.npz; bound in spec/reviews/m3-v3-validation.json.provenance.json<br>
+<code>python scripts/m3_surrogate_loop.py run --case iterhybrid --transport surrogate --driver scan --out iterhybrid-v3.npz</code></td>
+<td><code>0522ee6</code></td>
+</tr>
+<tr id="c-143" class="odd">
+<td class="cid-cell">C-143</td>
+<td>Synthetic RF source and boundary-vector guard contracts and grouped reference dataset contracts pass in both test modes<br>
+<span class="tol">no failures or skips; JIT/vmap, rejected singular gradients, source control derivatives, whole-profile fallback and power rejection, core-loop finite-difference gradient at rtol 1e-6, hash tampering and group splits; no RF/pedestal prediction accuracy established</span></td>
+<td class="val">25 synthetic contract tests pass in full and Tier-A-only modes</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>spec/reviews/m3-rf-pedestal-validation.json; response_guards and response_datasets JUnit reports bound in its sidecar<br>
+<code>python -m pytest tests/unit/test_response_guards.py tests/unit/test_response_datasets.py</code></td>
+<td><code>599c12a</code></td>
+</tr>
+<tr id="c-144" class="even">
+<td class="cid-cell">C-144</td>
+<td>Gaussian RF construction rejects NaN and positive or negative infinity in each of its four parameters<br>
+<span class="tol">ValueError before source evaluation; finite-parameter deposition behaviour remains covered by the existing RF tests</span></td>
+<td class="val">12 nonfinite-parameter cases pass in each mode</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/physics/test_rf_deposition.py::test_nonfinite_source_parameters_are_rejected; JUnit reports bound in spec/reviews/m3-rf-pedestal-validation.json.provenance.json<br>
+<code>python -m pytest tests/physics/test_rf_deposition.py</code></td>
+<td><code>599c12a</code></td>
+</tr>
+<tr id="c-145" class="odd">
+<td class="cid-cell">C-145</td>
+<td>Model-independent case/profile response baseline training, saved inference and guard compatibility pass on synthetic numerical fixtures in both modes<br>
+<span class="tol">no failures or skips; saved group splits, failed-case filtering, training-only normalisation and bounds, per-member validation checkpoint selection, unit-preserving metrics, seed replay, hash tampering, CLI, reference-independent reload, guard selection and gradients (FD rtol 1e-6, forward/reverse rtol 1e-10); synthetic fits improve over a constant baseline, not a physics accuracy target</span></td>
+<td class="val">26 synthetic baseline-pipeline tests pass in full and Tier-A-only modes</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>spec/reviews/m3-response-training-validation.json; response_training JUnit reports bound in its sidecar<br>
+<code>python -m pytest tests/unit/test_response_training.py</code></td>
+<td><code>deb866b</code></td>
+</tr>
+<tr id="c-146" class="even">
+<td class="cid-cell">C-146</td>
+<td>Local guarded ITER transport-surrogate validation covers RAPTOR L-mode with v1 and final monotone v3, and ITER hybrid with final monotone v3 and a Newton override<br>
+<span class="tol">no failures or skips; three steps at dt 0.05 s; residual_tol=1e-10 for loop derivatives and balance; coefficient FD rtol 1e-6, loop FD rtol 1e-7, forward/reverse rtol 1e-9 and 1e-12 respectively; unchanged stencil masks; energy below 1e-6 and particles below 1e-10 relative; local short checks, not matched timing or M4 certification</span></td>
+<td class="val">15 gradient, JIT, fallback and discrete-balance checks pass across RAPTOR and ITER hybrid in each mode</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>spec/reviews/m3-extended-loop-validation.json; full and Tier-A JUnit reports and tested source snapshots bound in its provenance sidecar<br>
+<code>python -m pytest tests/diff/test_torax_surrogate_gradients.py tests/diff/test_torax_surrogate_v3_gradients.py tests/diff/test_torax_surrogate_iterhybrid_gradients.py tests/physics/test_torax_surrogate_loop.py; run one file per process on CPU-limited hosts, then repeat with TKIT_TIER_A_ONLY=1</code></td>
+<td><code>7971903</code></td>
+</tr>
+<tr id="c-147" class="odd">
+<td class="cid-cell">C-147</td>
+<td>Performance evidence rejects unsuccessful solves and handles overlapping trace events in both test modes<br>
+<span class="tol">no failures or skips; stalled, coarse-tolerance and nonfinite rejection, nested and concurrent interval unions, gaps, invalid durations, unlabelled events and effective CPU/job records; no new matched timing or physics certificate</span></td>
+<td class="val">11 performance-tool checks pass in full and Tier-A-only modes</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>spec/reviews/m3-performance-continuation.json; final focused JUnit reports and tested source hashes bound in its sidecar<br>
+<code>python -m pytest tests/unit/test_m3_performance_tools.py; repeat with TKIT_TIER_A_ONLY=1</code></td>
+<td><code>762fcd5</code></td>
+</tr>
+<tr id="c-148" class="even">
+<td class="cid-cell">C-148</td>
+<td>The saved three-step Newton trace has fused runtime labels; an interval-union audit does not recover physics component attribution<br>
+<span class="tol">interval union 5.368648273 s versus inclusive sum 5.398356896 s; all HLO events use one fused module and one runtime source, across two threads; trace overhead included, no component percentage or unprofiled runtime inferred</span></td>
+<td class="val">72059 complete HLO events with about 5.369 s of covered trace time</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>data/m3/validation/continuation/newton-trace-summary.json; trace digest observed at analysis time and bound in spec/reviews/m3-performance-continuation.json.provenance.json<br>
+<code>python scripts/m3_profile_trace.py TRACE.json.gz --out REPORT.json</code></td>
+<td><code>762fcd5</code></td>
+</tr>
+<tr id="c-149" class="odd">
+<td class="cid-cell">C-149</td>
+<td>The selected EPEDNN pressure/width checkpoint's JAX port reproduces pinned upstream regression values<br>
+<span class="tol">ITER and two other upstream numerical fixtures; relative maximum difference about 1.6e-15; 54 finite JIT outputs; raw AD/FD checks with unchanged masks; no fresh Julia, full-EPED, experimental or coupled validation</span></td>
+<td class="val">12 upstream scalar regression values agree within relative tolerance 1e-12</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/m3-epednn-port-validation.json; numeric artifact, upstream model/source/tests and working-tree source hashes bound in its sidecar<br>
+<code>python scripts/m3_validate_epednn.py data/references/EPEDNN.jl --out NEW_REPORT.json</code></td>
+<td><code>working tree at parent 3d28f9f; source hashes bound in evidence; evidence retained at 66cc594</code></td>
+</tr>
+<tr id="c-150" class="even">
+<td class="cid-cell">C-150</td>
+<td>EPEDNN port contracts and Tier A import/label checks pass in both modes<br>
+<span class="tol">10 new port checks and 2 existing import/label checks; zero failures or skips; raw FD rtol 1e-6 and atol 1e-9; no new full-suite aggregate or coupled acceptance</span></td>
+<td class="val">12 focused tests pass in full and Tier-A-only modes</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>spec/reviews/m3-epednn-port-validation.json; full and Tier-A final JUnit reports and working-tree source hashes bound in its sidecar<br>
+<code>python -m pytest tests/unit/test_epednn.py tests/tier_a/test_tier_labels.py tests/tier_a/test_tier_isolation.py; repeat with TKIT_TIER_A_ONLY=1</code></td>
+<td><code>working tree at parent 3d28f9f; source hashes bound in evidence; evidence retained at 66cc594</code></td>
+</tr>
+<tr id="c-151" class="odd">
+<td class="cid-cell">C-151</td>
+<td>GENRAY native-output reader contracts and Tier A import/label checks pass in both modes<br>
+<span class="tol">22 reader checks on synthetic classic NetCDF and 2 Tier A import/label checks; zero failures or skips; SI conversions, signs, separate channels, integrals, malformed/missing outputs and optional SciPy isolation; no solver execution or new full-suite aggregate</span></td>
+<td class="val">24 focused tests pass in full and Tier-A-only modes</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>spec/reviews/m3-genray-adapter-validation.json; source, tests, metadata, upstream schema and final JUnit reports bound in its sidecar<br>
+<code>python -m pytest tests/unit/test_genray.py tests/tier_a/test_tier_labels.py tests/tier_a/test_tier_isolation.py; repeat with TKIT_TIER_A_ONLY=1</code></td>
+<td><code>working tree at parent 3d28f9f; source hashes bound in evidence; evidence retained at 66cc594</code></td>
+</tr>
+<tr id="c-152" class="even">
+<td class="cid-cell">C-152</td>
+<td>The GENRAY reader checks the pinned upstream saved ITER EC output's channels and numerical accounting<br>
+<span class="tol">saved genray_v10.13_200117 file; SI channels preserved; integral rtol 1e-12 and atol 1e-9; maximum absolute power residual about 1.05e-9 W and toroidal-current residual about 3.64e-12 A; no fresh solver run, project baseline selection, new labels or coupled physical acceptance</span></td>
+<td class="val">200 native bins in the saved upstream ITER EC output pass reader and accounting checks</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/m3-genray-pilot-validation.json; saved-output report, raw fixture and paired inputs, script and reader bound by provenance<br>
+<code>python scripts/m3_validate_genray.py data/references/genray --out NEW_REPORT.json</code></td>
+<td><code>working tree at parent 3d28f9f; source hashes bound in evidence; evidence retained at 66cc594</code></td>
+</tr>
+<tr id="c-153" class="odd">
+<td class="cid-cell">C-153</td>
+<td>The bounded GENRAY pilot lifecycle, reader and Tier A contracts pass in both modes<br>
+<span class="tol">16 new pilot tests with fake executables, 22 reader tests and 2 Tier A checks; zero failures or skips; retained failures and partial outputs, process-group timeout cleanup, input snapshots, provenance, lineage rejection and CLI failure reporting; no new full-suite aggregate</span></td>
+<td class="val">40 focused pilot, reader and Tier A checks pass in full and Tier-A-only modes</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>spec/reviews/m3-genray-pilot-validation.json; source, tests, metadata and final executed JUnit reports bound in its sidecar<br>
+<code>python -m pytest tests/unit/test_genray_pilot.py tests/unit/test_genray.py tests/tier_a/test_tier_labels.py tests/tier_a/test_tier_isolation.py; repeat with TKIT_TIER_A_ONLY=1</code></td>
+<td><code>working tree at parent 3d28f9f; source hashes bound in evidence; evidence retained at 66cc594</code></td>
+</tr>
+<tr id="c-154" class="even">
+<td class="cid-cell">C-154</td>
+<td>The pinned external GENRAY reference builds with Giza's plotting interface and passes artifact/linkage checks<br>
+<span class="tol">final build uses one CPU and takes 65.94 s within a 300 s deadline; 61 regular artifacts and acyclic snapshot lineage checked; 18 required PG symbols exported and 41 runtime library paths resolved; legacy compiler warnings retained; no solver run or plotting/scientific parity established</span></td>
+<td class="val">one external reference executable builds with verified artifacts and resolved runtime libraries</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/m3-genray-build-validation.json; exact executed builder, source archives, binary, logs, libraries, artifact sidecars and proposed pilot manifest bound by digest<br>
+<code>load the documented compiler/NetCDF/Python environment; run scripts/m3_build_genray.py with one-CPU affinity, pinned sources, new output/work directories and --timeout-s 300; inspect recorded build commands; verify proposed manifest with scripts/m3_run_genray_pilot.py --check-only</code></td>
+<td><code>working tree at parent 3d28f9f; source hashes bound in evidence; evidence retained at 66cc594</code></td>
+</tr>
+<tr id="c-155" class="odd">
+<td class="cid-cell">C-155</td>
+<td>The first EC reference attempt retains a plotting-device failure, and an isolated alias correction passes plotting-only ABI probes<br>
+<span class="tol">original and patched libraries each check VPS, VCPS, CPS and an invalid device; original VCPS fails and patched VCPS produces portrait colour PostScript; successful plots contain a red line and expected page dimensions; 78 immutable pilot/build artifacts verified; the first solver attempt stopped after 0.316 s with no NetCDF despite returning zero; corrected build takes 88.12 s within a 300 s one-CPU bound; no corrected GENRAY execution or scientific parity claimed</span></td>
+<td class="val">all eight plotting-device checks match their expected outcomes</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/m3-genray-first-execution.json; accounting, retained failure, corrected build, patch, plotting probe commands/outputs and checked retry manifest bound by digest<br>
+<code>inspect the retained report and plotting-only probe commands; build using scripts/m3_build_genray.py with the explicit spec/patches/giza/vcps-device.patch; rerunning GENRAY needs a separately approved compute request</code></td>
+<td><code>working tree; exact source and executed helper hashes bound in evidence; evidence retained at 66cc594</code></td>
+</tr>
+<tr id="c-156" class="even">
+<td class="cid-cell">C-156</td>
+<td>The corrected original ITER EC numerical pilot completes and produces readable native heating and signed-current profiles<br>
+<span class="tol">single unchanged upstream numerical case; one CPU and 4 GiB allocation; 90 s job elapsed and 975280 KiB peak batch RSS; 200 native bins and 37 immutable artifacts verified; largest native power/current accounting residuals 5.82e-10 W and 3.64e-12 A; absorbed power 999904.760150 W and toroidal current +25814.194282 A; saved-reference total differences +0.126330 W and -0.320392 A; power weighted-L1 difference 6.386e-5 and current shape differences 6.309e-5 to 6.744e-5; ray stop code 2 is the remaining-power cutoff; PostScript renders to one blank page; no physical acceptance, labels or plotted-content parity claimed</span></td>
+<td class="val">the corrected EC reference completes in 83.16 s with readable native profiles</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/m3-genray-corrected-pilot.json and spec/reviews/m3-genray-corrected-pilot-observations.json; accounting, manifests, unchanged snapshots, raw output, exact audit helpers, render logs and profile comparison figures bound by digest<br>
+<code>inspect the retained numerical and observations reports and their sidecars; native output can be reread without executing GENRAY; each fresh solver run requires its own approved compute request</code></td>
+<td><code>working tree; exact reader, launcher, audit helper and artifact hashes bound in evidence; evidence retained at 66cc594</code></td>
+</tr>
+<tr id="c-157" class="odd">
+<td class="cid-cell">C-157</td>
+<td>Final pedestal, GENRAY, packaging, Tier A and blog-export focused checks pass in both modes<br>
+<span class="tol">zero failures, errors or skips; 7 files rerun per mode; combined 411 passes per mode include 53 retained unchanged-file reports and are not a fresh full-suite execution; no additional solver runs or physical acceptance</span></td>
+<td class="val">56 focused checks pass in full and Tier-A-only modes</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>spec/reviews/m3-blog-commit-validation.json; final source, metadata, fresh and retained JUnit reports bound in its sidecar<br>
+<code>run the seven listed test files individually with pytest --junitxml in normal mode and TKIT_TIER_A_ONLY=1; aggregate the complete report tree using blog/tools/stats.py --from-junit</code></td>
+<td><code>66cc594; fresh execution at parent 3d28f9f with exact final source hashes bound</code></td>
+</tr>
 </tbody>
 </table>
 
@@ -1315,7 +2099,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </footer>
 <div class="tk-footer">
-Code and first draft by Claude (Anthropic), working to a brief by Vignesh Gopakumar,
+Code and first draft by Claude (Anthropic) and Codex, working to a brief by Vignesh Gopakumar,
 who reviewed and approved this page.
 <a href="../../Blog/tokamak-toolkit/about.html">How this is built</a> ·
 <a href="../../Blog/tokamak-toolkit/index.html">Tokamak Toolkit home</a>
