@@ -1,0 +1,45 @@
+---
+title: A plan for completing M3 and starting verification
+date: '2026-10-07'
+categories:
+- decision
+entry: 27
+milestone: M3
+---
+
+::: {.entry-meta}
+[decision]{.chip .decision} Entry 27 · milestone M3
+:::
+
+We have written a dependency-ordered [action plan](../action-plan.qmd) for the remaining
+surrogate work. It distinguishes completed local validation from performance measurements,
+reference choices and subsequent verification.
+
+The local transport checks are complete: [15 gradient, JIT, fallback and discrete-balance checks pass across RAPTOR and ITER hybrid in each mode]{.claim}[C-146](/Blog/tokamak-toolkit/claims.qmd#c-146){.cid .st-tested}. The final-model matched
+runtime comparison remains open because its compute run was cancelled before execution.
+The next performance step is to resolve that cancellation, agree a fresh bounded submission
+and compare the final surrogate with reference transport at matched settings. Newton
+profiling stays separate from the linear-solver timing comparison.
+
+In parallel, the owner can choose the reference solvers or datasets for radio-frequency
+(RF) and pedestal responses. That decision must specify channels, outputs, units, criteria
+and Tier A fallbacks. The existing guards, grouped dataset interfaces and baseline trainer
+are ready for those references; no predictive RF or pedestal model is trained.
+
+After reference selection, we label a small grouped baseline, inspect errors and physical
+integrals, agree accuracy targets, train ensembles and integrate them into TORAX behind
+guards. Gradient, balance, fallback and coupled cost checks then define completion.
+
+M3 closes only when all its required surrogate tasks meet the accuracy, differentiable
+execution and speed-up criteria. Verification follows: agreed properties and trajectory
+tolerances, formal proofs, uncertainty calibration, reference comparisons and certification
+review. Local sampled checks remain distinct from those certificates.
+
+This documentation update selects no new physics closure and submits no compute job.
+The build log now follows the same sequence as the internal plan.
+
+Technical details → [Next steps](../technical/surrogates.qmd#next).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › next](/Blog/tokamak-toolkit/technical/surrogates.qmd#next)
+:::

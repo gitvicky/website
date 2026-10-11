@@ -1,0 +1,53 @@
+---
+title: The first EC reference run stops at its plotting device
+date: '2026-10-08'
+categories:
+- negative
+entry: 33
+milestone: M3
+---
+
+::: {.entry-meta}
+[negative result]{.chip .negative} Entry 33 · milestone M3
+:::
+
+We tried to produce native electron-cyclotron (EC) heating and current profiles
+from the original ITER reference case. These will eventually supply the
+transport sources described in the [Primer](../primer.qmd); terminology is in
+the [Glossary](../glossary.qmd).
+
+The owner approved continuation with the proposed original ITER numerical case
+and its one-run resource ceiling. The first run started and stopped before
+producing scientific output. Its plotting dependency rejected the requested
+portrait colour PostScript device. GENRAY's error branch then returned zero,
+which would look successful if we checked only the process exit code.
+
+The pilot runner also requires the expected output file. It correctly retained
+a failure, with unchanged inputs, immutable binary/input snapshots, stdout,
+stderr and partial files. No heating or driven-current profiles were produced.
+
+We traced the failure to a missing device alias in the pinned replacement plotting library.
+We added a small explicit patch that maps the alias to the library's existing portrait colour
+PostScript driver. GENRAY source and physics inputs remain unchanged. The
+correction builds separately, retaining the patch and executed build helper.
+
+A plotting-only Fortran probe now checks the actual interface against both
+libraries: [all eight plotting-device checks match their expected outcomes]{.claim}[C-155](/Blog/tokamak-toolkit/claims.qmd#c-155){.cid .st-measured}. Successful output has the expected page orientation
+and colour; an unknown device still fails. This establishes the device correction,
+while a completed GENRAY run and full scientific/plotting comparison remain pending.
+
+At this checkpoint, the original one-run approval is exhausted. A concrete retry
+request keeps the same allocation and conservative charging ceiling and awaits
+fresh approval. No retry, labels or training occurred at this stage. The
+[subsequently authorized retry](34-genray-corrected-numerical-pilot.qmd) completes
+the numerical pilot. The current-source and ITER pedestal
+boundary contracts remain open, and historical full-suite test statistics are
+unchanged. M3 remains in progress.
+
+Technical details → [first EC execution and plotting correction](../technical/surrogates.qmd#genray-first-run).
+Decision → [OQ-21](../decisions.qmd#oq-21).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › genray first run](/Blog/tokamak-toolkit/technical/surrogates.qmd#genray-first-run)  
+**Decisions →** [OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21)
+:::

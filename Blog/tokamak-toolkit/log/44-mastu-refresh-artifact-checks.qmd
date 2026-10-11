@@ -1,0 +1,45 @@
+---
+title: MAST-U feedback label collection passes local artifact checks
+date: '2026-10-11'
+categories:
+- measured
+- hardened
+entry: 44
+milestone: M4
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} [enforced rule]{.chip .hardened} Entry 44 · milestone M4
+:::
+
+We completed the owner-approved feedback label collection for MAST-U remediation.
+The collection uses training equilibria and excludes both test equilibria. The
+surrogate, guard and closed-loop acceptance limit remain unchanged.
+
+We reviewed the finished local artifacts before considering training. The review
+checks the allocation against the approved resource and time limits, verifies
+checksums and provenance, and compares every label input row with its selected
+case and source trajectory. It also checks the case budget, unique coordinates,
+training-only equilibrium selection, source-model identity and finite successful
+labels: [eight local checks pass for approved allocation/time, hashes and lineage, full-input alignment, case budget, unique coordinates, training-only equilibria, source model and finite successful labels]{.claim}[C-183](/Blog/tokamak-toolkit/claims.qmd#c-183){.cid .st-measured}.
+
+| stage | result |
+|---|---|
+| completed collection | [eight local checks pass for approved allocation/time, hashes and lineage, full-input alignment, case budget, unique coordinates, training-only equilibria, source model and finite successful labels]{.claim}[C-183](/Blog/tokamak-toolkit/claims.qmd#c-183){.cid .st-measured} |
+| artifact synchronization | awaiting explicit approval |
+| training and coupled revalidation | pending |
+
+The new evidence establishes that the collected labels retain their full solver
+inputs and their source lineage. It does not establish held-out model accuracy or
+an improved temperature trajectory. The existing failed MAST-U acceptance result
+remains open ([K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030)).
+
+**What's next.** Synchronize the reviewed artifacts after approval, then prepare
+training and validation while preserving the test split and the owner-required
+monotonicity constraint. Another coupled comparison must assess the unchanged
+closed-loop limit before any claim of successful remediation.
+
+::: {.entry-links}
+**Technical details →** [Verification › mastu remediation](/Blog/tokamak-toolkit/technical/verification.qmd#mastu-remediation)  
+**Decisions →** [OQ-27](/Blog/tokamak-toolkit/decisions.qmd#oq-27)
+:::

@@ -1,0 +1,54 @@
+---
+title: The approved MAST-U candidate is trained and checked offline
+date: '2026-10-11'
+categories:
+- built
+- measured
+entry: 47
+milestone: M4
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} [measurement]{.chip .measured} Entry 47 · milestone M4
+:::
+
+The owner approved one bounded MAST-U training experiment. Its single submitted job
+completed within the approved allocation and retained each ensemble member's selected
+checkpoint, along with the training and validation history.
+
+The completion audit binds the saved model to the reviewed source snapshot and frozen
+data manifest. It verifies original split indices and feedback-row lineage, checks the
+actual sampling counts and compares the resulting normalization and physical box with
+the preparation. The saved parameters and tested predictions are finite:
+[164 completion checks pass, binding the saved candidate to the reviewed snapshot and frozen data/splits, with finite parameters/history and tested member/served predictions]{.claim}[C-186](/Blog/tokamak-toolkit/claims.qmd#c-186){.cid .st-measured}. The candidate stays in a separate directory.
+
+The local offline comparison keeps validation, existing holdouts and refresh training
+states separate. Results are mixed: the existing held-out flux gates pass, one flux
+median improves and the other regresses slightly. Refresh training medians improve
+modestly while their tails worsen. Those training scores do not measure generalization,
+and passing the flux gates does not establish coupled temperature accuracy.
+
+| check | recorded outcome |
+|---|---|
+| approved training | completed within its budget |
+| source, split and checkpoint integrity | completion audit passes |
+| numerical export parity | [all 168 export comparison records pass the unchanged mixed tolerance, covering all 20 members in training/physical units, the served ensemble and JAX JIT/eager arithmetic]{.claim}[C-187](/Blog/tokamak-toolkit/claims.qmd#c-187){.cid .st-measured} |
+| monotonicity | saved-parameter and sampled derivative diagnostics pass; formal proofs pending |
+| coupled comparison | candidate replay pending; [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) open |
+
+Every exported member and the served ensemble pass the unchanged mixed numerical
+parity tolerance. Sampled physical derivatives have no negative values for the required
+monotone pairs. This checks the implementation and saved parameters; it does not replace
+the formal M4 proof.
+
+The current model and guard remain selected. Tracking stays offline, and no new artifacts
+have been synchronized. The training approval did not include a coupled solver run.
+
+**What's next.** Prepare and review the matched candidate replay, retain its paired
+reference and served-mask diagnostics, and judge both temperatures against the existing
+limits before any model decision.
+
+::: {.entry-links}
+**Technical details →** [Surrogates › m4 feedback candidate](/Blog/tokamak-toolkit/technical/surrogates.qmd#m4-feedback-candidate)  
+**Decisions →** [OQ-29](/Blog/tokamak-toolkit/decisions.qmd#oq-29)
+:::

@@ -1,0 +1,42 @@
+---
+title: The approved MAST-U artifact upload matches downloaded checksums
+date: '2026-10-11'
+categories:
+- measured
+entry: 45
+milestone: M4
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 45 · milestone M4
+:::
+
+The owner approved synchronization of the reviewed MAST-U refresh artifacts to
+private tracking storage. We compared the pending payload with its approved
+manifest before sending it with one worker. The offline payload queue is now empty.
+
+We checked the remote folder and visibility, then downloaded every artifact and
+compared its size and SHA-256 checksum with the manifest: [all 26 uploaded artifact records covering 18 distinct files match both remote SHA-256 metadata and downloaded bytes; the folder and private visibility match the approved request, and the offline payload queue is empty]{.claim}[C-184](/Blog/tokamak-toolkit/claims.qmd#c-184){.cid .st-measured}.
+Public and tenant-wide visibility are disabled.
+
+| verification | result |
+|---|---|
+| remote metadata and downloaded bytes | [all 26 uploaded artifact records covering 18 distinct files match both remote SHA-256 metadata and downloaded bytes; the folder and private visibility match the approved request, and the offline payload queue is empty]{.claim}[C-184](/Blog/tokamak-toolkit/claims.qmd#c-184){.cid .st-measured} |
+| next physics check | training and coupled revalidation remain pending |
+
+The upload contains duplicate provenance sidecar records from the existing tracking
+workflow. Retrieval by name is ambiguous for those records. We downloaded each by
+its artifact identifier and checked every record. The remote records remain intact.
+
+This completes tracking for the approved label collection. It establishes artifact
+integrity and private storage; it does not establish an improved surrogate or a
+successful coupled remedy. The MAST-U closed-loop failure remains open ([K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030)).
+
+**What's next.** Prepare training and validation using the refreshed labels, preserving
+the test split and the required monotonicity constraint. Model changes and another
+coupled comparison remain separate work.
+
+::: {.entry-links}
+**Technical details →** [Verification › mastu remediation](/Blog/tokamak-toolkit/technical/verification.qmd#mastu-remediation)  
+**Decisions →** [OQ-28](/Blog/tokamak-toolkit/decisions.qmd#oq-28)
+:::

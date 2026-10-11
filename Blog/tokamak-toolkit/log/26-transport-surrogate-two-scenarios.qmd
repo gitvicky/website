@@ -1,0 +1,53 @@
+---
+title: Transport-surrogate validation on two scenarios
+date: '2026-10-07'
+categories:
+- measured
+entry: 26
+milestone: M3
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 26 · milestone M3
+:::
+
+The final transport surrogate now has local derivative and conservation checks on ITER
+hybrid as well as RAPTOR L-mode. Both use the guarded ensemble, with Bohm/gyro-Bohm
+transport supplying coefficients wherever the guard rejects the surrogate.
+
+## Derivatives and conservation
+
+The derivative checks compare automatic differentiation with finite differences. They
+perturb the electron-temperature profile, require the guard to select the same faces on
+each side of the perturbation, and require the Newton solver to reach its fine tolerance.
+Forward and reverse automatic differentiation must also agree. These checks cover both
+the initial transport coefficients and the core temperature after coupled steps.
+
+The loop checks require finite temperatures, density and poloidal flux. They compare the
+selected coefficients directly with the ensemble or fallback, then rebuild discrete energy
+and particle balance from the solver coefficients. The existing assertion tolerances are
+retained: [15 gradient, JIT, fallback and discrete-balance checks pass across RAPTOR and ITER hybrid in each mode]{.claim}[C-146](/Blog/tokamak-toolkit/claims.qmd#c-146){.cid .st-tested}.
+
+ITER hybrid uses an explicit Newton solver override for this validation. The existing
+linear-solver timing configuration remains a separate experiment. The original surrogate
+and final model are both checked on RAPTOR; only the final model is checked on ITER hybrid.
+
+## What remains open
+
+These are short local checks using ITER ensembles. They do not measure agreement with a
+fresh TGLF trajectory, establish a final-model speed-up or certify an error bound. The
+default Newton stopping tolerance still permits derivative and balance discrepancies
+([K-026](/Blog/tokamak-toolkit/ceilings.qmd#k-026)); tighter convergence is explicit in these tests.
+
+The new execution reports and tested source snapshots are stored separately and bound to a
+validation report by hashes. Reports for unchanged test files are retained when generating
+site statistics; the aggregate count is not a fresh full-suite rerun.
+
+Matched final-model timing still awaits resolution of the compute cancellation. RF and
+pedestal training still requires the reference-target decision in [OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21).
+
+Technical details → [Extended loop validation](../technical/surrogates.qmd#extended-loop-validation).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › extended loop validation](/Blog/tokamak-toolkit/technical/surrogates.qmd#extended-loop-validation)
+:::

@@ -1,0 +1,67 @@
+---
+title: A structured EC surrogate meets the held-out accuracy targets
+date: '2026-10-10'
+categories:
+- decision
+- built
+entry: 38
+milestone: M3
+---
+
+::: {.entry-meta}
+[decision]{.chip .decision} [new component]{.chip .built} Entry 38 · milestone M3
+:::
+
+The first baseline on EC dataset v1 ([entry 37](37-ec-dataset-v1-and-baseline.qmd)) learned
+the electron-cyclotron (EC) totals but not the deposition profiles. The owner then set the
+accuracy targets, chose how to handle the single-equilibrium approximation ([K-028](/Blog/tokamak-toolkit/ceilings.qmd#k-028)), and
+approved compute for a structured model. The [Primer](../primer.qmd) explains sources; terms
+are in the [Glossary](../glossary.qmd).
+
+**Targets.** On whole TORAX runs held out from training, per megawatt injected: absorbed
+power and driven current within a median relative error of one tenth, and the heating
+deposition centre within a median absolute error of 0.05 in normalised toroidal-flux radius.
+Driven current is scored on cases with more than one kiloampere per megawatt, so that
+near-zero currents do not dominate a relative error.
+
+**[K-028](/Blog/tokamak-toolkit/ceilings.qmd#k-028).** Every GENRAY case uses the same equilibrium, which carries the full ITER current.
+The owner chose to drop states whose plasma current is far from it. We keep states whose
+prescribed current is at least two thirds of the equilibrium's. This keeps all flat-top
+states and the last state of each current ramp-up, and drops the earlier ramp-up states,
+which held all of the largest driven currents ([2910 of 3120 cases kept (210 early ramp-up cases dropped); largest driven current 61 kA/MW, was 279 kA/MW]{.claim}[C-167](/Blog/tokamak-toolkit/claims.qmd#c-167){.cid .st-measured}). The kept flat-top
+states still differ from the equilibrium in current and shape, so the ceiling stays open.
+
+**Model.** Instead of predicting the profile at each radius, the network predicts six
+numbers per case: absorbed power, driven current, and the centre and width of the heating
+and of the current deposition. These are the parameters of the Gaussian model that serves as
+the Tier A fallback, so the surrogate and its fallback share one output form. Profiles are
+rebuilt as Gaussians integrated over each radial cell and scaled to the predicted totals.
+The deposition is narrower than one cell in about half the cases, which is why the
+integration over cells matters. We trained four sizes of the existing five-member ensemble,
+selected one on the validation runs, and scored it once on the test runs.
+
+| quantity | result |
+|---|---|
+| test targets | [all three targets pass: absorbed power 0.01% and driven current 2.7% median relative error (targets 10%), heating centre 0.0036 median absolute error in rho (target 0.05)]{.claim}[C-168](/Blog/tokamak-toolkit/claims.qmd#c-168){.cid .st-measured} |
+| rebuilt profiles | [heating RMSE 8.6e3 W/m^3 (training mean 1.34e4, Gaussian of the true parameters 5.4e3); current RMSE 1.35e4 A/m^2 (training mean 2.09e4, Gaussian of the true parameters 5.0e3)]{.claim}[C-169](/Blog/tokamak-toolkit/claims.qmd#c-169){.cid .st-measured} |
+
+The rebuilt profiles are closer to GENRAY than the training mean, unlike the pointwise model
+of entry 37. A Gaussian with the true parameters still differs from GENRAY's profile, and
+that difference is the limit of this representation. The check is on runs the model never
+saw, but the labels come from one code with one equilibrium and one ray per case, so it
+measures how well the surrogate reproduces GENRAY under those approximations, not the physics
+of the deposition. Absorbed power is nearly complete in almost every case, which makes its
+target easy to meet. The ensemble spread is not calibrated; that is M4 work. The focused
+checks pass in both modes ([19 focused checks (15 EC pipeline and structured labels, 4 structured evaluation) pass in full and Tier-A-only modes]{.claim}[C-170](/Blog/tokamak-toolkit/claims.qmd#c-170){.cid .st-tested}).
+
+All three EC targets pass, and [OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21) is resolved. Next: couple the EC model and the ITER
+pedestal conversion into TORAX behind their guards and check derivatives, balance and
+fallback.
+
+Technical details → [Structured EC surrogate](../technical/surrogates.qmd#ec-structured).
+Decision → [OQ-21](../decisions.qmd#oq-21).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › ec structured](/Blog/tokamak-toolkit/technical/surrogates.qmd#ec-structured)  
+**Decisions →** [OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21)
+:::

@@ -1,0 +1,48 @@
+---
+title: The MAST-U candidate replay fails reference coverage
+date: '2026-10-11'
+categories:
+- measured
+entry: 49
+milestone: M4
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 49 · milestone M4
+:::
+
+The owner approved the prepared local replay once. The solver completed with finite,
+converged profiles, but the comparison stopped because a face served by the candidate
+used fallback in the saved physics reference: [the single approved replay finishes in 65 seconds within its 240-second bound, with 40 finite converged steps and 146 passing integrity checks; comparison exits with a reference-coverage failure at candidate-served face 4, normalized radius 0.16]{.claim}[C-189](/Blog/tokamak-toolkit/claims.qmd#c-189){.cid .st-measured}.
+
+That reference cannot establish the formal temperature criterion for this candidate.
+The failing face stays in its actual served mask. We neither intersect masks nor
+substitute the historical baseline mask for acceptance. The saved trajectory, source
+snapshot, provenance and failure logs remain available; no solver retry was made.
+
+The supplementary comparisons retain mixed results: [candidate/baseline serve 15/13 faces with 11 overlapping; fixed-baseline-mask candidate T_e/T_i errors are 42.1252%/48.1182%, versus baseline 35.3331%/49.1458%; candidate whole-profile errors are 29.7365%/41.8856%, and own-mask descriptive distances to the hybrid reference are 29.8865%/40.0063%]{.claim}[C-190](/Blog/tokamak-toolkit/claims.qmd#c-190){.cid .st-preliminary}.
+Electron temperature worsens on the fixed baseline mask. Smaller whole-profile
+errors and lower descriptive distances on the candidate's own faces do not establish
+improved coupled accuracy. Those own-mask distances compare against a trajectory
+containing fallback at the uncovered face and are explicitly ineligible for acceptance.
+
+Raw guard reconstruction matches every saved accepted-state face. Rejections decrease:
+[candidate rejects 415/1040 accepted-state face records (39.9038%), versus baseline 466/1040 (44.8077%); exclusive candidate reasons are 341 model-box exits, 50 excessive diffusivities and 24 excessive convection values, with exact raw guard reconstruction]{.claim}[C-191](/Blog/tokamak-toolkit/claims.qmd#c-191){.cid .st-measured}. This is accepted-state accounting; it does not measure intermediate
+solver calls, and the owner has not set a fallback-rate acceptance threshold.
+
+The historical reference lacks raw rejection reasons. Repeating identical reference
+compute would not establish that the missing face becomes admissible. Its cause and a
+physically justified remedy need review before a new reference request. A separate
+sampling experiment can also be prepared from training-only evidence, with original
+holdouts and the physical contract preserved. Neither experiment has been authorized.
+
+[K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) remains open. The current model and guard stay selected, and nothing has been
+synchronized or replaced.
+
+**What's next.** Review the reference-coverage failure and bounded follow-up proposal
+before new training or coupled compute. Formal certification remains unfinished.
+
+::: {.entry-links}
+**Technical details →** [Verification › candidate replay result](/Blog/tokamak-toolkit/technical/verification.qmd#candidate-replay-result)  
+**Decisions →** [OQ-30](/Blog/tokamak-toolkit/decisions.qmd#oq-30)
+:::

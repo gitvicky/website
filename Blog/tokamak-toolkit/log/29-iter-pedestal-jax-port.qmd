@@ -1,0 +1,55 @@
+---
+title: Porting the selected ITER pedestal model to JAX
+date: '2026-10-08'
+categories:
+- built
+entry: 29
+milestone: M3
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 29 · milestone M3
+:::
+
+We need a pedestal boundary that can run inside the differentiable transport
+loop. The [Primer](../primer.qmd) explains why the boundary and core evolve
+together; terminology is in the [Glossary](../glossary.qmd).
+
+The owner has selected an electron-cyclotron (EC) heating and current-drive reference and a pretrained
+pressure/width pedestal model for ITER. EC labelling and the ITER port can proceed
+independently. MAST-U keeps its prescribed pedestal, with predictive closure deferred;
+ion-cyclotron work is deferred too.
+
+We ported the selected pedestal model to JAX. Its loader checks the exact
+checkpoint digest and reads numeric data without executing Julia objects. Loaded
+inference uses JAX only. The port preserves the model's preprocessing, neural layers,
+power-law correction and pressure/width outputs. All pedestal solutions remain available;
+no boundary branch is selected implicitly.
+
+The port reproduces the pinned upstream regression values: [12 upstream scalar regression values agree within relative tolerance 1e-12]{.claim}[C-149](/Blog/tokamak-toolkit/claims.qmd#c-149){.cid .st-measured}.
+Focused domain, solution-selection, compilation, batch and derivative checks pass in
+both modes: [12 focused tests pass in full and Tier-A-only modes]{.claim}[C-150](/Blog/tokamak-toolkit/claims.qmd#c-150){.cid .st-tested}. Derivative comparisons use an interior numerical fixture
+and keep its domain mask unchanged. The upstream regression values are the reference;
+the Julia runtime itself was not executed. These are implementation checks, with
+no independent physicist review of the coupled boundary.
+
+This is a numerical port of a trained model. It does not establish agreement with full
+EPED or with a coupled physical trajectory. The selected single network provides no
+ensemble spread, so no uncertainty estimate is inferred from it.
+
+Coupled ITER integration still needs the pedestal solution, supplied density and
+composition, temperature partition, and conversion from the model's poloidal-flux width
+to the transport boundary. The EC reference source is staged separately. Its baseline
+launch and current-drive prescription remain to be selected, and its current channel
+needs an adapter into TORAX. No EC labels or new coupled runtime result are claimed.
+
+M3 remains in progress. Later entries record the EC reference's build and
+[completed numerical pilot](34-genray-corrected-numerical-pilot.qmd).
+
+Technical details → [Selected ITER pedestal port](../technical/surrogates.qmd#epednn-port).
+Decision → [OQ-21](../decisions.qmd#oq-21).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › epednn port](/Blog/tokamak-toolkit/technical/surrogates.qmd#epednn-port)  
+**Decisions →** [OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21)
+:::

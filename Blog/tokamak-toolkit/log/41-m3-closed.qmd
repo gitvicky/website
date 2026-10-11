@@ -1,0 +1,57 @@
+---
+title: 'M3 closed: surrogates for transport, EC heating and the ITER pedestal'
+date: '2026-10-10'
+categories:
+- measured
+- decision
+entry: 41
+milestone: M3
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} [decision]{.chip .decision} Entry 41 · milestone M3
+:::
+
+M3 built fast surrogates for the expensive physics and ran them inside the coupling loop. Its
+three acceptance criteria are held-out accuracy, differentiable execution inside the loop, and
+a measured end-to-end speed-up. The audit in [entry 40](40-mastu-loop-and-m3-audit.qmd) left
+one measurement open: MAST-U transport timed against TGLF inside TORAX. The owner approved one
+compute-node job for it. The [M3 page](../milestones/M3.qmd) has the full record.
+
+**A failed first run.** The job stopped after a minute. TORAX's preparation of TGLF inputs
+gives the two radial points nearest the magnetic axis meaningless values on the MAST-U
+geometry, a safety factor of order ten to the seventeenth among them. TGLF's eigensolver fails
+on these and TGLF ends its worker process, which ends the whole TORAX run. We reproduced it
+point by point on a login node. Such points are now not sent to TGLF; they receive no value
+and the guard serves them from the fallback, the same treatment the surrogate gets outside
+its training box. The owner approved the same job again.
+
+**MAST-U result.** [TGLF 364.1 s, surrogate 0.492 s, Bohm/gyro-Bohm 0.043 s: the surrogate is about 740 times faster than TGLF; profile deviation from TGLF at 0.2 s, T_e 41.5% and T_i 62.4% (Bohm/gyro-Bohm 47.9% and 84.6%), with half the faces outside the training window and on the fallback]{.claim}[C-176](/Blog/tokamak-toolkit/claims.qmd#c-176){.cid .st-measured}. The speed-up is of the same order as on ITER
+([TGLF 539.1 s, final v3 surrogate 1.249 s, QLKNN 0.117 s; the v3 surrogate is about 432 times faster than TGLF and 10.7 times slower than QLKNN]{.claim}[C-158](/Blog/tokamak-toolkit/claims.qmd#c-158){.cid .st-measured}). The profile agreement is much weaker than on ITER: at the final time
+half the radial points of this MAST-U run lie outside the surrogate's training window, and the
+fallback serves them. Where the surrogate serves, the profiles stay closer to TGLF than the
+fallback's. This is the domain limitation the brief asks to report rather than hide; it is
+carried into M4 as a stated limit.
+
+| surrogate | accuracy | inside the loop | speed-up |
+|---|---|---|---|
+| transport, ITER and MAST-U | [MAST-U: Q_e 17.8%, Q_i 25.2%; ITER: Q_e 7.2%, Q_i 10.8%; all meet the 30% target]{.claim}[C-129](/Blog/tokamak-toolkit/claims.qmd#c-129){.cid .st-measured} | guarded, differentiable, balanced | ITER and MAST-U measured |
+| EC | [all three targets pass: absorbed power 0.01% and driven current 2.7% median relative error (targets 10%), heating centre 0.0036 median absolute error in rho (target 0.05)]{.claim}[C-168](/Blog/tokamak-toolkit/claims.qmd#c-168){.cid .st-measured} | [runs under jit for both launchers with the surrogate serving the source; energy balance within 1e-6 and particles within 1e-10; derivatives through Newton match finite differences to 1e-7]{.claim}[C-171](/Blog/tokamak-toolkit/claims.qmd#c-171){.cid .st-tested} | per call and coupled |
+| ITER pedestal | upstream parity | [runs under jit with EPEDNN setting the pedestal; energy balance within 1e-6 and particles within 1e-10; derivatives through Newton match finite differences to 1e-7]{.claim}[C-173](/Blog/tokamak-toolkit/claims.qmd#c-173){.cid .st-tested} | per step |
+
+The owner confirmed the closure on 10 October. Open ceilings move to M4 with the surrogates:
+the transport surrogate's cost relative to QLKNN, one EC equilibrium, Newton on MAST-U, the
+MAST-U training window, and uncalibrated ensemble spreads.
+
+**What's next.** M4 verifies the surrogates: properties proved over input boxes, calibrated
+uncertainty intervals, and closed-loop trajectories compared with the physics codes, ending in
+a certification review. The choice of properties and tolerances belongs to the owner
+([OQ-22](../decisions.qmd#oq-22)).
+
+Technical details → [M3 audit](../technical/surrogates.qmd#m3-audit),
+[MAST-U timing](../technical/surrogates.qmd#mastu-timing).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › m3 audit](/Blog/tokamak-toolkit/technical/surrogates.qmd#m3-audit) · [Surrogates › mastu timing](/Blog/tokamak-toolkit/technical/surrogates.qmd#mastu-timing)  
+**Decisions →** [OQ-22](/Blog/tokamak-toolkit/decisions.qmd#oq-22)
+:::

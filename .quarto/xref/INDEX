@@ -595,5 +595,104 @@
   },
   "Blog/tokamak-toolkit/log/20-heat-flux-positivity-monotonicity.qmd": {
     "20-heat-flux-positivity-monotonicity.html": "0a60c7cc"
+  },
+  "Blog/tokamak-toolkit/log/29-iter-pedestal-jax-port.qmd": {
+    "29-iter-pedestal-jax-port.html": "4ce7fe6d"
+  },
+  "Blog/tokamak-toolkit/log/34-genray-corrected-numerical-pilot.qmd": {
+    "34-genray-corrected-numerical-pilot.html": "e6225015"
+  },
+  "Blog/tokamak-toolkit/log/23-v3-surrogates-held-out-target.qmd": {
+    "23-v3-surrogates-held-out-target.html": "9366b79a"
+  },
+  "Blog/tokamak-toolkit/log/28-m3-performance-review.qmd": {
+    "28-m3-performance-review.html": "58da0f58"
+  },
+  "Blog/tokamak-toolkit/log/26-transport-surrogate-two-scenarios.qmd": {
+    "26-transport-surrogate-two-scenarios.html": "f67b80bf"
+  },
+  "Blog/tokamak-toolkit/log/37-ec-dataset-v1-and-baseline.qmd": {
+    "37-ec-dataset-v1-and-baseline.html": "ce9a318a"
+  },
+  "Blog/tokamak-toolkit/log/27-m3-action-plan.qmd": {
+    "27-m3-action-plan.html": "b6e5dc7b"
+  },
+  "Blog/tokamak-toolkit/log/21-tglf-surrogate-in-torax-loop.qmd": {
+    "21-tglf-surrogate-in-torax-loop.html": "33237d5d"
+  },
+  "Blog/tokamak-toolkit/log/24-rf-pedestal-contracts.qmd": {
+    "24-rf-pedestal-contracts.html": "86c8dc83"
+  },
+  "Blog/tokamak-toolkit/log/36-ec-and-pedestal-contracts.qmd": {
+    "36-ec-and-pedestal-contracts.html": "2b5962c3"
+  },
+  "Blog/tokamak-toolkit/log/38-structured-ec-surrogate.qmd": {
+    "38-structured-ec-surrogate.html": "76f6360f"
+  },
+  "Blog/tokamak-toolkit/log/33-genray-first-run-plotting-failure.qmd": {
+    "33-genray-first-run-plotting-failure.html": "9ecca6ea"
+  },
+  "Blog/tokamak-toolkit/log/22-dataset-v3-torax-trajectories.qmd": {
+    "22-dataset-v3-torax-trajectories.html": "10046102"
+  },
+  "Blog/tokamak-toolkit/log/19-active-learning-round-1.qmd": {
+    "19-active-learning-round-1.html": "7d14592e"
+  },
+  "Blog/tokamak-toolkit/log/32-genray-build-and-pilot-request.qmd": {
+    "32-genray-build-and-pilot-request.html": "56923bfd"
+  },
+  "Blog/tokamak-toolkit/log/31-genray-saved-reference-pilot.qmd": {
+    "31-genray-saved-reference-pilot.html": "dd127c7d"
+  },
+  "Blog/tokamak-toolkit/log/25-response-baseline-training.qmd": {
+    "25-response-baseline-training.html": "6a910146"
+  },
+  "Blog/tokamak-toolkit/log/30-genray-output-reader.qmd": {
+    "30-genray-output-reader.html": "22b0ea88"
+  },
+  "Blog/tokamak-toolkit/log/35-matched-comparison-tglf-v3-qlknn.qmd": {
+    "35-matched-comparison-tglf-v3-qlknn.html": "d0202bb7"
+  },
+  "Blog/tokamak-toolkit/technical/surrogates.qmd": {
+    "surrogates.html": "2493a9cb"
+  },
+  "Blog/tokamak-toolkit/milestones/M4.qmd": {
+    "M4.html": "cc4f8692"
+  },
+  "Blog/tokamak-toolkit/log/42-m4-properties-and-transport-check.qmd": {
+    "42-m4-properties-and-transport-check.html": "8261ab52"
+  },
+  "Blog/tokamak-toolkit/log/43-mastu-feedback-diagnosis.qmd": {
+    "43-mastu-feedback-diagnosis.html": "9a53e3a4"
+  },
+  "Blog/tokamak-toolkit/log/40-mastu-loop-and-m3-audit.qmd": {
+    "40-mastu-loop-and-m3-audit.html": "0c183cc8"
+  },
+  "Blog/tokamak-toolkit/log/39-ec-and-pedestal-surrogates-in-torax.qmd": {
+    "39-ec-and-pedestal-surrogates-in-torax.html": "755edc14"
+  },
+  "Blog/tokamak-toolkit/log/47-mastu-candidate-trained-and-checked.qmd": {
+    "47-mastu-candidate-trained-and-checked.html": "0a50f191"
+  },
+  "Blog/tokamak-toolkit/log/45-mastu-artifact-upload-verified.qmd": {
+    "45-mastu-artifact-upload-verified.html": "ce8f9d32"
+  },
+  "Blog/tokamak-toolkit/log/41-m3-closed.qmd": {
+    "41-m3-closed.html": "3af1503f"
+  },
+  "Blog/tokamak-toolkit/log/46-mastu-retraining-preparation.qmd": {
+    "46-mastu-retraining-preparation.html": "28cbc04d"
+  },
+  "Blog/tokamak-toolkit/log/48-mastu-candidate-replay-preparation.qmd": {
+    "48-mastu-candidate-replay-preparation.html": "9dd03915"
+  },
+  "Blog/tokamak-toolkit/log/49-mastu-replay-reference-coverage-fails.qmd": {
+    "49-mastu-replay-reference-coverage-fails.html": "ea241e89"
+  },
+  "Blog/tokamak-toolkit/log/44-mastu-refresh-artifact-checks.qmd": {
+    "44-mastu-refresh-artifact-checks.html": "a9ab11b2"
+  },
+  "Blog/tokamak-toolkit/technical/verification.qmd": {
+    "verification.html": "e90b74cd"
   }
 }

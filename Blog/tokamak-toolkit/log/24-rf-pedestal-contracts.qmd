@@ -1,0 +1,55 @@
+---
+title: Guards and data interfaces for RF and pedestal surrogates
+date: '2026-10-07'
+categories:
+- built
+- hardened
+entry: 24
+milestone: M3
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} [enforced rule]{.chip .hardened} Entry 24 · milestone M3
+:::
+
+The next M3 modelling tasks are RF deposition and the pedestal boundary. They need different
+outputs from turbulent transport: heating profiles in the plasma volume, and values describing
+the edge. Their software interfaces are now built.
+
+## A complete source profile
+
+The RF guard checks inputs, output bounds and ensemble spread. Its default decision selects a
+complete source profile. Mixing surrogate values at some radii with fallback values at others
+can change the integrated heating power, even when each profile separately has the right power.
+An explicit physics check can reject a candidate whose volume integral is wrong. Selecting
+the whole profile does not itself enforce power conservation.
+
+A separate vector guard handles boundary responses, with units and physics criteria supplied
+by the caller. Both guards retain a Tier A fallback and isolate rejected surrogate branches
+from derivatives. The core loop records source spread and fallback use.
+
+The dataset interface stores case responses or complete radial profiles. Related launches,
+equilibria or trajectories share a group identifier and stay together in training or holdout
+sets. Source hashes, units, reference version, failures and the split seed are recorded.
+Radial profiles keep their supplied toroidal-flux coordinate; there is no silent conversion
+from poloidal flux.
+
+The synthetic software checks give [25 synthetic contract tests pass in full and Tier-A-only modes]{.claim}[C-143](/Blog/tokamak-toolkit/claims.qmd#c-143){.cid .st-tested}. Nonfinite Gaussian RF parameters are
+also rejected: [12 nonfinite-parameter cases pass in each mode]{.claim}[C-144](/Blog/tokamak-toolkit/claims.qmd#c-144){.cid .st-tested}. These tests establish interface behaviour, not prediction
+accuracy for an RF or pedestal model.
+
+## The reference comes next
+
+The existing RF baseline is an analytic Gaussian EC source. The pedestal baseline takes
+prescribed values. Training against these would demonstrate a pipeline, but would not add
+predictive physics. Choosing reference solvers or data is the next modelling decision.
+
+After that choice: label grouped cases, inspect a baseline, set accuracy targets, train the
+ensembles, integrate them into TORAX, and check coupled derivatives, balance and cost.
+No RF/pedestal model has been trained in this step.
+
+Technical details → [RF and pedestal interfaces](../technical/surrogates.qmd#rf-pedestal).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › rf pedestal](/Blog/tokamak-toolkit/technical/surrogates.qmd#rf-pedestal)
+:::

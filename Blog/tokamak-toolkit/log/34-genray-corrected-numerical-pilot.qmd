@@ -1,0 +1,87 @@
+---
+title: The corrected EC reference produces native heating and current profiles
+date: '2026-10-08'
+categories:
+- measured
+entry: 34
+milestone: M3
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 34 · milestone M3
+:::
+
+We need freshly generated electron-cyclotron (EC) profiles to inspect the
+reference's heating and current conventions before coupling or training. The
+[Primer](../primer.qmd) explains source coupling; terminology is in the
+[Glossary](../glossary.qmd).
+
+The owner approved one run with the corrected plotting library. The original
+ITER numerical deck and GENRAY source remain unchanged. The run now reaches
+the normal end of the solver and produces readable native output:
+[the corrected EC reference completes in 83.16 s with readable native profiles]{.claim}[C-156](/Blog/tokamak-toolkit/claims.qmd#c-156){.cid .st-measured}.
+
+We retained separate electron, ion and collisional heating channels and
+each signed current definition. Heating volume integrals and the toroidal
+current area integral agree with their matching stored totals to floating-point
+precision. Other current definitions retain their upstream totals separately.
+The single ray stops
+when its remaining power reaches the deck's cutoff. Input hashes are unchanged,
+stderr is empty, and raw outputs, snapshots and accounting records have bound
+provenance.
+
+The paired saved output uses an older GENRAY producer. Native coordinates and
+bin volumes/areas match, allowing a direct descriptive comparison. The heating
+and signed-current curves closely overlap at the displayed scale; the numerical
+differences are retained without imposing a parity threshold.
+Positive toroidal and negative parallel current remain distinct.
+
+The saved file comes from upstream independently of our runner. Comparing it
+uses the same reader for both files, so this is a descriptive regression check
+and numerical accounting exercise. It is not independent physical validation.
+
+![Fresh and older saved electron heating, toroidal current and parallel current
+on native bins. Solid accent: corrected pilot; dashed grey: saved reference.
+The curves overlap at this scale while their signed definitions remain
+distinct.](../figures/m3_genray_profiles.svg){#fig-genray-pilot}
+
+<!-- genray-figure-provenance:start -->
+<details class="provenance">
+<summary>Figure provenance</summary>
+
+Tier A; generated 2026-10-08.
+Package 0.0.1, Python 3.11.7, JAX 0.10.2.
+Commit `a152933`; working tree dirty: true
+(draft documentation and figure generation pending commit).
+Configuration SHA-256: `ef05555c511db86e44114583fef28ab74993394e0718bbe58e61c962356a5dd9`.
+SVG SHA-256: `94ef577c3b934df1348de6a4180892d4a971ceb8d9d1221d7ac59e4d057c8538`.
+Fresh and saved input SHA-256 prefixes:
+`b61e2bb3295d93c5` and `77b5d9f85cced382`.
+The reference used a single CPU; regenerating the figure reads its retained files.
+[Full profile CSV](../figures/m3_genray_profiles.csv); generator
+`blog/figures/make_m3_genray.py`.
+
+</details>
+<!-- genray-figure-provenance:end -->
+
+The PostScript device now opens and closes without errors. Its output renders
+to a blank page, so this run does not establish plotted content or plotting
+parity. A separate comparison figure is generated directly from the native
+NetCDF profiles; it is not substituted for GENRAY's plotting output.
+
+The bounded numerical pilot is complete. Production launch, heating/current
+conversion, conservative radial mapping, fallback criteria and grouped sampling
+still need to be settled before labelling or training. The ITER pedestal boundary
+and matched transport comparison remain independent workstreams. Historical
+suite reports are retained for unchanged tests. The repository checkpoint has
+[56 focused checks pass in full and Tier-A-only modes]{.claim}[C-157](/Blog/tokamak-toolkit/claims.qmd#c-157){.cid .st-tested}; these fresh results are combined with retained reports when
+generating the aggregate status.
+That aggregate is not a fresh full-suite run. M3 remains in progress.
+
+Technical details → [corrected EC numerical pilot](../technical/surrogates.qmd#genray-corrected-pilot).
+Decision → [OQ-21](../decisions.qmd#oq-21).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › genray corrected pilot](/Blog/tokamak-toolkit/technical/surrogates.qmd#genray-corrected-pilot)  
+**Decisions →** [OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21)
+:::

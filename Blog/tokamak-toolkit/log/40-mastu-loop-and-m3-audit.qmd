@@ -1,0 +1,53 @@
+---
+title: The MAST-U transport surrogate in the loop, and the M3 acceptance audit
+date: '2026-10-10'
+categories:
+- measured
+- negative
+entry: 40
+milestone: M3
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} [negative result]{.chip .negative} Entry 40 · milestone M3
+:::
+
+Before auditing M3 we listed, for each surrogate, the evidence for the three acceptance
+criteria: held-out accuracy, running differentiably inside the loop, and measured speed-up.
+One gap appeared. The in-loop checks of the transport surrogate had all used the ITER
+ensemble; the MAST-U ensemble had been scored on held-out data but never run inside TORAX.
+The [Primer](../primer.qmd) explains the loop; terms are in the
+[Glossary](../glossary.qmd).
+
+**MAST-U in the loop.** We took MAST-U states from transport dataset v3, with their FreeGSNKE
+equilibria, and replaced the runs' Bohm/gyro-Bohm transport with the guarded MAST-U
+surrogate. With the runs' own linear solver every step converges and the guard hands the
+faces outside the training window to the fallback. With the Newton solver the result is
+partly negative: from these initial states Newton does not reach TORAX's tolerance at the
+runs' time step, and reaches it at small steps only for some equilibria. The initial states
+are not in equilibrium; even the native transport changes the core temperature quickly. We
+recorded this as ceiling [K-029](/Blog/tokamak-toolkit/ceilings.qmd#k-029) and did not loosen the tolerance. On a case where Newton
+converges, energy balance closes and derivatives through the solver agree with finite
+differences ([linear solver: every step converges on two equilibria with the fallback serving 31-35% of faces; on a converging Newton case energy balance within 1e-6 and derivatives match finite differences to 1e-7; Newton does not converge at the runs' 5 ms steps from these initial states ([K-029](/Blog/tokamak-toolkit/ceilings.qmd#k-029))]{.claim}[C-175](/Blog/tokamak-toolkit/claims.qmd#c-175){.cid .st-tested}).
+
+**Audit.** The table summarises the evidence per criterion. The full audit, with ceilings, is
+in the technical section.
+
+| criterion | evidence |
+|---|---|
+| held-out accuracy | transport, both machines: [MAST-U: Q_e 17.8%, Q_i 25.2%; ITER: Q_e 7.2%, Q_i 10.8%; all meet the 30% target]{.claim}[C-129](/Blog/tokamak-toolkit/claims.qmd#c-129){.cid .st-measured}; EC: [all three targets pass: absorbed power 0.01% and driven current 2.7% median relative error (targets 10%), heating centre 0.0036 median absolute error in rho (target 0.05)]{.claim}[C-168](/Blog/tokamak-toolkit/claims.qmd#c-168){.cid .st-measured}; ITER pedestal: upstream parity |
+| inside the loop, differentiable | all four surrogates, with [K-029](/Blog/tokamak-toolkit/ceilings.qmd#k-029) for MAST-U under Newton |
+| speed-up | ITER transport: [TGLF 539.1 s, final v3 surrogate 1.249 s, QLKNN 0.117 s; the v3 surrogate is about 432 times faster than TGLF and 10.7 times slower than QLKNN]{.claim}[C-158](/Blog/tokamak-toolkit/claims.qmd#c-158){.cid .st-measured}; EC per call and coupled; pedestal per step; MAST-U per call only |
+
+Two points are left for the owner. The MAST-U transport surrogate has no end-to-end timing
+against TGLF inside TORAX, because TGLF in TORAX needs a compute node; one short job, like the
+ITER comparison, would measure it. And M3 has no human gate in the brief, so its closure is
+recorded when the owner confirms it. The uncertainty estimates of all surrogates are
+uncalibrated; that is M4 work.
+
+Technical details → [MAST-U in the loop](../technical/surrogates.qmd#mastu-in-loop),
+[M3 audit](../technical/surrogates.qmd#m3-audit).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › mastu in loop](/Blog/tokamak-toolkit/technical/surrogates.qmd#mastu-in-loop) · [Surrogates › m3 audit](/Blog/tokamak-toolkit/technical/surrogates.qmd#m3-audit)
+:::

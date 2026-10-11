@@ -80,7 +80,8 @@ ul.task-list li input[type="checkbox"] {
 
     const options = {
       valueNames: ['listing-date','listing-title','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
+      page: 30,
+    pagination: { item: "<li class='page-item'><a class='page page-link' href='#'></a></li>" },
       searchColumns: ["listing-date","listing-title","listing-author"],
     };
 
@@ -222,27 +223,27 @@ window.Quarto = {
 <tbody>
 <tr class="odd">
 <td>milestone</td>
-<td>M3</td>
+<td>M4</td>
 </tr>
 <tr class="even">
 <td>log entries</td>
-<td>20</td>
+<td>49</td>
 </tr>
 <tr class="odd">
 <td>tests passing</td>
-<td>411 recorded full-mode results, 411 with gated codes disabled</td>
+<td>539 recorded full-mode results, 539 with gated codes disabled</td>
 </tr>
 <tr class="even">
 <td>source</td>
-<td>12099 lines + 6067 lines of tests</td>
+<td>15308 lines + 8083 lines of tests</td>
 </tr>
 <tr class="odd">
 <td>tested code</td>
-<td><code>66cc594</code></td>
+<td><code>8721f24</code></td>
 </tr>
 <tr class="even">
 <td>updated</td>
-<td>2026-10-08</td>
+<td>2026-10-11</td>
 </tr>
 </tbody>
 </table>
@@ -598,14 +599,14 @@ a box for what it does.</figcaption>
 <td>M3</td>
 <td><a href="../../Blog/tokamak-toolkit/milestones/M3.html">Surrogates</a></td>
 <td>neural ensembles with physics built in, running inside the loop</td>
-<td><span class="wf wip">in progress</span></td>
+<td><span class="wf done">done 10 Oct 2026</span></td>
 <td>—</td>
 </tr>
 <tr class="odd">
 <td>M4</td>
-<td>Verification</td>
+<td><a href="../../Blog/tokamak-toolkit/milestones/M4.html">Verification</a></td>
 <td>proved properties, calibrated uncertainty, closed-loop checks per surrogate</td>
-<td><span class="wf todo">not started</span></td>
+<td><span class="wf active">in progress</span></td>
 <td><span class="wf todo">certification review</span></td>
 </tr>
 <tr class="even">
@@ -623,7 +624,7 @@ a box for what it does.</figcaption>
 <h2 class="anchored" data-anchor-id="the-log">The log</h2>
 <details class="tk-log">
 <summary>
-Show all 20 entries, newest first
+Show all 49 entries, newest first
 </summary>
 <div id="listing-log" class="quarto-listing quarto-listing-container-table">
 <table class="quarto-listing-table table">
@@ -641,7 +642,326 @@ Categories
 </tr>
 </thead>
 <tbody class="list">
-<tr data-index="0" data-categories="built,measured" data-listing-date-sort="1790982000000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="837" data-listing-title-sort="Heat-flux positivity and monotonicity of TGLF in the gradients" data-listing-filename-sort="20-heat-flux-positivity-monotonicity.qmd">
+<tr data-index="0" data-categories="measured" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="354" data-listing-title-sort="The MAST-U candidate replay fails reference coverage" data-listing-filename-sort="49-mastu-replay-reference-coverage-fails.qmd">
+<td>
+<span class="listing-date">11 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/49-mastu-replay-reference-coverage-fails.html" class="title listing-title">The MAST-U candidate replay fails reference coverage</a>
+</td>
+<td>
+<span class="listing-categories">measured</span>
+</td>
+</tr>
+<tr data-index="1" data-categories="built" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="339" data-listing-title-sort="The MAST-U candidate replay preserves masks and guard accounting" data-listing-filename-sort="48-mastu-candidate-replay-preparation.qmd">
+<td>
+<span class="listing-date">11 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/48-mastu-candidate-replay-preparation.html" class="title listing-title">The MAST-U candidate replay preserves masks and guard accounting</a>
+</td>
+<td>
+<span class="listing-categories">built</span>
+</td>
+</tr>
+<tr data-index="2" data-categories="built,measured" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="338" data-listing-title-sort="The approved MAST-U candidate is trained and checked offline" data-listing-filename-sort="47-mastu-candidate-trained-and-checked.qmd">
+<td>
+<span class="listing-date">11 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/47-mastu-candidate-trained-and-checked.html" class="title listing-title">The approved MAST-U candidate is trained and checked offline</a>
+</td>
+<td>
+<span class="listing-categories">built, measured</span>
+</td>
+</tr>
+<tr data-index="3" data-categories="built" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="246" data-listing-title-sort="MAST-U retraining preparation preserves the existing holdouts" data-listing-filename-sort="46-mastu-retraining-preparation.qmd">
+<td>
+<span class="listing-date">11 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/46-mastu-retraining-preparation.html" class="title listing-title">MAST-U retraining preparation preserves the existing holdouts</a>
+</td>
+<td>
+<span class="listing-categories">built</span>
+</td>
+</tr>
+<tr data-index="4" data-categories="measured" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="255" data-listing-title-sort="The approved MAST-U artifact upload matches downloaded checksums" data-listing-filename-sort="45-mastu-artifact-upload-verified.qmd">
+<td>
+<span class="listing-date">11 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/45-mastu-artifact-upload-verified.html" class="title listing-title">The approved MAST-U artifact upload matches downloaded checksums</a>
+</td>
+<td>
+<span class="listing-categories">measured</span>
+</td>
+</tr>
+<tr data-index="5" data-categories="measured,hardened" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="237" data-listing-title-sort="MAST-U feedback label collection passes local artifact checks" data-listing-filename-sort="44-mastu-refresh-artifact-checks.qmd">
+<td>
+<span class="listing-date">11 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/44-mastu-refresh-artifact-checks.html" class="title listing-title">MAST-U feedback label collection passes local artifact checks</a>
+</td>
+<td>
+<span class="listing-categories">measured, hardened</span>
+</td>
+</tr>
+<tr data-index="6" data-categories="measured,negative" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="385" data-listing-title-sort="MAST-U remediation starts with matched fluxes and guard history" data-listing-filename-sort="43-mastu-feedback-diagnosis.qmd">
+<td>
+<span class="listing-date">11 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/43-mastu-feedback-diagnosis.html" class="title listing-title">MAST-U remediation starts with matched fluxes and guard history</a>
+</td>
+<td>
+<span class="listing-categories">measured, negative</span>
+</td>
+</tr>
+<tr data-index="7" data-categories="measured,decision,negative" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="466" data-listing-title-sort="Verification begins: ITER passes the transport check; MAST-U misses it" data-listing-filename-sort="42-m4-properties-and-transport-check.qmd">
+<td>
+<span class="listing-date">11 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/42-m4-properties-and-transport-check.html" class="title listing-title">Verification begins: ITER passes the transport check; MAST-U misses it</a>
+</td>
+<td>
+<span class="listing-categories">measured, decision, negative</span>
+</td>
+</tr>
+<tr data-index="8" data-categories="measured,decision" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="544" data-listing-title-sort="M3 closed: surrogates for transport, EC heating and the ITER pedestal" data-listing-filename-sort="41-m3-closed.qmd">
+<td>
+<span class="listing-date">10 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/41-m3-closed.html" class="title listing-title">M3 closed: surrogates for transport, EC heating and the ITER pedestal</a>
+</td>
+<td>
+<span class="listing-categories">measured, decision</span>
+</td>
+</tr>
+<tr data-index="9" data-categories="measured,negative" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="454" data-listing-title-sort="The MAST-U transport surrogate in the loop, and the M3 acceptance audit" data-listing-filename-sort="40-mastu-loop-and-m3-audit.qmd">
+<td>
+<span class="listing-date">10 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/40-mastu-loop-and-m3-audit.html" class="title listing-title">The MAST-U transport surrogate in the loop, and the M3 acceptance audit</a>
+</td>
+<td>
+<span class="listing-categories">measured, negative</span>
+</td>
+</tr>
+<tr data-index="10" data-categories="built" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="562" data-listing-title-sort="The EC and ITER pedestal surrogates inside TORAX" data-listing-filename-sort="39-ec-and-pedestal-surrogates-in-torax.qmd">
+<td>
+<span class="listing-date">10 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/39-ec-and-pedestal-surrogates-in-torax.html" class="title listing-title">The EC and ITER pedestal surrogates inside TORAX</a>
+</td>
+<td>
+<span class="listing-categories">built</span>
+</td>
+</tr>
+<tr data-index="11" data-categories="decision,built" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="558" data-listing-title-sort="A structured EC surrogate meets the held-out accuracy targets" data-listing-filename-sort="38-structured-ec-surrogate.qmd">
+<td>
+<span class="listing-date">10 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/38-structured-ec-surrogate.html" class="title listing-title">A structured EC surrogate meets the held-out accuracy targets</a>
+</td>
+<td>
+<span class="listing-categories">decision, built</span>
+</td>
+</tr>
+<tr data-index="12" data-categories="measured" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="543" data-listing-title-sort="EC reference dataset v1 on ITER states, and a first held-out baseline" data-listing-filename-sort="37-ec-dataset-v1-and-baseline.qmd">
+<td>
+<span class="listing-date">10 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/37-ec-dataset-v1-and-baseline.html" class="title listing-title">EC reference dataset v1 on ITER states, and a first held-out baseline</a>
+</td>
+<td>
+<span class="listing-categories">measured</span>
+</td>
+</tr>
+<tr data-index="13" data-categories="decision,built" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="518" data-listing-title-sort="Conventions for the EC reference labels and the ITER pedestal boundary" data-listing-filename-sort="36-ec-and-pedestal-contracts.qmd">
+<td>
+<span class="listing-date">10 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/36-ec-and-pedestal-contracts.html" class="title listing-title">Conventions for the EC reference labels and the ITER pedestal boundary</a>
+</td>
+<td>
+<span class="listing-categories">decision, built</span>
+</td>
+</tr>
+<tr data-index="14" data-categories="measured" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="506" data-listing-title-sort="Matched comparison of TGLF, the final v3 surrogate and QLKNN inside TORAX" data-listing-filename-sort="35-matched-comparison-tglf-v3-qlknn.qmd">
+<td>
+<span class="listing-date">10 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/35-matched-comparison-tglf-v3-qlknn.html" class="title listing-title">Matched comparison of TGLF, the final v3 surrogate and QLKNN inside TORAX</a>
+</td>
+<td>
+<span class="listing-categories">measured</span>
+</td>
+</tr>
+<tr data-index="15" data-categories="measured" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="436" data-listing-title-sort="The corrected EC reference produces native heating and current profiles" data-listing-filename-sort="34-genray-corrected-numerical-pilot.qmd">
+<td>
+<span class="listing-date">8 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/34-genray-corrected-numerical-pilot.html" class="title listing-title">The corrected EC reference produces native heating and current profiles</a>
+</td>
+<td>
+<span class="listing-categories">measured</span>
+</td>
+</tr>
+<tr data-index="16" data-categories="negative" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="287" data-listing-title-sort="The first EC reference run stops at its plotting device" data-listing-filename-sort="33-genray-first-run-plotting-failure.qmd">
+<td>
+<span class="listing-date">8 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/33-genray-first-run-plotting-failure.html" class="title listing-title">The first EC reference run stops at its plotting device</a>
+</td>
+<td>
+<span class="listing-categories">negative</span>
+</td>
+</tr>
+<tr data-index="17" data-categories="built" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="318" data-listing-title-sort="Building the EC reference and preparing its first pilot" data-listing-filename-sort="32-genray-build-and-pilot-request.qmd">
+<td>
+<span class="listing-date">8 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/32-genray-build-and-pilot-request.html" class="title listing-title">Building the EC reference and preparing its first pilot</a>
+</td>
+<td>
+<span class="listing-categories">built</span>
+</td>
+</tr>
+<tr data-index="18" data-categories="built" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="341" data-listing-title-sort="Checking a saved EC reference and retaining pilot failures" data-listing-filename-sort="31-genray-saved-reference-pilot.qmd">
+<td>
+<span class="listing-date">8 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/31-genray-saved-reference-pilot.html" class="title listing-title">Checking a saved EC reference and retaining pilot failures</a>
+</td>
+<td>
+<span class="listing-categories">built</span>
+</td>
+</tr>
+<tr data-index="19" data-categories="built" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="273" data-listing-title-sort="Reading EC heating and current without losing their conventions" data-listing-filename-sort="30-genray-output-reader.qmd">
+<td>
+<span class="listing-date">8 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/30-genray-output-reader.html" class="title listing-title">Reading EC heating and current without losing their conventions</a>
+</td>
+<td>
+<span class="listing-categories">built</span>
+</td>
+</tr>
+<tr data-index="20" data-categories="built" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="318" data-listing-title-sort="Porting the selected ITER pedestal model to JAX" data-listing-filename-sort="29-iter-pedestal-jax-port.qmd">
+<td>
+<span class="listing-date">8 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/29-iter-pedestal-jax-port.html" class="title listing-title">Porting the selected ITER pedestal model to JAX</a>
+</td>
+<td>
+<span class="listing-categories">built</span>
+</td>
+</tr>
+<tr data-index="21" data-categories="fixed" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="260" data-listing-title-sort="Reviewing the comparison job and saved Newton trace" data-listing-filename-sort="28-m3-performance-review.qmd">
+<td>
+<span class="listing-date">7 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/28-m3-performance-review.html" class="title listing-title">Reviewing the comparison job and saved Newton trace</a>
+</td>
+<td>
+<span class="listing-categories">fixed</span>
+</td>
+</tr>
+<tr data-index="22" data-categories="decision" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="247" data-listing-title-sort="A plan for completing M3 and starting verification" data-listing-filename-sort="27-m3-action-plan.qmd">
+<td>
+<span class="listing-date">7 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/27-m3-action-plan.html" class="title listing-title">A plan for completing M3 and starting verification</a>
+</td>
+<td>
+<span class="listing-categories">decision</span>
+</td>
+</tr>
+<tr data-index="23" data-categories="measured" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="297" data-listing-title-sort="Transport-surrogate validation on two scenarios" data-listing-filename-sort="26-transport-surrogate-two-scenarios.qmd">
+<td>
+<span class="listing-date">7 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/26-transport-surrogate-two-scenarios.html" class="title listing-title">Transport-surrogate validation on two scenarios</a>
+</td>
+<td>
+<span class="listing-categories">measured</span>
+</td>
+</tr>
+<tr data-index="24" data-categories="built" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="315" data-listing-title-sort="A baseline trainer for RF and pedestal response data" data-listing-filename-sort="25-response-baseline-training.qmd">
+<td>
+<span class="listing-date">7 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/25-response-baseline-training.html" class="title listing-title">A baseline trainer for RF and pedestal response data</a>
+</td>
+<td>
+<span class="listing-categories">built</span>
+</td>
+</tr>
+<tr data-index="25" data-categories="built,hardened" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="319" data-listing-title-sort="Guards and data interfaces for RF and pedestal surrogates" data-listing-filename-sort="24-rf-pedestal-contracts.qmd">
+<td>
+<span class="listing-date">7 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/24-rf-pedestal-contracts.html" class="title listing-title">Guards and data interfaces for RF and pedestal surrogates</a>
+</td>
+<td>
+<span class="listing-categories">built, hardened</span>
+</td>
+</tr>
+<tr data-index="26" data-categories="measured,negative" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="570" data-listing-title-sort="The v3 surrogates meet the held-out target" data-listing-filename-sort="23-v3-surrogates-held-out-target.qmd">
+<td>
+<span class="listing-date">7 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/23-v3-surrogates-held-out-target.html" class="title listing-title">The v3 surrogates meet the held-out target</a>
+</td>
+<td>
+<span class="listing-categories">measured, negative</span>
+</td>
+</tr>
+<tr data-index="27" data-categories="built" data-listing-date-sort="1790982000000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="661" data-listing-title-sort="Dataset v3: TGLF inputs along TORAX trajectories" data-listing-filename-sort="22-dataset-v3-torax-trajectories.qmd">
+<td>
+<span class="listing-date">3 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/22-dataset-v3-torax-trajectories.html" class="title listing-title">Dataset v3: TGLF inputs along TORAX trajectories</a>
+</td>
+<td>
+<span class="listing-categories">built</span>
+</td>
+</tr>
+<tr data-index="28" data-categories="built,measured" data-listing-date-sort="1790982000000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="743" data-listing-title-sort="The TGLF surrogate inside the TORAX loop" data-listing-filename-sort="21-tglf-surrogate-in-torax-loop.qmd">
+<td>
+<span class="listing-date">3 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/21-tglf-surrogate-in-torax-loop.html" class="title listing-title">The TGLF surrogate inside the TORAX loop</a>
+</td>
+<td>
+<span class="listing-categories">built, measured</span>
+</td>
+</tr>
+<tr data-index="29" data-categories="built,measured" data-listing-date-sort="1790982000000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="837" data-listing-title-sort="Heat-flux positivity and monotonicity of TGLF in the gradients" data-listing-filename-sort="20-heat-flux-positivity-monotonicity.qmd">
 <td>
 <span class="listing-date">3 Oct 2026</span>
 </td>
@@ -652,7 +972,18 @@ Categories
 <span class="listing-categories">built, measured</span>
 </td>
 </tr>
-<tr data-index="1" data-categories="built" data-listing-date-sort="1790982000000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="725" data-listing-title-sort="Baseline TGLF surrogates for MAST-U and ITER, including a recreated TGLF-NN" data-listing-filename-sort="18-tglf-surrogates-baseline.qmd">
+<tr data-index="30" data-categories="negative,decision" data-listing-date-sort="1790982000000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="828" data-listing-title-sort="Active learning round 1 against uniform sampling, and the plan for dataset v3" data-listing-filename-sort="19-active-learning-round-1.qmd">
+<td>
+<span class="listing-date">3 Oct 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/19-active-learning-round-1.html" class="title listing-title">Active learning round 1 against uniform sampling, and the plan for dataset v3</a>
+</td>
+<td>
+<span class="listing-categories">negative, decision</span>
+</td>
+</tr>
+<tr data-index="31" data-categories="built" data-listing-date-sort="1790982000000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="725" data-listing-title-sort="Baseline TGLF surrogates for MAST-U and ITER, including a recreated TGLF-NN" data-listing-filename-sort="18-tglf-surrogates-baseline.qmd">
 <td>
 <span class="listing-date">3 Oct 2026</span>
 </td>
@@ -663,7 +994,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="2" data-categories="built" data-listing-date-sort="1790895600000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="617" data-listing-title-sort="TGLF datasets for MAST-U and ITER, version 1" data-listing-filename-sort="17-tglf-datasets-mastu-iter.qmd">
+<tr data-index="32" data-categories="built" data-listing-date-sort="1790895600000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="617" data-listing-title-sort="TGLF datasets for MAST-U and ITER, version 1" data-listing-filename-sort="17-tglf-datasets-mastu-iter.qmd">
 <td>
 <span class="listing-date">2 Oct 2026</span>
 </td>
@@ -674,7 +1005,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="3" data-categories="measured" data-listing-date-sort="1790895600000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="527" data-listing-title-sort="TGLF built, checked and timed for the M2 datasets" data-listing-filename-sort="16-tglf-build-and-cost.qmd">
+<tr data-index="33" data-categories="measured" data-listing-date-sort="1790895600000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="527" data-listing-title-sort="TGLF built, checked and timed for the M2 datasets" data-listing-filename-sort="16-tglf-build-and-cost.qmd">
 <td>
 <span class="listing-date">2 Oct 2026</span>
 </td>
@@ -685,7 +1016,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="4" data-categories="measured" data-listing-date-sort="1790895600000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="609" data-listing-title-sort="ASCOT5 production run: alpha heating from 6400 markers" data-listing-filename-sort="15-ascot5-production-run.qmd">
+<tr data-index="34" data-categories="measured" data-listing-date-sort="1790895600000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="609" data-listing-title-sort="ASCOT5 production run: alpha heating from 6400 markers" data-listing-filename-sort="15-ascot5-production-run.qmd">
 <td>
 <span class="listing-date">2 Oct 2026</span>
 </td>
@@ -696,7 +1027,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="5" data-categories="fixed" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="443" data-listing-title-sort="Fix: NaN forward-mode gradients through TORAX's Newton solver" data-listing-filename-sort="14-forward-mode-nan.qmd">
+<tr data-index="35" data-categories="fixed" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="443" data-listing-title-sort="Fix: NaN forward-mode gradients through TORAX's Newton solver" data-listing-filename-sort="14-forward-mode-nan.qmd">
 <td>
 <span class="listing-date">1 Oct 2026</span>
 </td>
@@ -707,7 +1038,7 @@ Categories
 <span class="listing-categories">fixed</span>
 </td>
 </tr>
-<tr data-index="6" data-categories="decision" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="441" data-listing-title-sort="M1 physicist review: benchmark tolerance, pedestal, time step, ASCOT5 and the fallback model" data-listing-filename-sort="13-m1-physicist-review.qmd">
+<tr data-index="36" data-categories="decision" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="441" data-listing-title-sort="M1 physicist review: benchmark tolerance, pedestal, time step, ASCOT5 and the fallback model" data-listing-filename-sort="13-m1-physicist-review.qmd">
 <td>
 <span class="listing-date">1 Oct 2026</span>
 </td>
@@ -718,7 +1049,7 @@ Categories
 <span class="listing-categories">decision</span>
 </td>
 </tr>
-<tr data-index="7" data-categories="measured" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="482" data-listing-title-sort="ASCOT5 second cluster run: a tighter orbit tolerance, and a production run lost to a time limit" data-listing-filename-sort="12-ascot5-second-run.qmd">
+<tr data-index="37" data-categories="measured" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="482" data-listing-title-sort="ASCOT5 second cluster run: a tighter orbit tolerance, and a production run lost to a time limit" data-listing-filename-sort="12-ascot5-second-run.qmd">
 <td>
 <span class="listing-date">1 Oct 2026</span>
 </td>
@@ -729,7 +1060,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="8" data-categories="measured" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="564" data-listing-title-sort="ITER L-mode benchmark against RAPTOR, from the TORAX paper" data-listing-filename-sort="11-raptor-lmode-benchmark.qmd">
+<tr data-index="38" data-categories="measured" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="564" data-listing-title-sort="ITER L-mode benchmark against RAPTOR, from the TORAX paper" data-listing-filename-sort="11-raptor-lmode-benchmark.qmd">
 <td>
 <span class="listing-date">1 Oct 2026</span>
 </td>
@@ -740,7 +1071,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="9" data-categories="measured" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="506" data-listing-title-sort="ASCOT5 fusion-alpha heating for the ITER flat-top: first cluster run" data-listing-filename-sort="10-ascot5-alpha-heating.qmd">
+<tr data-index="39" data-categories="measured" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="506" data-listing-title-sort="ASCOT5 fusion-alpha heating for the ITER flat-top: first cluster run" data-listing-filename-sort="10-ascot5-alpha-heating.qmd">
 <td>
 <span class="listing-date">1 Oct 2026</span>
 </td>
@@ -751,7 +1082,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="10" data-categories="built" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="444" data-listing-title-sort="Run tracking with Simvue" data-listing-filename-sort="09-run-tracking.qmd">
+<tr data-index="40" data-categories="built" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="444" data-listing-title-sort="Run tracking with Simvue" data-listing-filename-sort="09-run-tracking.qmd">
 <td>
 <span class="listing-date">1 Oct 2026</span>
 </td>
@@ -762,7 +1093,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="11" data-categories="measured" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="463" data-listing-title-sort="Energy and particle balance on the ITER benchmark" data-listing-filename-sort="08-energy-particle-balance.qmd">
+<tr data-index="41" data-categories="measured" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="463" data-listing-title-sort="Energy and particle balance on the ITER benchmark" data-listing-filename-sort="08-energy-particle-balance.qmd">
 <td>
 <span class="listing-date">30 Sep 2026</span>
 </td>
@@ -773,7 +1104,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="12" data-categories="fixed" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="382" data-listing-title-sort="Fix: wrong minor radius in the IMAS export" data-listing-filename-sort="07-imas-export-minor-radius.qmd">
+<tr data-index="42" data-categories="fixed" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="382" data-listing-title-sort="Fix: wrong minor radius in the IMAS export" data-listing-filename-sort="07-imas-export-minor-radius.qmd">
 <td>
 <span class="listing-date">30 Sep 2026</span>
 </td>
@@ -784,7 +1115,7 @@ Categories
 <span class="listing-categories">fixed</span>
 </td>
 </tr>
-<tr data-index="13" data-categories="built" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="428" data-listing-title-sort="FreeGSNKE wrapper and a MAST-U free-boundary equilibrium" data-listing-filename-sort="06-freegsnke-mastu.qmd">
+<tr data-index="43" data-categories="built" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="428" data-listing-title-sort="FreeGSNKE wrapper and a MAST-U free-boundary equilibrium" data-listing-filename-sort="06-freegsnke-mastu.qmd">
 <td>
 <span class="listing-date">30 Sep 2026</span>
 </td>
@@ -795,7 +1126,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="14" data-categories="measured,built" data-listing-date-sort="1790031600000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="475" data-listing-title-sort="Solver stalls in the ITER ramp-up, analytic RF heating, Aurora and ASCOT5 builds" data-listing-filename-sort="05-stalls-rf-and-builds.qmd">
+<tr data-index="44" data-categories="measured,built" data-listing-date-sort="1790031600000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="475" data-listing-title-sort="Solver stalls in the ITER ramp-up, analytic RF heating, Aurora and ASCOT5 builds" data-listing-filename-sort="05-stalls-rf-and-builds.qmd">
 <td>
 <span class="listing-date">22 Sep 2026</span>
 </td>
@@ -806,7 +1137,7 @@ Categories
 <span class="listing-categories">measured, built</span>
 </td>
 </tr>
-<tr data-index="15" data-categories="built,fixed" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="429" data-listing-title-sort="Guard inside TORAX, and a fix for an unset smoothing default" data-listing-filename-sort="04-guard-inside-torax.qmd">
+<tr data-index="45" data-categories="built,fixed" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="429" data-listing-title-sort="Guard inside TORAX, and a fix for an unset smoothing default" data-listing-filename-sort="04-guard-inside-torax.qmd">
 <td>
 <span class="listing-date">21 Sep 2026</span>
 </td>
@@ -817,7 +1148,7 @@ Categories
 <span class="listing-categories">built, fixed</span>
 </td>
 </tr>
-<tr data-index="16" data-categories="measured" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="419" data-listing-title-sort="Fixed-step loop over TORAX and a time-step convergence study" data-listing-filename-sort="03-fixed-step-loop.qmd">
+<tr data-index="46" data-categories="measured" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="419" data-listing-title-sort="Fixed-step loop over TORAX and a time-step convergence study" data-listing-filename-sort="03-fixed-step-loop.qmd">
 <td>
 <span class="listing-date">21 Sep 2026</span>
 </td>
@@ -828,7 +1159,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="17" data-categories="built" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="343" data-listing-title-sort="TORAX backend and the ITER hybrid reference runs" data-listing-filename-sort="02-torax-backend.qmd">
+<tr data-index="47" data-categories="built" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="343" data-listing-title-sort="TORAX backend and the ITER hybrid reference runs" data-listing-filename-sort="02-torax-backend.qmd">
 <td>
 <span class="listing-date">21 Sep 2026</span>
 </td>
@@ -839,7 +1170,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="18" data-categories="built" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1791491082000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="452" data-listing-title-sort="Newton-Raphson solver for the coupling loop" data-listing-filename-sort="01-newton-solver.qmd">
+<tr data-index="48" data-categories="built" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1791747012000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="452" data-listing-title-sort="Newton-Raphson solver for the coupling loop" data-listing-filename-sort="01-newton-solver.qmd">
 <td>
 <span class="listing-date">21 Sep 2026</span>
 </td>
@@ -855,6 +1186,9 @@ Categories
 <div class="listing-no-matching d-none">
 No matching items
 </div>
+<nav id="log-pagination" class="listing-pagination" aria-label="Page Navigation">
+  <ul class="pagination"></ul>
+</nav>
 </div>
 </details>
 </section>
@@ -862,11 +1196,8 @@ No matching items
 <h2 class="anchored" data-anchor-id="whats-next">What’s next</h2>
 <p>The <a href="../../Blog/tokamak-toolkit/action-plan.html">action plan</a> gives dependencies and completion criteria.</p>
 <ul>
-<li><strong>Measure matched final-model speed-up.</strong> Resolve the cancelled compute run, then compare TGLF, final v3 and QLKNN at matched settings. The local derivative, fallback and balance checks are complete (<span class="claim">15 gradient, JIT, fallback and discrete-balance checks pass across RAPTOR and ITER hybrid in each mode</span><a href="../../Blog/tokamak-toolkit/claims.html#c-146" class="cid st-tested">C-146</a>); runtime evidence remains open.</li>
-<li><strong>Complete EC and ITER pedestal contracts</strong> (<a href="../../Blog/tokamak-toolkit/decisions.html#oq-21">OQ-21</a>), independently of the compute investigation. Reference/model/channels are selected; launch/current conventions and the coupled pedestal boundary mapping remain open. MAST-U predictive closure and IC are deferred.</li>
-<li><strong>Train and integrate response surrogates.</strong> Guards, grouped datasets and baseline training are built, and the selected pretrained ITER pedestal model is ported. Label EC reference cases, agree accuracy targets, train EC ensembles and test guarded coupled execution.</li>
+<li><strong>M4: verification.</strong> Properties and tooling are selected (<a href="../../Blog/tokamak-toolkit/decisions.html#oq-22">OQ-22</a>–24), property contracts are written, and the saved transport comparisons pass on ITER and fail on MAST-U (<a href="../../Blog/tokamak-toolkit/log/42-m4-properties-and-transport-check.html">entry 42</a>). Exports pass the approved numeric gate. The owner prioritized MAST-U remediation before further proofs and calibration. Matched flux probes and an exact replay are complete (<a href="../../Blog/tokamak-toolkit/log/43-mastu-feedback-diagnosis.html">entry 43</a>); the approved training-only label refresh completed and passes local artifact checks (<a href="../../Blog/tokamak-toolkit/log/44-mastu-refresh-artifact-checks.html">entry 44</a>). Artifact synchronization and downloaded-checksum verification are complete (<a href="../../Blog/tokamak-toolkit/log/45-mastu-artifact-upload-verified.html">entry 45</a>). Retraining preparation passes focused checks and a training-only smoke (<a href="../../Blog/tokamak-toolkit/log/46-mastu-retraining-preparation.html">entry 46</a>); the concrete compute request was approved and executed once. The candidate completion audit and numerical export checks pass (<a href="../../Blog/tokamak-toolkit/log/47-mastu-candidate-trained-and-checked.html">entry 47</a>); the offline comparison retains mixed regressions. Coupled replay preparation now passes its focused checks and training-only smoke (<a href="../../Blog/tokamak-toolkit/log/48-mastu-candidate-replay-preparation.html">entry 48</a>); the approved solver replay completes, but reference coverage fails (<a href="../../Blog/tokamak-toolkit/log/49-mastu-replay-reference-coverage-fails.html">entry 49</a>). Resolve reference admissibility and review the bounded follow-up next. The approved reference diagnostic is consumed (<span class="claim">the diagnostic completes in 517 seconds within its 30-minute bound, with 40 finite converged steps, exact historical temperature/density/poloidal-flux-profile and final-mask equality, and 171 passing saved-output integrity checks</span><a href="../../Blog/tokamak-toolkit/claims.html#c-193" class="cid st-measured">C-193</a>); negative raw heat diffusivity explains the rejected face (<span class="claim">final face 4 at normalized radius 0.16 has valid inputs but raw electron heat diffusivity -0.02792124888 m²/s; negative heat diffusivity rejects that face at 8 of 40 accepted states; reference rejection is 323/1040 accepted-state face records (31.0577%)</span><a href="../../Blog/tokamak-toolkit/claims.html#c-194" class="cid st-measured">C-194</a>). Reference physics disposition remains ahead (<a href="../../Blog/tokamak-toolkit/decisions.html#oq-32">OQ-32</a>). <a href="../../Blog/tokamak-toolkit/ceilings.html#k-030">K-030</a> remains open.</li>
 <li><strong>Profile Newton separately</strong> (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-022">K-022</a>), distinguishing compilation, ensemble evaluation and Jacobian cost. Historical speed-up belongs to v1.</li>
-<li><strong>Close M3 before verification.</strong> Audit accuracy, differentiable guarded execution and measured speed-up for every required task. At M4, agree properties and trajectory tolerances, prove input-box properties, calibrate uncertainty and prepare certification review.</li>
 <li><strong>ASCOT5 follow-ups, before neutral-beam ions</strong>: the alphas’ mean birth energy (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-011">K-011</a>) and the core heating profile (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-012">K-012</a>).</li>
 <li><strong>Future extension:</strong> extending the benchmark to a STEP power-plant flat-top is planned as a future extension. For now the work stays with the ITER benchmark and MAST-U.</li>
 </ul>

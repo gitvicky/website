@@ -1,0 +1,52 @@
+---
+title: MAST-U remediation starts with matched fluxes and guard history
+date: '2026-10-11'
+categories:
+- measured
+- negative
+entry: 43
+milestone: M4
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} [negative result]{.chip .negative} Entry 43 · milestone M4
+:::
+
+The owner prioritized remediation of the failed MAST-U coupled transport check. The
+chosen temperature limit stays in place. Before changing a model, this step checks which
+predictions are wrong and whether the guard explains the observed fallback faces.
+
+**Matched fluxes.** A bounded local probe sends the failed run's final-state inputs to
+TGLF, using the existing solver settings. Every in-domain face returns finite fluxes.
+The isolated inner served face contributes most of the temperature error, yet both
+the surrogate and TGLF predict zero heat flux there at the final state. That result
+shows why a local final-state prediction cannot explain the whole evolving profile.
+Elsewhere, flux discrepancies are large: [all 17 in-domain final-state probes succeed; on 12 served faces with reference flux above 1 gB, median relative errors are 41.17% Q_e and 74.27% Q_i; an unconstrained v3 control gives 38.05/71.88%]{.claim}[C-181](/Blog/tokamak-toolkit/claims.qmd#c-181){.cid .st-measured}.
+
+The existing unconstrained model is a diagnostic control, evaluated on those same
+states. It also has large errors. This comparison provides no demonstrated shortcut
+through dropping the owner-required monotonicity constraint.
+
+| diagnostic | result |
+|---|---|
+| matched flux probes and diagnostic control | [all 17 in-domain final-state probes succeed; on 12 served faces with reference flux above 1 gB, median relative errors are 41.17% Q_e and 74.27% Q_i; an unconstrained v3 control gives 38.05/71.88%]{.claim}[C-181](/Blog/tokamak-toolkit/claims.qmd#c-181){.cid .st-measured} |
+| training use of the failed-case probes | none |
+| replay | [all saved temperature, density and psi values are reproduced exactly; four final inner faces exceed the existing ion-diffusivity guard bound; 44.81% of accepted-state face diagnostics reject the surrogate]{.claim}[C-182](/Blog/tokamak-toolkit/claims.qmd#c-182){.cid .st-measured} |
+
+**Guard history.** The local surrogate replay captures diagnostics at accepted states,
+after timed stepping. At the final state, four inner faces are inside the input box
+but have predicted ion diffusivity above the existing guard bound. The served region
+changes during the run. These diagnostics still do not count intermediate evaluations
+inside the solver, and the guard settings are unchanged.
+
+**Next experiment.** A prepared label-refresh pipeline collects surrogate-feedback
+states on training equilibria, filters them through the existing approved region and
+keeps the full solver inputs. Both test equilibria remain excluded. A training-case
+smoke run and focused filtering checks pass; no production label job has been submitted.
+Its compute request goes to the owner before execution. Retraining and another coupled
+comparison will be needed to establish whether the proposed coverage remedy works.
+
+::: {.entry-links}
+**Technical details →** [Verification › mastu remediation](/Blog/tokamak-toolkit/technical/verification.qmd#mastu-remediation)  
+**Decisions →** [OQ-25](/Blog/tokamak-toolkit/decisions.qmd#oq-25)
+:::

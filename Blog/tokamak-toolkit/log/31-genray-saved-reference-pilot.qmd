@@ -1,0 +1,60 @@
+---
+title: Checking a saved EC reference and retaining pilot failures
+date: '2026-10-08'
+categories:
+- built
+entry: 31
+milestone: M3
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 31 · milestone M3
+:::
+
+We need a reference-file check and a runner that retains failed cases before
+sampling electron-cyclotron (EC) labels. The [Primer](../primer.qmd) explains why
+surrogate data needs a defined source; terminology is in the
+[Glossary](../glossary.qmd).
+
+We checked the EC reader against a real saved output in the upstream
+regression suite: [200 native bins in the saved upstream ITER EC output pass reader and accounting checks]{.claim}[C-152](/Blog/tokamak-toolkit/claims.qmd#c-152){.cid .st-measured}. Its power and toroidal-current integrals
+agree with the stored totals to floating-point precision. The file identifies
+an older solver version. Reading it validates the boundary adapter; it does not
+select a project launch, establish current-solver accuracy or produce new labels.
+The upstream file is independent of our synthetic fixtures; its accounting
+check still uses our reader.
+
+The saved case also shows why current conventions matter: parallel current is
+negative while toroidal and ONETWO currents are positive. Preserving the channels
+and their signs is necessary before defining a transport-source conversion.
+
+The new pilot runner requires explicit input files, executable, reference/build
+identity, case and family IDs, lineage and wall limit. It snapshots the inputs
+and binary, retains logs and partial outputs, records failures, and refuses to
+overwrite a previous run. A timeout kills the subprocess group. Every retained
+regular file has content-bound provenance. A readable output remains draft data;
+it is not a physical acceptance result or a training dataset.
+
+[40 focused pilot, reader and Tier A checks pass in full and Tier-A-only modes]{.claim}[C-153](/Blog/tokamak-toolkit/claims.qmd#c-153){.cid .st-tested}. Lifecycle tests use fake executables, including failed launches,
+nonzero exits, malformed or missing outputs, changed inputs, timeout cleanup,
+Tier B lineage rejection and CLI failure reporting. Historical full-suite
+statistics remain separate from these focused checks.
+
+Compiler and NetCDF modules are available. The checked compiler configuration
+does not resolve the plotting library required by the upstream build, so that
+dependency or a documented executable remains needed. No reference build, solver
+execution or cluster job was performed at this checkpoint. The
+[build](32-genray-build-and-pilot-request.qmd) and
+[numerical execution](34-genray-corrected-numerical-pilot.qmd) follow separately.
+Production baseline and pedestal-boundary choices
+remain with the owner; the independent ITER port is unchanged.
+M3 remains in progress.
+
+Technical details → [EC boundary](../technical/surrogates.qmd#genray-output) and
+[bounded pilot lifecycle](../technical/surrogates.qmd#genray-pilot).
+Decision → [OQ-21](../decisions.qmd#oq-21).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › genray output](/Blog/tokamak-toolkit/technical/surrogates.qmd#genray-output) · [Surrogates › genray pilot](/Blog/tokamak-toolkit/technical/surrogates.qmd#genray-pilot)  
+**Decisions →** [OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21)
+:::

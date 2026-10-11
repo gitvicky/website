@@ -1658,6 +1658,376 @@ Superseded by <a href="#c-067">C-067</a></td>
 <code>run the seven listed test files individually with pytest --junitxml in normal mode and TKIT_TIER_A_ONLY=1; aggregate the complete report tree using blog/tools/stats.py --from-junit</code></td>
 <td><code>66cc594; fresh execution at parent 3d28f9f with exact final source hashes bound</code></td>
 </tr>
+<tr id="c-158" class="even">
+<td class="cid-cell">C-158</td>
+<td>Matched end-to-end timing of the final monotone v3 surrogate on RAPTOR L-mode: linear solver, host driver, 40 fixed steps of 0.05 s, compilation and one warm-up step excluded<br>
+<span class="tol">job 2650336, one CPU node, same host for all three; surrogate and QLKNN each use one core, TGLF uses 51 worker processes; zero stalled or coarse-tolerance steps; single run, no repeat timing</span></td>
+<td class="val">TGLF 539.1 s, final v3 surrogate 1.249 s, QLKNN 0.117 s; the v3 surrogate is about 432 times faster than TGLF and 10.7 times slower than QLKNN</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>data/m3/validation/loop/job_2650336/ (tglf.npz, surrogate.npz, qlknn.npz metadata; provenance sidecars bind the runner, script, commit 6fb189c and source diff)<br>
+<code>sbatch scripts/m3_surrogate_loop.sbatch (needs an approved compute request)</code></td>
+<td><code>6fb189c</code></td>
+</tr>
+<tr id="c-159" class="odd">
+<td class="cid-cell">C-159</td>
+<td>Closed-loop profiles at t = 2 s against TGLF, RAPTOR L-mode, job 2650336, normalised root-mean-square deviation<br>
+<span class="tol">one trajectory, one case; the guarded surrogate uses the Bohm/gyro-Bohm fallback on faces outside its training domain (C-160), so the deviation describes the guarded model</span></td>
+<td class="val">final v3 surrogate: T_e 7.7%, T_i 9.2%, n_e 11.4%, psi 0.32%; QLKNN: T_e 155%, T_i 128%, n_e 86%, psi 2.4%</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>data/m3/validation/loop/job_2650336/comparison.json<br>
+<code>python scripts/m3_surrogate_loop.py compare tglf.npz surrogate.npz qlknn.npz --out comparison.json</code></td>
+<td><code>6fb189c</code></td>
+</tr>
+<tr id="c-160" class="even">
+<td class="cid-cell">C-160</td>
+<td>Faces of the final accepted state outside the guard's domain, final v3 surrogate, RAPTOR L-mode, job 2650336<br>
+<span class="tol">final accepted state only, not a trajectory average; every rejected face is outside the training input box</span></td>
+<td class="val">17 of 51 faces (rho_tor_norm up to 0.08 and from 0.78) are outside the guard's domain and use the fallback</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>data/m3/validation/loop/job_2650336/surrogate.npz (ok_transport_final, final_in_domain)<br>
+<code>read the two masks from the saved run file</code></td>
+<td><code>6fb189c</code></td>
+</tr>
+<tr id="c-161" class="odd">
+<td class="cid-cell">C-161</td>
+<td>Cause of the immediate cancellation of comparison job 2611883<br>
+<span class="tol">inferred from accounting records (same state, zero elapsed time, two nodes repeat); no statement from the scheduler operators</span></td>
+<td class="val">seven full-node jobs since 2 Oct were cancelled by root at start with no reason; each resubmission landed on another node and ran</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>sacct records of the project's jobs 2026-10-02 to 2026-10-07; spec/reports/M3.md (2026-10-10)<br>
+<code>sacct -X --format=JobID,State,Elapsed,NodeList over the project's jobs</code></td>
+<td><code>7f0f1b7</code></td>
+</tr>
+<tr id="c-162" class="even">
+<td class="cid-cell">C-162</td>
+<td>ITER pedestal from the EPEDNN port under the OQ-21 contract (GH solution 0, T_i = T_e, top at psi_norm = 1 - 2 x half-width), upstream ITER example input, Z_eff 1.5 with carbon<br>
+<span class="tol">one input point; the selected single network has no ensemble spread; not coupled to TORAX yet</span></td>
+<td class="val">pedestal pressure 0.0772 MPa, T_ped 3.59 keV at n_e,ped 7e19 m^-3, top at psi_norm 0.935</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>tests/unit/test_pedestal_contract.py::test_selected_model_on_the_upstream_iter_example<br>
+<code>pytest tests/unit/test_pedestal_contract.py</code></td>
+<td><code>5ec80f4</code></td>
+</tr>
+<tr id="c-163" class="odd">
+<td class="cid-cell">C-163</td>
+<td>Focused checks of the EC dataset pipeline and the pedestal contract pass in both modes<br>
+<span class="tol">synthetic NetCDF files and fake executables for the pipeline; real EPEDNN weights in one pedestal test; zero failures or skips</span></td>
+<td class="val">19 focused checks (13 EC pipeline, 6 pedestal contract) pass in full and Tier-A-only modes</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/unit/test_genray_ec.py, tests/unit/test_pedestal_contract.py<br>
+<code>pytest tests/unit/test_genray_ec.py tests/unit/test_pedestal_contract.py (and with TKIT_TIER_A_ONLY=1)</code></td>
+<td><code>5ec80f4</code></td>
+</tr>
+<tr id="c-164" class="even">
+<td class="cid-cell">C-164</td>
+<td>GENRAY EC dataset v1 on ITER states (39 TORAX runs x 8 states x 10 launches), job 2650369<br>
+<span class="tol">one equilibrium for all states (K-028); one central ray per case; labels per MW injected; no physical acceptance threshold</span></td>
+<td class="val">3120 of 3120 cases produce readable output (20 of 20 check cases); median 84.8 s of GENRAY time per case</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>data/m3/genray_ec/v1/summary.json and the two response datasets with provenance sidecars; Simvue run genray-ec-dataset-iter-v1<br>
+<code>sbatch scripts/m3_genray_ec.sbatch (needs an approved compute request)</code></td>
+<td><code>7f0f1b7</code></td>
+</tr>
+<tr id="c-165" class="odd">
+<td class="cid-cell">C-165</td>
+<td>Driven current from the momentum-conservation deck (ieffic=4) against the main ieffic=6 labels, 20 check cases<br>
+<span class="tol">two cases with |I_cd| below 0.3 kA differ in sign or by a factor two</span></td>
+<td class="val">median 4.1% difference in driven current (range -14% to +16%), identical absorbed power</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>data/m3/genray_ec/v1/summary.json (check)<br>
+<code>python -m tkit.datasets.genray_ec assemble</code></td>
+<td><code>7f0f1b7</code></td>
+</tr>
+<tr id="c-166" class="even">
+<td class="cid-cell">C-166</td>
+<td>First held-out baseline on EC dataset v1 (unconstrained 5-member ensemble, 64x2, 640 test cases from 8 held-out TORAX runs)<br>
+<span class="tol">draft dataset; no accuracy target set (B3); uncalibrated spread covers 0.60-0.90 of errors at two spreads</span></td>
+<td class="val">driven current RMSE 3.30 kA/MW against 13.5 kA/MW for the training mean; pointwise profile model: current-density RMSE 2.20e4 A/m<sup>2 against 2.09e4 A/m</sup>2 for the mean</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>data/m3/genray_ec/v1/baseline-case/meta.json and baseline-profile/meta.json<br>
+<code>python -m tkit.surrogates.responses &lt;dataset&gt; &lt;out&gt; --config configs/surrogates/m3_ec_genray_v1_&lt;case|profile&gt;.json --allow-draft</code></td>
+<td><code>86ea238</code></td>
+</tr>
+<tr id="c-167" class="odd">
+<td class="cid-cell">C-167</td>
+<td>EC states kept under K-028 option (b), prescribed I_p at least 10 MA (two thirds of the equilibrium's 15 MA)<br>
+<span class="tol">I_p from the TORAX configuration, piecewise linear in time; kept states at 10.5-11.5 MA still use the 15 MA equilibrium</span></td>
+<td class="val">2910 of 3120 cases kept (210 early ramp-up cases dropped); largest driven current 61 kA/MW, was 279 kA/MW</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>data/m3/genray_ec/v1/structured-filter.json and ec-genray-iter-v1-structured.npz with provenance; Simvue run genray-ec-structured-iter-v1<br>
+<code>python -m tkit.datasets.genray_ec structured</code></td>
+<td><code>e0f1a09</code></td>
+</tr>
+<tr id="c-168" class="even">
+<td class="cid-cell">C-168</td>
+<td>Structured EC ensemble (5 members, width 128, depth 3, selected on validation) on the test split of the structured EC dataset: 640 cases from 8 held-out TORAX runs, per MW injected<br>
+<span class="tol">scored once on test; one equilibrium (K-028); one central ray; absorbed power is near complete in almost every case; ensemble spread not calibrated</span></td>
+<td class="val">all three targets pass: absorbed power 0.01% and driven current 2.7% median relative error (targets 10%), heating centre 0.0036 median absolute error in rho (target 0.05)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>data/m3/genray_ec/v1/structured-w128d3/ (model, metadata, provenance) and structured-w128d3-test.json; targets configs/surrogates/m3_ec_targets.yaml<br>
+<code>python -m tkit.surrogates.responses ec-genray-iter-v1-structured.npz out --config configs/surrogates/m3_ec_structured_w128d3.json --allow-draft; python -m tkit.surrogates.ec_structured out --split test</code></td>
+<td><code>e0f1a09</code></td>
+</tr>
+<tr id="c-169" class="odd">
+<td class="cid-cell">C-169</td>
+<td>Profiles rebuilt from the structured EC ensemble's outputs (cell-integrated Gaussians normalised to the predicted totals) against GENRAY's remapped profiles, test split<br>
+<span class="tol">diagnostic, not a target; the Gaussian of the true parameters is the shape's floor</span></td>
+<td class="val">heating RMSE 8.6e3 W/m<sup>3 (training mean 1.34e4, Gaussian of the true parameters 5.4e3); current RMSE 1.35e4 A/m</sup>2 (training mean 2.09e4, Gaussian of the true parameters 5.0e3)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>data/m3/genray_ec/v1/structured-w128d3-test.json (profiles)<br>
+<code>python -m tkit.surrogates.ec_structured out --split test --profile-dataset ec-genray-iter-v1-profile.npz --genray-nc &lt;any case&gt;/genray.nc --rho-scale 0.99887</code></td>
+<td><code>e0f1a09</code></td>
+</tr>
+<tr id="c-170" class="even">
+<td class="cid-cell">C-170</td>
+<td>Focused checks of the EC pipeline, structured labels and structured evaluation pass in both modes<br>
+<span class="tol">synthetic NetCDF files and fake executables; zero failures or skips</span></td>
+<td class="val">19 focused checks (15 EC pipeline and structured labels, 4 structured evaluation) pass in full and Tier-A-only modes</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/unit/test_genray_ec.py, tests/unit/test_ec_structured.py<br>
+<code>pytest tests/unit/test_genray_ec.py tests/unit/test_ec_structured.py (and with TKIT_TIER_A_ONLY=1)</code></td>
+<td><code>e0f1a09</code></td>
+</tr>
+<tr id="c-171" class="odd">
+<td class="cid-cell">C-171</td>
+<td>EC surrogate as TORAX's ecrh source on ITER hybrid (10 MW of generic heating moved to EC, Newton, 3 steps of 0.05 s): jit for both launchers, heating integral, discrete balance and derivatives through Newton<br>
+<span class="tol">residual_tol 1e-10 for balance and derivatives; guard decision unchanged over the stencil; three steps only</span></td>
+<td class="val">runs under jit for both launchers with the surrogate serving the source; energy balance within 1e-6 and particles within 1e-10; derivatives through Newton match finite differences to 1e-7</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/physics/test_torax_ec_loop.py, tests/diff/test_torax_ec_gradients.py, tests/unit/test_torax_ec.py<br>
+<code>pytest tests/physics/test_torax_ec_loop.py tests/diff/test_torax_ec_gradients.py tests/unit/test_torax_ec.py</code></td>
+<td><code>433bf5b</code></td>
+</tr>
+<tr id="c-172" class="even">
+<td class="cid-cell">C-172</td>
+<td>EC surrogate source over the full ITER hybrid trajectory (TORAX's shipped settings, 5 s) against its Gaussian fallback alone, and per-call cost against GENRAY<br>
+<span class="tol">single timings, four runs side by side on separate cores; GENRAY cannot run inside TORAX's step</span></td>
+<td class="val">surrogate serves 29 of 30 states (upper launcher) and 16 of 27 (equatorial; core T_e leaves the training range); run time 1.6-1.7 times the analytic source; one call 39 microseconds against 85 s for GENRAY</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>data/m3/validation/ec_coupled/ (run files and summary); data/m3/genray_ec/v1/summary.json<br>
+<code>python scripts/m3_ec_coupled.py run &lt;UL|EL&gt; &lt;surrogate|fallback&gt;; python scripts/m3_ec_coupled.py summarise</code></td>
+<td><code>433bf5b</code></td>
+</tr>
+<tr id="c-173" class="odd">
+<td class="cid-cell">C-173</td>
+<td>EPEDNN pedestal as a TORAX pedestal model on ITER hybrid (Newton, 3 steps of 0.05 s): jit, fallback on the amu mass, discrete balance and derivatives through Newton<br>
+<span class="tol">residual_tol 1e-10 for balance and derivatives; EPEDNN decision unchanged over the stencil</span></td>
+<td class="val">runs under jit with EPEDNN setting the pedestal; energy balance within 1e-6 and particles within 1e-10; derivatives through Newton match finite differences to 1e-7</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/physics/test_torax_pedestal_loop.py, tests/diff/test_torax_pedestal_gradients.py, tests/unit/test_pedestal_contract.py<br>
+<code>pytest tests/physics/test_torax_pedestal_loop.py tests/diff/test_torax_pedestal_gradients.py</code></td>
+<td><code>f250ce8</code></td>
+</tr>
+<tr id="c-174" class="even">
+<td class="cid-cell">C-174</td>
+<td>EPEDNN pedestal over the full ITER hybrid trajectory (TORAX's shipped settings, 5 s) against the scenario's prescribed pedestal (T_ped 4.5 keV, top 0.90)<br>
+<span class="tol">one scenario; n_e,ped and composition prescribed; single timing</span></td>
+<td class="val">EPEDNN sets the pedestal on 48 of 48 states: T_ped 2.62-2.69 keV, top 0.90-0.92; final stored thermal energy 220 MJ against 303 MJ, beta_N 1.57 against 2.16; about 1.5 times the prescribed model per step</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>data/m3/validation/pedestal_coupled/ (run files and summary)<br>
+<code>python scripts/m3_pedestal_coupled.py run &lt;epednn|prescribed&gt;; python scripts/m3_pedestal_coupled.py summarise</code></td>
+<td><code>f250ce8</code></td>
+</tr>
+<tr id="c-175" class="odd">
+<td class="cid-cell">C-175</td>
+<td>Final monotone v3 MAST-U transport surrogate behind the guard on MAST-U states of dataset v3<br>
+<span class="tol">three steps; density not evolved in these runs; MAST-U end-to-end timing against TGLF not measured</span></td>
+<td class="val">linear solver: every step converges on two equilibria with the fallback serving 31-35% of faces; on a converging Newton case energy balance within 1e-6 and derivatives match finite differences to 1e-7; Newton does not converge at the runs' 5 ms steps from these initial states (K-029)</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/physics/test_torax_surrogate_mastu_loop.py, tests/diff/test_torax_surrogate_mastu_gradients.py<br>
+<code>pytest tests/physics/test_torax_surrogate_mastu_loop.py tests/diff/test_torax_surrogate_mastu_gradients.py</code></td>
+<td><code>f250ce8</code></td>
+</tr>
+<tr id="c-176" class="even">
+<td class="cid-cell">C-176</td>
+<td>Matched end-to-end timing of the final monotone v3 MAST-U surrogate: dataset-v3 MAST-U run (FreeGSNKE equilibrium), linear solver, host driver, 40 fixed steps of 5 ms, compilation and one warm-up step excluded<br>
+<span class="tol">job 2650876, one node; TGLF on 26 worker processes, the others on one core; one case, single timing; faces with meaningless TGLF inputs (axis) go to the fallback in the TGLF run</span></td>
+<td class="val">TGLF 364.1 s, surrogate 0.492 s, Bohm/gyro-Bohm 0.043 s: the surrogate is about 740 times faster than TGLF; profile deviation from TGLF at 0.2 s, T_e 41.5% and T_i 62.4% (Bohm/gyro-Bohm 47.9% and 84.6%), with half the faces outside the training window and on the fallback</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>data/m3/validation/loop_mastu/job_2650876/ (run files, comparison, runner and script as executed, commit da7b7e8)<br>
+<code>sbatch scripts/m3_surrogate_loop_mastu.sbatch (needs an approved compute request)</code></td>
+<td><code>da7b7e8</code></td>
+</tr>
+<tr id="c-177" class="odd">
+<td class="cid-cell">C-177</td>
+<td>M4 owner-selected property contracts and strict schema validation<br>
+<span class="tol">contracts preserve OQ-20 and OQ-22; no formal proof is claimed by a parsing test</span></td>
+<td class="val">six property contracts load; 14 property-validation tests pass in each mode, including malformed-domain, tolerance and output-schema rejection</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/unit/test_verify_properties.py; configs/properties/<br>
+<code>pytest tests/unit/test_verify_properties.py; TKIT_TIER_A_ONLY=1 pytest tests/unit/test_verify_properties.py</code></td>
+<td><code>ca488f2</code></td>
+</tr>
+<tr id="c-178" class="even">
+<td class="cid-cell">C-178</td>
+<td>M4 V8 final monotone v3 ITER transport compared with TGLF at the final accepted state of the saved matched run<br>
+<span class="tol">paper eq. 41 normalized by surrogate mean; both cell profiles interpolated onto the guard faces; final-state mask only</span></td>
+<td class="val">served-face T_e 7.42%, T_i 8.18%, both passing the 15% limit; whole profile 7.72/9.23%; 34 of 51 final-state faces served</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-transport-closed-loop.json; saved matched ITER run<br>
+<code>python scripts/m4_transport_closed_loop.py</code></td>
+<td><code>ca488f2</code></td>
+</tr>
+<tr id="c-179" class="odd">
+<td class="cid-cell">C-179</td>
+<td>M4 V8 final monotone v3 MAST-U transport misses the unchanged closed-loop accuracy limit against TGLF<br>
+<span class="tol">paper eq. 41 normalized by surrogate mean; both cell profiles interpolated onto guard faces; K-030; final mask is not trajectory fallback accounting</span></td>
+<td class="val">served-face T_e 35.33%, T_i 49.15%, both failing 15%; whole profile 41.51/62.39%; cells with both adjacent faces served give 11.86/23.24%, still failing T_i; 13 of 26 final-state faces served</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-transport-closed-loop.json; saved matched MAST-U run<br>
+<code>python scripts/m4_transport_closed_loop.py</code></td>
+<td><code>ca488f2</code></td>
+</tr>
+<tr id="c-180" class="even">
+<td class="cid-cell">C-180</td>
+<td>Float64 PyTorch exports preserve the selected JAX networks and prediction transforms under owner-approved mixed parity<br>
+<span class="tol">mixed numerical parity approved in OQ-26; no labelled pedestal holdout exists, so its additional checks use domain boundaries and centre; no formal proof follows from parity</span></td>
+<td class="val">13 export checks pass in each mode: all selected members, random box points, local holdouts, physical transforms and served means, with rtol=1e-12 and atol=1e-12 in each declared output unit</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/unit/test_verify_export.py; reviews/m4-export-parity.json<br>
+<code>pytest tests/unit/test_verify_export.py; TKIT_TIER_A_ONLY=1 pytest tests/unit/test_verify_export.py</code></td>
+<td><code>ca488f2</code></td>
+</tr>
+<tr id="c-181" class="odd">
+<td class="cid-cell">C-181</td>
+<td>Matched TGLF probes expose large MAST-U heat-flux errors on the failed surrogate feedback states<br>
+<span class="tol">one failed trajectory, not a population or closed-loop estimate; full solver inputs, existing SAT2 settings; held-out diagnostic labels never enter training</span></td>
+<td class="val">all 17 in-domain final-state probes succeed; on 12 served faces with reference flux above 1 gB, median relative errors are 41.17% Q_e and 74.27% Q_i; an unconstrained v3 control gives 38.05/71.88%</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-flux-probe.json; reviews/m4-mastu-assessment.json and bound sidecars<br>
+<code>python scripts/m4_mastu_probe.py; python scripts/m4_mastu_assess.py</code></td>
+<td><code>bc1d0a9</code></td>
+</tr>
+<tr id="c-182" class="even">
+<td class="cid-cell">C-182</td>
+<td>MAST-U accepted-state diagnostic replay exactly reproduces the failed saved profiles and identifies coefficient-guard rejections<br>
+<span class="tol">40 accepted states, not solver-intermediate transport-call accounting; no guard settings changed</span></td>
+<td class="val">all saved temperature, density and psi values are reproduced exactly; four final inner faces exceed the existing ion-diffusivity guard bound; 44.81% of accepted-state face diagnostics reject the surrogate</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-assessment.json; data/m4/validation/mastu-remediation/history.npz and executed runner snapshot<br>
+<code>python scripts/m3_surrogate_loop.py run --case mastu --transport surrogate --solver linear --driver host --steps 40 --warmup-step --diagnostic-history --out history.npz</code></td>
+<td><code>bc1d0a9</code></td>
+</tr>
+<tr id="c-183" class="odd">
+<td class="cid-cell">C-183</td>
+<td>Completed MAST-U feedback label collection passes local artifact integrity checks<br>
+<span class="tol">collection integrity only; no retraining, held-out accuracy or improved closed-loop result is claimed; remote tracking synchronization is recorded separately in C-184</span></td>
+<td class="val">eight local checks pass for approved allocation/time, hashes and lineage, full-input alignment, case budget, unique coordinates, training-only equilibria, source model and finite successful labels</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-refresh-result.json and bound sidecar; scripts/m4_mastu_refresh_review.py<br>
+<code>python scripts/m4_mastu_refresh_review.py --job 2656846</code></td>
+<td><code>24fc139</code></td>
+</tr>
+<tr id="c-184" class="even">
+<td class="cid-cell">C-184</td>
+<td>Approved MAST-U refresh upload retains private visibility and matches downloaded artifact checksums<br>
+<span class="tol">synchronization integrity only; duplicate provenance sidecars remain separate records; no model training or improved physics accuracy is claimed</span></td>
+<td class="val">all 26 uploaded artifact records covering 18 distinct files match both remote SHA-256 metadata and downloaded bytes; the folder and private visibility match the approved request, and the offline payload queue is empty</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-simvue-upload-result.json and bound sidecar; approved upload manifest<br>
+<code>python data/m4/remediation/mastu/job_2656846/verify_simvue_upload.py (read-only remote downloads; requires the configured private account)</code></td>
+<td><code>9854782</code></td>
+</tr>
+<tr id="c-185" class="odd">
+<td class="cid-cell">C-185</td>
+<td>MAST-U feedback retraining preparation passes focused regression checks and a bounded training-only smoke<br>
+<span class="tol">tooling and split isolation only; smoke results are not acceptance metrics; unchanged-file execution reports are retained for aggregate statistics</span></td>
+<td class="val">55 focused checks pass in both normal and Tier A modes; the bounded training-only smoke produces finite predictions and reloads exactly</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>reviews/m4-mastu-training-preparation.json and bound sidecar; data/m4/preparation/mastu/suites; smoke-v3/result.json<br>
+<code>python -m pytest tests/unit/test_m4_feedback.py tests/unit/test_surrogate_train.py tests/unit/test_surrogate_predict.py tests/unit/test_surrogate_monotone.py tests/unit/test_surrogate_monotonicity.py tests/unit/test_surrogate_positivity.py tests/unit/test_provenance_integrity.py</code></td>
+<td><code>6e9ef9f</code></td>
+</tr>
+<tr id="c-186" class="even">
+<td class="cid-cell">C-186</td>
+<td>The approved MAST-U candidate completes within budget and passes its completion integrity audit<br>
+<span class="tol">completion integrity only; no coupled accuracy, formal certificate, synchronization or replacement is claimed</span></td>
+<td class="val">164 completion checks pass, binding the saved candidate to the reviewed snapshot and frozen data/splits, with finite parameters/history and tested member/served predictions</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-training-result.json and bound sidecar; native final accounting<br>
+<code>python data/m4/preparation/mastu/verify-completion-as-executed.py (preserve and move the existing output report before rerunning; never overwrite the candidate)</code></td>
+<td><code>655c7cf</code></td>
+</tr>
+<tr id="c-187" class="odd">
+<td class="cid-cell">C-187</td>
+<td>The MAST-U feedback candidate passes all-member and served numerical export parity<br>
+<span class="tol">rtol=1e-12 and atol=1e-12 in each declared output unit (OQ-26); numerical parity and sampled derivatives do not replace formal M4 proofs</span></td>
+<td class="val">all 168 export comparison records pass the unchanged mixed tolerance, covering all 20 members in training/physical units, the served ensemble and JAX JIT/eager arithmetic</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-offline-result.json and bound sidecar; source-bound offline review<br>
+<code>python data/m4/preparation/mastu/offline-review-as-executed.py (preserve and move the existing output report before rerunning; never overwrite the candidate)</code></td>
+<td><code>655c7cf</code></td>
+</tr>
+<tr id="c-188" class="even">
+<td class="cid-cell">C-188</td>
+<td>MAST-U candidate replay preparation passes focused checks and a bounded training-only integration smoke<br>
+<span class="tol">replay tooling only; the held-out candidate replay has not run, no temperature accuracy or formal certificate is claimed, and original model/guard selection is retained</span></td>
+<td class="val">40 focused checks pass in normal and Tier A modes; the two-step training-only candidate smoke is finite and reconstructs the raw accepted-state guard predicate exactly</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>reviews/m4-mastu-replay-preparation.json and bound sidecar; replay-suites; replay-smoke-v3/result.json<br>
+<code>python -m pytest tests/unit/test_m4_replay.py tests/unit/test_verify_closed_loop.py tests/unit/test_m3_performance_tools.py tests/unit/test_m4_mastu_refresh.py</code></td>
+<td><code>0dd614a</code></td>
+</tr>
+<tr id="c-189" class="odd">
+<td class="cid-cell">C-189</td>
+<td>The approved candidate replay completes its solver trajectory but fails saved-reference coverage<br>
+<span class="tol">formal temperature gate is not evaluable; saved TGLF reference uses fallback at the uncovered candidate face; no face removal or automatic retry</span></td>
+<td class="val">the single approved replay finishes in 65 seconds within its 240-second bound, with 40 finite converged steps and 146 passing integrity checks; comparison exits with a reference-coverage failure at candidate-served face 4, normalized radius 0.16</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-replay-result.json and bound sidecar; consumed replay trajectory and logs<br>
+<code>Read the bound saved-output audit; do not rerun the consumed OQ-30 solver command</code></td>
+<td><code>793e61c</code></td>
+</tr>
+<tr id="c-190" class="even">
+<td class="cid-cell">C-190</td>
+<td>Supplementary candidate temperature diagnostics retain the fixed-mask electron regression and reference-coverage limitation<br>
+<span class="tol">supplementary diagnostics only, not acceptance metrics; the uncovered reference face invalidates the formal comparison; every actual candidate face is retained</span></td>
+<td class="val">candidate/baseline serve 15/13 faces with 11 overlapping; fixed-baseline-mask candidate T_e/T_i errors are 42.1252%/48.1182%, versus baseline 35.3331%/49.1458%; candidate whole-profile errors are 29.7365%/41.8856%, and own-mask descriptive distances to the hybrid reference are 29.8865%/40.0063%</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>reviews/m4-mastu-replay-result.json and bound sidecar; actual and fixed-baseline masks retained<br>
+<code>Read the bound saved-output audit without invoking any solver</code></td>
+<td><code>793e61c</code></td>
+</tr>
+<tr id="c-191" class="odd">
+<td class="cid-cell">C-191</td>
+<td>Candidate accepted-state guard diagnostics reproduce the saved raw predicate and retain rejection accounting<br>
+<span class="tol">accepted-state face diagnostics only, not intermediate solver-call accounting or a fallback acceptance gate; nonexclusive convection count is 25 and overlaps another reason once</span></td>
+<td class="val">candidate rejects 415/1040 accepted-state face records (39.9038%), versus baseline 466/1040 (44.8077%); exclusive candidate reasons are 341 model-box exits, 50 excessive diffusivities and 24 excessive convection values, with exact raw guard reconstruction</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-replay-result.json and bound sidecar; accepted-state raw features and coefficients<br>
+<code>Read the bound saved-output audit and its guard-accounting records</code></td>
+<td><code>793e61c</code></td>
+</tr>
+<tr id="c-192" class="even">
+<td class="cid-cell">C-192</td>
+<td>Reference diagnostic preparation checks raw guard evidence without running physical TGLF<br>
+<span class="tol">synthetic worker responses only; physical TGLF forbidden; no physics labels, formal acceptance metric or new reference job; historical missing dependency evidence remains explicit</span></td>
+<td class="val">32 focused checks pass in each mode; a two-step synthetic training-equilibrium smoke is finite and reconstructs the raw guard exactly; all 77 source modules pass typing, and lint/format plus batch syntax pass</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-reference-preparation.json and bound sidecar; frozen package and retained synthetic smoke artifacts<br>
+<code>Run tests/unit/test_m4_reference.py and tests/unit/test_m4_replay.py in normal and Tier A modes; check the frozen package without running its compute command</code></td>
+<td><code>f3e08bb</code></td>
+</tr>
+<tr id="c-193" class="odd">
+<td class="cid-cell">C-193</td>
+<td>The single approved reference diagnostic completes and reproduces the saved reference exactly<br>
+<span class="tol">diagnosis only; historical external dependency bytes remain missing; no retry or formal temperature acceptance</span></td>
+<td class="val">the diagnostic completes in 517 seconds within its 30-minute bound, with 40 finite converged steps, exact historical temperature/density/poloidal-flux-profile and final-mask equality, and 171 passing saved-output integrity checks</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-reference-result.json and bound sidecar; trajectory, executed package and final native accounting<br>
+<code>Run the bound read-only saved-output audit; do not rerun the consumed OQ-31 compute command</code></td>
+<td><code>8721f24</code></td>
+</tr>
+<tr id="c-194" class="even">
+<td class="cid-cell">C-194</td>
+<td>Valid-input negative raw heat diffusivity explains the uncovered final reference face<br>
+<span class="tol">raw guard reconstructed exactly; physical/numerical origin of signed coefficients remains unproven; the reference still cannot establish the formal candidate temperature comparison</span></td>
+<td class="val">final face 4 at normalized radius 0.16 has valid inputs but raw electron heat diffusivity -0.02792124888 m²/s; negative heat diffusivity rejects that face at 8 of 40 accepted states; reference rejection is 323/1040 accepted-state face records (31.0577%)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-reference-result.json and bound sidecar; full input/raw coefficient/guard histories<br>
+<code>Inspect the bound face-4 history and reconstruct the saved raw guard without calling TGLF</code></td>
+<td><code>8721f24</code></td>
+</tr>
 </tbody>
 </table>
 

@@ -1,0 +1,62 @@
+---
+title: M4 · Verification
+subtitle: In progress
+toc: true
+disclosure:
+  class: green
+  approved_by: null
+  approved_on: null
+---
+
+## Goal and gate
+
+Prove the owner-selected properties over explicit input boxes, calibrate uncertainty intervals,
+compare coupled trajectories against Tier A physics and bind the guards to the certificates.
+The brief requires CI to re-prove properties on surrogate changes. The owner certification
+review is the human gate; it has not occurred.
+
+## Progress
+
+| task | state |
+|---|---|
+| model storage and verification tooling | approved: committed model candidates/boxes ([OQ-23](/Blog/tokamak-toolkit/decisions.qmd#oq-23)), auto_LiRPA/input splitting ([OQ-24](/Blog/tokamak-toolkit/decisions.qmd#oq-24)) |
+| PyTorch export | [13 export checks pass in each mode: all selected members, random box points, local holdouts, physical transforms and served means, with rtol=1e-12 and atol=1e-12 in each declared output unit]{.claim}[C-180](/Blog/tokamak-toolkit/claims.qmd#c-180){.cid .st-tested}; numerical parity is not a formal certificate |
+| property contracts | [six property contracts load; 14 property-validation tests pass in each mode, including malformed-domain, tolerance and output-schema rejection]{.claim}[C-177](/Blog/tokamak-toolkit/claims.qmd#c-177){.cid .st-tested} |
+| transport closed-loop comparison | ITER passes ([served-face T_e 7.42%, T_i 8.18%, both passing the 15% limit; whole profile 7.72/9.23%; 34 of 51 final-state faces served]{.claim}[C-178](/Blog/tokamak-toolkit/claims.qmd#c-178){.cid .st-measured}); MAST-U fails ([served-face T_e 35.33%, T_i 49.15%, both failing 15%; whole profile 41.51/62.39%; cells with both adjacent faces served give 11.86/23.24%, still failing T_i; 13 of 26 final-state faces served]{.claim}[C-179](/Blog/tokamak-toolkit/claims.qmd#c-179){.cid .st-measured}, [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030)) |
+| formal proofs, output bounds and local robustness | pending |
+| conformal calibration and EC trajectory comparison | pending |
+| certificate-bound guards, per-surrogate reports and CI re-proofs | pending |
+| certification review | pending |
+
+The transport comparison uses final-state served faces with both temperature profiles
+interpolated onto the same coordinates. It also reports whole-profile errors and cells with
+both adjacent faces served. The final-state mask is not trajectory fallback accounting.
+The owner prioritizes MAST-U remediation before further proofs and calibration ([OQ-25](/Blog/tokamak-toolkit/decisions.qmd#oq-25)).
+Matched probes and an exact accepted-state replay diagnose flux errors and coefficient
+rejections ([all 17 in-domain final-state probes succeed; on 12 served faces with reference flux above 1 gB, median relative errors are 41.17% Q_e and 74.27% Q_i; an unconstrained v3 control gives 38.05/71.88%]{.claim}[C-181](/Blog/tokamak-toolkit/claims.qmd#c-181){.cid .st-measured}, [all saved temperature, density and psi values are reproduced exactly; four final inner faces exceed the existing ion-diffusivity guard bound; 44.81% of accepted-state face diagnostics reject the surrogate]{.claim}[C-182](/Blog/tokamak-toolkit/claims.qmd#c-182){.cid .st-measured}). A training-only label refresh is
+complete under the approved compute request ([OQ-27](/Blog/tokamak-toolkit/decisions.qmd#oq-27)); [eight local checks pass for approved allocation/time, hashes and lineage, full-input alignment, case budget, unique coordinates, training-only equilibria, source model and finite successful labels]{.claim}[C-183](/Blog/tokamak-toolkit/claims.qmd#c-183){.cid .st-measured}.
+Artifact synchronization is complete with downloaded checksums verified
+([entry 45](../log/45-mastu-artifact-upload-verified.qmd)).
+Retraining data/splits, configuration and bounded smoke are prepared
+([55 focused checks pass in both normal and Tier A modes; the bounded training-only smoke produces finite predictions and reloads exactly]{.claim}[C-185](/Blog/tokamak-toolkit/claims.qmd#c-185){.cid .st-tested}; [entry 46](../log/46-mastu-retraining-preparation.qmd)).
+The approved single training job is complete ([164 completion checks pass, binding the saved candidate to the reviewed snapshot and frozen data/splits, with finite parameters/history and tested member/served predictions]{.claim}[C-186](/Blog/tokamak-toolkit/claims.qmd#c-186){.cid .st-measured}), and the local offline
+report retains mixed regressions. Candidate exports pass numerical parity
+([all 168 export comparison records pass the unchanged mixed tolerance, covering all 20 members in training/physical units, the served ensemble and JAX JIT/eager arithmetic]{.claim}[C-187](/Blog/tokamak-toolkit/claims.qmd#c-187){.cid .st-measured}; [entry 47](../log/47-mastu-candidate-trained-and-checked.qmd)).
+Matched candidate replay tooling is now prepared ([40 focused checks pass in normal and Tier A modes; the two-step training-only candidate smoke is finite and reconstructs the raw accepted-state guard predicate exactly]{.claim}[C-188](/Blog/tokamak-toolkit/claims.qmd#c-188){.cid .st-tested};
+[entry 48](../log/48-mastu-candidate-replay-preparation.qmd)), with reference provenance
+limits recorded. The approved replay is now consumed: solver convergence passes,
+but reference coverage fails ([the single approved replay finishes in 65 seconds within its 240-second bound, with 40 finite converged steps and 146 passing integrity checks; comparison exits with a reference-coverage failure at candidate-served face 4, normalized radius 0.16]{.claim}[C-189](/Blog/tokamak-toolkit/claims.qmd#c-189){.cid .st-measured};
+[entry 49](../log/49-mastu-replay-reference-coverage-fails.qmd)). Fixed-mask diagnostics
+retain the electron regression ([candidate/baseline serve 15/13 faces with 11 overlapping; fixed-baseline-mask candidate T_e/T_i errors are 42.1252%/48.1182%, versus baseline 35.3331%/49.1458%; candidate whole-profile errors are 29.7365%/41.8856%, and own-mask descriptive distances to the hybrid reference are 29.8865%/40.0063%]{.claim}[C-190](/Blog/tokamak-toolkit/claims.qmd#c-190){.cid .st-preliminary}). Reference admissibility,
+a separately reviewed next experiment and formal proofs remain ahead; [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) stays open.
+
+Reference diagnostic preparation passes its synthetic smoke and focused checks
+([32 focused checks pass in each mode; a two-step synthetic training-equilibrium smoke is finite and reconstructs the raw guard exactly; all 77 source modules pass typing, and lint/format plus batch syntax pass]{.claim}[C-192](/Blog/tokamak-toolkit/claims.qmd#c-192){.cid .st-measured}). The approved diagnostic is consumed: historical profiles/mask
+reproduce exactly ([the diagnostic completes in 517 seconds within its 30-minute bound, with 40 finite converged steps, exact historical temperature/density/poloidal-flux-profile and final-mask equality, and 171 passing saved-output integrity checks]{.claim}[C-193](/Blog/tokamak-toolkit/claims.qmd#c-193){.cid .st-measured}), while negative raw heat diffusivity explains
+the rejected face ([final face 4 at normalized radius 0.16 has valid inputs but raw electron heat diffusivity -0.02792124888 m²/s; negative heat diffusivity rejects that face at 8 of 40 accepted states; reference rejection is 323/1040 accepted-state face records (31.0577%)]{.claim}[C-194](/Blog/tokamak-toolkit/claims.qmd#c-194){.cid .st-measured}). Its physical/numerical origin and reference
+remedy need review ([OQ-32](/Blog/tokamak-toolkit/decisions.qmd#oq-32)); formal candidate acceptance remains not evaluable.
+
+See [entry 42](../log/42-m4-properties-and-transport-check.qmd) and
+[entry 43](../log/43-mastu-feedback-diagnosis.qmd),
+[entry 44](../log/44-mastu-refresh-artifact-checks.qmd), and
+[technical verification](../technical/verification.qmd).

@@ -1,0 +1,67 @@
+---
+title: EC reference dataset v1 on ITER states, and a first held-out baseline
+date: '2026-10-10'
+categories:
+- measured
+entry: 37
+milestone: M3
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 37 · milestone M3
+:::
+
+The electron-cyclotron (EC) surrogate needs reference labels: heating and driven-current
+profiles from the GENRAY ray-tracing code, for plasma states the coupling loop visits and for
+the launch directions an operator would use. The [Primer](../primer.qmd) explains sources;
+terms are in the [Glossary](../glossary.qmd).
+
+**Sampling.** The plasma states come from the same family of ITER TORAX runs as transport
+dataset v3: the M1 benchmark case, the ITER hybrid flat top and the ITER current ramp-up, with
+heating and density scaled. The saved v3 files hold transport inputs only, so we ran the
+family again and kept the electron temperature, electron density and effective charge. From
+each run we take states evenly spaced in time. Each state gets launches from two launcher
+families: the equatorial launcher at the upstream deck's launch point, and an upper launcher at
+an approximate public position (not an ITER design value). The poloidal and toroidal angles are
+drawn uniformly within each family's range. Whole TORAX runs are held out for validation and
+test, so no held-out state shares a trajectory with a training state.
+
+**Labelling.** One GENRAY process per core ran every case on one cluster node, after the owner
+approved the request. Each case keeps its input deck, its output file, its logs and a record
+of hashes and status. The plasma equilibrium is the same for every case: the upstream deck's
+ITER file. This is the largest approximation in the dataset (ceiling [K-028](/Blog/tokamak-toolkit/ceilings.qmd#k-028)). The highest
+driven currents come from early ramp-up states, which are hot and dilute and in TORAX carry
+only a few megaamperes, traced through an equilibrium with the full plasma current. Those
+labels describe no consistent plasma. The collisional heating channel is zero in every case,
+because the deck does not enable collisional damping.
+
+| quantity | result |
+|---|---|
+| cases with readable output | [3120 of 3120 cases produce readable output (20 of 20 check cases); median 84.8 s of GENRAY time per case]{.claim}[C-164](/Blog/tokamak-toolkit/claims.qmd#c-164){.cid .st-measured} |
+| current-drive method check (momentum-conserving against adjoint) | [median 4.1% difference in driven current (range -14% to +16%), identical absorbed power]{.claim}[C-165](/Blog/tokamak-toolkit/claims.qmd#c-165){.cid .st-measured} |
+| first held-out baseline | [driven current RMSE 3.30 kA/MW against 13.5 kA/MW for the training mean; pointwise profile model: current-density RMSE 2.20e4 A/m^2 against 2.09e4 A/m^2 for the mean]{.claim}[C-166](/Blog/tokamak-toolkit/claims.qmd#c-166){.cid .st-measured} |
+
+**Baseline.** We trained the existing response baseline, an unconstrained five-member
+ensemble, on the totals and, separately, on the profiles point by point. The totals are
+learned: the driven-current error is about a quarter of the spread of the test labels. The
+pointwise profile model does no better than predicting the training mean. Deposition profiles
+are narrow peaks whose position moves with the launch angle, and a model that predicts each
+radius separately does not capture that. The EC surrogate therefore needs a structured
+output, for example deposition centre, width and totals, the same parameters as the Gaussian
+fallback.
+
+The check of the labels is partial. GENRAY's own power and current totals agree with the
+integrals of its profiles, and the two current-drive methods agree to a few per cent on the
+larger currents. Neither is an independent physics validation; both use the same rays.
+
+Next: the owner sets accuracy targets from this baseline (B3), a structured EC model is
+trained (B4), and [K-028](/Blog/tokamak-toolkit/ceilings.qmd#k-028) is either lifted with one equilibrium per state or the ramp-up states
+are restricted.
+
+Technical details → [EC dataset v1](../technical/surrogates.qmd#ec-dataset-v1).
+Decision → [OQ-21](../decisions.qmd#oq-21).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › ec dataset v1](/Blog/tokamak-toolkit/technical/surrogates.qmd#ec-dataset-v1)  
+**Decisions →** [OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21)
+:::

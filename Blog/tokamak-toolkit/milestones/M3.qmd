@@ -1,6 +1,6 @@
 ---
 title: M3 · Surrogates
-subtitle: In progress
+subtitle: Done 10 Oct 2026
 toc: true
 ---
 
@@ -37,26 +37,26 @@ ensembles now pass that target: [MAST-U: Q_e 17.8%, Q_i 25.2%; ITER: Q_e 7.2%, Q
 | $Q_e$, $Q_i$ clipped at zero in use, stability penalty in training ([OQ-19](/Blog/tokamak-toolkit/decisions.qmd#oq-19)) | production models trained; reference-stable points are not all predicted zero | [entry 20](../log/20-heat-flux-positivity-monotonicity.qmd) |
 | monotonicity measured on TGLF scans and on the v1 ensemble | done | [entry 20](../log/20-heat-flux-positivity-monotonicity.qmd) |
 | monotone surrogate, departure from TGLF measured ([OQ-20](/Blog/tokamak-toolkit/decisions.qmd#oq-20) 1) | built; sampled checks pass, departure recorded | |
-| surrogate inside the M1 loop, behind the guard | validated on RAPTOR and ITER hybrid with explicit Newton settings; strict gradients and balance pass | draft entry 26 |
-| end-to-end speed-up | measured for v1; matched final v3 timing awaits compute ([K-022](/Blog/tokamak-toolkit/ceilings.qmd#k-022)) | |
-| compute request and saved-trace review | bounded request reviewed; cancellation cause and fresh approval pending; trace component attribution unresolved | draft entry 28 |
-| RF deposition and pedestal surrogates | corrected EC numerical pilot complete with native accounting and descriptive comparison; pretrained pedestal port passes raw checks; production labels/coupling and boundary contracts pending; MAST-U predictive pedestal and IC deferred ([OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21)) | draft entries 24–25, 29–34 |
+| surrogate inside the M1 loop, behind the guard | ITER: RAPTOR and hybrid validated; MAST-U: linear-solver loop, balance and gradients on a converging Newton case ([K-029](/Blog/tokamak-toolkit/ceilings.qmd#k-029)) | entry 26, [40](../log/40-mastu-loop-and-m3-audit.qmd) |
+| end-to-end speed-up | measured for final v3 against TGLF and QLKNN at matched settings ([K-022](/Blog/tokamak-toolkit/ceilings.qmd#k-022) for the QLKNN gap) | [entry 35](../log/35-matched-comparison-tglf-v3-qlknn.qmd) |
+| compute request and saved-trace review | cancellation traced to a recurring node start-up failure; resubmission ran; trace component attribution unresolved | entries 28, [35](../log/35-matched-comparison-tglf-v3-qlknn.qmd) |
+| RF deposition and pedestal surrogates | EC surrogate meets the owner's targets and runs in TORAX with its fallback; ITER EPEDNN pedestal runs in TORAX; MAST-U predictive pedestal and IC deferred ([OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21)) | entries 24–25, 29–34, [36](../log/36-ec-and-pedestal-contracts.qmd)–[39](../log/39-ec-and-pedestal-surrogates-in-torax.qmd) |
 
 ## Against the criteria
 
 | criterion | where it stands |
 |---|---|
 | held-out transport accuracy | passes on v3: [MAST-U: Q_e 17.8%, Q_i 25.2%; ITER: Q_e 7.2%, Q_i 10.8%; all meet the 30% target]{.claim}[C-129](/Blog/tokamak-toolkit/claims.qmd#c-129){.cid .st-measured}; dataset/model provenance and scores audited |
+| held-out EC accuracy | passes: [all three targets pass: absorbed power 0.01% and driven current 2.7% median relative error (targets 10%), heating centre 0.0036 median absolute error in rho (target 0.05)]{.claim}[C-168](/Blog/tokamak-toolkit/claims.qmd#c-168){.cid .st-measured} |
 | differentiable, inside the loop | ITER v1 and v3 strict gradients pass ([v1 and v3 pass: three-step derivative FD tolerance 1e-7, forward/reverse tolerance 1e-12; guard masks unchanged over the stencil]{.claim}[C-138](/Blog/tokamak-toolkit/claims.qmd#c-138){.cid .st-tested}), as does discrete balance ([v1 and v3 pass: energy residual below 1e-6 and particle residual below 1e-10, with fine solver convergence]{.claim}[C-139](/Blog/tokamak-toolkit/claims.qmd#c-139){.cid .st-tested}); extended RAPTOR/ITER hybrid checks pass ([15 gradient, JIT, fallback and discrete-balance checks pass across RAPTOR and ITER hybrid in each mode]{.claim}[C-146](/Blog/tokamak-toolkit/claims.qmd#c-146){.cid .st-tested}); [K-026](/Blog/tokamak-toolkit/ceilings.qmd#k-026) records the default-tolerance limitation |
-| speed-up | historical v1 comparison: [TGLF 540.38 s, v1 surrogate 0.780 s, QLKNN 0.126 s; v1 is about 693 times faster than TGLF]{.claim}[C-132](/Blog/tokamak-toolkit/claims.qmd#c-132){.cid .st-measured}; final v3 matched timing has no result because the scheduler cancelled its job before execution |
+| speed-up | ITER final v3 at matched settings: [TGLF 539.1 s, final v3 surrogate 1.249 s, QLKNN 0.117 s; the v3 surrogate is about 432 times faster than TGLF and 10.7 times slower than QLKNN]{.claim}[C-158](/Blog/tokamak-toolkit/claims.qmd#c-158){.cid .st-measured} (historical v1: [TGLF 540.38 s, v1 surrogate 0.780 s, QLKNN 0.126 s; v1 is about 693 times faster than TGLF]{.claim}[C-132](/Blog/tokamak-toolkit/claims.qmd#c-132){.cid .st-measured}); MAST-U: [TGLF 364.1 s, surrogate 0.492 s, Bohm/gyro-Bohm 0.043 s: the surrogate is about 740 times faster than TGLF; profile deviation from TGLF at 0.2 s, T_e 41.5% and T_i 62.4% (Bohm/gyro-Bohm 47.9% and 84.6%), with half the faces outside the training window and on the fallback]{.claim}[C-176](/Blog/tokamak-toolkit/claims.qmd#c-176){.cid .st-measured} |
 
-## Plan to completion
+## Closure
 
-Follow the [action plan](../action-plan.qmd): resolve the performance blocker and complete
-the EC production and ITER pedestal boundary contracts independently. Then label EC cases, agree accuracy
-targets, train EC ensembles and integrate both responses. Prescribed MAST-U pedestal and
-deferred IC follow the owner's revised scope. Close M3 only when all required tasks meet its criteria. M4 begins
-after that acceptance.
+All three criteria have evidence for every required surrogate
+([audit](../technical/surrogates.qmd#m3-audit)); the MAST-U end-to-end timing was measured last
+([TGLF 364.1 s, surrogate 0.492 s, Bohm/gyro-Bohm 0.043 s: the surrogate is about 740 times faster than TGLF; profile deviation from TGLF at 0.2 s, T_e 41.5% and T_i 62.4% (Bohm/gyro-Bohm 47.9% and 84.6%), with half the faces outside the training window and on the fallback]{.claim}[C-176](/Blog/tokamak-toolkit/claims.qmd#c-176){.cid .st-measured}). The owner confirmed the closure on 10 Oct 2026
+([entry 41](../log/41-m3-closed.qmd)). Open ceilings carry into M4.
 
 ## Deviations so far
 

@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Surrogates – Vignesh Gopakumar</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../Images/dy_dx.png" rel="icon" type="image/png">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../styles.css">
+<link rel="stylesheet" href="../tokamak-toolkit.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">Vignesh Gopakumar</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../research.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../talks.html"> 
+<span class="menu-text">Talks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../Blog/blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../Blog/tokamak-toolkit/index.html"> 
+<span class="menu-text">Tokamak Toolkit</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose">Purpose</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data, inputs and splits</a></li>
+  <li><a href="#output-scaling" id="toc-output-scaling" class="nav-link" data-scroll-target="#output-scaling">Output scaling</a></li>
+  <li><a href="#baseline-ensemble" id="toc-baseline-ensemble" class="nav-link" data-scroll-target="#baseline-ensemble">Member networks</a></li>
+  <li><a href="#training" id="toc-training" class="nav-link" data-scroll-target="#training">Training</a>
+  <ul class="collapse">
+  <li><a href="#algorithm-1-training-an-ensemble-as-in-tkit.surrogates.train.fit" id="toc-algorithm-1-training-an-ensemble-as-in-tkit.surrogates.train.fit" class="nav-link" data-scroll-target="#algorithm-1-training-an-ensemble-as-in-tkit.surrogates.train.fit">Algorithm 1: training an ensemble (as in <code>tkit.surrogates.train.fit</code>)</a></li>
+  <li><a href="#parameters-and-defaults" id="toc-parameters-and-defaults" class="nav-link" data-scroll-target="#parameters-and-defaults">Parameters and defaults</a></li>
+  </ul></li>
+  <li><a href="#metrics" id="toc-metrics" class="nav-link" data-scroll-target="#metrics">Metrics</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results on the version 1 datasets</a>
+  <ul class="collapse">
+  <li><a href="#learning-curves" id="toc-learning-curves" class="nav-link" data-scroll-target="#learning-curves">Learning curves</a></li>
+  </ul></li>
+  <li><a href="#active-learning" id="toc-active-learning" class="nav-link" data-scroll-target="#active-learning">Active learning, round 1</a>
+  <ul class="collapse">
+  <li><a href="#algorithm-2-one-round-as-in-tkit.datasets.tglf_active.run" id="toc-algorithm-2-one-round-as-in-tkit.datasets.tglf_active.run" class="nav-link" data-scroll-target="#algorithm-2-one-round-as-in-tkit.datasets.tglf_active.run">Algorithm 2: one round (as in <code>tkit.datasets.tglf_active.run</code>)</a></li>
+  <li><a href="#selected-batch" id="toc-selected-batch" class="nav-link" data-scroll-target="#selected-batch">Where the selected batch landed</a></li>
+  <li><a href="#retraining" id="toc-retraining" class="nav-link" data-scroll-target="#retraining">Retraining against the uniform batch</a></li>
+  </ul></li>
+  <li><a href="#heat-flux-sign" id="toc-heat-flux-sign" class="nav-link" data-scroll-target="#heat-flux-sign">Heat-flux sign and the ReLU output</a>
+  <ul class="collapse">
+  <li><a href="#relu" id="toc-relu" class="nav-link" data-scroll-target="#relu">Clip in use, stability penalty in training</a></li>
+  </ul></li>
+  <li><a href="#monotonicity" id="toc-monotonicity" class="nav-link" data-scroll-target="#monotonicity">Monotonicity in the gradients</a></li>
+  <li><a href="#in-the-loop" id="toc-in-the-loop" class="nav-link" data-scroll-target="#in-the-loop">In the TORAX loop</a>
+  <ul class="collapse">
+  <li><a href="#extended-loop-validation" id="toc-extended-loop-validation" class="nav-link" data-scroll-target="#extended-loop-validation">Extended local validation</a></li>
+  </ul></li>
+  <li><a href="#dataset-v3" id="toc-dataset-v3" class="nav-link" data-scroll-target="#dataset-v3">Dataset v3</a></li>
+  <li><a href="#accuracy-target" id="toc-accuracy-target" class="nav-link" data-scroll-target="#accuracy-target">Accuracy target</a></li>
+  <li><a href="#v3-results" id="toc-v3-results" class="nav-link" data-scroll-target="#v3-results">Final v3 models</a></li>
+  <li><a href="#performance-review" id="toc-performance-review" class="nav-link" data-scroll-target="#performance-review">Performance runner and trace review</a></li>
+  <li><a href="#epednn-port" id="toc-epednn-port" class="nav-link" data-scroll-target="#epednn-port">Selected ITER pedestal port</a></li>
+  <li><a href="#next" id="toc-next" class="nav-link" data-scroll-target="#next">Next steps</a></li>
+  <li><a href="#interface" id="toc-interface" class="nav-link" data-scroll-target="#interface">Interface</a></li>
+  <li><a href="#correctness" id="toc-correctness" class="nav-link" data-scroll-target="#correctness">Correctness</a></li>
+  <li><a href="#design-decisions" id="toc-design-decisions" class="nav-link" data-scroll-target="#design-decisions">Design decisions</a></li>
+  <li><a href="#rf-pedestal" id="toc-rf-pedestal" class="nav-link" data-scroll-target="#rf-pedestal">RF and pedestal interfaces</a></li>
+  <li><a href="#response-training" id="toc-response-training" class="nav-link" data-scroll-target="#response-training">Response baseline training</a></li>
+  <li><a href="#ceilings" id="toc-ceilings" class="nav-link" data-scroll-target="#ceilings">Ceilings</a></li>
+  <li><a href="#reproducing" id="toc-reproducing" class="nav-link" data-scroll-target="#reproducing">Reproducing</a></li>
+  <li><a href="#genray-output" id="toc-genray-output" class="nav-link" data-scroll-target="#genray-output">EC native-output boundary</a></li>
+  <li><a href="#genray-pilot" id="toc-genray-pilot" class="nav-link" data-scroll-target="#genray-pilot">Bounded EC pilot lifecycle</a></li>
+  <li><a href="#genray-build" id="toc-genray-build" class="nav-link" data-scroll-target="#genray-build">EC reference build and original pilot proposal</a></li>
+  <li><a href="#genray-first-run" id="toc-genray-first-run" class="nav-link" data-scroll-target="#genray-first-run">First EC execution and plotting correction</a></li>
+  <li><a href="#genray-corrected-pilot" id="toc-genray-corrected-pilot" class="nav-link" data-scroll-target="#genray-corrected-pilot">Corrected EC numerical pilot</a>
+  <ul class="collapse">
+  <li><a href="#native-profile-comparison" id="toc-native-profile-comparison" class="nav-link" data-scroll-target="#native-profile-comparison">Native profile comparison</a></li>
+  <li><a href="#repository-checkpoint-verification" id="toc-repository-checkpoint-verification" class="nav-link" data-scroll-target="#repository-checkpoint-verification">Repository checkpoint verification</a></li>
+  </ul></li>
+  <li><a href="#matched-comparison" id="toc-matched-comparison" class="nav-link" data-scroll-target="#matched-comparison">Matched comparison</a></li>
+  <li><a href="#ec-contract" id="toc-ec-contract" class="nav-link" data-scroll-target="#ec-contract">EC label conventions</a></li>
+  <li><a href="#pedestal-contract" id="toc-pedestal-contract" class="nav-link" data-scroll-target="#pedestal-contract">ITER pedestal conversion</a></li>
+  <li><a href="#ec-dataset-v1" id="toc-ec-dataset-v1" class="nav-link" data-scroll-target="#ec-dataset-v1">EC dataset v1</a></li>
+  <li><a href="#ec-structured" id="toc-ec-structured" class="nav-link" data-scroll-target="#ec-structured">Structured EC surrogate</a></li>
+  <li><a href="#ec-in-torax" id="toc-ec-in-torax" class="nav-link" data-scroll-target="#ec-in-torax">EC surrogate in TORAX</a></li>
+  <li><a href="#pedestal-in-torax" id="toc-pedestal-in-torax" class="nav-link" data-scroll-target="#pedestal-in-torax">ITER pedestal in TORAX</a></li>
+  <li><a href="#mastu-in-loop" id="toc-mastu-in-loop" class="nav-link" data-scroll-target="#mastu-in-loop">MAST-U transport surrogate in the loop</a></li>
+  <li><a href="#m3-audit" id="toc-m3-audit" class="nav-link" data-scroll-target="#m3-audit">M3 acceptance audit</a>
+  <ul class="collapse">
+  <li><a href="#mastu-timing" id="toc-mastu-timing" class="nav-link" data-scroll-target="#mastu-timing">MAST-U end-to-end timing</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#changelog" id="toc-changelog" class="nav-link" data-scroll-target="#changelog">Changelog</a></li>
+  <li><a href="#m4-feedback-preparation" id="toc-m4-feedback-preparation" class="nav-link" data-scroll-target="#m4-feedback-preparation">M4 feedback retraining preparation</a></li>
+  <li><a href="#m4-feedback-candidate" id="toc-m4-feedback-candidate" class="nav-link" data-scroll-target="#m4-feedback-candidate">M4 feedback candidate completion and offline review</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Surrogates</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-left">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">October 10, 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="purpose" class="level2">
+<h2 class="anchored" data-anchor-id="purpose">Purpose</h2>
+<p>Fast models of TGLF’s turbulent fluxes, so that the coupled loop of M1 can call a turbulence model at every radius and time step. Each surrogate is a deep ensemble: the members’ mean is the prediction, and their spread is the uncertainty the <a href="../../../Blog/tokamak-toolkit/technical/guard.html">guard</a> reads. Each trained model is written once, read-only, with a provenance record that binds it to the digest of the dataset it was trained on (brief invariant 6).</p>
+<p>The brief’s M3 acceptance criteria are: held-out accuracy meets the target in the configuration; the surrogate is differentiable and runs inside the M1 loop; the end-to-end speedup is measured and reported. Dataset v3 and its final ReLU/monotone models are complete. The monotone models pass the held-out transport target and the strict local loop checks at a tighter Newton tolerance; matched final-model timing remains in progress. The sampled structure checks, threshold-classification limits and uncalibrated spread are documented below.</p>
+<p>This page includes the results prepared for draft entries 21–34. TGLF itself, the sampling space and the version 1 datasets are on the <a href="../../../Blog/tokamak-toolkit/technical/datasets.html">datasets</a> page.</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data, inputs and splits</h2>
+<p><strong>Datasets.</strong> One per machine, <code>tglf-mastu-v1</code> and <code>tglf-iter-v1</code> (<span class="claim">100000 of 100000 cases completed, all six fluxes finite</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-071" class="cid st-measured">C-071</a>, <span class="claim">100000 of 100000 cases completed, all six fluxes finite</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-072" class="cid st-measured">C-072</a>), 10<sup>5</sup> cases each. Every case is kept: no filter on flux magnitude (owner, <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-18">OQ-18</a>; ceiling <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-019">K-019</a>). Loading a dataset recomputes its SHA-256 and refuses it if the digest differs from its provenance record.</p>
+<p><strong>Splits.</strong> A random permutation from the machine’s seed (MAST-U 0, ITER 1) gives a test split (10%), a validation split (10%) and a training split (80%). The indices are saved with every model. The test split is evaluated once, after training; the validation split chooses each member’s kept parameters and the stopping epoch. For the learning curves a fixed random fraction of the training split is kept (validation and test unchanged). Each active-learning batch has a fixed holdout of 10% of its cases (its own seed), the same rows for every model.</p>
+<p><strong>Inputs and outputs.</strong></p>
+<div class="tk-cols even">
+<div class="tk-col">
+<p><em>MLP ensemble (<code>ens</code>).</em> The 17 sampled TGLF inputs: <code>BETAE</code>, <code>DELTA_LOC</code>, <code>DRMAJDX_LOC</code>, <code>KAPPA_LOC</code>, <code>Q_LOC</code>, <code>RLNS_1</code>, <code>RLTS_1</code>, <code>RLTS_2</code>, <code>RMAJ_LOC</code>, <code>RMIN_LOC</code>, <code>SHAT</code>, <code>S_DELTA_LOC</code>, <code>S_KAPPA_LOC</code>, <code>TAUS_2</code>, <code>VEXB_SHEAR</code>, <code>XNUE</code>, <code>ZEFF</code>, with <code>XNUE</code> and <code>Q_LOC</code> as <span class="math inline">\(\log_{10}\)</span>. The derived inputs are functions of these and are left out. Outputs: all six fluxes, <span class="math inline">\(\Gamma_e, \Gamma_i, \Gamma_\mathrm{imp}, Q_e, Q_i, Q_\mathrm{imp}\)</span>.</p>
+</div>
+<div class="tk-col">
+<p><em>TGLF-NN network (<code>tglfnn</code>, <code>tglfnn_symlog</code>).</em> GA’s inputs that vary in our datasets (18): <code>AS_2</code> (it carries <span class="math inline">\(Z_\mathrm{eff}\)</span>), <code>BETAE</code>, <code>DELTA_LOC</code>, <code>DRMAJDX_LOC</code>, <code>KAPPA_LOC</code>, <code>P_PRIME_LOC</code>, <code>Q_LOC</code>, <code>Q_PRIME_LOC</code>, <code>RLNS_1</code>, <code>RLTS_1</code>, <code>RLTS_2</code>, <code>RMAJ_LOC</code>, <code>RMIN_LOC</code>, <code>S_DELTA_LOC</code>, <code>S_KAPPA_LOC</code>, <code>TAUS_2</code>, <code>VEXB_SHEAR</code>, <code>XNUE</code>, with <code>BETAE</code> and <code>XNUE</code> as <span class="math inline">\(\log_{10}\)</span>, as GA does. Outputs: <span class="math inline">\(\Gamma_e, Q_e, Q_i\)</span>. GA’s fourth output, the ion momentum flux, was not stored by M2.</p>
+</div>
+</div>
+<p>Fluxes are in TGLF’s gyro-Bohm units (gB) with <code>UNITS = CGYRO</code>, as stored by M2. All inputs are standardised with the training split’s mean and standard deviation.</p>
+</section>
+<section id="output-scaling" class="level2">
+<h2 class="anchored" data-anchor-id="output-scaling">Output scaling</h2>
+<p>Two target transforms are implemented; both are followed by standardisation with the training split’s mean and standard deviation.</p>
+<ul>
+<li><strong>Signed-log</strong> (owner, <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-18">OQ-18</a>): <span class="math inline">\(t = \mathrm{sign}(Q)\,\ln(1 + |Q|/s)\)</span>, <span class="math inline">\(s = 1\)</span> gB, inverse <span class="math inline">\(Q = \mathrm{sign}(t)\,s\,(e^{|t|} - 1)\)</span>. It keeps the sign, is linear near zero and logarithmic in the tail.</li>
+<li><strong>Linear</strong> (<code>standard</code>), as in GA’s TGLF-NN: the flux itself is standardised.</li>
+</ul>
+<p><strong>Why linear scaling fails on these datasets.</strong> Standardising divides each flux by its standard deviation over the training split, and the high-flux tail sets that value: <span class="claim">2.5 × 10<sup>5</sup> gB (MAST-U) and 1.1 × 10<sup>4</sup> gB (ITER); the median |Q_e|, 473 and 29 gB, is 0.0019 and 0.0027 standard deviations</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-085" class="cid st-measured">C-085</a>. With a squared-error loss in standardised units, an error as large as the typical flux itself changes the loss by the square of that small fraction, while the tail cases contribute errors of order one. The optimiser therefore fits the tail and has almost no signal from typical cases. Measured: the TGLF-NN network with linear outputs is off by about an order of magnitude at the median, and its <span class="math inline">\(R^2\)</span> in signed-log space is negative, worse than predicting the mean (<span class="claim">MAST-U 9.1 (Q_e) and 17.7 (Q_i); ITER 6.8 and 7.0; R² of Q_e in signed-log space -0.30 (MAST-U) and -0.35 (ITER)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-078" class="cid st-measured">C-078</a>). It also agrees less often with TGLF on which cases are stable (<span class="claim">TGLF-NN, signed-log 0.91 (MAST-U) and 0.92 (ITER); MLP 0.91 and 0.92; TGLF-NN, linear outputs 0.79 and 0.77</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-082" class="cid st-measured">C-082</a>). GA’s training fluxes come from measured profiles and stay in a bounded range (<span class="claim">GA’s MAST-U model -1.5 × 10<sup>4</sup> to 5.2 × 10<sup>4</sup> gB; tglf-mastu-v1 -2.4 × 10<sup>6</sup> to 2.8 × 10<sup>7</sup> gB</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-086" class="cid st-measured">C-086</a>), where linear scaling resolves typical cases.</p>
+</section>
+<section id="baseline-ensemble" class="level2">
+<h2 class="anchored" data-anchor-id="baseline-ensemble">Member networks</h2>
+<div class="tk-cols even">
+<section id="baseline-mlp-ensemble" class="level3 tk-col">
+<h3 class="anchored" data-anchor-id="baseline-mlp-ensemble">Baseline MLP ensemble</h3>
+<p><code>eqx.nn.MLP</code>: input layer, four hidden layers of 256 units with GELU, linear output layer; 10 members. Parameters per member: <span class="claim">21 827 per member (TGLF-NN network) against 203 526 (MLP)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-080" class="cid st-measured">C-080</a>. The configuration’s top-level keys (<code>configs/surrogates/m3_tglf.yaml</code>) are this variant; every other variant overrides them key by key.</p>
+</section>
+<section id="tglf-nn" class="level3 tk-col">
+<h3 class="anchored" data-anchor-id="tglf-nn">TGLF-NN recreation</h3>
+<p>The member network of GA’s TGLF-NN, as read from the model files <code>sat2_em_mastu_azf+-1</code> and <code>sat2_em_iter4_azf-1</code> in TurbulentTransport.jl (commit <code>212a9a7</code>, Apache-2.0): a dense input layer to width 32 with ELU; five residual blocks, each three dense layers of width 32 with ELU and a fourth without activation, whose output is added to the block’s input and passed through ELU; a linear output layer. 20 members. GA’s trained weights are not used.</p>
+</section>
+</div>
+<p>The residual member, <em><code>tkit/surrogates/models.py</code> @ <code>f4da0c0</code></em>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x: Array) <span class="op">-&gt;</span> Array:</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    h <span class="op">=</span> jax.nn.elu(<span class="va">self</span>.inp(x))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> block <span class="kw">in</span> <span class="va">self</span>.blocks:</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        r <span class="op">=</span> h</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> layer <span class="kw">in</span> block[:<span class="op">-</span><span class="dv">1</span>]:</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>            r <span class="op">=</span> jax.nn.elu(layer(r))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> jax.nn.elu(h <span class="op">+</span> block[<span class="op">-</span><span class="dv">1</span>](r))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">self</span>.out(h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>What is GA’s and what is ours.</strong> From GA’s model files: the layer sizes, the activations, the residual structure, the number of members, the inputs taken in <span class="math inline">\(\log_{10}\)</span>, and linear output standardisation. GA’s model takes 29 inputs; four of them (<code>DEBYE</code>, <code>ZETA_LOC</code>, <code>ZMAJ_LOC</code>, <code>VPAR</code>) are not set in our datasets, and four (<code>RLNS_2</code>, <code>RLNS_3</code>, <code>RLTS_3</code>, <code>TAUS_3</code>) equal main-ion values there, which leaves the 18 above. GA’s training data are TGLF runs on inputs from measured profiles, and GA’s training procedure (loss, optimiser, epochs) is not published. Ours is used for every variant: the loss, optimiser and stopping rule of Algorithm 1, on the M2 datasets. GA has not reviewed or endorsed this work.</p>
+</section>
+<section id="training" class="level2">
+<h2 class="anchored" data-anchor-id="training">Training</h2>
+<section id="algorithm-1-training-an-ensemble-as-in-tkit.surrogates.train.fit" class="level3">
+<h3 class="anchored" data-anchor-id="algorithm-1-training-an-ensemble-as-in-tkit.surrogates.train.fit">Algorithm 1: training an ensemble (as in <code>tkit.surrogates.train.fit</code>)</h3>
+<pre><code>input: training (x, t), validation (x_v, t_v), members M, epochs E, batch B, patience P
+standardise x and t with the training split's mean and standard deviation
+initialise M members from independent keys
+optimiser: AdamW, learning rate cosine-decayed from lr_0 over all steps, weight decay w
+best_m = +inf for every member m; since = 0
+for epoch = 0 .. E-1:
+    each member draws its own permutation of the training set
+    for each step: member m takes its own minibatch of B cases;
+                   loss = sum over m of the mean squared error of m; one AdamW update
+    v_m = mean squared error of member m on the validation split
+    for each m with v_m &lt; best_m: keep member m's parameters; best_m = v_m
+    since = 0 if any member improved, else since + 1
+    if since &gt;= P: stop
+return the ensemble with each member's kept parameters</code></pre>
+<p>The members share the data, the architecture and the optimiser, and differ in initialisation and minibatch order. The loss is summed over members so that one compiled step updates all of them; each member’s gradient depends only on its own term.</p>
+<p><strong>Overfitting.</strong> Every variant overfits: the members’ mean validation loss reaches its minimum and then rises while the training loss keeps falling (<span class="claim">epochs 16-25 for the MLP and the TGLF-NN network with linear outputs; 161-224 for the TGLF-NN network on signed-log targets</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-087" class="cid st-measured">C-087</a>). Each member keeps its best-validation parameters, so the saved ensemble is the one at the minimum, member by member.</p>
+<p><strong>Cost.</strong> <span class="claim">13 s (MLP, 10 members, 80000 cases); 39-53 s (TGLF-NN, 20 members, 80000 cases); 70-109 s (TGLF-NN, 170000 cases)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-088" class="cid st-measured">C-088</a>. Training cost is not a constraint at this dataset size.</p>
+</section>
+<section id="parameters-and-defaults" class="level3">
+<h3 class="anchored" data-anchor-id="parameters-and-defaults">Parameters and defaults</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>parameter</th>
+<th>default</th>
+<th>config key</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>members</td>
+<td>10 (MLP), 20 (TGLF-NN)</td>
+<td><code>model.n_members</code></td>
+<td>the brief asks for 5–10; TGLF-NN uses GA’s 20</td>
+</tr>
+<tr class="even">
+<td>width, depth</td>
+<td>256, 4 hidden layers (MLP)</td>
+<td><code>model.width</code>, <code>model.depth</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>width, blocks, layers per block</td>
+<td>32, 5, 4 (TGLF-NN)</td>
+<td><code>model.width</code>, <code>n_blocks</code>, <code>block_depth</code></td>
+<td><code>arch: resnet</code></td>
+</tr>
+<tr class="even">
+<td>epochs, patience</td>
+<td>600, 60</td>
+<td><code>train.epochs</code>, <code>train.patience</code></td>
+<td>patience counts epochs in which no member improved</td>
+</tr>
+<tr class="odd">
+<td>batch</td>
+<td>1024</td>
+<td><code>train.batch</code></td>
+<td>per member</td>
+</tr>
+<tr class="even">
+<td>learning rate, weight decay</td>
+<td>10<sup>−3</sup> cosine-decayed, 10<sup>−5</sup></td>
+<td><code>train.lr</code>, <code>train.weight_decay</code></td>
+<td>AdamW</td>
+</tr>
+<tr class="odd">
+<td>target transform</td>
+<td>signed-log, <span class="math inline">\(s = 1\)</span> gB</td>
+<td><code>target_transform</code></td>
+<td><code>standard</code> for GA’s linear scaling</td>
+</tr>
+<tr class="even">
+<td>splits</td>
+<td>10% test, 10% validation</td>
+<td><code>split</code></td>
+<td>seed per machine</td>
+</tr>
+<tr class="odd">
+<td>relative-error floor</td>
+<td>1 gB</td>
+<td><code>metrics.flux_floor</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>stable if</td>
+<td><span class="math inline">\(Q_e + Q_i &lt; 1\)</span> gB</td>
+<td><code>metrics.stable_below</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="metrics" class="level2">
+<h2 class="anchored" data-anchor-id="metrics">Metrics</h2>
+<p>Every variant is scored in the same way, whatever its training transform, so variants compare directly. The prediction is the members’ mean in the training space, mapped back to gB.</p>
+<ul>
+<li><strong>Relative error</strong> per case, <span class="math inline">\(|\hat Q - Q|/|Q|\)</span>, on cases with <span class="math inline">\(|Q| &gt; 1\)</span> gB, for <span class="math inline">\(Q_e\)</span> and <span class="math inline">\(Q_i\)</span>; reported as the median and the 90th percentile, and as the median in the near-threshold band <span class="math inline">\(1 &lt; |Q| \le 100\)</span> gB.</li>
+<li><strong><span class="math inline">\(R^2\)</span> and RMSE</strong> of each output in signed-log space (<span class="math inline">\(s = 1\)</span> gB).</li>
+<li><strong>Coverage</strong>: the fraction of cases whose TGLF value, in signed-log space, lies within the members’ mean ± 2 standard deviations.</li>
+<li><strong>Stable/unstable agreement</strong>: the fraction of cases on which the ensemble and TGLF agree whether <span class="math inline">\(Q_e + Q_i &lt; 1\)</span> gB.</li>
+</ul>
+<p>The <a href="#reproducing">figure script</a> re-evaluates the saved round-1 models with its own code and reproduces the stored medians; it also computes 95% bootstrap intervals over the test cases (1000 resamples, paired across models), which the training code does not.</p>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results on the version 1 datasets</h2>
+<p>Held-out test split, 10000 cases per machine. GPU jobs 2318567 (baseline, commit <code>50d9e38</code>) and 2319237 (TGLF-NN variants and learning curves, commit <code>f4da0c0</code>).</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>quantity</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>median relative error of <span class="math inline">\(Q_e\)</span>, <span class="math inline">\(Q_i\)</span>: MLP ensemble, signed-log</td>
+<td><span class="claim">MAST-U 0.77 (Q_e) and 0.80 (Q_i); ITER 0.61 and 0.62</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-077" class="cid st-measured">C-077</a></td>
+</tr>
+<tr class="even">
+<td>the same, TGLF-NN network with linear outputs</td>
+<td><span class="claim">MAST-U 9.1 (Q_e) and 17.7 (Q_i); ITER 6.8 and 7.0; R² of Q_e in signed-log space -0.30 (MAST-U) and -0.35 (ITER)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-078" class="cid st-measured">C-078</a></td>
+</tr>
+<tr class="odd">
+<td>the same, TGLF-NN network on signed-log targets</td>
+<td><span class="claim">MAST-U 0.75 (Q_e) and 0.77 (Q_i); ITER 0.60 and 0.58</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-079" class="cid st-measured">C-079</a></td>
+</tr>
+<tr class="even">
+<td>parameters per member</td>
+<td><span class="claim">21 827 per member (TGLF-NN network) against 203 526 (MLP)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-080" class="cid st-measured">C-080</a></td>
+</tr>
+<tr class="odd">
+<td>±2σ coverage of <span class="math inline">\(Q_e\)</span> (signed-log)</td>
+<td><span class="claim">TGLF-NN network 0.63 (MAST-U) and 0.66 (ITER); MLP ensemble 0.54 and 0.57</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-081" class="cid st-measured">C-081</a></td>
+</tr>
+<tr class="even">
+<td>stable/unstable agreement</td>
+<td><span class="claim">TGLF-NN, signed-log 0.91 (MAST-U) and 0.92 (ITER); MLP 0.91 and 0.92; TGLF-NN, linear outputs 0.79 and 0.77</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-082" class="cid st-measured">C-082</a></td>
+</tr>
+<tr class="odd">
+<td>rank correlation of member spread with error</td>
+<td><span class="claim">0.39-0.51 for the MLP ensemble and 0.53-0.62 for the TGLF-NN network</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-089" class="cid st-measured">C-089</a></td>
+</tr>
+</tbody>
+</table>
+<p>With signed-log targets the TGLF-NN network and the MLP ensemble reach the same accuracy within the bootstrap interval, and the TGLF-NN network’s spread covers TGLF more often. Neither spread is calibrated: a calibrated Gaussian spread would cover 95% of cases at ±2σ. Calibration (conformal, M4) is not done yet. The member spread ranks the errors only weakly (<span class="claim">0.39-0.51 for the MLP ensemble and 0.53-0.62 for the TGLF-NN network</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-089" class="cid st-measured">C-089</a>). The errors are lower on ITER than on MAST-U for every variant; the MAST-U box is wider in every kinetic input (see the <a href="../../../Blog/tokamak-toolkit/technical/datasets.html#sampling-space">datasets</a> page), and we have not separated that from the shape of the machine.</p>
+<p>All metrics of every model (90th percentiles, <span class="math inline">\(R^2\)</span>, RMSE, Γ outputs, validation and test) are in <a href="../figures/m3_metrics.csv">m3_metrics.csv</a>.</p>
+<section id="learning-curves" class="level3">
+<h3 class="anchored" data-anchor-id="learning-curves">Learning curves</h3>
+<div id="fig-m3-learning-curves" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-m3-learning-curves-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/m3_learning_curves.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-m3-learning-curves-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Median relative error of <span class="math inline">\(Q_e\)</span> on the v1 test split against the number of training cases, MAST-U left, ITER right. Squares: MLP ensemble; circles: TGLF-NN network on signed-log targets; dotted: the fitted power law, extended. Triangles: the TGLF-NN network trained on v1 plus an active-learning batch (up: selected; down: uniform), see <a href="#active-learning">below</a>. Look at the slopes: still falling at 80000 cases, faster on ITER than on MAST-U.
+</figcaption>
+</figure>
+</div>
+<p><em>CSV: <a href="../figures/m3_learning_curves.csv">m3_learning_curves.csv</a>. Provenance: models of jobs 2319237 (commit <code>f4da0c0</code>, clean tree) and 2318567 (commit <code>50d9e38</code>, dirty tree recorded); figure script <code>blog/figures/make_m3_surrogates.py</code>.</em></p>
+<p>Each curve has three points, 20000, 40000 and 80000 training cases, with the validation and test splits fixed. Fitted slopes: <span class="claim">-0.10 (MAST-U) and -0.19 (ITER) for the TGLF-NN network; -0.07 and -0.14 for the MLP</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-083" class="cid st-measured">C-083</a>. If the curves kept these slopes, a median error of 0.30 on <span class="math inline">\(Q_e\)</span> would need <span class="claim">about 3 × 10<sup>6</sup> cases (ITER) and about 10<sup>9</sup> (MAST-U)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-084" class="cid st-preliminary">C-084</a>. That extrapolation spans orders of magnitude beyond the data and gives only the scale. Both networks give nearly the same curves, which points to the data rather than the network as the limit; we have not tested that directly.</p>
+</section>
+</section>
+<section id="active-learning" class="level2">
+<h2 class="anchored" data-anchor-id="active-learning">Active learning, round 1</h2>
+<p>The brief’s M2 task “active learning near critical gradients” was moved to after the first surrogates (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-18">OQ-18</a> a), so that a trained ensemble could choose the points. Code: <code>tkit.datasets.tglf_active</code> (commit <code>352f879</code>).</p>
+<section id="algorithm-2-one-round-as-in-tkit.datasets.tglf_active.run" class="level3">
+<h3 class="anchored" data-anchor-id="algorithm-2-one-round-as-in-tkit.datasets.tglf_active.run">Algorithm 2: one round (as in <code>tkit.datasets.tglf_active.run</code>)</h3>
+<pre><code>input: machine's approved region R and alpha_MHD cap, trained ensemble F, pool size N_p,
+       batch size n, tau, pool seed (disjoint from v1's)
+pool = sample_region(R, N_p, seed)                  # Algorithm 1 of the datasets page
+for each pool point x:
+    members' Q_e, Q_i -&gt; signed-log (s = 1 gB)
+    sigma(x) = members' std, averaged over Q_e and Q_i
+    q(x)     = members' mean of Q_e + Q_i (gB)
+    s(x)     = sigma(x) * exp(-|symlog(q(x))| / tau)
+selected = n indices drawn with probability proportional to s, without replacement
+uniform  = n indices drawn uniformly from the pool minus `selected`
+save the selection (before any TGLF run; reused if the job is resubmitted)
+label both batches with TGLF -&gt; datasets tglf-&lt;machine&gt;-v2-al, tglf-&lt;machine&gt;-v2-random</code></pre>
+<p>Sampling without replacement in proportion to <span class="math inline">\(s\)</span> uses Gumbel top-<span class="math inline">\(k\)</span>: add independent Gumbel noise to <span class="math inline">\(\ln s\)</span> and keep the <span class="math inline">\(n\)</span> largest. It spreads the batch over the high-score region instead of taking only the <span class="math inline">\(n\)</span> highest scores. <em><code>tkit/datasets/tglf_active.py</code> @ <code>352f879</code></em>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>keys <span class="op">=</span> np.log(np.maximum(score, <span class="fl">1e-300</span>)) <span class="op">+</span> rng.gumbel(size<span class="op">=</span><span class="bu">len</span>(score))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>al <span class="op">=</span> np.sort(np.argsort(<span class="op">-</span>keys)[:n])</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>rest <span class="op">=</span> np.setdiff1d(np.arange(<span class="bu">len</span>(score)), al)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>rand <span class="op">=</span> np.sort(rng.choice(rest, size<span class="op">=</span>n, replace<span class="op">=</span><span class="va">False</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Settings: the TGLF-NN ensemble trained on v1 with signed-log targets scores the pool; <span class="math inline">\(N_p = 10^6\)</span>, <span class="math inline">\(n = 10^5\)</span>, <span class="math inline">\(\tau = 2\)</span>, pool seeds 100 (MAST-U) and 101 (ITER), against 0 and 1 for v1. <strong>Score, first version, rejected.</strong> <span class="math inline">\(\sigma\,(1 + \text{proximity})\)</span> was tried first on a test pool before any TGLF run. Its batch followed <span class="math inline">\(\sigma\)</span> alone, and <span class="math inline">\(\sigma\)</span> is largest far above threshold, so it would have selected high-flux cases. The product form makes proximity to zero flux a factor.</p>
+<p><strong>Labelling.</strong> <span class="claim">4 × 10<sup>5</sup> cases, all completed with finite fluxes; 1 h 16 min (MAST-U) and 1 h 15 min (ITER)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-090" class="cid st-measured">C-090</a>, at the same TGLF settings as v1.</p>
+</section>
+<section id="selected-batch" class="level3">
+<h3 class="anchored" data-anchor-id="selected-batch">Where the selected batch landed</h3>
+<div id="fig-m3-al-flux" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-m3-al-flux-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/m3_al_flux.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-m3-al-flux-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: TGLF’s <span class="math inline">\(Q_e + Q_i\)</span> on a signed-log axis, fraction of cases per bin, MAST-U left, ITER right: v1 (grey), the selected batch (accent) and the uniform batch from the same pool (dashed). The shaded band is 0 to 100 gB. Look at the accent curve: its mass sits at and just above zero flux, where v1 and the uniform batch have little.
+</figcaption>
+</figure>
+</div>
+<p><em>CSV: <a href="../figures/m3_al_flux.csv">m3_al_flux.csv</a> (histograms) and <a href="../figures/m3_datasets.csv">m3_datasets.csv</a> (per dataset: bins, sign fractions, digests). Provenance: datasets <code>tglf-&lt;machine&gt;-v2-al</code> and <code>-v2-random</code> written at commit <code>352f879</code> (clean tree), jobs 2319519 and 2319520; figure script <code>blog/figures/make_m3_surrogates.py</code>.</em></p>
+<p>By TGLF’s own fluxes, below 1 gB / 1–100 gB / above 10<sup>4</sup> gB: <span class="claim">MAST-U 16% / 18% / 28% in v1 against 45% / 31% / 5% in the selected batch; ITER 17% / 39% / 10% against 35% / 47% / 2%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-091" class="cid st-measured">C-091</a>. The selecting ensemble expected fewer stable cases than TGLF found, and the batch’s mean member disagreement is lower than the pool’s (<span class="claim">predicted below 1 gB: 24% (MAST-U) and 19% (ITER), against 45% and 35% from TGLF; mean disagreement 0.58 against 0.69 for the pool (MAST-U), 0.46 against 0.51 (ITER)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-092" class="cid st-measured">C-092</a>): the proximity factor, not the disagreement, decided the selection. The uniform batch is drawn from what the selected batch left, so it is slightly depleted of low-flux cases relative to v1 (see the row of <a href="../../../Blog/tokamak-toolkit/claims.html#c-091">C-091</a>); that works against the uniform control near threshold, not for it.</p>
+</section>
+<section id="retraining" class="level3">
+<h3 class="anchored" data-anchor-id="retraining">Retraining against the uniform batch</h3>
+<p>Three TGLF-NN ensembles per machine, signed-log targets, the same settings: v1 only (80000 training cases), v1 plus the selected batch’s non-holdout rows, v1 plus the uniform batch’s (170000 each). Validation and the v1 test split stay v1’s. GPU job 2321323 (commit <code>352f879</code>); the v1-only models are scored on the batch holdouts by <code>tkit.surrogates.evaluate</code>.</p>
+<p>Median relative error of <span class="math inline">\(Q_e\)</span>, on the v1 test split / the selected batch’s holdout / the uniform batch’s holdout (10000 cases each):</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>training data</th>
+<th>MAST-U</th>
+<th>ITER</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>v1 only</td>
+<td><span class="claim">0.75 / 0.85 / 0.76</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-093" class="cid st-measured">C-093</a></td>
+<td><span class="claim">0.60 / 0.69 / 0.59</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-096" class="cid st-measured">C-096</a></td>
+</tr>
+<tr class="even">
+<td>v1 + selected batch</td>
+<td><span class="claim">0.72 / 0.81 / 0.73</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-094" class="cid st-measured">C-094</a></td>
+<td><span class="claim">0.57 / 0.64 / 0.55</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-097" class="cid st-measured">C-097</a></td>
+</tr>
+<tr class="odd">
+<td>v1 + uniform batch</td>
+<td><span class="claim">0.69 / 0.81 / 0.70</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-095" class="cid st-measured">C-095</a></td>
+<td><span class="claim">0.55 / 0.62 / 0.52</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-098" class="cid st-measured">C-098</a></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Both batches help, by about what the learning curve gives</strong> for the larger training set: <span class="claim">fit 0.70 (MAST-U) and 0.52 (ITER); measured 0.72 and 0.57 with the selected batch, 0.69 and 0.55 with the uniform batch</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-101" class="cid st-measured">C-101</a>.</li>
+<li><strong>The uniform batch helps as much or more on every test set.</strong> Uniform minus selected, paired bootstrap over the test cases: <span class="claim">on the selected batch’s holdout 0.000 (-0.013 to 0.009) for MAST-U and -0.015 (-0.028 to -0.003) for ITER; on the v1 test split -0.023 (-0.033 to -0.014) and -0.027 (-0.040 to -0.015)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-099" class="cid st-measured">C-099</a>. On the selected batch’s own holdout, where the selected-batch model trained on the same distribution, the two tie on MAST-U and the uniform batch is ahead on ITER. <span class="math inline">\(Q_i\)</span> follows the same pattern (<a href="../figures/m3_metrics.csv">m3_metrics.csv</a>).</li>
+<li><strong>Near threshold</strong> (<span class="math inline">\(1 &lt; |Q| \le 100\)</span> gB) on the selected holdout: <span class="claim">MAST-U Q_e 0.77 against 0.78, Q_i 0.74 against 0.73; ITER Q_e 0.58 against 0.57, Q_i 0.54 against 0.52</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-100" class="cid st-measured">C-100</a>.</li>
+<li><strong>The selected cases are harder</strong>: every model has its largest error on the selected holdout, and the stable/unstable agreement there is lower than on the other test sets (<a href="../figures/m3_metrics.csv">m3_metrics.csv</a>).</li>
+</ul>
+<p><strong>Finding.</strong> Round 1 of active learning did not beat uniform sampling. Concentrating training cases near threshold reduced the error there by no more than the same number of uniform cases did, and reduced it less elsewhere.</p>
+<p><strong>What we have measured and what we have not.</strong> Measured: the member disagreement is weakly related to the actual error (<span class="claim">0.39-0.51 for the MLP ensemble and 0.53-0.62 for the TGLF-NN network</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-089" class="cid st-measured">C-089</a>), and the selection was decided by predicted proximity to zero flux rather than by disagreement (<span class="claim">predicted below 1 gB: 24% (MAST-U) and 19% (ITER), against 45% and 35% from TGLF; mean disagreement 0.58 against 0.69 for the pool (MAST-U), 0.46 against 0.51 (ITER)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-092" class="cid st-measured">C-092</a>). Not measured: why the near-threshold cases stay hard. One possible reason is that near threshold the flux is small and changes fast with the inputs, so relative errors there stay large whatever the sampling density; we have not tested it. The check of round 1 does not depend on the selecting ensemble: the outcomes are TGLF’s fluxes on held-out cases, and the control batch comes from the same pool.</p>
+<p><strong>Consequence.</strong> With the current sampling space, more uniform data is the cheaper route to lower error, and the learning curves put the target out of reach that way (<span class="claim">about 3 × 10<sup>6</sup> cases (ITER) and about 10<sup>9</sup> (MAST-U)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-084" class="cid st-preliminary">C-084</a>). The next dataset changes what is sampled (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-19">OQ-19</a> 1): see <a href="#next">next steps</a>.</p>
+</section>
+</section>
+<section id="heat-flux-sign" class="level2">
+<h2 class="anchored" data-anchor-id="heat-flux-sign">Heat-flux sign and the ReLU output</h2>
+<p>The brief asks for physics structure in the surrogates: zero flux below threshold, positivity, monotonicity in gradients. TGLF’s own heat fluxes are not always positive. Over the six TGLF datasets: <span class="claim">Q_e &lt; 0 in 2.0-6.5% of cases (below -1 gB in 0.5-1.5%; median of the negative values -0.03 to -0.09 gB); Q_i &lt; 0 in 9.4-14.1% (below -1 gB in 2.2-5.1%); particle fluxes negative in 33-54%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-102" class="cid st-measured">C-102</a>. The negative <span class="math inline">\(Q_e\)</span> values are small; the negative <span class="math inline">\(Q_i\)</span> values have a long tail, and they occur where the electron channel dominates: <span class="claim">Q_e &gt; 0 in 97% (MAST-U) and 95% (ITER) of them, with median Q_e / |Q_i| of 69 and 34; lowest Q_i -6.9 × 10<sup>6</sup> gB (MAST-U) and -6.5 × 10<sup>4</sup> gB (ITER)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-103" class="cid st-measured">C-103</a>. Negative particle fluxes are inward flux and physical.</p>
+<p>Owner decision (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-19">OQ-19</a> 3): <span class="math inline">\(Q_e\)</span> and <span class="math inline">\(Q_i\)</span> are clipped at zero in use, exactly zero below threshold and never negative; the particle fluxes keep their sign. Built at commit <code>9a036a6</code>.</p>
+<section id="relu" class="level3">
+<h3 class="anchored" data-anchor-id="relu">Clip in use, stability penalty in training</h3>
+<p>A ReLU inside the network passes no gradient for points it predicts as stable. The clip is therefore applied only in use, per member, after the inverse target transform (with a sign-preserving transform this is a ReLU on the flux). In training the outputs stay linear and the loss is QLKNN’s stability penalty (van de Plassche et al., Phys. Plasmas 27, 022310, 2020). For a clipped output with prediction <span class="math inline">\(p\)</span> and target <span class="math inline">\(t\)</span> (signed-log values; the loss is evaluated after standardisation, with the threshold standardised the same way),</p>
+<p><span class="math display">\[
+\ell(p, t) =
+\begin{cases}
+(p - t)^2 &amp; \text{TGLF's } Q &gt; 0,\\
+w\,\max(p + m, 0)^2 &amp; \text{TGLF's } Q \le 0,
+\end{cases}
+\]</span></p>
+<p>so where TGLF’s flux is zero or negative only a prediction above the margin <span class="math inline">\(-m\)</span> costs, and any prediction below it is free. With signed-log targets, <span class="math inline">\(m = 1\)</span> is <span class="math inline">\(Q = -1.7\)</span> gB. Every other output keeps the squared error. <em><code>tkit/surrogates/train.py</code> @ <code>9a036a6</code></em>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> jnp.where(stable, weight <span class="op">*</span> jnp.maximum(pred <span class="op">-</span> floor, <span class="fl">0.0</span>) <span class="op">**</span> <span class="dv">2</span>, (pred <span class="op">-</span> y) <span class="op">**</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Choosing the rule.</strong> CPU smoke runs of the TGLF-NN network on signed-log targets, 5 members, 150 epochs, a fifth of the v1 training split (16000 cases), one run per rule and machine, scored on the v1 test split. The measure is the share of test cases with TGLF’s <span class="math inline">\(Q \le 0\)</span> that the surrogate returns as exactly zero (all members clipped):</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>training of <span class="math inline">\(Q_e\)</span>, <span class="math inline">\(Q_i\)</span></th>
+<th>exact zero where TGLF’s <span class="math inline">\(Q \le 0\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>linear outputs, clipped afterwards</td>
+<td><span class="claim">Q_e 0.13 (MAST-U) and 0.17 (ITER); Q_i 0.16 and 0.20</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-105" class="cid st-preliminary">C-105</a></td>
+</tr>
+<tr class="even">
+<td>fitted to <span class="math inline">\(\max(Q, 0)\)</span> (<code>clip_target</code>)</td>
+<td><span class="claim">Q_e 0.10 (MAST-U) and 0.15 (ITER); Q_i 0.06 and 0.06</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-106" class="cid st-preliminary">C-106</a></td>
+</tr>
+<tr class="odd">
+<td>stability penalty, <span class="math inline">\(m = 0\)</span>, <span class="math inline">\(w = 1\)</span></td>
+<td><span class="claim">Q_e 0.18 (MAST-U) and 0.21 (ITER); Q_i 0.13 and 0.17</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-107" class="cid st-preliminary">C-107</a></td>
+</tr>
+<tr class="even">
+<td>stability penalty, <span class="math inline">\(m = 1\)</span>, <span class="math inline">\(w = 1\)</span> (adopted)</td>
+<td><span class="claim">Q_e 0.28 (MAST-U) and 0.40 (ITER); Q_i 0.25 and 0.43</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-108" class="cid st-preliminary">C-108</a></td>
+</tr>
+<tr class="odd">
+<td>stability penalty, <span class="math inline">\(m = 0.5\)</span>, <span class="math inline">\(w = 10\)</span></td>
+<td><span class="claim">Q_e 0.45 (MAST-U) and 0.62 (ITER); Q_i 0.48 and 0.63</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-109" class="cid st-preliminary">C-109</a></td>
+</tr>
+</tbody>
+</table>
+<p>The adopted setting against clipping afterwards: <span class="claim">Q_i median relative error +0.005 (MAST-U) and +0.009 (ITER), Q_e within ±0.004; stable/unstable agreement +0.009 and +0.016; Q &gt; 1 gB predicted zero in 0.1% (Q_e) and 0.3% (Q_i) of such cases</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-110" class="cid st-preliminary">C-110</a>. The weight-10 penalty: <span class="claim">Q_i median relative error +0.03 (MAST-U) and +0.05 (ITER); 1.0% and 1.3% of cases with Q_i &gt; 1 gB predicted as zero</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-111" class="cid st-preliminary">C-111</a>. Fitting <span class="math inline">\(\max(Q, 0)\)</span> gives fewer exact zeros than clipping afterwards, because the fit to a kinked target lands just above zero. All rows, with <span class="math inline">\(Q_e\)</span> errors and the margin-0.5 row: <a href="../figures/m3_relu_variants.csv">m3_relu_variants.csv</a>. The smoke runs rank the rules; the final v3 production variants and their exact-zero rates are described in <a href="#v3-results">the v3 results</a>.</p>
+<p><strong>What the clip costs, whatever the model</strong> (ceiling <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-021">K-021</a>): <span class="claim">Q &lt;= 0 in 4.6% (MAST-U) and 5.2% (ITER) of cases for Q_e, 11.8% and 13.2% for Q_i; Q &lt; -1 gB in 0.8% and 0.7% (Q_e) and 6.5% and 4.3% (Q_i) of cases with |Q| &gt; 1 gB; Q_e + Q_i changes by more than 10% in 0.9% and 1.0% of cases</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-104" class="cid st-measured">C-104</a> (<a href="../figures/m3_clip_cost.csv">m3_clip_cost.csv</a>). Inside TORAX the heat flux becomes a diffusivity clipped at its minimum, so the coupled loop already discards negative heat fluxes.</p>
+</section>
+</section>
+<section id="monotonicity" class="level2">
+<h2 class="anchored" data-anchor-id="monotonicity">Monotonicity in the gradients</h2>
+<p>The brief asks for the heat flux to be non-decreasing in its own temperature gradient: <span class="math inline">\(Q_e\)</span> in <span class="math inline">\(a/L_{T_e}\)</span> (<code>RLTS_1</code>) and <span class="math inline">\(Q_i\)</span> in <span class="math inline">\(a/L_{T_i}\)</span> (<code>RLTS_2</code>). <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-19">OQ-19</a> asked for this to be measured on TGLF before it is imposed. Code: <code>tkit.surrogates.monotonicity</code> (commit <code>476875d</code>).</p>
+<p><strong>Scans.</strong> Per machine, 35 base points drawn from the v1 test split among cases with <span class="math inline">\(Q_e\)</span> and <span class="math inline">\(Q_i\)</span> above 1 gB. Each is scanned over <code>RLTS_1</code> and, separately, over <code>RLTS_2</code>: 8 evenly spaced values over the base value ± a third of the approved range, cut at the range and at the machine’s α<sub>MHD</sub> cap, with the value nearest the base replaced by the base. All other sampled inputs are fixed; the derived inputs (<code>P_PRIME_LOC</code>, α<sub>MHD</sub>) are recomputed, as in the datasets. Each base case is also re-run to check TGLF’s run-to-run noise: <span class="claim">560 cases per machine, all completed; the 70 re-run base cases per machine reproduce the dataset’s fluxes bit for bit</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-112" class="cid st-measured">C-112</a>.</p>
+<p><strong>Measure.</strong> Along a scan, the largest drop of <span class="math inline">\(Q\)</span> below its running maximum as the gradient rises, relative to that maximum. A drop above 100% means the flux went negative. The same is computed for the v1 ensemble (TGLF-NN, signed-log targets) on the same scan points, and the ensemble’s slope <span class="math inline">\(\mathrm{d}\,\mathrm{symlog}(Q)/\mathrm{d}(a/L_T)\)</span> is evaluated at every v1 test point with the heat flux above 1 gB, as a total derivative (<code>P_PRIME_LOC</code> moves with the gradient).</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>quantity</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>TGLF: scans along which the flux falls</td>
+<td><span class="claim">falls somewhere in 77% (Q_e) and 80% (Q_i) of MAST-U scans, 51% and 74% of ITER scans; by more than half in 40% and 57% (MAST-U), 34% and 57% (ITER)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-113" class="cid st-measured">C-113</a></td>
+</tr>
+<tr class="even">
+<td>v1 ensemble, same scans</td>
+<td><span class="claim">falls somewhere in 20% (Q_e) and 49% (Q_i) of MAST-U scans, 23% and 37% of ITER scans; by more than half in 3% and 23% (MAST-U), 9% and 17% (ITER)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-114" class="cid st-measured">C-114</a></td>
+</tr>
+<tr class="odd">
+<td>v1 ensemble: negative slope at test points</td>
+<td><span class="claim">Q_e 8% (MAST-U) and 11% (ITER); Q_i 25% and 22%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-115" class="cid st-measured">C-115</a></td>
+</tr>
+</tbody>
+</table>
+<div id="fig-m3-monotonicity" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-m3-monotonicity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/m3_monotonicity.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-m3-monotonicity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Fraction of scans whose largest drop below the running maximum exceeds a given size, TGLF (accent) against the v1 ensemble on the same scans (dashed), per machine and flux. Look at the left end: TGLF falls somewhere along most scans, the ensemble along fewer.
+</figcaption>
+</figure>
+</div>
+<p><em>CSV: <a href="../figures/m3_monotonicity.csv">m3_monotonicity.csv</a>. Provenance: <code>data/m3/scans/tglf-mono-v1</code> (TGLF at the M2 settings; summary written at commit <code>476875d</code>, dirty tree recorded); figure script <code>blog/figures/make_m3_structure.py</code>.</em></p>
+<p>TGLF is not monotone in its own gradient along most of these scans, and the ensemble, being smoother, is non-monotone at different places. Why TGLF falls is not measured: a change of the dominant mode, or the effect of scanning one input with the others fixed (for example <span class="math inline">\(T_i/T_e\)</span> and the density gradient), are both possible.</p>
+<p><strong>Decision <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-20">OQ-20</a> (1), owner.</strong> Monotonicity is a requirement for the TGLF surrogates anyway: <span class="math inline">\(Q_e\)</span> non-decreasing in <span class="math inline">\(a/L_{T_e}\)</span> and <span class="math inline">\(Q_i\)</span> non-decreasing in <span class="math inline">\(a/L_{T_i}\)</span>. Where TGLF decreases, the surrogate departs from TGLF by construction. The final models use <code>models.MonotoneResMLP</code>: a residual trunk on the other inputs and one head per paired gradient, with nonnegative weights along that gradient’s paths and nondecreasing activations. <code>P_PRIME_LOC</code> is omitted because it moves with the gradients; the remaining inputs determine it. ReLU, positive output scaling and inverse signed-log preserve monotonicity. Sampled checks and the measured departure are reported in <a href="#v3-results">the v3 results</a>; proof over declared boxes remains M4 work.</p>
+</section>
+<section id="in-the-loop" class="level2">
+<h2 class="anchored" data-anchor-id="in-the-loop">In the TORAX loop</h2>
+<p><em>Results prepared for draft entry 21. The completed matched timing below uses v1.</em></p>
+<p><strong>Wiring</strong> (<code>tkit.physics.torax_surrogate</code>, commit <code>7ec2569</code>). The surrogate is a TORAX transport model, <code>model_name = "tkit_tglf_surrogate"</code>, pure and jittable. Per face, inside TORAX’s step: (1) the TORAX state becomes TGLF inputs through TORAX’s own <code>TGLFBasedTransportModel._prepare_tglf_inputs</code>, the conventions the datasets follow; (2) the saved ensemble (<code>tkit.surrogates.predict</code>) returns the members’ mean and spread in gB; (3) <span class="math inline">\(\Gamma_e\)</span>, <span class="math inline">\(Q_e\)</span>, <span class="math inline">\(Q_i\)</span> become <span class="math inline">\(\chi_e\)</span>, <span class="math inline">\(\chi_i\)</span>, <span class="math inline">\(D_e\)</span>, <span class="math inline">\(V_e\)</span> through TORAX’s own conversion, as TORAX’s TGLF models do. Where a face’s inputs leave the box of the training inputs, the coefficients are NaN with finite derivatives (the network is evaluated at the box centre and the result replaced by a select); the tkit guard’s finiteness test rejects the face and serves Bohm/gyro-Bohm (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-1">OQ-1</a>). The domain is therefore defined in the surrogate’s own input coordinates (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-10">OQ-10</a>). Differences from TORAX’s TGLF model: <span class="math inline">\(Q_i\)</span> is the main ion’s flux, not the sum over ions (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-024">K-024</a>), and TGLF’s settings are the datasets’, not TORAX’s TGLF defaults.</p>
+<p><strong>Derivatives</strong> of v1 at its recorded settings: <span class="claim">reverse mode within 10<sup>−6</sup> (coefficients) and 10<sup>−7</sup> (after 3 Newton steps) of central differences, and within 10<sup>−9</sup> and 10<sup>−12</sup> of forward mode</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-116" class="cid st-tested">C-116</a>. For final v3, the default Newton stopping tolerance gives <span class="claim">v3 derivative discrepancy about 1.8e-5 relative; peak discrete energy residual 1.11e-5 (v1) and 1.36e-6 (v3)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-140" class="cid st-tested">C-140</a> (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-026">K-026</a>). The strict v3 derivative check passes when the numerical root is converged more tightly (<span class="claim">v1 and v3 pass: three-step derivative FD tolerance 1e-7, forward/reverse tolerance 1e-12; guard masks unchanged over the stencil</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-138" class="cid st-tested">C-138</a>), as does discrete energy and particle balance (<span class="claim">v1 and v3 pass: energy residual below 1e-6 and particle residual below 1e-10, with fine solver convergence</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-139" class="cid st-tested">C-139</a>). The comparison command uses <code>residual_tol=1e-10</code> for v3 Newton runs and records it in <code>solver_config</code>. The derivative and conservation assertion tolerances are retained. The default-tolerance limitation remains visible rather than being attributed to a guard-mask change.</p>
+<section id="extended-loop-validation" class="level3">
+<h3 class="anchored" data-anchor-id="extended-loop-validation">Extended local validation</h3>
+<p>The guarded ITER ensemble is checked on RAPTOR L-mode (v1 and final monotone v3) and ITER hybrid predictor-corrector (final monotone v3). Both use an explicit Newton solver for these checks, with a fixed step of <code>dt=0.05 s</code>. This does not redefine the ITER hybrid linear-solver timing scenario. The evidence is <span class="claim">15 gradient, JIT, fallback and discrete-balance checks pass across RAPTOR and ITER hybrid in each mode</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-146" class="cid st-tested">C-146</a>.</p>
+<p>For initial coefficients, perturb electron temperature by <code>1 + eps * rho_tor_norm</code> and compare the derivative of summed guarded electron/ion diffusivities with central differences at <code>h=1e-4</code>. Require unchanged guard masks, finite derivatives, a nonzero contribution from accepted ensemble faces, finite-difference agreement at <code>rtol=1e-6</code> and forward/reverse agreement at <code>rtol=1e-9</code>.</p>
+<p>For core electron temperature after three coupled Newton steps, use <code>residual_tol=1e-10</code>, require fine solver status and unchanged accepted-state masks throughout the stencil, and retain <code>rtol=1e-7</code> for finite differences and <code>rtol=1e-12</code> for forward/reverse agreement. Conservation retains maximum relative energy residual below <code>1e-6</code> and particle residual below <code>1e-10</code>. JIT checks also require finite temperature, density and poloidal flux, and finite nonnegative ensemble spread on accepted faces. Fallback checks compare selected coefficients exactly with the fallback on rejected faces and with the ensemble on accepted faces.</p>
+<p>The combined RAPTOR derivative process exceeded the local CPU limit before completing. Each model/scenario now runs in its own file with one-CPU affinity to respect that limit. New execution reports, source snapshots and model hashes are bound in the validation sidecar; prior audit artifacts are preserved. Unchanged files retain preceding execution reports for aggregate statistics. These short local checks establish no MAST-U coupled derivative result, matched speed-up, long-trajectory error tolerance or certified domain. <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-026">K-026</a> remains open.</p>
+<p><strong>Cost and agreement</strong>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>quantity</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>one surrogate call, 51 faces, one core</td>
+<td><span class="claim">3.1 ms</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-117" class="cid st-measured">C-117</a></td>
+</tr>
+<tr class="even">
+<td>TGLF on the same faces</td>
+<td><span class="claim">about 103 s (2.0 s per face)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-118" class="cid st-measured">C-118</a></td>
+</tr>
+<tr class="odd">
+<td>surrogate against TGLF on the loop’s final state</td>
+<td><span class="claim">Q_e 0.28 (11 faces) and Q_i 0.44 (12 faces); the surrogate is below TGLF on 10 of the 11 and on all 12</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-119" class="cid st-preliminary">C-119</a></td>
+</tr>
+<tr class="even">
+<td>RAPTOR L-mode, Newton, 200 steps: surrogate</td>
+<td><span class="claim">374 s and 405 s (two runs); no stalled step, 57 steps accepted at the coarse tolerance</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-120" class="cid st-measured">C-120</a></td>
+</tr>
+<tr class="odd">
+<td>the same with QLKNN</td>
+<td><span class="claim">29 s and 30 s (two runs); 179 of 200 steps stalled, 6 at the coarse tolerance</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-121" class="cid st-measured">C-121</a></td>
+</tr>
+<tr class="even">
+<td>linear solver; ITER hybrid case</td>
+<td><span class="claim">RAPTOR L-mode, linear solver: surrogate 5.2 s, QLKNN 0.57 s; Newton with the published constant transport 0.35 s, with Bohm/gyro-Bohm 1.6 s. ITER hybrid: surrogate 0.56 s, QLKNN 0.066 s, Bohm/gyro-Bohm 0.030 s</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-122" class="cid st-measured">C-122</a></td>
+</tr>
+<tr class="odd">
+<td>guard rejection</td>
+<td><span class="claim">0.51 on the RAPTOR L-mode case and 0.27 on the ITER hybrid case</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-123" class="cid st-measured">C-123</a></td>
+</tr>
+<tr class="even">
+<td>matched TGLF/v1 run, linear solver</td>
+<td><span class="claim">TGLF 540.38 s, v1 surrogate 0.780 s, QLKNN 0.126 s; v1 is about 693 times faster than TGLF</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-132" class="cid st-measured">C-132</a></td>
+</tr>
+<tr class="odd">
+<td>final v1 profiles against TGLF</td>
+<td><span class="claim">T_e 18.52%, T_i 22.09%, n_e 10.25%, psi 0.44%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-133" class="cid st-preliminary">C-133</a></td>
+</tr>
+<tr class="even">
+<td>final v3 profiles against the saved TGLF run</td>
+<td><span class="claim">T_e 7.72%, T_i 9.23%, n_e 11.36%, psi 0.32%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-134" class="cid st-preliminary">C-134</a></td>
+</tr>
+<tr class="odd">
+<td>local v3 loop and accepted-state diagnostics</td>
+<td><span class="claim">all profiles finite; no stalled or coarse-tolerance step; post-step guard rejection 33.1%; execution 1.62 s after compilation</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-135" class="cid st-measured">C-135</a></td>
+</tr>
+<tr class="even">
+<td>local v3 Newton and isolated inference cost</td>
+<td><span class="claim">40 Newton steps in 60.58 s, median 1.47 s per step; isolated prediction on 51 faces takes 4.36 ms per call</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-141" class="cid st-measured">C-141</a></td>
+</tr>
+<tr class="odd">
+<td>final v3, ITER hybrid execution</td>
+<td><span class="claim">50 steps to 5 s, all four profiles finite, no stalled or coarse-tolerance steps; accepted-state guard rejection 26.9%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-142" class="cid st-measured">C-142</a></td>
+</tr>
+</tbody>
+</table>
+<p>Under Newton the surrogate makes the coupled run slower than QLKNN, although one call is far cheaper than TGLF: every member is evaluated on every face, including faces the guard rejects, and the solver differentiates through all of them (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-022">K-022</a>). The local v3 trace captures three executed Newton steps after compilation. Its fused HLO labels do not yet separate ensemble inference from Jacobian construction; inclusive event durations overlap and cannot be summed as wall-time fractions. The v1 guard rejects many faces because its training box does not cover the loop’s geometry and outer-radius collisionality on these ITER cases (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-023">K-023</a>).</p>
+</section>
+</section>
+<section id="dataset-v3" class="level2">
+<h2 class="anchored" data-anchor-id="dataset-v3">Dataset v3</h2>
+<p><em>Results prepared for draft entry 22: labelling and reproducibility audits are complete.</em></p>
+<p>Code <code>tkit.datasets.tglf_trajectory</code>, plan <code>configs/sampling/m3_tglf_v3.yaml</code> (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-19">OQ-19</a> 1, <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-20">OQ-20</a> 2).</p>
+<ol type="1">
+<li><strong>Equilibria</strong> (MAST-U): 8 of the 42 FreeGSNKE MAST-U-like equilibria of M2, chosen by farthest-point sampling on standardised minor radius, aspect ratio, elongation, triangularity, <span class="math inline">\(q_{95}\)</span>, field, current and pressure scaling, solved again and saved as IMAS files.</li>
+<li><strong>Trajectories</strong>: one TORAX run per scenario, each in its own process. ITER: the RAPTOR L-mode benchmark and the ITER hybrid flat-top (own transport or Bohm/gyro-Bohm; heating power ×0.5, 1, 1.5; density ×0.8, 1, 1.2) and the ITER current ramp-up (own transport; heating power scaled). MAST-U: 0.5 s runs at a fixed 5 ms step, deuterium with carbon, prescribed density shape, a neutral-beam-like heating source; Bohm/gyro-Bohm ×1 and ×2, 1.5 and 3 MW, 0.35 and 0.6 of the Greenwald density, with and without a pedestal. <span class="claim">128 MAST-U runs and 39 ITER runs, all completed; 32 and 8 of them held out for the test split</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-124" class="cid st-measured">C-124</a>.</li>
+<li><strong>States</strong>: at every second output state, TORAX’s own TGLF input builder gives the 17 sampled inputs on every face. Faces inside the approved region (kinetic ranges with the ITER collisionality widened to <span class="math inline">\([10^{-3}, 1]\)</span>, the radial window <span class="math inline">\(0.1 \le r/a \le 0.9\)</span>, the α<sub>MHD</sub> cap) are kept; the measured M2 geometry ranges are counted, not applied (<code>geometry_filter: false</code>; on sample runs they dropped about half the MAST-U faces, mostly on triangularity shear in the core, where FreeGSNKE’s triangularity is noisy, <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-013">K-013</a>). <span class="claim">MAST-U 115722 of 124032 faces (93%); ITER 68978 of 79344 (87%)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-125" class="cid st-measured">C-125</a>; outside the M2 ranges, per input: <span class="claim">MAST-U: triangularity shear 41%, triangularity 12.5%, q 6.5%, magnetic shear 5.6%, collisionality 5%, beta_e 2%; ITER: a/L_Te 11%, a/L_Ti 10%, triangularity shear 5%, magnetic shear 3%, T_i/T_e 2%, collisionality 1%; every other input below 2%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-126" class="cid st-measured">C-126</a>.</li>
+<li><strong>Splits</strong>: whole runs held out, chosen with the seed (ITER, a fifth of the runs) or by equilibrium (MAST-U, all runs on 2 of the 8 equilibria). Test points are unperturbed held-out states, drawn evenly over the test runs.</li>
+<li><strong>Perturbation</strong> of training points: a quarter are unperturbed states; the rest are copies with <code>RLTS_1</code>, <code>RLTS_2</code>, <code>BETAE</code> multiplied by <span class="math inline">\(e^{N(0, 0.3)}\)</span>, <code>TAUS_2</code> by <span class="math inline">\(e^{N(0, 0.15)}\)</span>, <code>XNUE</code> by <span class="math inline">\(e^{N(0, 0.5)}\)</span>, <code>RLNS_1</code> shifted by <span class="math inline">\(N(0, 0.5)\)</span>, <code>ZEFF</code> by <span class="math inline">\(N(0, 0.3)\)</span>, and in half the copies <code>VEXB_SHEAR</code> drawn uniformly from its approved range (TORAX’s TGLF-type models pass zero without rotation). Geometry is never perturbed; copies outside the region are redrawn, up to 20 times. <span class="claim">90000 training points (22500 unperturbed) and 10000 test points per machine; more than 99.99% of perturbed copies fell inside the region at the first draw</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-127" class="cid st-measured">C-127</a>.</li>
+<li><strong>Labelling</strong> with TGLF at the M2 settings, as datasets <code>tglf-&lt;machine&gt;-v3-train</code> and <code>-v3-test</code>: <span class="claim">90000 training cases and 10000 held-out test cases per machine, all completed with finite fluxes</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-128" class="cid st-measured">C-128</a>. Per-case cost sums: <span class="claim">MAST-U: 58.03 case-hours (train), 5.45 (test); ITER: 63.43 (train), 5.62 (test)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-136" class="cid st-measured">C-136</a>. The audit checks labelled inputs against the points, verifies their digests and replays the split from saved trajectories and recorded plans. The historical MAST-U plan is verified at its producer commit rather than assumed equal to today’s plan. This uses the implementation and is not independent physics validation.</li>
+</ol>
+</section>
+<section id="accuracy-target" class="level2">
+<h2 class="anchored" data-anchor-id="accuracy-target">Accuracy target</h2>
+<p>Owner decision <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-19">OQ-19</a> (2), in <code>configs/surrogates/m3_tglf.yaml</code> as <code>acceptance.target</code>: the median relative error of the ensemble mean is at most 0.30 on <span class="math inline">\(Q_e\)</span> and on <span class="math inline">\(Q_i\)</span>, on cases with <span class="math inline">\(|Q| &gt; 1\)</span> gB, on each machine’s <strong>v3</strong> held-out test split. Errors on the v1 test split are reported, not gated. The closed-loop error is checked at M4. The final monotone models pass the target: <span class="claim">MAST-U: Q_e 17.8%, Q_i 25.2%; ITER: Q_e 7.2%, Q_i 10.8%; all meet the 30% target</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-129" class="cid st-measured">C-129</a>.</p>
+</section>
+<section id="v3-results" class="level2">
+<h2 class="anchored" data-anchor-id="v3-results">Final v3 models</h2>
+<p><code>tglfnn_symlog_relu_v3</code> and <code>tglfnn_symlog_relu_mono_v3</code> train on v1, both v2 batches and all v3-train points. The v3-test dataset is evaluation-only (<code>trained_on: false</code>, holdout 1); v3-train has holdout 0. The <code>-v1</code> directory suffix is the checkpoint version, not the sampled dataset version. One model per machine supplies the loop’s transport fluxes.</p>
+<p>The monotone-model audit verifies the checkpoint and metadata hashes, checks each dataset digest against the trained model, confirms disjoint v1 splits and withheld v3-test runs, and recomputes the held-out per-output scores. <span class="claim">MAST-U: Q_e 17.8%, Q_i 25.2%; ITER: Q_e 7.2%, Q_i 10.8%; all meet the 30% target</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-129" class="cid st-measured">C-129</a>. Empirical structure checks: <span class="claim">no negative member slopes on the tested v1/v3 points or scan grids, and no negative neighbour differences on the scan grids</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-130" class="cid st-tested">C-130</a>. Departure on broad scans where TGLF decreases: <span class="claim">MAST-U: Q_e 3.14, Q_i 3.36; ITER: Q_e 2.51, Q_i 2.11 signed-log units</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-131" class="cid st-preliminary">C-131</a>. That departure includes approximation error as well as the imposed monotonicity; <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-025">K-025</a> remains.</p>
+<p>The median target does not establish tail accuracy, threshold classification or uncertainty coverage. The exact-zero rates and raw ensemble-spread coverage are <span class="claim">mean ±2 standard deviations covers Q_e/Q_i at 75.3%/74.4% (MAST-U), 85.6%/80.8% (ITER); exact-zero predictions where TGLF is nonpositive: 44.0%/47.0% (MAST-U), 52.3%/21.1% (ITER)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-137" class="cid st-measured">C-137</a>. Outputs are nonnegative, but the stability penalty does not force every reference-stable point to zero. Calibration and formal proofs remain M4 work.</p>
+<p>The loop comparison command defaults to the monotone v3 variant and accepts <code>--surrogate-variant tglfnn_symlog</code> for historical v1 reproduction. Its new artifacts carry provenance; failed solves return nonzero, and profile comparisons require matching cases, solver settings, final times and grids. A fresh matched v3 compute comparison was cancelled before execution, with no output. Local v3 timing cannot be divided into historical TGLF timing to claim a matched speed-up.</p>
+</section>
+<section id="performance-review" class="level2">
+<h2 class="anchored" data-anchor-id="performance-review">Performance runner and trace review</h2>
+<p>The expanded accounting/controller/node audit still does not explain the cancelled compute run. Current node status cannot establish a historical cancellation cause. The prepared comparison request awaits the owner or scheduler support’s explanation and remedy, then fresh compute approval. No replacement job has been submitted.</p>
+<p><strong>What passed too easily.</strong> The host runner originally returned success when profiles were finite and no steps stalled, even if a solve finished at coarse tolerance. Its profile comparison used the same incomplete gate. Finiteness cannot establish fine convergence. The recorded comparisons had no coarse-tolerance steps, so this change retracts no measured result. New focused negative tests demonstrate the missing gate with otherwise finite runs.</p>
+<p><strong>Correction.</strong> Execution and comparison now require zero stalled and zero coarse-tolerance steps as well as finite profiles. The runner records host, actual CPU affinity and scheduler allocation. The batch script selects CPUs from that affinity, saves its own script with the runner, and explicitly requests a warm-up step. Warm-up is separately timed and discarded; the measured trajectory restarts from its original initial state. Compilation, warm-up and final guard diagnostics remain outside execution timing. Focused checks give <span class="claim">11 performance-tool checks pass in full and Tier-A-only modes</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-147" class="cid st-tested">C-147</a>. A bounded local host smoke check exercises warm-up and final diagnostics; it does not measure reference accuracy or matched speed-up.</p>
+<p><strong>Guard scope.</strong> The host driver evaluates the final accepted-state mask and spread after timing and stores their rejection fraction. That fraction is neither the trajectory average recorded by the scan driver nor a count of solver-iterate fallbacks. The reference guard adds an extra reference evaluation outside timed execution; QLKNN has no guard record.</p>
+<p><strong>Saved Newton trace.</strong> The offline analyser groups complete HLO events by process, module and run ID, and computes interval unions across threads. The saved trace contains <span class="claim">72059 complete HLO events with about 5.369 s of covered trace time</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-148" class="cid st-preliminary">C-148</a>. Its inclusive sum counts nested/concurrent time more than once, so it cannot supply component percentages. Interval unions remove that overlap, but every HLO event still has only the fused module and runtime source path. Ensemble inference, transport/geometry and Jacobian times remain null in the report. Covered trace time is not unprofiled runtime or CPU time; profiling overhead and unlabelled work remain. <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-022">K-022</a> stays open. The trace’s digest was observed during analysis, not recorded at its creation.</p>
+<p>The analysis command is <code>python scripts/m3_profile_trace.py TRACE.json.gz --out REPORT.json</code>. It binds the report, analyser and observed trace bytes to provenance. Existing timing artifacts are preserved. See <a href="../../../Blog/tokamak-toolkit/log/28-m3-performance-review.html">entry 28</a>.</p>
+</section>
+<section id="epednn-port" class="level2">
+<h2 class="anchored" data-anchor-id="epednn-port">Selected ITER pedestal port</h2>
+<p>The owner-selected pretrained pressure/width model has been ported to JAX. It retains the upstream input/output names, transformations, dense layers, activation and power-law correction. A data-only loader checks the exact checkpoint digest before parsing; loaded inference requires no Julia runtime. All pedestal solutions remain available until the coupled boundary contract selects one.</p>
+<p>Pinned upstream regression values agree (<span class="claim">12 upstream scalar regression values agree within relative tolerance 1e-12</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-149" class="cid st-measured">C-149</a>); focused input-domain, solution-selection, JIT/batch, derivative and Tier A import checks pass (<span class="claim">12 focused tests pass in full and Tier-A-only modes</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-150" class="cid st-tested">C-150</a>). The evidence binds working-tree source hashes. The regression values come from the pinned upstream tests; Julia itself was not executed. These checks do not establish agreement with full EPED or a coupled physical trajectory.</p>
+<p>Pressure stays in the upstream pressure unit and width stays in normalized poloidal flux. The input box is retained; finite extrapolated outputs report an invalid mask. A coupled adapter still needs the selected solution, supplied density/composition, temperature partition and conversion to the TORAX boundary coordinate. The single network supplies no ensemble spread; no uncertainty estimate is fabricated. The prescribed MAST-U pedestal remains, and its predictive replacement and IC are deferred.</p>
+<p>See <a href="../../../Blog/tokamak-toolkit/log/29-iter-pedestal-jax-port.html">entry 29</a>. EC heating and current-drive labelling can proceed independently. Its current channel requires a separate TORAX adapter: the core cell-source tuple contains heating and particle sources, not driven current.</p>
+</section>
+<section id="next" class="level2">
+<h2 class="anchored" data-anchor-id="next">Next steps</h2>
+<p>The <a href="../../../Blog/tokamak-toolkit/action-plan.html">action plan</a> records task dependencies and completion criteria. Performance comparison, the EC baseline and ITER pedestal integration can proceed independently; M4 follows full M3 acceptance.</p>
+<ul>
+<li><strong>Extend trajectory validation</strong> beyond the short RAPTOR and ITER hybrid gradient, fallback and balance checks (<span class="claim">15 gradient, JIT, fallback and discrete-balance checks pass across RAPTOR and ITER hybrid in each mode</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-146" class="cid st-tested">C-146</a>), retaining the default-tolerance limitation <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-026">K-026</a>.</li>
+<li><strong>Resolve the compute cancellation and measure matched final-model speed-up.</strong> Profile the Newton step separately, preserving solver-stall reporting (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-022">K-022</a>).</li>
+<li><strong>RF and pedestal surrogates</strong> remain M3 tasks. The transport accuracy result alone does not close the full milestone.</li>
+<li><strong>At M4:</strong> broader trajectory comparisons, declared error tolerances, property proofs and uncertainty calibration, retaining the threshold and monotonicity ceilings.</li>
+</ul>
+</section>
+<section id="interface" class="level2">
+<h2 class="anchored" data-anchor-id="interface">Interface</h2>
+<p>At the code-policy level (signatures, no bodies):</p>
+<ul>
+<li><code>tkit.surrogates.train.run(machine: "mastu" | "iter", config_path, out_dir, max_n=None,   epochs=None, tracking=None, variant="ens", train_frac=None) -&gt; Path</code>: trains one variant and writes a read-only directory with <code>model.eqx</code>, <code>meta.json</code> (configuration, split indices, training history, metrics) and the provenance record.</li>
+<li><code>tkit.surrogates.train.load(dir, verify=True) -&gt; (MLPEnsemble, meta)</code>: refuses a model whose file differs from its provenance digest.</li>
+<li><code>MLPEnsemble.__call__(x: (..., d)) -&gt; (mean: (..., k), std: (..., k))</code>, and <code>members_predict(x) -&gt; (M, ..., k)</code>, in the training space (signed-log or flux).</li>
+<li><code>tkit.surrogates.evaluate.evaluate_saved(model_dir, tags=None) -&gt; dict</code>: scores a saved model on test sets that appeared after it was trained; output in <code>data/m3/surrogates/evals/</code>.</li>
+<li><code>tkit.datasets.tglf_active.score_pool(model, meta, table, names, tau) -&gt; {std, proximity,   q_tot, score}</code>, <code>select(score, n, seed) -&gt; (selected, uniform)</code>, <code>run(region, workers)</code>.</li>
+</ul>
+</section>
+<section id="correctness" class="level2">
+<h2 class="anchored" data-anchor-id="correctness">Correctness</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>property</th>
+<th>how it is checked</th>
+<th>status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>the signed-log transform inverts exactly and keeps the sign</td>
+<td><code>test_surrogate_train.py::test_symlog_inverts_and_keeps_sign</code></td>
+<td>tested</td>
+</tr>
+<tr class="even">
+<td>splits are disjoint, cover the dataset and are reproducible from the seed</td>
+<td><code>::test_split_is_disjoint_and_reproducible</code></td>
+<td>tested</td>
+</tr>
+<tr class="odd">
+<td>each member keeps its own best-validation parameters</td>
+<td><code>::test_where_members_picks_per_member</code>, <code>::test_short_fit_learns_and_keeps_best</code></td>
+<td>tested</td>
+</tr>
+<tr class="even">
+<td>a short fit learns a known function (<span class="math inline">\(R^2\)</span> above 0.9, stable/unstable agreement above 0.9)</td>
+<td><code>::test_short_fit_learns_and_keeps_best</code></td>
+<td>tested</td>
+</tr>
+<tr class="odd">
+<td>a saved model loads to the same predictions; a tampered file does not load</td>
+<td><code>::test_save_load_round_trip</code>, <code>::test_tampered_model_does_not_load</code></td>
+<td>tested</td>
+</tr>
+<tr class="even">
+<td>variants override the baseline key by key; the linear transform is the identity</td>
+<td><code>::test_variants_override_the_baseline</code>, <code>::test_standard_transform_is_identity</code></td>
+<td>tested</td>
+</tr>
+<tr class="odd">
+<td>the residual member has the TGLF-NN shape and parameter count</td>
+<td><code>::test_resnet_member_is_the_tglfnn_shape</code></td>
+<td>tested</td>
+</tr>
+<tr class="even">
+<td>selection prefers high scores, and the two batches are disjoint</td>
+<td><code>test_tglf_active.py::test_select_prefers_high_scores_and_keeps_batches_disjoint</code></td>
+<td>tested</td>
+</tr>
+<tr class="odd">
+<td>a selection is made once and reused; each batch is labelled with its selection record</td>
+<td><code>::test_choose_scores_selects_and_is_made_once</code>, <code>::test_batch_is_labelled_with_its_selection</code>, <code>::test_round_selects_once_and_labels_both_batches</code></td>
+<td>tested</td>
+</tr>
+<tr class="even">
+<td>stored test metrics match a re-evaluation of the saved model</td>
+<td><code>tkit.surrogates.evaluate</code> (<code>test_matches_stored</code>) and the figure script</td>
+<td>measured</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="design-decisions" class="level2">
+<h2 class="anchored" data-anchor-id="design-decisions">Design decisions</h2>
+<ul>
+<li><strong>Signed-log targets, every case kept</strong>, not a flux filter (owner, <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-18">OQ-18</a>; <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-019">K-019</a>). The high-flux tail stays in the data and costs nothing in signed-log space.</li>
+<li><strong>One ensemble per machine</strong>, not one pooled model (owner, <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-18">OQ-18</a>).</li>
+<li><strong>GA’s architecture, our training.</strong> The TGLF-NN network is recreated from GA’s model files so that our surrogates can be compared with a published design; GA’s weights are not used, and their training procedure is not published.</li>
+<li><strong>Members keep their own best-validation parameters</strong>, not a common stopping epoch: the members’ minima differ.</li>
+<li><strong>A uniform control batch from the same pool</strong> in every active-learning round, so that a gain from selection can be told apart from a gain from more data.</li>
+<li><strong>Metrics in one space</strong> for every variant, so variants trained on different targets compare directly.</li>
+</ul>
+</section>
+<section id="rf-pedestal" class="level2">
+<h2 class="anchored" data-anchor-id="rf-pedestal">RF and pedestal interfaces</h2>
+<p>This extension provides guards and a dataset contract. The EC reference and pretrained ITER pedestal model are selected; production labels, response training and coupled integration remain pending. No RF/pedestal predictive accuracy or speed-up has been measured.</p>
+<p><strong>Cell sources.</strong> <code>GuardedSourceSurrogate</code> accepts a caller-supplied feature extractor, an ensemble and a Tier A source fallback. Features have one row per radial cell. The response is <code>(q_e, q_i, s_n)</code>, in W/m³, W/m³ and m⁻³ s⁻¹. Input and output domains, plus standard-deviation limits in each output’s units, are explicit. An accepted candidate must have finite features, finite bounded outputs, finite nonnegative spread within those limits, and pass any supplied physics predicate. The default decision requires every cell to pass and selects the complete surrogate or fallback profile. An external <code>vmap</code> keeps different cases independent.</p>
+<p>For RF, a whole-profile predicate should check the volume-weighted integral of the heating against the requested absorbed power and enforce the chosen electron/ion partition. Positivity and whole-profile selection alone do not enforce that integral. No partition is chosen by the guard. The existing Gaussian EC baseline integrates to its absorbed-power input; launched power must not be treated as absorbed power without an explicit absorption model.</p>
+<p><strong>Boundary vectors.</strong> <code>GuardedVectorSurrogate</code> uses the same checks for arbitrary caller-defined outputs. A future pedestal adapter must specify its outputs, units and validity criteria, with the prescribed pedestal as the existing baseline. There is no implicit predictive pedestal closure or coordinate convention. The cell-source interface does not include driven current; an RF current-drive adapter remains further work.</p>
+<p>Both guards expose the selection mask and the fallback’s finite-value/validity mask separately. Selected fallback points have zero stored surrogate spread; that zero is not an estimate of fallback uncertainty. Rejected surrogate branches use the transport guard’s derivative isolation, cutting feature and parameter derivatives before contributions are summed. The decision is discrete; derivatives describe the selected branch, not a derivative through a switch. Callable feature extractors can carry differentiable JAX control arrays. Use Equinox’s filtered JIT when a callable contains Python functions as well as array parameters.</p>
+<p>The core coupling loop retains source spread alongside its source trace and logs the source fallback fraction. Synthetic fixtures test compilation, vectorisation, rejected singular branches, whole-profile power rejection and finite-difference gradients through that loop: <span class="claim">25 synthetic contract tests pass in full and Tier-A-only modes</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-143" class="cid st-tested">C-143</a>. This is core-loop infrastructure; TORAX RF and pedestal plugins have not yet been trained or integrated. Gaussian RF construction rejects nonfinite control parameters: <span class="claim">12 nonfinite-parameter cases pass in each mode</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-144" class="cid st-tested">C-144</a>.</p>
+<p><strong>Reference datasets.</strong> <code>tkit.datasets.responses</code> stores either <code>(case, output)</code> or <code>(case, radius, output)</code> labels alongside a finite <code>(case, feature)</code> input table. The schema records feature/output names and unit labels, reference name/version/tier, draft status and approval for production data. Unit labels are not automatic unit conversions. Source files and the writer are hash-bound to provenance; loading checks the artifact, schema and split.</p>
+<p>Profiles include a finite, strictly increasing <code>rho_tor_norm</code> grid in [0, 1] per case, retained without resampling. A width in poloidal flux must remain explicitly labelled as such, rather than being interpreted as a width in toroidal flux. Related cases share an explicit group ID; seeded splits permute whole groups and take the ceiling of each requested group fraction, leaving at least one training group. Fractions apply to groups, so row fractions can differ. No radial cells of one profile are split across holdouts. Failed cases remain with recorded status and wall time; fitting must select successful cases. Files are written once and made read-only. Tier B datasets are rejected in Tier-A-only mode. No production dataset was made for this extension.</p>
+<p>Next: choose references and channels; define grouped sampling; label a baseline and inspect power integrals/failures; agree held-out targets; train; integrate into TORAX; test coupled derivatives and balance; measure matched runtime. The infrastructure tests use synthetic fixtures and do not substitute for any of these physics checks.</p>
+</section>
+<section id="response-training" class="level2">
+<h2 class="anchored" data-anchor-id="response-training">Response baseline training</h2>
+<p><code>tkit.surrogates.responses</code> fits a numerical baseline to the caller’s versioned RF/pedestal response dataset. It does not select a reference solver, sampling range, power partition, pedestal criterion or physics constraint. It uses the existing affine-normalised MLP ensemble fitter, with independent initialisation and batch orders, and each member’s best validation parameters. No production RF/pedestal labels have been fitted.</p>
+<p><strong>Preparation.</strong> Select successful cases within each stored train/validation/test split, keeping their original case indices. An empty successful split is an error; do not resplit to fill it. Case labels use the schema’s declared feature vector. Profiles require an explicit <code>profile_features: case_plus_rho</code> setting: repeat the case feature vector at each supplied radius, append <code>rho_tor_norm</code>, and flatten the labels to pointwise outputs. Flattening happens after case selection, so cells from one profile cannot leak across holdouts. The current format has equal radial sizes; each successful case therefore contributes the same number of points. Pointwise error metrics are not volume-integrated heating-power errors.</p>
+<p><strong>Fit and score.</strong> Compute feature/output means and scales from training rows only, and fit the ensemble in that normalised space. Fit the input box from those same rows, without widening it using holdouts. Select each member on validation loss. After fitting, evaluate the test split and report physical-unit RMSE, MAE and signed bias for every output, the RMSE of the constant training-mean prediction, case/point counts and uncalibrated two-spread coverage. No numerical accuracy target is supplied implicitly. Output positivity and other physics structure are future choices based on the selected reference and intended use.</p>
+<p><strong>Saved inference.</strong> The model directory holds the ensemble arrays and normalisation, names/units, training-input bounds, configuration, original successful and failed case rows, fit history and metrics. Provenance binds model bytes, metadata, reference dataset and sidecar, trainer and ensemble implementation. Files are written once and made read-only. Reloading checks the model and metadata hashes but does not open reference files. Tier A runtime can therefore evaluate a model with recorded Tier B training lineage without that solver or dataset being installed. This is a runtime dependency property; it does not grant redistribution permission for a dataset or weights.</p>
+<p><code>ResponseSurrogate(x)</code> returns mean and member spread in declared output units. Pass the loaded model and its stored input box to the source or boundary-vector guard with an explicit Tier A fallback, output bounds, spread limits and any required power/physics predicate. For the source guard, an adapter must supply <code>(q_e, q_i, s_n)</code> in that order and in its source units; arbitrary reference output channels are not automatically mapped to that contract. The stored box is a training-sample range, not an M4 certificate.</p>
+<p>Example numerical configuration for case responses (no reference physics is implied):</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">"seed"</span><span class="fu">:</span> <span class="dv">42</span><span class="fu">,</span> <span class="dt">"n_members"</span><span class="fu">:</span> <span class="dv">5</span><span class="fu">,</span> <span class="dt">"width"</span><span class="fu">:</span> <span class="dv">64</span><span class="fu">,</span> <span class="dt">"depth"</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a> <span class="dt">"epochs"</span><span class="fu">:</span> <span class="dv">200</span><span class="fu">,</span> <span class="dt">"batch"</span><span class="fu">:</span> <span class="dv">256</span><span class="fu">,</span> <span class="dt">"patience"</span><span class="fu">:</span> <span class="dv">20</span><span class="fu">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a> <span class="dt">"lr"</span><span class="fu">:</span> <span class="dv">0</span><span class="er">.001</span><span class="fu">,</span> <span class="dt">"weight_decay"</span><span class="fu">:</span> <span class="dv">0</span><span class="er">.00001</span><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>For profiles, explicitly add <code>"profile_features": "case_plus_rho"</code>.</p>
+<pre class="text"><code>python -m tkit.surrogates.responses DATASET.npz MODEL_DIR --config CONFIG.json</code></pre>
+<p>Draft data requires <code>--allow-draft</code>. The synthetic training tests give <span class="claim">26 synthetic baseline-pipeline tests pass in full and Tier-A-only modes</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-145" class="cid st-tested">C-145</a>; they do not establish RF or pedestal accuracy, calibrated uncertainty or coupled speed-up.</p>
+</section>
+<section id="ceilings" class="level2">
+<h2 class="anchored" data-anchor-id="ceilings">Ceilings</h2>
+<p><a href="../../../Blog/tokamak-toolkit/ceilings.html#k-018">K-018</a> (independent geometry sampling; dataset v3 removes it for v3) and <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-019">K-019</a> (high-flux cases kept as computed, handled by the signed-log targets). The cost of the ReLU outputs (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-19">OQ-19</a> 3) is recorded as <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-021">K-021</a>. See <a href="../../../Blog/tokamak-toolkit/ceilings.html">known ceilings</a>.</p>
+</section>
+<section id="reproducing" class="level2">
+<h2 class="anchored" data-anchor-id="reproducing">Reproducing</h2>
+<pre><code>python -m tkit.surrogates.train &lt;machine&gt; [--variant tglfnn | tglfnn_symlog | ...] [--train-frac f]
+python -m tkit.datasets.tglf_active &lt;machine&gt; --workers 256
+python -m tkit.surrogates.evaluate data/m3/surrogates/tglf-&lt;machine&gt;-tglfnn_symlog-v1
+python blog/figures/make_m3_surrogates.py
+python -m tkit.surrogates.monotonicity plan | run-chunk N | finish
+python blog/figures/make_m3_structure.py SMOKE_MODEL_DIR</code></pre>
+<p><code>make_m3_surrogates.py</code> reads only the saved models, the datasets and the selections; <code>make_m3_structure.py</code> reads the scan summary, the v1 datasets and the smoke-run models (kept in session scratch storage, not under <code>data/</code>). Together they write the three figures and the seven CSV files on this page.</p>
+</section>
+<section id="genray-output" class="level2">
+<h2 class="anchored" data-anchor-id="genray-output">EC native-output boundary</h2>
+<p>The owner-selected GENRAY EC reference emits native bin-centred profiles. The host-side reader retains four power-density components (total, electron wave-particle, ion wave-particle and collisional) and four signed current-density definitions (parallel, ONETWO, toroidal and poloidal). It multiplies erg/(cm^3 s) by 0.1 for W/m^3, erg/s by 1e-7 for W, cm^3 by 1e-6 for m^3, cm^2 by 1e-4 for m^2, and A/cm^2 by 1e4 for A/m^2. Injected and absorbed power remain distinct. No damping components are summed implicitly.</p>
+<p>The native coordinate flag and boundary reduction remain part of the result. Even the square-root toroidal-flux option needs an equilibrium mapping when its normalizing boundary is reduced relative to the full LCFS. No interpolation onto the toolkit grid occurs in the reader. File content is bound by SHA-256; units, dimensions, finite values, fill values and bin consistency are checked.</p>
+<p>Power integrals use the native bin volumes. The toroidal current integral uses bin areas and is compared with the reference’s explicit area-integral total. Other current totals use distinct upstream accumulations; they are retained without treating them as equivalent. Residuals carry no pass threshold yet.</p>
+<p>TORAX’s EC PSI source expects the surface average of j dot B in A T/m^2. GENRAY’s ONETWO profile is labelled as that quantity divided by B_0. Selecting the matching field/sign convention and conservative geometry mapping remains part of the coupling contract. Raw A/m^2 cannot be passed directly as this source.</p>
+<p><span class="claim">24 focused tests pass in full and Tier-A-only modes</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-151" class="cid st-tested">C-151</a>. These checks use synthetic classic NetCDF files and do not establish solver success, predictive accuracy or coupled balance. No reference labels or EC training have been performed. The reader dependency is optional and loaded only on the host. The existing ceiling remains open (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-027">K-027</a>).</p>
+<p>See <a href="../../../Blog/tokamak-toolkit/log/30-genray-output-reader.html">entry 30</a> for the reader and <a href="../../../Blog/tokamak-toolkit/log/31-genray-saved-reference-pilot.html">entry 31</a> for the saved-file check.</p>
+<p>The upstream regression suite also supplies a saved ITER EC file with 200 bins: <span class="claim">200 native bins in the saved upstream ITER EC output pass reader and accounting checks</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-152" class="cid st-measured">C-152</a>. It identifies <code>genray_v10.13_200117</code>, an older producer version. The check pins the file, deck and equilibrium digests, compares all power/current channels after SI conversion, and checks numerical integrals with rtol 1e-12 and atol 1e-9. These are bookkeeping checks on a saved fixture, not acceptance tolerances for future reference cases. The largest power residual is about 1.05e-9 W and the toroidal-current residual about 3.64e-12 A. The file has negative parallel current and positive toroidal/ONETWO currents, illustrating why the signed definitions must remain explicit.</p>
+</section>
+<section id="genray-pilot" class="level2">
+<h2 class="anchored" data-anchor-id="genray-pilot">Bounded EC pilot lifecycle</h2>
+<p>The caller supplies a built executable, every input under the exact filename expected by the unchanged deck, a reference/build identity, case/family IDs, input lineage, and a positive finite wall limit. Exactly one legacy or SI-format deck is supplied. No launch, current-drive prescription, split or physical acceptance threshold is selected by the runner.</p>
+<p>Preparation creates a new run directory, copies immutable input and binary snapshots, and gives the reference separate working copies. Existing sidecars are verified; their Tier B lineage cannot be downgraded by a caller’s Tier A declaration. Tier-A-only mode rejects such inputs before launch. The subprocess uses explicit thread settings, captures stdout/stderr, and runs outside JIT. Timeout and leader-exit cleanup kill its POSIX process group. Regular files, including partial outputs, are retained with bound provenance and made read-only. Symlinks and subdirectories are listed as skipped and are not ingested.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>recorded status</th>
+<th>meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>launch_error</td>
+<td>operating system could not start the executable</td>
+</tr>
+<tr class="even">
+<td>timeout</td>
+<td>reference exceeded the explicit wall limit</td>
+</tr>
+<tr class="odd">
+<td>exit_nonzero</td>
+<td>executable returned a nonzero exit code</td>
+</tr>
+<tr class="even">
+<td>input_modified</td>
+<td>reference changed or removed a working input</td>
+</tr>
+<tr class="odd">
+<td>output_missing</td>
+<td>no regular native output file was produced</td>
+</tr>
+<tr class="even">
+<td>output_invalid</td>
+<td>output could not be parsed or its diagnostics were nonfinite</td>
+</tr>
+<tr class="odd">
+<td>output_readable</td>
+<td>zero exit code and readable native output; physical acceptance remains false</td>
+</tr>
+</tbody>
+</table>
+<p>Failed cases retain their IDs and evidence; they are not resampled. A readable pilot remains draft data on native bins. Preparing training labels still requires approved physics/channel conventions and conservative coordinate/grid mapping. <span class="claim">40 focused pilot, reader and Tier A checks pass in full and Tier-A-only modes</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-153" class="cid st-tested">C-153</a>. Lifecycle checks use fake executables, separately from the saved upstream-file validation. No fresh GENRAY execution or response training is inferred from these tests. The fresh numerical execution is described <a href="#genray-corrected-pilot">below</a>, and <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-027">K-027</a> remains open.</p>
+</section>
+<section id="genray-build" class="level2">
+<h2 class="anchored" data-anchor-id="genray-build">EC reference build and original pilot proposal</h2>
+<p>The external reference is built from pinned GENRAY and Giza source archives. Giza provides replacement PGPLOT libraries; compiler and NetCDF paths come from the loaded toolchain. Build configuration overrides the upstream host-specific makefile settings and records optimization, record-marker and legacy argument flags. Sources are unchanged. Cairo/X11 support the plotting dependency. <code>make -j1</code>, one-CPU affinity and a 300-second deadline bound software compilation.</p>
+<p>The final build retains the executed helper, source archives, installed plotting libraries, executable and command logs. Every regular artifact has a bound sidecar; source snapshots are roots of an acyclic lineage. Earlier attempts retain their original records and snapshot-lineage limitations. <span class="claim">one external reference executable builds with verified artifacts and resolved runtime libraries</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-154" class="cid st-measured">C-154</a>. Exported plotting symbols and resolved libraries establish link readiness; legacy-source warnings remain. No plotted or scientific output parity is inferred from compilation.</p>
+<p>At the original build checkpoint, a separate proposal specified one upstream ITER regression case, one CPU, four GiB, ten minutes of job wall time and a 300-second solver timeout. That proposal preceded owner selection and the failed first execution described below. A content-bound manifest includes case inputs, binary, resolved libraries, toolkit sources, package metadata and job scripts. Its read-only check passes; the launcher refuses changed inputs before execution.</p>
+<p>Execution would use a new job-specific directory, immutable binary/input snapshots and the bounded pilot lifecycle described above. The launcher records host, job ID, requested CPU count and actual affinity. Readable output remains draft native-grid data. Review plotting output, process status, profiles and physical integrals before preparing labels; physical thresholds and coordinate, field and signed-current mappings remain owner decisions. <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-027">K-027</a> stays open. The historical full-suite statistics remain unchanged.</p>
+<p>See <a href="../../../Blog/tokamak-toolkit/log/32-genray-build-and-pilot-request.html">entry 32</a> for this build checkpoint.</p>
+</section>
+<section id="genray-first-run" class="level2">
+<h2 class="anchored" data-anchor-id="genray-first-run">First EC execution and plotting correction</h2>
+<p>The owner authorized the original ITER numerical pilot and its one-run ceiling. The reference starts, reaches plotting initialization and stops before native NetCDF output. GENRAY requests the PGPLOT <code>/VCPS</code> device; pinned Giza recognizes <code>/CPS</code> and <code>/VPS</code>, but not <code>/VCPS</code>. A failed <code>PGOPEN</code> returns -1. GENRAY’s Fortran STOP branch returns zero, so an exit-code-only check would falsely report success. The pilot runner instead retains <code>output_missing</code>, unchanged input hashes, raw logs, partial outputs and immutable snapshots. No physical channels or integrals are available from this attempt.</p>
+<p>The correction is an explicit alias in Giza’s device parser, mapping <code>/VCPS</code> to its existing portrait colour PostScript driver. GENRAY sources and physics inputs remain unchanged. An isolated software build snapshots the patch and executed helper and records hashes; previous builds and the failed run remain immutable. No change is made to the reference physics prescription.</p>
+<p>A Fortran probe linked against the original and corrected PGPLOT libraries checks <code>/VPS</code>, <code>/VCPS</code>, <code>/CPS</code> and an invalid device. It uses the real <code>PGOPEN</code> entry point, draws a red line and closes the device. Successful outputs are checked for PostScript headers, page dimensions and colour. The original <code>/VCPS</code> fails; the corrected alias produces portrait output, while an invalid device continues to fail. <span class="claim">all eight plotting-device checks match their expected outcomes</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-155" class="cid st-measured">C-155</a>. This does not establish full GENRAY plotting or scientific parity.</p>
+<p>At the correction checkpoint, the exhausted single-run authorization is followed by a fresh bounded retry proposal with unchanged physics inputs and resource ceiling, exact corrected binary/runtime hashes and a passing read-only manifest check. The separately authorized retry is recorded below. Production EC launch/current conventions, conservative radial mapping, physical thresholds and ITER boundary contracts remain open. <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-027">K-027</a> and M3 remain open; historical suite statistics are unchanged.</p>
+<p>See <a href="../../../Blog/tokamak-toolkit/log/33-genray-first-run-plotting-failure.html">entry 33</a> for the failed attempt.</p>
+</section>
+<section id="genray-corrected-pilot" class="level2">
+<h2 class="anchored" data-anchor-id="genray-corrected-pilot">Corrected EC numerical pilot</h2>
+<p>The owner approved one corrected run using the same original ITER input deck, equilibrium, solver source and bounded allocation. Manifest hashes pass before submission. The solver reaches its normal end with readable native output, unchanged input hashes, one-CPU affinity and empty stderr. The raw NetCDF, input/binary snapshots, logs, partial auxiliary files and scheduler records remain immutable and content-bound. <span class="claim">the corrected EC reference completes in 83.16 s with readable native profiles</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-156" class="cid st-measured">C-156</a>.</p>
+<p>The output identifies a newer producer than the saved upstream fixture. Native faces, bin volumes and areas match exactly. Power channels are volume-integrated against their matching stored totals; toroidal current is area-integrated against <code>GA_tor_cur_total</code>. Other signed current definitions remain separate. The native ray-stop code records the input remaining-power cutoff, rather than an imposed physical acceptance rule.</p>
+<p>The saved-reference comparison records signed total differences and relative weighted L1 profile differences. Power uses native volume weights. Current shape diagnostics use native area weights without claiming that each current definition has that physical integral convention. A zero reference channel has no defined relative error; its absolute difference is retained. Native profiles are not interpolated, clipped, rescaled or converted into a full-LCFS toolkit source. No parity threshold is installed from this one-case comparison.</p>
+<p>PostScript opens/closes without Giza errors and renders successfully, but its single page is blank. The magnetic/profile and dispersion plotting switches in the deck are off. This establishes device initialization and format readability, not plotted content or PGPLOT parity. A separate PNG/PDF comparison generated from NetCDF shows overlapping heating/current curves at the displayed scale; negative parallel and positive ONETWO/toroidal signs are retained.</p>
+<p>The numerical pilot is complete. Production launch and absorbed-power choices, electron damping channels, ONETWO B_0/sign conversion, conservative grid mapping, fallbacks and rejection criteria remain open before labels can be prepared. Group scope and a new labelling budget must be reviewed separately; the measured one-case runtime does not establish a sampling-domain cost. No production dataset, training, TORAX coupling or response speed-up is claimed. <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-027">K-027</a> and M3 remain open; historical suite counts retain their original execution reports.</p>
+<section id="native-profile-comparison" class="level3">
+<h3 class="anchored" data-anchor-id="native-profile-comparison">Native profile comparison</h3>
+<div id="fig-genray-native-profiles" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genray-native-profiles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/m3_genray_profiles.svg" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genray-native-profiles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Fresh and saved electron heating, toroidal current and parallel current on the native reference bins. Solid accent lines: corrected pilot; dashed grey lines: older upstream saved output. The curves overlap at this scale. Current signs remain explicit; no full-boundary mapping or physical acceptance is implied.
+</figcaption>
+</figure>
+</div>
+<p><em>CSV: <a href="../figures/m3_genray_profiles.csv">all heating and signed-current channels</a>. The figure is regenerated with <code>python blog/figures/make_m3_genray.py</code> from the audit-bound raw files and verified SI reader, without another solver run.</em></p>
+<!-- genray-figure-provenance:start -->
+<details class="provenance">
+<summary>
+Figure provenance
+</summary>
+<p>Tier A; generated 2026-10-08. Package 0.0.1, Python 3.11.7, JAX 0.10.2. Commit <code>a152933</code>; working tree dirty: true (draft documentation and figure generation pending commit). Configuration SHA-256: <code>ef05555c511db86e44114583fef28ab74993394e0718bbe58e61c962356a5dd9</code>. SVG SHA-256: <code>94ef577c3b934df1348de6a4180892d4a971ceb8d9d1221d7ac59e4d057c8538</code>. Fresh and saved input SHA-256 prefixes: <code>b61e2bb3295d93c5</code> and <code>77b5d9f85cced382</code>. The reference used a single CPU; regenerating the figure reads its retained files. <a href="../figures/m3_genray_profiles.csv">Full profile CSV</a>; generator <code>blog/figures/make_m3_genray.py</code>.</p>
+</details>
+<!-- genray-figure-provenance:end -->
+</section>
+<section id="repository-checkpoint-verification" class="level3">
+<h3 class="anchored" data-anchor-id="repository-checkpoint-verification">Repository checkpoint verification</h3>
+<p><span class="claim">56 focused checks pass in full and Tier-A-only modes</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-157" class="cid st-tested">C-157</a>. These fresh checks cover the pedestal port, native reader, pilot lifecycle, installed-wheel resources, Tier A labels/import isolation and blog exporter. Existing source and configuration files match the previous suite checkpoint; its modified packaging test is rerun. New modules have new tests. Reports for all other test files are retained when regenerating the aggregate statistics. The aggregate is not a fresh full-suite execution.</p>
+<p>Earlier metadata and build-helper hashes remain attached to their original checkpoints. Subsequent dependency metadata and patch support are bound by the fresh verification, without rewriting historical reports. Numerical accounting and saved-reference comparisons do not replace physical acceptance.</p>
+<p>See <a href="../../../Blog/tokamak-toolkit/log/34-genray-corrected-numerical-pilot.html">entry 34</a>.</p>
+</section>
+</section>
+<section id="matched-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="matched-comparison">Matched comparison</h2>
+<p><strong>Purpose.</strong> M3 acceptance criterion 3: the end-to-end speed-up of the final transport surrogate inside the coupling loop, against the reference it learns (TGLF) and the transport model TORAX ships (QLKNN), at matched settings.</p>
+<p><strong>Scheduler cause.</strong> The first attempt (job 2611883) was cancelled by root at start, with no reason recorded. The same accounting record appears on seven full-node CPU jobs since 2 October; two nodes appear twice, and every resubmission ran elsewhere (<span class="claim">seven full-node jobs since 2 Oct were cancelled by root at start with no reason; each resubmission landed on another node and ran</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-161" class="cid st-preliminary">C-161</a>). The owner approved a resubmission excluding those nodes, with one automatic retry if the same cancellation recurred. Job 2650336 ran at the first attempt.</p>
+<p><strong>Method.</strong> One node; the RAPTOR L-mode benchmark case; the linear predictor-corrector solver (TGLF has no derivatives, so Newton cannot run it); the host driver; 40 fixed steps to <span class="math inline">\(t = 2\)</span> s. TGLF runs through TORAX’s in-process model with its SAT2 settings and one worker process per face. The surrogate is the ITER ensemble <code>tglfnn_symlog_relu_mono_v3</code> behind the guard with the Bohm/gyro-Bohm fallback. QLKNN runs with TORAX’s defaults and no guard. Each run records compilation time and one separately timed warm-up step, both excluded from the run time. The runner rejects stalled, non-finite and coarse-tolerance solves.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>quantity</th>
+<th>result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>run time (compilation and warm-up excluded)</td>
+<td><span class="claim">TGLF 539.1 s, final v3 surrogate 1.249 s, QLKNN 0.117 s; the v3 surrogate is about 432 times faster than TGLF and 10.7 times slower than QLKNN</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-158" class="cid st-measured">C-158</a></td>
+</tr>
+<tr class="even">
+<td>closed-loop profile deviation from TGLF at <span class="math inline">\(t = 2\)</span> s</td>
+<td><span class="claim">final v3 surrogate: T_e 7.7%, T_i 9.2%, n_e 11.4%, psi 0.32%; QLKNN: T_e 155%, T_i 128%, n_e 86%, psi 2.4%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-159" class="cid st-measured">C-159</a></td>
+</tr>
+<tr class="odd">
+<td>faces outside the guard’s domain, final state</td>
+<td><span class="claim">17 of 51 faces (rho_tor_norm up to 0.08 and from 0.78) are outside the guard’s domain and use the fallback</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-160" class="cid st-measured">C-160</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Reading the result.</strong> The v3 surrogate is slower than v1 (<span class="claim">TGLF 540.38 s, v1 surrogate 0.780 s, QLKNN 0.126 s; v1 is about 693 times faster than TGLF</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-132" class="cid st-measured">C-132</a>): the monotone construction evaluates more per call. Against QLKNN the gap is recorded in <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-022">K-022</a>. The rejected faces lie near the axis and at the edge, outside the training window in minor radius; the profiles there come from the fallback, so the deviation measures the guarded model. One trajectory and one timing run; no repeat statistics.</p>
+<p><strong>Evidence.</strong> <code>data/m3/validation/loop/job_2650336/</code>: the three run files, the comparison, the runner and batch script as executed, the source commit and the source diff, each with provenance. Entry: <a href="../../../Blog/tokamak-toolkit/log/35-matched-comparison-tglf-v3-qlknn.html">35</a>.</p>
+</section>
+<section id="ec-contract" class="level2">
+<h2 class="anchored" data-anchor-id="ec-contract">EC label conventions</h2>
+<p><strong>Purpose.</strong> Fix how GENRAY’s native output becomes training labels and, later, TORAX source terms (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-21">OQ-21</a>, owner decision 10 Oct 2026). Brief invariants served: units and coordinates explicit, Tier A fallback for every surrogate.</p>
+<p><strong>Current drive.</strong> The upstream ITER deck’s adjoint calculation (<code>ieffic=6</code>, <code>i_adj=1</code>). The momentum-conserving Lin-Liu calculation (<code>ieffic=4</code>, <code>ieffic_mom_cons=1</code>) runs on a sample of cases as a check, from the upstream variant deck with the same state and launch.</p>
+<p><strong>Heating.</strong> Electron heating is the sum of GENRAY’s wave-particle (<code>powden_e</code>) and collisional (<code>powden_cl</code>) channels; both are stored separately.</p>
+<p><strong>Current.</strong> GENRAY’s <code>s_cur_den_onetwo</code> is</p>
+<p><span class="math display">\[
+j_{12} = \frac{\langle j_\parallel B \rangle}{B_0}, \qquad
+j_{12} = j_\parallel \frac{\langle B^2 \rangle}{\langle B \rangle B_0},
+\]</span></p>
+<p>the second form being how GENRAY computes it (<code>prep3d.f</code>), with <span class="math inline">\(B_0\)</span> the vacuum toroidal field <code>bcentr</code> at <code>rcentr</code> in the equilibrium file. TORAX’s EC current input is <span class="math inline">\(\langle j \cdot B \rangle\)</span> with <span class="math inline">\(B_0\)</span> also the vacuum field at the major radius, so at coupling <span class="math inline">\(\langle j \cdot B \rangle = j_{12}\, B_0^{\mathrm{TORAX}}\)</span>. The label is multiplied by <span class="math inline">\(\operatorname{sign}(I_p\, B_0)\)</span> of the equilibrium, so that current along the plasma current is positive.</p>
+<p><strong>Radial mapping.</strong> GENRAY’s radius (<code>indexrho=2</code>) is <span class="math inline">\(\sqrt{\Phi/\Phi_s}\)</span> with <span class="math inline">\(\Phi_s\)</span> the toroidal flux at the reduced boundary <code>psifactr</code>. With <span class="math inline">\(\Phi(\psi_N) = \int_0^{\psi_N} q\, d\psi_N'\)</span> from the equilibrium’s <span class="math inline">\(q\)</span> profile,</p>
+<p><span class="math display">\[
+\rho_{\mathrm{tor,norm}} = \rho_{\mathrm{GENRAY}} \sqrt{\Phi(\psi_{\mathrm{factr}})/\Phi(1)} .
+\]</span></p>
+<p>Heating and current are remapped onto uniform output cells by interpolating the cumulative integrals <span class="math inline">\(\int p\, dV\)</span> and <span class="math inline">\(\int j_{12}\, dA\)</span> (GENRAY’s own bin volumes and areas) at the output faces and differencing. The integral over every output cell equals GENRAY’s; cells beyond GENRAY’s last face receive zero. The current’s area integral is GENRAY’s <code>GA_tor_cur_total</code>.</p>
+<p><strong>Power.</strong> 170 GHz, O-mode, one central ray as in the deck; labels are divided by the injected power and stored per MW. Linear scaling with power is assumed in use.</p>
+<p><strong>Fallback.</strong> The Gaussian EC model with centre, width and current-drive efficiency fitted to the labels. <strong>Acceptance.</strong> Set by the owner after the baseline (B3).</p>
+</section>
+<section id="pedestal-contract" class="level2">
+<h2 class="anchored" data-anchor-id="pedestal-contract">ITER pedestal conversion</h2>
+<p><strong>Purpose.</strong> Turn the selected EPEDNN network’s outputs into TORAX’s prescribed-pedestal fields (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-21">OQ-21</a>, owner decision 10 Oct 2026).</p>
+<p><strong>Method.</strong> For EPEDNN inputs <span class="math inline">\(x\)</span> (upstream order and units, <span class="math inline">\(n_{e,\mathrm{ped}}\)</span> in <span class="math inline">\(10^{19}\,\mathrm{m^{-3}}\)</span>):</p>
+<ol type="1">
+<li>Branch: both diamagnetic corrections (GH), solution 0, which is upstream’s <code>GH.H</code>, the H-mode branch and the upstream default.</li>
+<li>Temperatures: <span class="math inline">\(T_i = T_e = T\)</span> at the pedestal top, with <span class="math inline">\(p = n_e (1 + n_\mathrm{ions}/n_e)\, T\)</span>. For main ions of charge <span class="math inline">\(Z_m\)</span> and one impurity of charge <span class="math inline">\(Z\)</span>, <span class="math inline">\(n_\mathrm{ions}/n_e = \frac{Z - Z_\mathrm{eff}}{Z_m (Z - Z_m)} + \frac{Z_\mathrm{eff} - Z_m}{Z (Z - Z_m)}\)</span>.</li>
+<li>Density: the prescribed <span class="math inline">\(n_{e,\mathrm{ped}}\)</span>, which is also the network’s input.</li>
+<li>Pedestal top: <span class="math inline">\(\psi_N = 1 - 2w\)</span>, with <span class="math inline">\(w\)</span> the network’s width, documented upstream as the half width in normalised poloidal flux, mapped to <span class="math inline">\(\rho_{\mathrm{tor,norm}}\)</span> through the equilibrium’s monotone <span class="math inline">\(\psi_N(\rho_{\mathrm{tor,norm}})\)</span>.</li>
+<li>Fallback: the prescribed pedestal wherever the input-box check fails, an output is not finite, <span class="math inline">\(T \le 0\)</span>, or the top falls outside <span class="math inline">\((0, 1)\)</span>.</li>
+</ol>
+<p>Pure JAX; the selection uses <code>where</code>, so the function compiles once and has finite gradients inside the box. On the upstream ITER example: <span class="claim">pedestal pressure 0.0772 MPa, T_ped 3.59 keV at n_e,ped 7e19 m^-3, top at psi_norm 0.935</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-162" class="cid st-measured">C-162</a>.</p>
+<p><strong>Correctness.</strong> <span class="claim">19 focused checks (13 EC pipeline, 6 pedestal contract) pass in full and Tier-A-only modes</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-163" class="cid st-tested">C-163</a>. The pedestal tests compare the branch with the raw output vector, the ion fraction with its pure-hydrogen and pure-impurity limits, the temperature and top mapping with hand calculations, the fallback with out-of-box inputs, and JIT and gradient inside the box. The network’s physics is used as selected and not tested here.</p>
+<p><strong>Not yet done.</strong> Coupling into TORAX (B5); MAST-U keeps its prescribed pedestal.</p>
+</section>
+<section id="ec-dataset-v1" class="level2">
+<h2 class="anchored" data-anchor-id="ec-dataset-v1">EC dataset v1</h2>
+<p><strong>Purpose.</strong> Reference labels for the EC surrogate on ITER states the coupling loop visits (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-21">OQ-21</a> scope B, owner decision 10 Oct 2026). Plan: <code>configs/sampling/m3_genray_ec_v1.yaml</code>; producer <code>tkit.datasets.genray_ec</code>; job <code>scripts/m3_genray_ec.sbatch</code>.</p>
+<p><strong>Algorithm.</strong></p>
+<ol type="1">
+<li><em>States.</em> The 39 ITER TORAX runs of the dataset-v3 family (M1 benchmark case, ITER hybrid flat top and ITER ramp-up, with heating and density scaled) are run again, keeping <span class="math inline">\(T_e\)</span>, <span class="math inline">\(n_e\)</span> and <span class="math inline">\(Z_\mathrm{eff}\)</span> over time. Eight states per run, evenly spaced in time after the first tenth of the run.</li>
+<li><em>Deck.</em> Each state’s profiles are interpolated onto GENRAY’s 21-point tabular grid (uniform in GENRAY’s radius, converted as in <a href="#ec-contract">EC label conventions</a>) and written into the upstream deck’s density, temperature and <span class="math inline">\(Z_\mathrm{eff}\)</span> tables. Nothing else in the deck changes except the launch.</li>
+<li><em>Launch.</em> Ten launches per state, five per family. Equatorial launcher: the deck’s own launch point, polar and toroidal angles drawn uniformly around the deck’s direction on its co-current side. Upper launcher: an approximate public position (from the published ITER EC code benchmark, not an ITER design value), aimed downward with poloidal steering. Angles use the deck’s <code>toray</code> convention.</li>
+<li><em>Run.</em> One GENRAY process per core in a node-local scratch directory, with a timeout. Kept per case: the deck, the output file, compressed console logs and a record with hashes, exit status and wall time. GENRAY’s adjoint scratch files are discarded.</li>
+<li><em>Assemble.</em> Two response datasets with the same inputs (<span class="math inline">\(T_e\)</span>, <span class="math inline">\(n_e\)</span>, <span class="math inline">\(Z_\mathrm{eff}\)</span> on the 21 points, launcher flag, launch position and angles): case totals (wave-particle and collisional absorbed power, driven current) and profiles on 50 uniform cells in <span class="math inline">\(\rho_{\mathrm{tor,norm}}\)</span>. Splits hold out whole TORAX runs. Failed cases would be kept with their status and never fitted; there were none.</li>
+</ol>
+<p><strong>Results.</strong> <span class="claim">3120 of 3120 cases produce readable output (20 of 20 check cases); median 84.8 s of GENRAY time per case</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-164" class="cid st-measured">C-164</a>. Current-drive check: <span class="claim">median 4.1% difference in driven current (range -14% to +16%), identical absorbed power</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-165" class="cid st-measured">C-165</a>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>launcher</th>
+<th>absorbed fraction, minimum / median</th>
+<th>driven current per MW (kA), 5th / 50th / 95th percentile</th>
+<th>heating centroid in <span class="math inline">\(\rho_{\mathrm{tor,norm}}\)</span>, 5th / 50th / 95th</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>equatorial</td>
+<td>0.370 / 0.9999</td>
+<td>8.2 / 23.2 / 46.0</td>
+<td>0.07 / 0.25 / 0.50</td>
+</tr>
+<tr class="even">
+<td>upper</td>
+<td>0.977 / 0.9999</td>
+<td>0.07 / 5.5 / 15.1</td>
+<td>0.33 / 0.71 / 0.92</td>
+</tr>
+</tbody>
+</table>
+<p>Incomplete absorption occurs for cold, dense L-mode states at the largest toroidal angles (single pass). A few upper-launcher cases drive small counter-current at large radius. The collisional channel is zero in every case: the deck does not enable collisional damping. The largest currents come from early ramp-up states traced through the full-current equilibrium (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-028">K-028</a>).</p>
+<p><strong>Baseline.</strong> The existing response trainer with its defaults (five members, two hidden layers of 64), on case totals and, separately, on profiles with <span class="math inline">\(\rho_{\mathrm{tor,norm}}\)</span> as an extra input: <span class="claim">driven current RMSE 3.30 kA/MW against 13.5 kA/MW for the training mean; pointwise profile model: current-density RMSE 2.20e4 A/m^2 against 2.09e4 A/m^2 for the mean</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-166" class="cid st-measured">C-166</a>. The totals are learned; the pointwise profile model is no better than the training mean. B4 needs a structured profile output (centre, width, totals).</p>
+<p><strong>Ceilings.</strong> <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-028">K-028</a>: one equilibrium for every state; collisional channel inactive. The upper-launcher position is approximate.</p>
+<p><strong>Reproducing.</strong> <code>sbatch scripts/m3_genray_ec.sbatch</code> (needs an approved compute request), then <code>python -m tkit.surrogates.responses &lt;dataset&gt; &lt;out&gt; --config configs/surrogates/m3_ec_genray_v1_&lt;case|profile&gt;.json --allow-draft</code>. Entry: <a href="../../../Blog/tokamak-toolkit/log/37-ec-dataset-v1-and-baseline.html">37</a>.</p>
+</section>
+<section id="ec-structured" class="level2">
+<h2 class="anchored" data-anchor-id="ec-structured">Structured EC surrogate</h2>
+<p><strong>Purpose.</strong> The EC surrogate of M3: GENRAY’s absorbed power, driven current and deposition profiles from the plasma state and the launch, behind a guard with the Gaussian EC model as fallback (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-21">OQ-21</a>, owner decisions 10 Oct 2026).</p>
+<p><strong>Targets</strong> (<code>configs/surrogates/m3_ec_targets.yaml</code>), measured once on the test split, whole held-out TORAX runs, per MW injected:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>output</th>
+<th>metric</th>
+<th>limit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>absorbed power</td>
+<td>median relative error</td>
+<td>0.10</td>
+</tr>
+<tr class="even">
+<td>driven current (cases above one kiloampere per MW)</td>
+<td>median relative error</td>
+<td>0.10</td>
+</tr>
+<tr class="odd">
+<td>heating deposition centre</td>
+<td>median absolute error in <span class="math inline">\(\rho_{\mathrm{tor,norm}}\)</span></td>
+<td>0.05</td>
+</tr>
+</tbody>
+</table>
+<p><strong><a href="../../../Blog/tokamak-toolkit/ceilings.html#k-028">K-028</a> restriction.</strong> States are kept when their prescribed plasma current (from the TORAX configuration, piecewise linear in time) is at least two thirds of the equilibrium’s: <span class="claim">2910 of 3120 cases kept (210 early ramp-up cases dropped); largest driven current 61 kA/MW, was 279 kA/MW</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-167" class="cid st-measured">C-167</a>. The test split keeps the same eight held-out runs.</p>
+<p><strong>Labels.</strong> Six numbers per case from GENRAY’s native bins: absorbed electron power <span class="math inline">\(P\)</span>, co-current driven current <span class="math inline">\(I\)</span>, and for heating and for current the centre <span class="math inline">\(c\)</span> and width <span class="math inline">\(w\)</span>,</p>
+<p><span class="math display">\[
+c = \frac{\sum_k \rho_k\, q_k}{\sum_k q_k}, \qquad
+w^2 = \frac{\sum_k (\rho_k - c)^2\, q_k}{\sum_k q_k},
+\]</span></p>
+<p>with <span class="math inline">\(q_k = p_k V_k\)</span> for heating (power density times bin volume) and <span class="math inline">\(q_k = |j_{12,k}| A_k\)</span> for current (bin area), <span class="math inline">\(\rho_k\)</span> in <span class="math inline">\(\rho_{\mathrm{tor,norm}}\)</span>.</p>
+<p><strong>Model.</strong> The existing response ensemble (five members) on the 68 inputs of EC dataset v1. Four sizes (width 64 or 128, depth 2 or 3) were trained; all pass on validation, and the width-128, depth-3 model is best on every validation metric. Outputs are bounded before use: absorbed power between zero and the injected power, centres in <span class="math inline">\([0, 1]\)</span>, widths at least <span class="math inline">\(10^{-3}\)</span>.</p>
+<p><strong>Profiles.</strong> The heating (or current) density in cell <span class="math inline">\(i\)</span> between faces <span class="math inline">\(\rho_{i}\)</span> and <span class="math inline">\(\rho_{i+1}\)</span> is</p>
+<p><span class="math display">\[
+p_i = \frac{P\, f_i}{V_i}, \qquad
+f_i = \frac{\Phi\big(\frac{\rho_{i+1}-c}{w}\big) - \Phi\big(\frac{\rho_i-c}{w}\big)}
+{\Phi\big(\frac{1-c}{w}\big) - \Phi\big(\frac{-c}{w}\big)},
+\]</span></p>
+<p>with <span class="math inline">\(\Phi\)</span> the standard normal distribution function and <span class="math inline">\(V_i\)</span> the cell volume (area for current). The integral of the profile equals the predicted total exactly, also when the width is below one cell, which is the case for about half the labels.</p>
+<p><strong>Results.</strong> <span class="claim">all three targets pass: absorbed power 0.01% and driven current 2.7% median relative error (targets 10%), heating centre 0.0036 median absolute error in rho (target 0.05)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-168" class="cid st-measured">C-168</a>. Profiles: <span class="claim">heating RMSE 8.6e3 W/m^3 (training mean 1.34e4, Gaussian of the true parameters 5.4e3); current RMSE 1.35e4 A/m^2 (training mean 2.09e4, Gaussian of the true parameters 5.0e3)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-169" class="cid st-measured">C-169</a>.</p>
+<p><strong>Correctness.</strong> <span class="claim">19 focused checks (15 EC pipeline and structured labels, 4 structured evaluation) pass in full and Tier-A-only modes</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-170" class="cid st-tested">C-170</a>. The tests check the current interpolation, the moments and sign of the structured labels on a synthetic output, the output bounds, the masking and pass/fail logic of the target scoring, and conservation and centring of the cell-integrated Gaussian for a narrow and a wide deposition.</p>
+<p><strong>Ceilings.</strong> <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-028">K-028</a> (narrowed, still open); one central ray per case; spread not calibrated.</p>
+<p><strong>Reproducing.</strong> <code>python -m tkit.datasets.genray_ec structured</code>; <code>python -m tkit.surrogates.responses ec-genray-iter-v1-structured.npz &lt;out&gt; --config configs/surrogates/m3_ec_structured_w128d3.json --allow-draft</code>; <code>python -m tkit.surrogates.ec_structured &lt;out&gt; --split test</code>. Entry: <a href="../../../Blog/tokamak-toolkit/log/38-structured-ec-surrogate.html">38</a>.</p>
+</section>
+<section id="ec-in-torax" class="level2">
+<h2 class="anchored" data-anchor-id="ec-in-torax">EC surrogate in TORAX</h2>
+<p><strong>Purpose.</strong> Run the structured EC surrogate inside TORAX’s step, behind a guard with a Tier A fallback (M3 criterion 2; brief invariant: every surrogate behind a guard).</p>
+<p><strong>Method.</strong> A new model, <code>tkit_ec_surrogate</code>, of TORAX’s <code>ecrh</code> source, which returns heating [W/m<span class="math inline">\(^3\)</span>] and <span class="math inline">\(\langle j \cdot B \rangle\)</span> [A T/m<span class="math inline">\(^2\)</span>] on cells. Per step:</p>
+<ol type="1">
+<li>features: <span class="math inline">\(T_e\)</span> [eV], <span class="math inline">\(n_e\)</span> [m<span class="math inline">\(^{-3}\)</span>], <span class="math inline">\(Z_\mathrm{eff}\)</span> interpolated from TORAX’s face values to GENRAY’s 21 radii, plus the launcher flag and launch from the source’s parameters;</li>
+<li>the ensemble’s six outputs per MW, bounded, scaled by the injected power;</li>
+<li>cell-integrated Gaussians (<a href="#ec-structured">Structured EC surrogate</a>) with TORAX’s cell volumes <span class="math inline">\(V' \Delta\rho\)</span> and areas <span class="math inline">\(S' \Delta\rho\)</span>; <span class="math inline">\(\langle j \cdot B \rangle = j_{12} B_0\)</span>;</li>
+<li>one guard decision for the whole profile: inputs in the training-sample box (widened by <span class="math inline">\(10^{-6}\)</span> of each range, since inputs held at a constant sit on its edge), finite outputs, member spread of the current at most 2 kA/MW plus a quarter of its magnitude, of both centres at most 0.05; otherwise TORAX’s Gaussian Lin-Liu EC model with parameters fitted on the training split (centre linear in the launch angles; median width; median dimensionless efficiency).</li>
+</ol>
+<p><strong>Correctness.</strong> <span class="claim">runs under jit for both launchers with the surrogate serving the source; energy balance within 1e-6 and particles within 1e-10; derivatives through Newton match finite differences to 1e-7</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-171" class="cid st-tested">C-171</a>. Unit tests: feature order and units, power and current integrals at any injected power, the three guard rejections and the box margin, a deposition narrower than one cell, and derivatives against finite differences.</p>
+<p><strong>Cost.</strong> <span class="claim">surrogate serves 29 of 30 states (upper launcher) and 16 of 27 (equatorial; core T_e leaves the training range); run time 1.6-1.7 times the analytic source; one call 39 microseconds against 85 s for GENRAY</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-172" class="cid st-measured">C-172</a>.</p>
+</section>
+<section id="pedestal-in-torax" class="level2">
+<h2 class="anchored" data-anchor-id="pedestal-in-torax">ITER pedestal in TORAX</h2>
+<p><strong>Method.</strong> <code>tkit_epednn</code>, a TORAX pedestal model derived from <code>set_T_ped_n_ped</code>, whose prescribed fields are the fallback. Inputs per step: minor radius, <span class="math inline">\(\beta_N\)</span> (TORAX’s definition), <span class="math inline">\(B_0\)</span>, triangularity and elongation of the last face, <span class="math inline">\(I_p\)</span>, the main-ion mass number, the prescribed <span class="math inline">\(n_{e,\mathrm{ped}}\)</span>, major radius and <span class="math inline">\(Z_\mathrm{eff}\)</span> at the prescribed top. The conversion is the <a href="#pedestal-contract">pedestal contract</a>, with <span class="math inline">\(n_\mathrm{ions}/n_e\)</span> from TORAX’s main-ion and impurity densities and <span class="math inline">\(\psi_N(\rho)\)</span> from TORAX’s current <span class="math inline">\(\psi\)</span>. Fallback outside the input box, for non-finite outputs, or for <span class="math inline">\(T_\mathrm{ped}\)</span> outside 0.5-15 keV or a top outside 0.75-0.99.</p>
+<p><strong>Mass number, deliberately.</strong> EPED’s <code>m</code> is the main-ion mass number (2.5 for 50:50 D-T in the upstream ITER example); TORAX’s <code>A_i</code> is the mass in amu (2.515), which lies outside the network’s training range. The model uses the fraction-weighted mass number of the configured main ions.</p>
+<p><strong>Correctness.</strong> <span class="claim">runs under jit with EPEDNN setting the pedestal; energy balance within 1e-6 and particles within 1e-10; derivatives through Newton match finite differences to 1e-7</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-173" class="cid st-tested">C-173</a>. <strong>Trajectory and cost.</strong> <span class="claim">EPEDNN sets the pedestal on 48 of 48 states: T_ped 2.62-2.69 keV, top 0.90-0.92; final stored thermal energy 220 MJ against 303 MJ, beta_N 1.57 against 2.16; about 1.5 times the prescribed model per step</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-174" class="cid st-measured">C-174</a>.</p>
+</section>
+<section id="mastu-in-loop" class="level2">
+<h2 class="anchored" data-anchor-id="mastu-in-loop">MAST-U transport surrogate in the loop</h2>
+<p><span class="claim">linear solver: every step converges on two equilibria with the fallback serving 31-35% of faces; on a converging Newton case energy balance within 1e-6 and derivatives match finite differences to 1e-7; Newton does not converge at the runs’ 5 ms steps from these initial states (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-029">K-029</a>)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-175" class="cid st-tested">C-175</a>. The MAST-U states are those of dataset v3 (FreeGSNKE equilibria, TORAX’s IMAS geometry), with the runs’ Bohm/gyro-Bohm transport replaced by the guarded final monotone v3 MAST-U ensemble. Newton from these states is ceiling <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-029">K-029</a>; the balance and derivative checks use the equilibrium and step size at which Newton converges to TORAX’s tolerance, with the tolerance unchanged.</p>
+</section>
+<section id="m3-audit" class="level2">
+<h2 class="anchored" data-anchor-id="m3-audit">M3 acceptance audit</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>surrogate</th>
+<th>held-out accuracy</th>
+<th>inside the loop, differentiable</th>
+<th>speed-up or cost</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>transport, ITER</td>
+<td><span class="claim">MAST-U: Q_e 17.8%, Q_i 25.2%; ITER: Q_e 7.2%, Q_i 10.8%; all meet the 30% target</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-129" class="cid st-measured">C-129</a></td>
+<td><span class="claim">v1 and v3 pass: three-step derivative FD tolerance 1e-7, forward/reverse tolerance 1e-12; guard masks unchanged over the stencil</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-138" class="cid st-tested">C-138</a>; <span class="claim">v1 and v3 pass: energy residual below 1e-6 and particle residual below 1e-10, with fine solver convergence</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-139" class="cid st-tested">C-139</a></td>
+<td><span class="claim">TGLF 539.1 s, final v3 surrogate 1.249 s, QLKNN 0.117 s; the v3 surrogate is about 432 times faster than TGLF and 10.7 times slower than QLKNN</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-158" class="cid st-measured">C-158</a></td>
+</tr>
+<tr class="even">
+<td>transport, MAST-U</td>
+<td><span class="claim">MAST-U: Q_e 17.8%, Q_i 25.2%; ITER: Q_e 7.2%, Q_i 10.8%; all meet the 30% target</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-129" class="cid st-measured">C-129</a></td>
+<td><span class="claim">linear solver: every step converges on two equilibria with the fallback serving 31-35% of faces; on a converging Newton case energy balance within 1e-6 and derivatives match finite differences to 1e-7; Newton does not converge at the runs’ 5 ms steps from these initial states (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-029">K-029</a>)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-175" class="cid st-tested">C-175</a></td>
+<td><span class="claim">TGLF 364.1 s, surrogate 0.492 s, Bohm/gyro-Bohm 0.043 s: the surrogate is about 740 times faster than TGLF; profile deviation from TGLF at 0.2 s, T_e 41.5% and T_i 62.4% (Bohm/gyro-Bohm 47.9% and 84.6%), with half the faces outside the training window and on the fallback</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-176" class="cid st-measured">C-176</a></td>
+</tr>
+<tr class="odd">
+<td>EC</td>
+<td><span class="claim">all three targets pass: absorbed power 0.01% and driven current 2.7% median relative error (targets 10%), heating centre 0.0036 median absolute error in rho (target 0.05)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-168" class="cid st-measured">C-168</a></td>
+<td><span class="claim">runs under jit for both launchers with the surrogate serving the source; energy balance within 1e-6 and particles within 1e-10; derivatives through Newton match finite differences to 1e-7</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-171" class="cid st-tested">C-171</a></td>
+<td><span class="claim">surrogate serves 29 of 30 states (upper launcher) and 16 of 27 (equatorial; core T_e leaves the training range); run time 1.6-1.7 times the analytic source; one call 39 microseconds against 85 s for GENRAY</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-172" class="cid st-measured">C-172</a></td>
+</tr>
+<tr class="even">
+<td>ITER pedestal</td>
+<td><span class="claim">12 upstream scalar regression values agree within relative tolerance 1e-12</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-149" class="cid st-measured">C-149</a></td>
+<td><span class="claim">runs under jit with EPEDNN setting the pedestal; energy balance within 1e-6 and particles within 1e-10; derivatives through Newton match finite differences to 1e-7</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-173" class="cid st-tested">C-173</a></td>
+<td><span class="claim">EPEDNN sets the pedestal on 48 of 48 states: T_ped 2.62-2.69 keV, top 0.90-0.92; final stored thermal energy 220 MJ against 303 MJ, beta_N 1.57 against 2.16; about 1.5 times the prescribed model per step</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-174" class="cid st-measured">C-174</a></td>
+</tr>
+</tbody>
+</table>
+<p>MAST-U pedestal (prescribed) and IC are deferred by the owner (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-21">OQ-21</a>). Ceilings that remain open: <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-022">K-022</a>, <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-024">K-024</a> to <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-029">K-029</a>. All ensemble spreads are uncalibrated (M4). The owner confirmed the closure of M3 on 10 Oct 2026, after the MAST-U timing below.</p>
+<section id="mastu-timing" class="level3">
+<h3 class="anchored" data-anchor-id="mastu-timing">MAST-U end-to-end timing</h3>
+<p><span class="claim">TGLF 364.1 s, surrogate 0.492 s, Bohm/gyro-Bohm 0.043 s: the surrogate is about 740 times faster than TGLF; profile deviation from TGLF at 0.2 s, T_e 41.5% and T_i 62.4% (Bohm/gyro-Bohm 47.9% and 84.6%), with half the faces outside the training window and on the fallback</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-176" class="cid st-measured">C-176</a>. The first attempt failed: TORAX’s TGLF input preparation gives the two faces nearest the axis meaningless inputs on the MAST-U IMAS geometry (safety factor of order <span class="math inline">\(10^{17}\)</span>, a non-finite shear term), TGLF’s eigensolver fails on them and TGLF ends the worker process. Faces whose inputs are non-finite or outside physical limits are now not sent to TGLF; they return no value and the guard’s fallback serves them.</p>
+</section>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>TGLF: G. M. Staebler et al., doi:<a href="https://doi.org/10.1063/1.2436852">10.1063/1.2436852</a> and doi:<a href="https://doi.org/10.1063/1.3505308">10.1063/1.3505308</a>, as listed in GACODE’s README.</li>
+<li>TGLF-NN: T. Neiser, O. Meneghini, S. Smith, J. McClenaghan, D. Orozco, J. Hall, G. Staebler, E. Belli, J. Candy, <em>Database generation for validation of TGLF and retraining of neural network accelerated TGLF-NN</em>, APS Division of Plasma Physics Meeting Abstracts (2022).</li>
+<li>TurbulentTransport.jl (TGLFNN.jl), developed by the GA Theory division at General Atomics, <a href="https://github.com/ProjectTorreyPines/TurbulentTransport.jl">github.com/ProjectTorreyPines/TurbulentTransport.jl</a>, Apache-2.0, copyright 2024 General Atomics.</li>
+</ul>
+</section>
+<section id="changelog" class="level2">
+<h2 class="anchored" data-anchor-id="changelog">Changelog</h2>
+<ul>
+<li><p>2026-10-10: MAST-U end-to-end timing; M3 closed (<a href="../../../Blog/tokamak-toolkit/log/41-m3-closed.html">entry 41</a>).</p></li>
+<li><p>2026-10-10: EC and ITER pedestal surrogates inside TORAX (<a href="../../../Blog/tokamak-toolkit/log/39-ec-and-pedestal-surrogates-in-torax.html">entry 39</a>); MAST-U transport surrogate in the loop and M3 audit (<a href="../../../Blog/tokamak-toolkit/log/40-mastu-loop-and-m3-audit.html">entry 40</a>).</p></li>
+<li><p>2026-10-10: structured EC surrogate meets the owner’s targets; <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-028">K-028</a> restriction (<a href="../../../Blog/tokamak-toolkit/log/38-structured-ec-surrogate.html">entry 38</a>).</p></li>
+<li><p>2026-10-10: matched TGLF / final v3 / QLKNN comparison (<a href="../../../Blog/tokamak-toolkit/log/35-matched-comparison-tglf-v3-qlknn.html">entry 35</a>); EC label conventions and ITER pedestal conversion (<a href="../../../Blog/tokamak-toolkit/log/36-ec-and-pedestal-contracts.html">entry 36</a>); EC dataset v1 and first baseline (<a href="../../../Blog/tokamak-toolkit/log/37-ec-dataset-v1-and-baseline.html">entry 37</a>).</p></li>
+<li><p>2026-10-08: profile SVG/CSV and repository checkpoint checks added; fresh focused reports combined with retained unchanged-file reports, with scope stated.</p></li>
+<li><p>2026-10-08: corrected EC numerical pilot completes; native accounting, descriptive saved-reference comparison and blank plotting output inspected (<a href="../../../Blog/tokamak-toolkit/log/34-genray-corrected-numerical-pilot.html">entry 34</a>).</p></li>
+<li><p>2026-10-08: first EC reference failure retained; explicit plotting-device correction built and probed, with fresh retry approval pending (<a href="../../../Blog/tokamak-toolkit/log/33-genray-first-run-plotting-failure.html">entry 33</a>).</p></li>
+<li><p>2026-10-08: bounded external EC build and content-bound one-case submission proposal; reference solver remains unrun (<a href="../../../Blog/tokamak-toolkit/log/32-genray-build-and-pilot-request.html">entry 32</a>).</p></li>
+<li><p>2026-10-08: saved upstream output inspected and bounded pilot lifecycle built (<a href="../../../Blog/tokamak-toolkit/log/31-genray-saved-reference-pilot.html">entry 31</a>); native-output reader preserves heating/current conventions (<a href="../../../Blog/tokamak-toolkit/log/30-genray-output-reader.html">entry 30</a>); selected ITER pedestal model ported to JAX (<a href="../../../Blog/tokamak-toolkit/log/29-iter-pedestal-jax-port.html">entry 29</a>).</p></li>
+<li><p>2026-10-07: compute request review, fine-convergence rejection, explicit warm-up/final guard timing and offline trace overlap audit; component attribution remains unresolved (<a href="../../../Blog/tokamak-toolkit/log/28-m3-performance-review.html">entry 28</a>).</p></li>
+<li><p>2026-10-07: dependency-ordered plan for performance comparison, RF/pedestal training and subsequent verification (<a href="../../../Blog/tokamak-toolkit/log/27-m3-action-plan.html">entry 27</a>).</p></li>
+<li><p>2026-10-07: short local RAPTOR and ITER hybrid gradient, fallback and conservation validation (<a href="../../../Blog/tokamak-toolkit/log/26-transport-surrogate-two-scenarios.html">entry 26</a>).</p></li>
+<li><p>2026-10-07: model-independent response preparation, baseline fitting, physical-unit metrics and reloadable inference (<a href="../../../Blog/tokamak-toolkit/log/25-response-baseline-training.html">entry 25</a>).</p></li>
+<li><p>2026-10-07: source and boundary-vector guards, grouped reference dataset contract and core-loop source diagnostics (<a href="../../../Blog/tokamak-toolkit/log/24-rf-pedestal-contracts.html">entry 24</a>).</p></li>
+<li><p>2026-10-03: first version: baseline MLP ensemble and TGLF-NN recreation per machine, output scaling, learning curves (<a href="../../../Blog/tokamak-toolkit/log/18-tglf-surrogates-baseline.html">entry 18</a>); active-learning round 1 against a uniform batch, the heat-flux sign, the accuracy target (<a href="../../../Blog/tokamak-toolkit/log/19-active-learning-round-1.html">entry 19</a>).</p></li>
+<li><p>2026-10-03: the clip in use and the stability penalty in training, with the smoke-run comparison and the clip’s cost (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-021">K-021</a>); TGLF monotonicity scans and the v1 ensemble’s slopes; <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-20">OQ-20</a> (1) (<a href="../../../Blog/tokamak-toolkit/log/20-heat-flux-positivity-monotonicity.html">entry 20</a>).</p></li>
+</ul>
+</section>
+<section id="m4-feedback-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="m4-feedback-preparation">M4 feedback retraining preparation</h2>
+<p><a href="../../../Blog/tokamak-toolkit/log/46-mastu-retraining-preparation.html">Entry 46</a> records the preparation. An optional extra-dataset path mapping resolves repository-relative or absolute sources; without it, previous dataset paths and deterministic splits are unchanged. The feedback source explicitly has zero holdout. Every retained row carries an index into its immutable source, and feedback rows also retain run, equilibrium, accepted step and face coordinates.</p>
+<p>The frozen manifest binds the recipe, baseline model, source and sidecar hashes, and a compressed artifact containing successful-row indices and all split indices. Held-out sources appear separately from training sources. Exact row hashes compare model features and all solver inputs shared between source schemas. A cross-split match blocks fitting until investigation; this audit found none. Full feedback inputs are also checked against case records and their provenance-bound accepted-state trajectories.</p>
+<p>The existing feature builder, monotone heads, signed-log outputs, clipping, stability penalty and optimizer recipe are retained. Input and target normalization are recomputed using augmented training rows only, with differences from the baseline recorded. All feedback rows lie inside the existing physical box, so its endpoints remain unchanged.</p>
+<p>The bounded smoke selects rows only from original training indices and the training-only feedback source. Its checkpoint fixture is drawn from original training rows; no feedback row is held out. Evaluation source files are not opened. Source snapshots, finite predictions, normalization, timings and exact checkpoint reload are recorded. Checks: <span class="claim">55 focused checks pass in both normal and Tier A modes; the bounded training-only smoke produces finite predictions and reloads exactly</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-185" class="cid st-tested">C-185</a>. No smoke accuracy is reported as acceptance evidence.</p>
+<p>Production fitting rejects changes to the frozen recipe, sources, indices or domain. A dedicated batch executes hashed source snapshots and retains selected per-member epochs, training/validation history, actual per-source minibatch counts and provenance for every source. Pooled permutations still drop incomplete final batches; recording sampled counts does not add loss weighting or duplicate feedback rows. The source package includes the batch script, configuration and frozen split/manifest artifacts. Its reviewed hash is required at execution. Approval, production training, offline acceptance, coupled revalidation and replacement remain separate stages.</p>
+</section>
+<section id="m4-feedback-candidate" class="level2">
+<h2 class="anchored" data-anchor-id="m4-feedback-candidate">M4 feedback candidate completion and offline review</h2>
+<p><a href="../../../Blog/tokamak-toolkit/log/47-mastu-candidate-trained-and-checked.html">Entry 47</a> records the approved candidate’s completion. The job records native scheduler allocation and final accounting, process exit, executed batch and the reviewed package digest. A separate completion audit checks every hashed snapshot file, model/metadata provenance, original source and split identities, checkpoint epochs, history, actual sampling counts and read-only model files (<span class="claim">164 completion checks pass, binding the saved candidate to the reviewed snapshot and frozen data/splits, with finite parameters/history and tested member/served predictions</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-186" class="cid st-measured">C-186</a>). Training-only normalization agrees with the frozen preparation at mixed relative/absolute tolerance <span class="math inline">\(10^{-12}\)</span>, and the physical box is unchanged.</p>
+<p>The offline comparison reads the saved post-fit metrics for frozen validation and original holdouts, retaining the metadata hashes and common scoring recipe. It checks that source hashes, seed, split rules, population sizes and reference-floor counts match the baseline. The full designated test population is kept. Refresh scores are recomputed on every valid refresh row and labelled training scores. Paired reports retain median and tail errors, coverage, stability and clipping behavior, including regressions. The held-out flux gate passes for each channel, with mixed changes relative to the baseline; refresh medians improve modestly while tails worsen. These observations do not select a new seed or recipe.</p>
+<p>Parity uses the same physical inputs for JAX and float64 PyTorch. Each member is compared in signed-log training and physical flux units; the served ensemble is compared after the training-space mean and inverse transform. Points comprise seeded random-box inputs, frozen original test inputs, refresh training inputs and the lower/upper corners and centre. JAX JIT/eager comparisons are included. All comparison records meet <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-26">OQ-26</a>’s <span class="math inline">\(|\Delta y| \le 10^{-12} + 10^{-12}|y_{\mathrm{JAX}}|\)</span> (<span class="claim">all 168 export comparison records pass the unchanged mixed tolerance, covering all 20 members in training/physical units, the served ensemble and JAX JIT/eager arithmetic</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-187" class="cid st-measured">C-187</a>). Relative-only failures and maximum absolute discrepancies remain in the audit so that the mixed decision is reproducible.</p>
+<p>Saved-parameter diagnostics verify paired gradients are absent from the free trunk, positive affine scales, matching output/input pairs and finite effective absolute weights. JAX directional derivatives of the actual physical member and served paths include preprocessing, affine normalization, output clipping and inverse signed-log. No sampled required-pair slope is negative. Those diagnostics are finite checks and architecture inspections; the formal M4 proof remains pending.</p>
+<p>The candidate is not selected by the default guard. Its matched coupled replay remains a separate next step, with existing temperature limits and guard settings. <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-030">K-030</a> remains open, and any future synchronization is reviewed against its actual payload.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2026 Vignesh Gopakumar</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<div class="tk-footer">
+Code and first draft by Claude (Anthropic) and Codex, working to a brief by Vignesh Gopakumar,
+who reviewed and approved this page.
+<a href="../../../Blog/tokamak-toolkit/about.html">How this is built</a> ·
+<a href="../../../Blog/tokamak-toolkit/index.html">Tokamak Toolkit home</a>
+</div>
+
+
+
+
+</body></html>

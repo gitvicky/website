@@ -1,0 +1,43 @@
+---
+title: Reviewing the comparison job and saved Newton trace
+date: '2026-10-07'
+categories:
+- fixed
+entry: 28
+milestone: M3
+---
+
+::: {.entry-meta}
+[bug fix]{.chip .fixed} Entry 28 · milestone M3
+:::
+
+We continued the [action plan](../action-plan.qmd) by inspecting the cancelled comparison
+job, reviewing its runner and analysing the already saved Newton trace. The scheduler still
+records a root cancellation without a cause. Current node status cannot explain that earlier
+event. The owner or scheduler support must resolve it before a fresh submission.
+
+The runner previously returned success for coarse-tolerance solves. Those results could
+enter the profile comparison despite falling short of fine convergence. Execution and
+comparison now reject them. New output records the host and actual CPU affinity. The batch
+script selects allowed CPU IDs and requests a separately timed warm-up step. Execution then
+starts again from the initial state. Final accepted-state guard diagnostics run after timing;
+they do not count fallback calls within solver iterations.
+
+Focused checks exercise rejection and overlapping trace intervals: [11 performance-tool checks pass in full and Tier-A-only modes]{.claim}[C-147](/Blog/tokamak-toolkit/claims.qmd#c-147){.cid .st-tested}.
+A bounded local smoke run also checks the host runner's warm-up and final guard output.
+It supplies execution evidence, not a reference comparison or speed-up measurement.
+
+The saved Newton trace has [72059 complete HLO events with about 5.369 s of covered trace time]{.claim}[C-148](/Blog/tokamak-toolkit/claims.qmd#c-148){.cid .st-preliminary}. Taking the union of event intervals avoids
+counting overlap twice, but every recorded operation still belongs to the same fused module
+and runtime source. That does not identify ensemble inference, geometry or Jacobian cost.
+The performance ceiling remains open.
+
+A concrete bounded comparison request is ready for review after the scheduler issue is
+resolved. No new cluster job has been submitted. RF and pedestal reference selection remains
+the other prerequisite for completing M3.
+
+Technical details → [Performance review](../technical/surrogates.qmd#performance-review).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › performance review](/Blog/tokamak-toolkit/technical/surrogates.qmd#performance-review)
+:::

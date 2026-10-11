@@ -1,0 +1,63 @@
+---
+title: The EC and ITER pedestal surrogates inside TORAX
+date: '2026-10-10'
+categories:
+- built
+entry: 39
+milestone: M3
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 39 · milestone M3
+:::
+
+M3 requires each surrogate to run inside the coupling loop, to be differentiable there, and
+to have its cost measured. The structured electron-cyclotron (EC) surrogate
+([entry 38](38-structured-ec-surrogate.qmd)) and the ITER pedestal network
+([entry 36](36-ec-and-pedestal-contracts.qmd)) existed only as standalone models. The
+[Primer](../primer.qmd) explains sources and the pedestal; terms are in the
+[Glossary](../glossary.qmd).
+
+**EC.** TORAX's EC source already returns both a heating profile and a driven-current
+profile, so the surrogate is registered as a new model of that source rather than as a new
+channel. At each step it reads the electron temperature, density and effective charge from
+TORAX's state, evaluates the ensemble, and rebuilds the two profiles on TORAX's own cells so
+that their integrals equal the predicted totals. A guard decides for the whole profile: if the
+inputs leave the training box or the ensemble members disagree too much, TORAX's Gaussian EC
+model with parameters fitted to the GENRAY labels is used instead. A first version rebuilt the
+model function on every run, so TORAX recompiled each time; it is now cached.
+
+**Pedestal.** The network is registered as a TORAX pedestal model whose prescribed values are
+the fallback. Its ten inputs come from TORAX's geometry and profiles, including the normalised
+beta computed by TORAX. One input needed a convention: EPED takes the ion mass number (2.5 for
+deuterium-tritium), while TORAX holds the mass in atomic units, slightly above the network's
+training range. With the mass number, the network sets the pedestal on every state.
+
+**Checks.** On the ITER hybrid scenario, with part of the scenario's generic heating moved to EC at the
+same total power, both models run in TORAX's compiled step with the Newton solver, close the discrete
+energy and particle balance, and have derivatives through the solver that agree with finite
+differences ([runs under jit for both launchers with the surrogate serving the source; energy balance within 1e-6 and particles within 1e-10; derivatives through Newton match finite differences to 1e-7]{.claim}[C-171](/Blog/tokamak-toolkit/claims.qmd#c-171){.cid .st-tested}; [runs under jit with EPEDNN setting the pedestal; energy balance within 1e-6 and particles within 1e-10; derivatives through Newton match finite differences to 1e-7]{.claim}[C-173](/Blog/tokamak-toolkit/claims.qmd#c-173){.cid .st-tested}). These checks compare the coupled code
+with itself under perturbation; they do not test the physics of either reference.
+
+| quantity | result |
+|---|---|
+| EC over the full trajectory | [surrogate serves 29 of 30 states (upper launcher) and 16 of 27 (equatorial; core T_e leaves the training range); run time 1.6-1.7 times the analytic source; one call 39 microseconds against 85 s for GENRAY]{.claim}[C-172](/Blog/tokamak-toolkit/claims.qmd#c-172){.cid .st-measured} |
+| pedestal over the full trajectory | [EPEDNN sets the pedestal on 48 of 48 states: T_ped 2.62-2.69 keV, top 0.90-0.92; final stored thermal energy 220 MJ against 303 MJ, beta_N 1.57 against 2.16; about 1.5 times the prescribed model per step]{.claim}[C-174](/Blog/tokamak-toolkit/claims.qmd#c-174){.cid .st-measured} |
+
+With central EC deposition the core temperature rises past the largest value in the EC
+training data, and the guard hands over to the fallback for the rest of that run. The upper
+launcher deposits off-axis and the surrogate serves almost every state. The network's pedestal
+is lower than the scenario's prescribed one, and stored energy and normalised beta fall with
+it; normalised beta is also an input to the network, so the loop settles on a consistent
+value.
+
+All four M3 surrogates (transport per machine, EC, ITER pedestal) now run inside TORAX. The
+remaining question for M3 is in the next entry.
+
+Technical details → [EC in TORAX](../technical/surrogates.qmd#ec-in-torax),
+[pedestal in TORAX](../technical/surrogates.qmd#pedestal-in-torax).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › ec in torax](/Blog/tokamak-toolkit/technical/surrogates.qmd#ec-in-torax) · [Surrogates › pedestal in torax](/Blog/tokamak-toolkit/technical/surrogates.qmd#pedestal-in-torax)  
+**Decisions →** [OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21)
+:::

@@ -1,6 +1,6 @@
 ---
 title: Action plan
-subtitle: Complete M3, then begin verification
+subtitle: M3 done; verification in progress
 toc: true
 disclosure:
   class: green
@@ -9,6 +9,28 @@ disclosure:
 ---
 
 ## Current position
+
+M3 closed on 10 October ([entry 41](log/41-m3-closed.qmd)). M4 now has owner-selected
+properties and tooling, validated property contracts, and a transport comparison passing
+on ITER and failing on MAST-U ([entry 42](log/42-m4-properties-and-transport-check.qmd)).
+The exports pass the numeric criterion approved in [OQ-26](/Blog/tokamak-toolkit/decisions.qmd#oq-26); MAST-U remediation takes priority
+([OQ-25](/Blog/tokamak-toolkit/decisions.qmd#oq-25)). Formal proofs, calibration, EC reference comparisons and certificate-bound guards
+remain ahead. The certification review is pending.
+Matched fluxes and an exact accepted-state replay diagnose the MAST-U failure
+([entry 43](log/43-mastu-feedback-diagnosis.qmd)). The approved training-only label refresh
+completed, and its local artifact checks pass ([entry 44](log/44-mastu-refresh-artifact-checks.qmd)).
+Artifact synchronization is complete with downloaded checksums verified
+([entry 45](log/45-mastu-artifact-upload-verified.qmd)).
+The approved candidate is trained and checked offline
+([entry 47](log/47-mastu-candidate-trained-and-checked.qmd)). Numerical export checks
+pass, and paired metrics retain mixed regressions. Matched coupled revalidation remains
+ahead; its tooling and reference audit are prepared
+([entry 48](log/48-mastu-candidate-replay-preparation.qmd)). The approved attempt
+finishes its solver but fails saved-reference coverage ([the single approved replay finishes in 65 seconds within its 240-second bound, with 40 finite converged steps and 146 passing integrity checks; comparison exits with a reference-coverage failure at candidate-served face 4, normalized radius 0.16]{.claim}[C-189](/Blog/tokamak-toolkit/claims.qmd#c-189){.cid .st-measured};
+[entry 49](log/49-mastu-replay-reference-coverage-fails.qmd)); review reference admissibility
+and a bounded follow-up before new compute. Keep [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) and the current model/guard.
+
+The sections below retain the M3 work record.
 
 M3 remains in progress. The final monotone transport ensembles meet the agreed held-out
 accuracy target ([MAST-U: Q_e 17.8%, Q_i 25.2%; ITER: Q_e 7.2%, Q_i 10.8%; all meet the 30% target]{.claim}[C-129](/Blog/tokamak-toolkit/claims.qmd#c-129){.cid .st-measured}). Local derivative, fallback and conservation checks
@@ -19,8 +41,10 @@ Guards, grouped response datasets and a baseline trainer are built for radio-fre
 responses. Their software checks use synthetic numerical fixtures
 ([25 synthetic contract tests pass in full and Tier-A-only modes]{.claim}[C-143](/Blog/tokamak-toolkit/claims.qmd#c-143){.cid .st-tested}, [26 synthetic baseline-pipeline tests pass in full and Tier-A-only modes]{.claim}[C-145](/Blog/tokamak-toolkit/claims.qmd#c-145){.cid .st-tested}). No new RF or pedestal model is trained.
 The owner-selected pretrained ITER pedestal model now has a JAX port with numeric checks
-([12 upstream scalar regression values agree within relative tolerance 1e-12]{.claim}[C-149](/Blog/tokamak-toolkit/claims.qmd#c-149){.cid .st-measured}, [12 focused tests pass in full and Tier-A-only modes]{.claim}[C-150](/Blog/tokamak-toolkit/claims.qmd#c-150){.cid .st-tested}); coupled acceptance remains unfinished.
-Final-model matched speed-up remains unmeasured.
+([12 upstream scalar regression values agree within relative tolerance 1e-12]{.claim}[C-149](/Blog/tokamak-toolkit/claims.qmd#c-149){.cid .st-measured}, [12 focused tests pass in full and Tier-A-only modes]{.claim}[C-150](/Blog/tokamak-toolkit/claims.qmd#c-150){.cid .st-tested}) and a conversion to TORAX's pedestal fields
+([pedestal pressure 0.0772 MPa, T_ped 3.59 keV at n_e,ped 7e19 m^-3, top at psi_norm 0.935]{.claim}[C-162](/Blog/tokamak-toolkit/claims.qmd#c-162){.cid .st-measured}); coupled acceptance remains unfinished. Final-model matched speed-up is
+measured ([TGLF 539.1 s, final v3 surrogate 1.249 s, QLKNN 0.117 s; the v3 surrogate is about 432 times faster than TGLF and 10.7 times slower than QLKNN]{.claim}[C-158](/Blog/tokamak-toolkit/claims.qmd#c-158){.cid .st-measured}). EC dataset v1 is labelled ([3120 of 3120 cases produce readable output (20 of 20 check cases); median 84.8 s of GENRAY time per case]{.claim}[C-164](/Blog/tokamak-toolkit/claims.qmd#c-164){.cid .st-measured}) and has a
+first held-out baseline ([driven current RMSE 3.30 kA/MW against 13.5 kA/MW for the training mean; pointwise profile model: current-density RMSE 2.20e4 A/m^2 against 2.09e4 A/m^2 for the mean]{.claim}[C-166](/Blog/tokamak-toolkit/claims.qmd#c-166){.cid .st-measured}).
 
 ## Complete the performance comparison {#performance}
 
@@ -37,8 +61,9 @@ speed-up.
 **Done when:** a reproducible final-model runtime comparison and discrepancy report exist,
 with allocation and solver settings stated.
 
-The expanded scheduler audit still gives no cancellation cause. A bounded replacement
-request has been reviewed and awaits that explanation/remedy and fresh approval. The runner
+Done 10 Oct. The cancellation matched a recurring node start-up failure
+([seven full-node jobs since 2 Oct were cancelled by root at start with no reason; each resubmission landed on another node and ran]{.claim}[C-161](/Blog/tokamak-toolkit/claims.qmd#c-161){.cid .st-preliminary}); the approved resubmission ran and gives [TGLF 539.1 s, final v3 surrogate 1.249 s, QLKNN 0.117 s; the v3 surrogate is about 432 times faster than TGLF and 10.7 times slower than QLKNN]{.claim}[C-158](/Blog/tokamak-toolkit/claims.qmd#c-158){.cid .st-measured}, with
+profile deviations [final v3 surrogate: T_e 7.7%, T_i 9.2%, n_e 11.4%, psi 0.32%; QLKNN: T_e 155%, T_i 128%, n_e 86%, psi 2.4%]{.claim}[C-159](/Blog/tokamak-toolkit/claims.qmd#c-159){.cid .st-measured} ([entry 35](log/35-matched-comparison-tglf-v3-qlknn.qmd)). The runner
 now rejects coarse-tolerance results, records effective CPU allocation, separates warm-up
 from execution and records final-state guard diagnostics after timing. Focused checks pass
 ([11 performance-tool checks pass in full and Tier-A-only modes]{.claim}[C-147](/Blog/tokamak-toolkit/claims.qmd#c-147){.cid .st-tested}). The offline saved-trace audit records unresolved component attribution
@@ -66,10 +91,11 @@ The corrected numerical pilot is complete with readable native profiles
 ([the corrected EC reference completes in 83.16 s with readable native profiles]{.claim}[C-156](/Blog/tokamak-toolkit/claims.qmd#c-156){.cid .st-measured}). Native accounting and descriptive saved-reference
 comparison are retained; the rendered PostScript page is blank. Settle the
 production coupling contracts and grouped sampling before reviewing a separate
-labelling budget. No physical labels are produced.
+labelling budget.
 
-**Done when:** those contracts and required access are recorded. These workstreams can
-proceed while the transport performance blocker is investigated.
+**Done when:** those contracts and required access are recorded. Done 10 Oct: the owner
+accepted the recommended conventions ([OQ-21](decisions.qmd#oq-21),
+[entry 36](log/36-ec-and-pedestal-contracts.qmd)).
 
 ## Train and integrate the response surrogates {#responses}
 
@@ -86,6 +112,15 @@ absorbed-power accuracy.
 
 **Done when:** the reference datasets, checkpoints, accuracy results, guarded coupled checks
 and matched cost measurements have provenance and meet the agreed criteria.
+
+EC dataset v1 is labelled ([3120 of 3120 cases produce readable output (20 of 20 check cases); median 84.8 s of GENRAY time per case]{.claim}[C-164](/Blog/tokamak-toolkit/claims.qmd#c-164){.cid .st-measured}). The first baseline learns the totals but its
+pointwise profile model does not beat the training mean ([driven current RMSE 3.30 kA/MW against 13.5 kA/MW for the training mean; pointwise profile model: current-density RMSE 2.20e4 A/m^2 against 2.09e4 A/m^2 for the mean]{.claim}[C-166](/Blog/tokamak-toolkit/claims.qmd#c-166){.cid .st-measured}), so the EC model
+needs a structured profile output. [K-028](/Blog/tokamak-toolkit/ceilings.qmd#k-028) records that every case uses one equilibrium.
+The owner then set the targets and restricted the states ([K-028](/Blog/tokamak-toolkit/ceilings.qmd#k-028) option b); the structured
+surrogate meets all three targets ([all three targets pass: absorbed power 0.01% and driven current 2.7% median relative error (targets 10%), heating centre 0.0036 median absolute error in rho (target 0.05)]{.claim}[C-168](/Blog/tokamak-toolkit/claims.qmd#c-168){.cid .st-measured},
+[entry 38](log/38-structured-ec-surrogate.qmd)). Both the EC surrogate and the ITER pedestal
+now run inside TORAX behind their guards ([runs under jit for both launchers with the surrogate serving the source; energy balance within 1e-6 and particles within 1e-10; derivatives through Newton match finite differences to 1e-7]{.claim}[C-171](/Blog/tokamak-toolkit/claims.qmd#c-171){.cid .st-tested}, [runs under jit with EPEDNN setting the pedestal; energy balance within 1e-6 and particles within 1e-10; derivatives through Newton match finite differences to 1e-7]{.claim}[C-173](/Blog/tokamak-toolkit/claims.qmd#c-173){.cid .st-tested},
+[entry 39](log/39-ec-and-pedestal-surrogates-in-torax.qmd)).
 
 ## Close M3, then start M4 {#verification}
 
@@ -107,11 +142,13 @@ milestone state and executed statistics. Counts that reuse unchanged execution r
 that qualification. Drafts and disclosure-held pages remain in the private review copy until
 the owner reviews them. The owner renders and publishes the separate website handoff.
 
-Immediate work: settle EC coupling and grouped sampling contracts, resolve the
-transport compute cancellation and complete the ITER pedestal boundary contract independently.
+M3 closed on 10 Oct 2026 ([entry 41](log/41-m3-closed.qmd)). The reference diagnostic
+is now consumed ([the diagnostic completes in 517 seconds within its 30-minute bound, with 40 finite converged steps, exact historical temperature/density/poloidal-flux-profile and final-mask equality, and 171 passing saved-output integrity checks]{.claim}[C-193](/Blog/tokamak-toolkit/claims.qmd#c-193){.cid .st-measured}). Immediate work: review the signed heat-transport
+evidence and reference remedy ([OQ-32](/Blog/tokamak-toolkit/decisions.qmd#oq-32); [final face 4 at normalized radius 0.16 has valid inputs but raw electron heat diffusivity -0.02792124888 m²/s; negative heat diffusivity rejects that face at 8 of 40 accepted states; reference rejection is 323/1040 accepted-state face records (31.0577%)]{.claim}[C-194](/Blog/tokamak-toolkit/claims.qmd#c-194){.cid .st-measured}), preserving reference
+inadmissibility and the separately proposed sampling experiment. Continue M4 under
+its existing decisions ([OQ-22](decisions.qmd#oq-22)).
 See [M3 status](milestones/M3.qmd), [decisions](decisions.qmd#oq-21) and
 [known ceilings](ceilings.qmd).
 
-The current private review copy passes its checks. The normal export remains blocked by
-links to held active-learning and surrogates pages; the owner's disclosure and draft reviews
-are still pending.
+Entries 21 to 34 and the active-learning and surrogates pages were approved on 9 Oct. New
+entries follow the same review before publication.

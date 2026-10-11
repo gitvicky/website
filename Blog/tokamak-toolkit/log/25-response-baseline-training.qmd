@@ -1,0 +1,51 @@
+---
+title: A baseline trainer for RF and pedestal response data
+date: '2026-10-07'
+categories:
+- built
+entry: 25
+milestone: M3
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 25 · milestone M3
+:::
+
+The RF and pedestal data interfaces now connect to a reusable ensemble trainer. It accepts
+the declared features and outputs of a reference dataset, so the numerical training pipeline
+can be tested before choosing new physics closures.
+
+## Keep the holdout intact
+
+Failed labels are filtered inside each saved split. They do not trigger a fresh split, and
+related cases stay together. For profile labels, cells become training rows only after cases
+have been selected. The caller must explicitly choose the layout that combines case features
+with the supplied radial coordinate. There is no interpolation or coordinate conversion.
+
+Normalisation is fitted on the training rows alone. Each ensemble member keeps its best
+validation checkpoint, and the test set is scored after fitting. Errors are reported in each
+output's declared units, alongside a constant training-mean baseline. Ensemble spread is a
+diagnostic here; it has not been calibrated as a coverage guarantee.
+
+## Inference carries what it needs
+
+The saved model includes its normalisation, feature schema and training-input box. Reloading
+checks both the model and metadata hashes and does not open reference datasets or solver
+files. The box is the range of the training points, not a certified domain. Loaded models
+can be passed to the existing response guard with an explicit fallback and physics bounds.
+
+Synthetic tests check the pipeline: [26 synthetic baseline-pipeline tests pass in full and Tier-A-only modes]{.claim}[C-145](/Blog/tokamak-toolkit/claims.qmd#c-145){.cid .st-tested}. They include gradients, saved splits,
+unit-preserving metrics, model tampering and deterministic replay. Case and profile fits
+improve on the constant baseline in these numerical fixtures. That is an optimiser check,
+not evidence of RF deposition or pedestal prediction accuracy.
+
+The trainer is an unconstrained baseline. No production RF/pedestal dataset or physics model
+has been trained, and no positivity head, power partition or pedestal criterion has been
+chosen. Selecting reference solvers or data is still the next modelling step; then the
+baseline can guide accuracy targets and the physics structure needed for the final model.
+
+Technical details → [Response training](../technical/surrogates.qmd#response-training).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › response training](/Blog/tokamak-toolkit/technical/surrogates.qmd#response-training)
+:::

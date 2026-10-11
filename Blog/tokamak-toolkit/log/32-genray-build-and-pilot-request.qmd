@@ -1,0 +1,57 @@
+---
+title: Building the EC reference and preparing its first pilot
+date: '2026-10-08'
+categories:
+- built
+entry: 32
+milestone: M3
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 32 · milestone M3
+:::
+
+We need a compiled electron-cyclotron (EC) reference before generating heating
+and current profiles for transport. The [Primer](../primer.qmd) explains that
+coupling; terminology is in the [Glossary](../glossary.qmd).
+
+We built a local executable for the external reference:
+[one external reference executable builds with verified artifacts and resolved runtime libraries]{.claim}[C-154](/Blog/tokamak-toolkit/claims.qmd#c-154){.cid .st-measured}. The build uses a pinned replacement plotting library,
+Giza, with the available compiler and NetCDF libraries. Source files stay
+unchanged; recorded compiler flags permit the legacy Fortran interfaces.
+The compiler's warnings remain in the retained logs.
+
+Build preparation uses one CPU, an isolated working directory and a five-minute
+deadline. The final build finishes in about 66 seconds. Its executed helper,
+source archives, binary, plotting libraries and logs have content-bound provenance.
+Two earlier builds are retained: their source-snapshot lineage was corrected
+in the final build rather than rewriting old records.
+
+A concrete request now proposes one unchanged upstream ITER regression case.
+The original current-drive prescription is proposed because a paired saved
+output exists for inspection. This remains the owner's physics choice. The
+requested job uses one CPU, four GiB and ten minutes, with a five-minute solver
+timeout. Charging may cover a whole node, so the approval request states that
+resource ceiling too.
+
+The submission launcher checks hashes of the binary, input decks, libraries,
+toolkit source and job scripts before execution. Its read-only preparation check
+passes. These build and linkage checks inspect the produced files separately
+from compilation; they do not exercise the solver's plotting or physics paths.
+A job would retain native outputs, failures, logs and CPU/job metadata in a new
+directory. At this checkpoint, no job has been submitted and GENRAY has not been run.
+
+A compiled executable establishes build readiness. Plotting parity, solver
+outputs, physical acceptance and transport-source conversion still need review.
+The independent ITER pedestal port still awaits its boundary choices.
+Historical test statistics are unchanged, and M3 remains in progress.
+The subsequent [first-run failure](33-genray-first-run-plotting-failure.qmd)
+and [corrected result](34-genray-corrected-numerical-pilot.qmd) are recorded separately.
+
+Technical details → [reference build and pilot request](../technical/surrogates.qmd#genray-build).
+Decision → [OQ-21](../decisions.qmd#oq-21).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › genray build](/Blog/tokamak-toolkit/technical/surrogates.qmd#genray-build)  
+**Decisions →** [OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21)
+:::

@@ -1,0 +1,52 @@
+---
+title: The MAST-U candidate replay preserves masks and guard accounting
+date: '2026-10-11'
+categories:
+- built
+entry: 48
+milestone: M4
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 48 · milestone M4
+:::
+
+The trained candidate now has a separate coupled-replay runner. An explicit immutable
+model path selects it for this experiment while the ordinary default keeps selecting
+the existing model. The source package binds the runner, configuration and inputs before
+execution.
+
+The preparation audits the saved reference against its recorded runner and clean source
+revision. Scenario settings, core transport code and guard settings agree. The original
+accepted-state replay also reproduces the saved baseline exactly, letting us check the
+new reporting without another solver run. Historical external dependency bytes were not
+recorded; that limit remains explicit. A new run must still match actual grids, time points,
+settings and convergence before the reference can be reused.
+
+The focused checks and a bounded training-only smoke pass: [40 focused checks pass in normal and Tier A modes; the two-step training-only candidate smoke is finite and reconstructs the raw accepted-state guard predicate exactly]{.claim}[C-188](/Blog/tokamak-toolkit/claims.qmd#c-188){.cid .st-tested}.
+The smoke uses a training equilibrium and two steps, with raw diagnostics after stepping.
+It is a tooling check, not the held-out coupled replay or an accuracy result.
+
+| report | purpose |
+|---|---|
+| candidate served faces | unchanged formal temperature criterion |
+| baseline mask and overlap | expose changes in the served region |
+| fixed baseline mask | supplementary comparison on the same historical faces |
+| whole profile and conservative cells | retain broader error diagnostics |
+| raw accepted-state guard reasons | explain rejections without claiming solver-call accounting |
+
+An isolated served face is retained. If no cell has both adjacent faces served, the cell
+metric is marked unavailable rather than discarding the face. Rejection reasons include
+both overlapping predicate counts and an exclusive priority partition. Candidate history
+must reconstruct the saved raw guard mask exactly; historical missing generic guard
+features are reported as a limitation.
+
+A concrete local CPU replay request is ready for the owner. The held-out candidate replay
+has not run, and [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) remains open. The current model and guard remain selected.
+
+**What's next.** Review the bounded replay request, then report both temperatures and all
+paired diagnostics against the existing limits before any model decision.
+
+::: {.entry-links}
+**Technical details →** [Verification › candidate replay preparation](/Blog/tokamak-toolkit/technical/verification.qmd#candidate-replay-preparation)
+:::

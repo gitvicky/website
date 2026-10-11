@@ -1,0 +1,87 @@
+---
+title: Active learning round 1 against uniform sampling, and the plan for dataset
+  v3
+date: '2026-10-03'
+categories:
+- negative
+- decision
+entry: 19
+milestone: M3
+---
+
+::: {.entry-meta}
+[negative result]{.chip .negative} [decision]{.chip .decision} Entry 19 · milestone M3
+:::
+
+The M2 datasets fill a 17-dimensional box of TGLF inputs uniformly, and most of the box lies
+far above the instability threshold, where turbulent fluxes are large ([entry 17](17-tglf-datasets-mastu-iter.qmd)).
+A transport solver is most sensitive near the threshold, where the flux turns on. The brief
+asks for active learning there; the owner moved it to after the first surrogates ([OQ-18](/Blog/tokamak-toolkit/decisions.qmd#oq-18)), so
+the ensemble of [entry 18](18-tglf-surrogates-baseline.qmd) could choose the points.
+
+## Selection
+
+For each machine we drew a pool of 10^6^ points from the same approved region as v1, with new
+seeds, and scored every point with the TGLF-NN ensemble:
+$s = \sigma\,\exp\!\left(-|\mathrm{symlog}(\hat Q_e + \hat Q_i)|/2\right)$, where $\sigma$ is
+the members' disagreement on $Q_e$ and $Q_i$ and the exponential is largest where the predicted
+heat flux is near zero. The selected batch (v2-al) is 10^5^ points drawn with probability
+proportional to $s$; a control batch (v2-random) is 10^5^ other pool points drawn uniformly. A
+first score, $\sigma(1 + \text{proximity})$, was dropped before any TGLF run: on a test pool
+its picks followed $\sigma$ alone, which is largest far above threshold. TGLF labelled both
+batches: [4 × 10^5^ cases, all completed with finite fluxes; 1 h 16 min (MAST-U) and 1 h 15 min (ITER)]{.claim}[C-090](/Blog/tokamak-toolkit/claims.qmd#c-090){.cid .st-measured}.
+
+The selection moved the data towards threshold. By TGLF's own $Q_e + Q_i$, below 1 gB / 1-100
+gB / above 10^4^ gB: [MAST-U 16% / 18% / 28% in v1 against 45% / 31% / 5% in the selected batch; ITER 17% / 39% / 10% against 35% / 47% / 2%]{.claim}[C-091](/Blog/tokamak-toolkit/claims.qmd#c-091){.cid .st-measured}.
+
+## Retraining against a uniform batch
+
+We trained the TGLF-NN ensemble three ways per machine: on v1, on v1 plus the selected batch,
+and on v1 plus the uniform batch. Validation stays on v1; each batch keeps a fixed tenth as a
+holdout. The table gives the median relative error of $Q_e$ on the v1 test split / the selected batch's holdout / the
+uniform batch's holdout.
+
+| training data | MAST-U | ITER |
+|---|---|---|
+| v1 only | [0.75 / 0.85 / 0.76]{.claim}[C-093](/Blog/tokamak-toolkit/claims.qmd#c-093){.cid .st-measured} | [0.60 / 0.69 / 0.59]{.claim}[C-096](/Blog/tokamak-toolkit/claims.qmd#c-096){.cid .st-measured} |
+| v1 + selected batch | [0.72 / 0.81 / 0.73]{.claim}[C-094](/Blog/tokamak-toolkit/claims.qmd#c-094){.cid .st-measured} | [0.57 / 0.64 / 0.55]{.claim}[C-097](/Blog/tokamak-toolkit/claims.qmd#c-097){.cid .st-measured} |
+| v1 + uniform batch | [0.69 / 0.81 / 0.70]{.claim}[C-095](/Blog/tokamak-toolkit/claims.qmd#c-095){.cid .st-measured} | [0.55 / 0.62 / 0.52]{.claim}[C-098](/Blog/tokamak-toolkit/claims.qmd#c-098){.cid .st-measured} |
+
+Both batches lower the error, by about what the learning curve gives for the larger training
+set ([fit 0.70 (MAST-U) and 0.52 (ITER); measured 0.72 and 0.57 with the selected batch, 0.69 and 0.55 with the uniform batch]{.claim}[C-101](/Blog/tokamak-toolkit/claims.qmd#c-101){.cid .st-measured}). The uniform batch lowers it as much or more on every test set,
+including the selected batch's own holdout, where the selected-batch model trained on the
+same distribution. The differences, uniform minus selected, with paired
+bootstrap intervals over test cases: [on the selected batch's holdout 0.000 (-0.013 to 0.009) for MAST-U and -0.015 (-0.028 to -0.003) for ITER; on the v1 test split -0.023 (-0.033 to -0.014) and -0.027 (-0.040 to -0.015)]{.claim}[C-099](/Blog/tokamak-toolkit/claims.qmd#c-099){.cid .st-measured}. Near threshold on that holdout, $Q_e$
+shows no resolved difference and $Q_i$ favours the uniform batch ([MAST-U Q_e 0.77 against 0.78, Q_i 0.74 against 0.73; ITER Q_e 0.58 against 0.57, Q_i 0.54 against 0.52]{.claim}[C-100](/Blog/tokamak-toolkit/claims.qmd#c-100){.cid .st-measured}). Round 1
+of active learning did not beat uniform sampling.
+
+Every model does worst on the selected holdout: those cases are harder, and concentrating
+data there did not pay for what it took from elsewhere. The disagreement $\sigma$ is a weak
+guide to the actual error (rank correlation [0.39-0.51 for the MLP ensemble and 0.53-0.62 for the TGLF-NN network]{.claim}[C-089](/Blog/tokamak-toolkit/claims.qmd#c-089){.cid .st-measured}). The check does not depend on
+the selecting ensemble: the outcomes are TGLF's fluxes on held-out cases.
+
+## Decision OQ-19
+
+With uniform sampling, the measured slopes put a median error of 0.30 at [about 3 × 10^6^ cases (ITER) and about 10^9^ (MAST-U)]{.claim}[C-084](/Blog/tokamak-toolkit/claims.qmd#c-084){.cid .st-preliminary}.
+[OQ-19](/Blog/tokamak-toolkit/decisions.qmd#oq-19) settles three points; the owner left the first two to the agent's recommendation and
+asked for the third:
+
+1. **Dataset v3** samples where the coupled simulation goes: TGLF inputs from TORAX states
+   along trajectories over a family of scenarios per machine, gradients perturbed around each
+   state, and the geometry from the same equilibrium (lifting [K-018](/Blog/tokamak-toolkit/ceilings.qmd#k-018) for v3). MAST-U profiles
+   are simulated, not measured.
+2. **Accuracy target**: median relative error of the ensemble mean at most 0.30 on $Q_e$ and
+   on $Q_i$ ($|Q| > 1$ gB), on each machine's v3 test split.
+3. **ReLU on the heat-flux outputs**: zero below threshold and no negative heat flux. TGLF's
+   own fluxes are negative in a minority of cases, [Q_e < 0 in 2.0-6.5% of cases (below -1 gB in 0.5-1.5%; median of the negative values -0.03 to -0.09 gB); Q_i < 0 in 9.4-14.1% (below -1 gB in 2.2-5.1%); particle fluxes negative in 33-54%]{.claim}[C-102](/Blog/tokamak-toolkit/claims.qmd#c-102){.cid .st-measured}; the ReLU sets those
+   heat fluxes to zero, and the particle fluxes keep their sign.
+
+M3 is in progress: dataset v3 and the ReLU outputs are next.
+
+Technical details → [Surrogates: active learning](../technical/surrogates.qmd#active-learning).
+Decisions → [OQ-18](../decisions.qmd#oq-18), [OQ-19](../decisions.qmd#oq-19).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › active learning](/Blog/tokamak-toolkit/technical/surrogates.qmd#active-learning) · [Surrogates › heat flux sign](/Blog/tokamak-toolkit/technical/surrogates.qmd#heat-flux-sign)  
+**Decisions →** [OQ-18](/Blog/tokamak-toolkit/decisions.qmd#oq-18) · [OQ-19](/Blog/tokamak-toolkit/decisions.qmd#oq-19)
+:::

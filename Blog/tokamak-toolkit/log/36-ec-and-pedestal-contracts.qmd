@@ -1,0 +1,64 @@
+---
+title: Conventions for the EC reference labels and the ITER pedestal boundary
+date: '2026-10-10'
+categories:
+- decision
+- built
+entry: 36
+milestone: M3
+---
+
+::: {.entry-meta}
+[decision]{.chip .decision} [new component]{.chip .built} Entry 36 · milestone M3
+:::
+
+Two surrogates remain for M3: electron-cyclotron (EC) heating and current drive, learned from
+the GENRAY ray-tracing code, and the ITER pedestal, taken from a pretrained EPED neural network
+(EPEDNN). Both had been selected ([OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21)), but not how their outputs become TORAX inputs. The
+[Primer](../primer.qmd) explains sources and the pedestal; terms are in the
+[Glossary](../glossary.qmd).
+
+We wrote one recommendation per open convention, and the owner accepted all of them as written.
+
+**EC labels.** The current-drive calculation stays the one in the upstream ITER deck (an
+adjoint method). A second method with momentum conservation is run on a few cases as a check
+only. Electron heating keeps GENRAY's two channels, wave-particle and collisional, separately.
+The current label is GENRAY's flux-surface average of $j \cdot B$ divided by $B_0$. We read
+the GENRAY source to find which $B_0$ this is: the vacuum toroidal field at the geometric
+centre stored in the equilibrium file, which is also TORAX's definition. TORAX's input is the
+same average without the division, so the coupling multiplies by TORAX's own $B_0$. Current is
+signed positive along the plasma current. Profiles go onto TORAX's radial coordinate by a
+remap that keeps the volume integral of heating and the area integral of current exact in
+every cell. GENRAY's radial coordinate ends slightly inside the last closed surface, and the
+remap rescales it with the equilibrium's safety-factor profile. Labels are per megawatt
+injected. Accuracy targets are set after a first baseline.
+
+**ITER pedestal.** EPEDNN returns a total pedestal pressure and a pedestal half-width in
+normalised poloidal flux, for three stability models and three solutions each. We use the
+model with both diamagnetic corrections and its first solution, which is also the upstream
+default. Ion and electron temperatures are equal at the pedestal top, so the temperature is
+the pressure divided by the electron density plus the total ion density. The pedestal density
+is the prescribed one, which is also an EPEDNN input. The pedestal top lies at one minus twice
+the half-width in poloidal flux; the upstream source documents the width as a half width. The
+equilibrium maps that point to TORAX's toroidal-flux coordinate. Where the network's inputs
+leave its training box, or an output is not finite, the prescribed pedestal is used instead.
+MAST-U keeps its prescribed pedestal.
+
+The pedestal conversion is now code: pure JAX, compiled and differentiable, with the fallback
+selected per call. On the upstream ITER example it gives [pedestal pressure 0.0772 MPa, T_ped 3.59 keV at n_e,ped 7e19 m^-3, top at psi_norm 0.935]{.claim}[C-162](/Blog/tokamak-toolkit/claims.qmd#c-162){.cid .st-measured}. The checks are
+partly independent: the branch selection is compared with the network's raw output vector,
+the temperature and coordinate conversions with hand calculations, and the fallback with
+inputs outside the box. They do not test the physics of the pedestal; the network is used as
+selected. The EC pipeline and pedestal checks pass in both modes ([19 focused checks (13 EC pipeline, 6 pedestal contract) pass in full and Tier-A-only modes]{.claim}[C-163](/Blog/tokamak-toolkit/claims.qmd#c-163){.cid .st-tested}).
+
+The EC conventions are applied in the labelling run of the next entry. The pedestal conversion
+is not yet connected to TORAX. Remaining for [OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21): the EC accuracy targets.
+
+Technical details → [EC label conventions](../technical/surrogates.qmd#ec-contract),
+[pedestal conversion](../technical/surrogates.qmd#pedestal-contract).
+Decision → [OQ-21](../decisions.qmd#oq-21).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › ec contract](/Blog/tokamak-toolkit/technical/surrogates.qmd#ec-contract) · [Surrogates › pedestal contract](/Blog/tokamak-toolkit/technical/surrogates.qmd#pedestal-contract)  
+**Decisions →** [OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21)
+:::

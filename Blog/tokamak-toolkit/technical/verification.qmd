@@ -1,0 +1,230 @@
+---
+title: Verification
+toc: true
+toc-depth: 3
+date-modified: '2026-10-11'
+---
+
+## Scope
+
+M4 separates formal properties over declared domains, statistical calibration and
+closed-loop comparisons. The owner-selected scope is [OQ-22](/Blog/tokamak-toolkit/decisions.qmd#oq-22). No M4 certification review
+has occurred and no formal property is yet certified.
+
+## Checked exports {#exports}
+
+`tkit.verify.export` makes fixed float64 PyTorch copies of the Equinox networks. It includes
+input transforms, normalization and physical output transforms. Transport's served response
+averages members in training space before inverse signed-log; EC clamps the raw mean after
+averaging. The selected pedestal retains its power-law residual, tanh-GELU, squared outputs
+and density scaling, with every solution explicit.
+
+`check_parity` rejects nonfinite arrays, shape differences and a discrepancy beyond the
+selected numeric criterion. [OQ-26](/Blog/tokamak-toolkit/decisions.qmd#oq-26) approves mixed relative and absolute parity after the
+relative-only check exposed cancellation near zero: [13 export checks pass in each mode: all selected members, random box points, local holdouts, physical transforms and served means, with rtol=1e-12 and atol=1e-12 in each declared output unit]{.claim}[C-180](/Blog/tokamak-toolkit/claims.qmd#c-180){.cid .st-tested}.
+Formal proofs may not bypass this gate. The artifact manifests bind model, metadata and explicit
+box files and allow transport exports to load without opening the large training datasets.
+They establish storage consistency, not proved physical behavior ([OQ-23](/Blog/tokamak-toolkit/decisions.qmd#oq-23)).
+
+## Property contracts {#properties}
+
+[six property contracts load; 14 property-validation tests pass in each mode, including malformed-domain, tolerance and output-schema rejection]{.claim}[C-177](/Blog/tokamak-toolkit/claims.qmd#c-177){.cid .st-tested}. `tkit.verify.properties` validates model scopes, output names,
+finite ordered boxes, the declared box data source, robustness tolerances and owner decisions.
+The existing [OQ-20](/Blog/tokamak-toolkit/decisions.qmd#oq-20) monotonicity contract is retained.
+
+The formal engine is auto_LiRPA with an input-splitting loop under [OQ-24](/Blog/tokamak-toolkit/decisions.qmd#oq-24). The loop and proof
+certificates are later work. Bounds target every member; local robustness targets the served
+ensemble response. Launcher families stay categorical, and complete perturbation boxes that
+leave a training domain will be reported separately. No training box is silently shrunk to
+make a property pass.
+
+## Closed-loop comparison {#closed-loop}
+
+`tkit.verify.closed_loop` reads provenance-bound saved runs and rejects unmatched settings,
+time/radial grids, nonfinite profiles or unconverged solver records. It checks that a face
+served by the surrogate was served by TGLF in the reference.
+
+The historical paper eq. 41 convention is retained:
+
+$$ E = 100\frac{\sqrt{\operatorname{mean}((T_{sur}-T_{ref})^2)}}
+                    {\operatorname{mean}(T_{sur})}. $$
+
+The guard is defined on faces, while temperatures are cell-centred. Both temperatures are
+linearly interpolated to the same served faces. Whole-profile errors and a supplementary
+comparison using cells with both adjacent faces served remain visible. The saved runs' grids
+are uniform; the reader rejects other grids without explicit face coordinates.
+
+ITER passes ([served-face T_e 7.42%, T_i 8.18%, both passing the 15% limit; whole profile 7.72/9.23%; 34 of 51 final-state faces served]{.claim}[C-178](/Blog/tokamak-toolkit/claims.qmd#c-178){.cid .st-measured}). MAST-U fails ([served-face T_e 35.33%, T_i 49.15%, both failing 15%; whole profile 41.51/62.39%; cells with both adjacent faces served give 11.86/23.24%, still failing T_i; 13 of 26 final-state faces served]{.claim}[C-179](/Blog/tokamak-toolkit/claims.qmd#c-179){.cid .st-measured}), with the conservative
+cell diagnostic also failing ion temperature. Its failure remains ceiling [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030). The mask
+is only the final accepted state's guard diagnostic; it does not measure fallback calls
+throughout the trajectory.
+
+## MAST-U remediation diagnosis {#mastu-remediation}
+
+The owner prioritizes the failed MAST-U criterion ([OQ-25](/Blog/tokamak-toolkit/decisions.qmd#oq-25)). Matched final-state probes
+show substantial flux error: [all 17 in-domain final-state probes succeed; on 12 served faces with reference flux above 1 gB, median relative errors are 41.17% Q_e and 74.27% Q_i; an unconstrained v3 control gives 38.05/71.88%]{.claim}[C-181](/Blog/tokamak-toolkit/claims.qmd#c-181){.cid .st-measured}. The existing unconstrained v3 model
+also misses those feedback states. That control is diagnostic and does not meet the
+owner's monotonicity contract; pointwise scores are not a coupled comparison.
+
+The accepted-state replay reproduces the failed saved trajectory: [all saved temperature, density and psi values are reproduced exactly; four final inner faces exceed the existing ion-diffusivity guard bound; 44.81% of accepted-state face diagnostics reject the surrogate]{.claim}[C-182](/Blog/tokamak-toolkit/claims.qmd#c-182){.cid .st-measured}.
+Four final inner faces lie in the model's box but exceed the ion-diffusivity guard
+bound. Captured masks cover accepted states, not the solver's intermediate evaluations.
+The isolated inner served face has zero final heat flux in both model and TGLF even
+though its temperature differs. No face is removed from the acceptance comparison.
+
+The approved refresh collected feedback-state labels on training equilibria only, with
+both test equilibria excluded. It retains full solver inputs and applies the approved-region
+filter. The local result review checks the finished artifacts: [eight local checks pass for approved allocation/time, hashes and lineage, full-input alignment, case budget, unique coordinates, training-only equilibria, source model and finite successful labels]{.claim}[C-183](/Blog/tokamak-toolkit/claims.qmd#c-183){.cid .st-measured}.
+It compares each label input row with the selected case and the source trajectory's
+accepted-state solver arrays, and binds lineage by hash. These checks establish collection
+integrity; they do not establish held-out accuracy or a successful coupled remedy.
+The owner approved artifact synchronization in [OQ-28](/Blog/tokamak-toolkit/decisions.qmd#oq-28). We checked remote privacy settings
+and downloaded every uploaded record by artifact identifier: [all 26 uploaded artifact records covering 18 distinct files match both remote SHA-256 metadata and downloaded bytes; the folder and private visibility match the approved request, and the offline payload queue is empty]{.claim}[C-184](/Blog/tokamak-toolkit/claims.qmd#c-184){.cid .st-measured}.
+Duplicate provenance sidecars are retained as distinct records; name-based retrieval is
+ambiguous for those duplicates. Downloads by identifier verify every record without
+changing the remote artifacts. Retraining and an improved closed-loop
+result remain pending. No new certificate or domain is deployed, and the 15% tolerance is unchanged.
+
+## Remaining acceptance work
+
+Formal certificates, conformal coverage, the EC coupled reference check, certificate-bound
+guards, CI proof reruns and the human certification review remain pending. Pedestal has no
+labelled split for conformal calibration and no local full-EPED physics reference.
+The owner prioritizes diagnosing and remediating the MAST-U closed-loop failure first ([OQ-25](/Blog/tokamak-toolkit/decisions.qmd#oq-25)).
+
+## Candidate replay preparation {#candidate-replay-preparation}
+
+[Entry 48](../log/48-mastu-candidate-replay-preparation.qmd) records R6 tooling.
+The runner supports an explicit immutable candidate directory while preserving default
+model selection. New trajectories record the full scenario configuration, source runner,
+model and metadata, scenario plan and equilibrium provenance. Preparation binds a source
+snapshot and checks every external input digest and environment version before execution.
+
+Reference reuse reconstructs the historical scenario from its checksum-bound runner and
+clean source revision. Physics/core/dataset modules and the scenario plan are byte-identical
+to that revision. Solver, fallback, wrapper post-processing and guard settings match recorded
+metadata; the candidate differs in its model path. Its previously audited box stays fixed.
+Historical metadata lacks the run index, but its bound runner selects the first scenario
+explicitly. External dependency bytes and a full resolved configuration were not recorded
+historically; the audit states that limitation and checks pinned/current versions instead
+of supplying retrospective hashes. Actual post-run configuration, grids, time points,
+provenance and finite convergence remain required.
+
+The formal comparison uses every candidate-served face, interpolating both profiles onto
+those coordinates and normalizing RMS difference by the candidate temperature mean. The
+report retains original served-mask counts, overlap and faces added/removed. A separate
+fixed-baseline-mask diagnostic evaluates the candidate temperatures on the old faces;
+it never replaces the formal mask. Whole-profile and both-adjacent-faces cell errors are
+retained. An isolated served face remains eligible for the formal metric even when the
+supplementary cell metric is unavailable. Existing comparison defaults are preserved.
+
+Accepted-state history captures generic guard features and raw coefficients before
+post-processing. Rejection diagnostics count model-domain violations, generic feature
+finiteness/box failures, nonfinite coefficients, negative diffusivities, excessive
+diffusivity and convection. Predicate counts overlap, so a separate priority partition
+provides counts that sum to the number of rejected face states. Candidate diagnostics
+must reproduce the saved raw predicate exactly. The historical replay lacks generic
+features; its unavailable predicate evidence stays explicit. These rates describe accepted
+states, not intermediate transport calls, and no fallback acceptance threshold is chosen.
+
+[40 focused checks pass in normal and Tier A modes; the two-step training-only candidate smoke is finite and reconstructs the raw accepted-state guard predicate exactly]{.claim}[C-188](/Blog/tokamak-toolkit/claims.qmd#c-188){.cid .st-tested} checks configuration/mask isolation, raw guard accounting, immutable
+package/input rejection and historical runner compatibility. A bounded two-step smoke uses
+a training equilibrium only and validates source-package execution, finite profiles and
+raw guard reconstruction. Saved baseline artifacts also reproduce the existing comparison
+exactly through the new report. No held-out candidate result or formal certificate is claimed.
+
+## Candidate replay result {#candidate-replay-result}
+
+[Entry 49](../log/49-mastu-replay-reference-coverage-fails.qmd) records the consumed
+owner-approved attempt. The bounded solver run completes finite and converged; actual
+scenario settings, time/radial grids and checksum-bound inputs match preparation.
+The comparison rejects reference coverage ([the single approved replay finishes in 65 seconds within its 240-second bound, with 40 finite converged steps and 146 passing integrity checks; comparison exits with a reference-coverage failure at candidate-served face 4, normalized radius 0.16]{.claim}[C-189](/Blog/tokamak-toolkit/claims.qmd#c-189){.cid .st-measured}). The saved physics
+trajectory used fallback at a candidate-served face. A formal temperature pass/fail
+cannot be computed against that reference under the existing contract. Its original
+success report is absent; a separate provenance-bound, read-only saved-output audit
+records the failure without executing another solver.
+
+Mask comparison retains every candidate face, added/removed faces and overlap. Descriptive
+distances to the saved hybrid physics/fallback trajectory use the same RMS normalization
+and are explicitly ineligible for acceptance. The fixed-baseline-mask comparison remains
+supplementary. All values and the electron regression remain visible: [candidate/baseline serve 15/13 faces with 11 overlapping; fixed-baseline-mask candidate T_e/T_i errors are 42.1252%/48.1182%, versus baseline 35.3331%/49.1458%; candidate whole-profile errors are 29.7365%/41.8856%, and own-mask descriptive distances to the hybrid reference are 29.8865%/40.0063%]{.claim}[C-190](/Blog/tokamak-toolkit/claims.qmd#c-190){.cid .st-preliminary}.
+No unfavorable face is removed and no criterion is replaced by a whole-profile metric.
+
+Accepted-state raw predicate reconstruction remains exact. Counts distinguish overlapping
+predicates from an exclusive partition: [candidate rejects 415/1040 accepted-state face records (39.9038%), versus baseline 466/1040 (44.8077%); exclusive candidate reasons are 341 model-box exits, 50 excessive diffusivities and 24 excessive convection values, with exact raw guard reconstruction]{.claim}[C-191](/Blog/tokamak-toolkit/claims.qmd#c-191){.cid .st-measured}. Model-domain exits produce
+nonfinite raw surrogate coefficients on rejected faces; no accepted coefficient is
+nonfinite. Historical generic-feature evidence is absent. These are accepted-state
+face records rather than intermediate transport-call counts; V10 sets no acceptance
+threshold yet.
+
+The historical reference contains no raw guard reasons, so its rejection cause cannot
+be reconstructed from its saved arrays. Diagnose reference admissibility before proposing
+new reference compute; rerunning an identical scenario does not ensure coverage. A separate
+single sampling experiment is proposed using training-only evidence, with unchanged original
+holdouts and physics. It needs a frozen implementation, checks, smoke and concrete resource
+review before fitting. Neither that proposal nor the consumed replay approves new compute,
+synchronization or model/guard replacement. [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) stays open; no formal proof is supplied.
+
+## Reference diagnostic preparation {#reference-diagnostic-preparation}
+
+The saved reference retains its final mask and finite profiles but lacks full solver
+inputs, raw coefficients and accepted-state reasons. Its log confirms settings and
+convergence; it does not distinguish an input-policy failure from a nonfinite,
+negative or excessive transport coefficient at the uncovered face. No cause is inferred.
+
+The prepared diagnostic preserves the scenario, physics sources, solver, guard and
+fallback. Each accepted state supplies full prepared inputs, worker-input validity,
+raw reference/fallback coefficients, generic features and the exact guard mask.
+Post-processing remains unchanged. Reporting retains all faces and both overlapping
+predicates and an exclusive guard partition. Input-policy invalidity is recorded
+separately; there is no surrogate model box on the TGLF reference. The last diagnostic
+supplies the final mask without an additional duplicate reference evaluation.
+
+[32 focused checks pass in each mode; a two-step synthetic training-equilibrium smoke is finite and reconstructs the raw guard exactly; all 77 source modules pass typing, and lint/format plus batch syntax pass]{.claim}[C-192](/Blog/tokamak-toolkit/claims.qmd#c-192){.cid .st-measured} checks input conversion, mask reconstruction, immutable source/input
+rejection, allocation refusal and failed-run artifact retention. A bounded synthetic
+training-equilibrium smoke exercises host stepping and the real input converter while
+forbidding physical TGLF calls. It also checks canonical paths through source-package
+symlinks and the full resolved configuration. This is tooling evidence, not new physical
+labels, TGLF cost or temperature acceptance.
+
+The source package freezes original inputs, candidate trajectory and dependency records.
+Numerical/input-stack distributions and the compiled TGLF extension/link closure are
+byte-bound; other installed distributions are version-bound. Historical missing dependency
+bytes remain explicit. A dedicated single diagnostic job, resource estimate from historical
+accounting and timeout limits were prepared for [OQ-31](/Blog/tokamak-toolkit/decisions.qmd#oq-31). That preparation is historical;
+the approved, consumed diagnostic is recorded below.
+Failure retains partial outputs and failed offline tracking; uploads require later review.
+
+If the diagnostic retains the uncovered face, it remains ineligible for the formal
+temperature criterion. Review the cause and any physically justified remedy before a
+new acceptance claim. The separate sampling experiment remains a proposal. Draft entry
+50 is retained in the private owner review copy. Current model/guard and [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) remain.
+
+## Reference diagnostic result {#reference-diagnostic-result}
+
+The owner-approved diagnostic is consumed. [the diagnostic completes in 517 seconds within its 30-minute bound, with 40 finite converged steps, exact historical temperature/density/poloidal-flux-profile and final-mask equality, and 171 passing saved-output integrity checks]{.claim}[C-193](/Blog/tokamak-toolkit/claims.qmd#c-193){.cid .st-measured} records its bounded
+completion and exact saved-profile/final-mask reproduction. The accepted-state
+history retains prepared inputs, raw transport and fallback coefficients, generic
+features and guards. Source/input/dependency and full resolved configuration bindings
+match the reviewed package; historical missing external dependency bytes stay missing.
+
+[final face 4 at normalized radius 0.16 has valid inputs but raw electron heat diffusivity -0.02792124888 m²/s; negative heat diffusivity rejects that face at 8 of 40 accepted states; reference rejection is 323/1040 accepted-state face records (31.0577%)]{.claim}[C-194](/Blog/tokamak-toolkit/claims.qmd#c-194){.cid .st-measured} explains the uncovered face. The prepared inputs pass the worker
+policy. Negative raw heat diffusivity fails the existing guard before diffusivity
+post-processing. The final rejection is electron heat diffusivity; earlier rejected
+states include ion heat diffusivity. No face or coefficient is removed, clipped or
+admitted to change reference coverage. Every worker-input and raw guard decision is
+reconstructed exactly. Accepted-state rejection reasons retain overlapping counts
+and an exclusive partition; they are not intermediate solver-call accounting or a
+fallback acceptance gate.
+
+The read-only audit uses the same diagnostic-report logic and checks artifact integrity,
+not independent physics validity. Exact historical array equality is checked separately.
+Completed offline local artifact copies match by checksum; synchronization still needs
+payload review. Draft entry 51 is retained in the private owner review copy.
+
+The saved raw coefficients follow the reference's flux-to-transport conversion; direct
+heat-flux and mode-resolved outputs were not retained. Signed transport's physical or
+numerical origin and any flux-preserving reference treatment require physics review
+([OQ-32](/Blog/tokamak-toolkit/decisions.qmd#oq-32)). Another identical run does not make the reference admissible. Formal candidate
+temperature acceptance remains not evaluable, [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) stays open and the current model/guard
+remain selected. The separate sampling proposal has no frozen fitting request.

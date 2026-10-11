@@ -1,0 +1,15 @@
+machine,pair,source,drop_rel_max,drop_rel_median_of_decreasing,fraction_decreasing_above_noise,fraction_drop_above_10pct,fraction_drop_above_1pct,fraction_drop_above_50pct,fraction_negative_slope_at_base,n_scans,mean_negative_fraction,mean_slope_p05,member_negative_fraction,n,n_cases,n_scans_capped_by_alpha_mhd,noise_bitwise_equal_fraction,noise_n_reruns,status_ok_fraction,core_s_per_case,commit,dirty
+mastu,Q_e_in_RLTS_1,tglf,1.00367,0.580094,0.771429,0.6,0.742857,0.4,0.228571,35,,,,,,,,,,,,
+mastu,Q_e_in_RLTS_1,ensemble,0.763,0.173557,0.2,0.114286,0.171429,0.0285714,0.0857143,35,,,,,,,,,,,,
+mastu,Q_e_in_RLTS_1,ensemble_test_slopes,,,,,,,,,0.0841554,-0.0664227,0.125399,8211,,,,,,,,
+mastu,Q_i_in_RLTS_2,tglf,18.9146,0.853547,0.8,0.771429,0.8,0.571429,0.342857,35,,,,,,,,,,,,
+mastu,Q_i_in_RLTS_2,ensemble,0.998973,0.469991,0.485714,0.371429,0.485714,0.228571,0.2,35,,,,,,,,,,,,
+mastu,Q_i_in_RLTS_2,ensemble_test_slopes,,,,,,,,,0.249759,-0.605843,0.270779,7267,,,,,,,,
+mastu,,scan_design,,,,,,,,,,,,,560,3,1,70,1,6.23499,476875d,True
+iter,Q_e_in_RLTS_1,tglf,0.985458,0.844246,0.514286,0.485714,0.485714,0.342857,0.142857,35,,,,,,,,,,,,
+iter,Q_e_in_RLTS_1,ensemble,0.856592,0.338706,0.228571,0.2,0.228571,0.0857143,0.0285714,35,,,,,,,,,,,,
+iter,Q_e_in_RLTS_1,ensemble_test_slopes,,,,,,,,,0.112428,-0.304146,0.138757,7934,,,,,,,,
+iter,Q_i_in_RLTS_2,tglf,3.64904,0.915237,0.742857,0.685714,0.742857,0.571429,0.257143,35,,,,,,,,,,,,
+iter,Q_i_in_RLTS_2,ensemble,0.984015,0.229051,0.371429,0.257143,0.342857,0.171429,0.171429,35,,,,,,,,,,,,
+iter,Q_i_in_RLTS_2,ensemble_test_slopes,,,,,,,,,0.219309,-1.02523,0.242287,6826,,,,,,,,
+iter,,scan_design,,,,,,,,,,,,,560,6,1,70,1,6.23499,476875d,True

@@ -1,0 +1,76 @@
+---
+title: 'Dataset v3: TGLF inputs along TORAX trajectories'
+date: '2026-10-03'
+categories:
+- built
+entry: 22
+milestone: M3
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 22 · milestone M3
+:::
+
+<!-- Results complete and audited 2026-10-07; retained as a draft for owner review and the
+existing amber disclosure review. -->
+
+The version 1 datasets fill a uniform box of TGLF inputs, most of it far from the plasmas the
+coupled simulation produces ([entry 19](19-active-learning-round-1.qmd)). [OQ-19](/Blog/tokamak-toolkit/decisions.qmd#oq-19) decided that
+dataset v3 samples where the loop goes: TGLF inputs taken from TORAX states along simulated
+trajectories, one family of scenarios per machine. The accuracy target, a median relative
+error of 0.30 on $Q_e$ and $Q_i$, is measured on v3's held-out split.
+
+## Scenario families and states
+
+For ITER we run three TORAX examples, the RAPTOR L-mode benchmark of M1, the ITER hybrid
+flat-top and the ITER current ramp-up, with heating power and density scaled up and down, and
+with the case's own transport model or Bohm/gyro-Bohm. For MAST-U there is no TORAX example, so
+we run TORAX on FreeGSNKE MAST-U-like free-boundary equilibria: eight equilibria chosen to spread
+over the 42 of M2, two Bohm/gyro-Bohm strengths, two heating powers, two densities, with and
+without a pedestal. The profiles are simulated, not measured; no experimental data are used.
+Runs: [128 MAST-U runs and 39 ITER runs, all completed; 32 and 8 of them held out for the test split]{.claim}[C-124](/Blog/tokamak-toolkit/claims.qmd#c-124){.cid .st-measured}.
+
+At every second output state, TORAX's own TGLF input builder gives the TGLF inputs on every
+face, exactly what a TGLF-type transport model receives inside the loop. The geometry inputs
+then come with the profiles from the same equilibrium, jointly, which removes the combinations
+no equilibrium has (ceiling [K-018](/Blog/tokamak-toolkit/ceilings.qmd#k-018)) from v3.
+
+A face becomes a v3 state if it lies inside the region approved for M2: the kinetic ranges, the
+radial window and the α~MHD~ cap ([OQ-16](/Blog/tokamak-toolkit/decisions.qmd#oq-16)), with the ITER collisionality range widened for v3 by
+the owner ([OQ-20](/Blog/tokamak-toolkit/decisions.qmd#oq-20), 2). The measured M2 geometry ranges are counted but do not exclude a state,
+because the geometry now comes from the equilibria themselves: [MAST-U 115722 of 124032 faces (93%); ITER 68978 of 79344 (87%)]{.claim}[C-125](/Blog/tokamak-toolkit/claims.qmd#c-125){.cid .st-measured}. Where the
+loop goes beyond the M2 ranges, input by input: [MAST-U: triangularity shear 41%, triangularity 12.5%, q 6.5%, magnetic shear 5.6%, collisionality 5%, beta_e 2%; ITER: a/L_Te 11%, a/L_Ti 10%, triangularity shear 5%, magnetic shear 3%, T_i/T_e 2%, collisionality 1%; every other input below 2%]{.claim}[C-126](/Blog/tokamak-toolkit/claims.qmd#c-126){.cid .st-measured}. On ITER the excluded faces
+are mostly steeper temperature gradients than the approved range; they are not in v3, so a
+surrogate trained on it does not cover them either.
+
+## Held-out runs and perturbation
+
+The test split is made of whole runs that training never sees. For MAST-U these are all runs on
+two of the eight equilibria, so the test shapes are new. Test points are the held-out states as
+they are, because the target is to be met on the distribution the loop produces. Training points
+are a quarter unperturbed states and three quarters copies of states with their kinetic inputs
+perturbed: temperature gradients, $T_i/T_e$, $\beta_e$ and collisionality multiplied by
+log-normal factors, the density gradient and $Z_\mathrm{eff}$ shifted, and the flow shear, which
+TORAX's TGLF-type models set to zero, drawn from its approved range in half of the copies. The
+geometry of a copy is never perturbed. Copies outside the region are redrawn:
+[90000 training points (22500 unperturbed) and 10000 test points per machine; more than 99.99% of perturbed copies fell inside the region at the first draw]{.claim}[C-127](/Blog/tokamak-toolkit/claims.qmd#c-127){.cid .st-measured}.
+
+## TGLF labels
+
+The labels are complete: [90000 training cases and 10000 held-out test cases per machine, all completed with finite fluxes]{.claim}[C-128](/Blog/tokamak-toolkit/claims.qmd#c-128){.cid .st-measured}. Their recorded cost is
+[MAST-U: 58.03 case-hours (train), 5.45 (test); ITER: 63.43 (train), 5.62 (test)]{.claim}[C-136](/Blog/tokamak-toolkit/claims.qmd#c-136){.cid .st-measured}; these are sums over individual cases, not elapsed job times.
+The audit replays the sampling from the recorded plans and saved trajectories, checks that
+the labelled inputs equal those points, and verifies dataset hashes. For MAST-U, the plan
+changed after assembly; its original hash matches the recorded commit. The versioned points
+are kept as produced.
+
+M3 is in progress: the structured ensembles have been trained and scored on the completed v3
+test split. Their accuracy and remaining coupled-loop checks are the next entry.
+
+Technical details → [Surrogates: dataset v3](../technical/surrogates.qmd#dataset-v3).
+Decisions → [OQ-19](../decisions.qmd#oq-19), [OQ-20](../decisions.qmd#oq-20).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › dataset v3](/Blog/tokamak-toolkit/technical/surrogates.qmd#dataset-v3)  
+**Decisions →** [OQ-19](/Blog/tokamak-toolkit/decisions.qmd#oq-19) · [OQ-20](/Blog/tokamak-toolkit/decisions.qmd#oq-20)
+:::

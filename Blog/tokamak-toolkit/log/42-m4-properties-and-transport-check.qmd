@@ -1,0 +1,59 @@
+---
+title: 'Verification begins: ITER passes the transport check; MAST-U misses it'
+date: '2026-10-11'
+categories:
+- measured
+- decision
+- negative
+entry: 42
+milestone: M4
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} [decision]{.chip .decision} [negative result]{.chip .negative} Entry 42 · milestone M4
+:::
+
+M4 asks three different questions: what the networks can be proved to do throughout an
+input box, whether calibrated intervals cover held-out reference outputs, and how closely
+the coupled simulation follows the physics code. The owner has chosen the properties and
+tolerances. This continuation writes those contracts and checks the existing transport runs.
+
+**Making proofs reproducible.** The owner approved storing the selected models and explicit
+input boxes with the code, so CI can access them. A hash manifest checks the stored files;
+it is not a proof certificate. The owner also approved auto_LiRPA, the bounding engine, with
+input-box splitting. The full alpha,beta-CROWN package remains a fallback if needed.
+
+**Copies for the verifier.** The new PyTorch exporters reproduce preprocessing, each member
+network and the physical output transforms. Two averaging details matter: transport averages
+in signed-log space before mapping back to flux; EC averages raw outputs before applying its
+physical clamps. Strict relative-only comparison exposed rounding near zero, also present
+between eager and compiled JAX. The owner approved an explicit mixed floating-point
+criterion, and [13 export checks pass in each mode: all selected members, random box points, local holdouts, physical transforms and served means, with rtol=1e-12 and atol=1e-12 in each declared output unit]{.claim}[C-180](/Blog/tokamak-toolkit/claims.qmd#c-180){.cid .st-tested}. No formal proof is claimed by numerical parity.
+
+**Properties written down.** [six property contracts load; 14 property-validation tests pass in each mode, including malformed-domain, tolerance and output-schema rejection]{.claim}[C-177](/Blog/tokamak-toolkit/claims.qmd#c-177){.cid .st-tested}. The contracts name the model, output units,
+domain source, statement and owner decision. A loader rejects incomplete or malformed
+contracts. Passing these software checks means the contracts can be read reliably, not that
+their statements have been proved.
+
+**The coupled transport check.** The saved matched runs provide a result without a new
+compute job. Temperatures live at cell centres; the guard says which faces the surrogate
+serves. Both profiles are interpolated onto those same served faces before comparing them.
+The full-profile errors and a conservative cell restriction are also retained.
+
+| machine | served-face comparison with TGLF | result |
+|---|---|---|
+| ITER | [served-face T_e 7.42%, T_i 8.18%, both passing the 15% limit; whole profile 7.72/9.23%; 34 of 51 final-state faces served]{.claim}[C-178](/Blog/tokamak-toolkit/claims.qmd#c-178){.cid .st-measured} | passes the chosen limit |
+| MAST-U | [served-face T_e 35.33%, T_i 49.15%, both failing 15%; whole profile 41.51/62.39%; cells with both adjacent faces served give 11.86/23.24%, still failing T_i; 13 of 26 final-state faces served]{.claim}[C-179](/Blog/tokamak-toolkit/claims.qmd#c-179){.cid .st-measured} | fails the chosen limit |
+
+The MAST-U result becomes ceiling [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030). Selecting only cells with two served adjacent faces
+still leaves ion temperature outside the limit. The final-state mask does not count every
+fallback call during the run. No tolerance was changed.
+
+The owner prioritized MAST-U remediation before further proofs and calibration. The failed
+accuracy criterion remains explicit, with its tolerance unchanged. The
+[M4 page](../milestones/M4.qmd) records the work still required.
+
+::: {.entry-links}
+**Technical details →** [Verification › exports](/Blog/tokamak-toolkit/technical/verification.qmd#exports) · [Verification › closed loop](/Blog/tokamak-toolkit/technical/verification.qmd#closed-loop)  
+**Decisions →** [OQ-23](/Blog/tokamak-toolkit/decisions.qmd#oq-23) · [OQ-24](/Blog/tokamak-toolkit/decisions.qmd#oq-24) · [OQ-25](/Blog/tokamak-toolkit/decisions.qmd#oq-25) · [OQ-26](/Blog/tokamak-toolkit/decisions.qmd#oq-26)
+:::

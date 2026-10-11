@@ -1,0 +1,44 @@
+---
+title: MAST-U retraining preparation preserves the existing holdouts
+date: '2026-10-11'
+categories:
+- built
+entry: 46
+milestone: M4
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 46 · milestone M4
+:::
+
+The completed feedback-label collection now has a separate retraining configuration.
+Its source stays at the recorded location. An optional path mapping extends the loader,
+while existing configurations keep their previous paths and split rules.
+
+The preparation freezes source hashes, original split indices and feedback-row lineage.
+It compares retained training rows with held-out rows using exact model-feature and
+common solver-input matches. The audit found no cross-split duplicates. The new source
+is training-only. Its case coordinates and equilibrium identities remain attached to
+the original full solver inputs.
+
+The model's feature definitions, signed-log output transform, heat-flux clipping,
+stability penalty and required monotonicity remain the same. Normalization will be
+recomputed from the augmented training rows. That expected difference is recorded;
+the declared physical input box stays fixed.
+
+The focused checks and bounded local smoke pass: [55 focused checks pass in both normal and Tier A modes; the bounded training-only smoke produces finite predictions and reloads exactly]{.claim}[C-185](/Blog/tokamak-toolkit/claims.qmd#c-185){.cid .st-tested}. The smoke uses
+training rows for both fitting and its internal checkpoint fixture. Its output is finite
+and reloads exactly. These are tooling checks, not held-out accuracy results.
+
+The dedicated batch script runs a single MAST-U candidate from a checksummed source
+snapshot. It records actual source sampling, selected checkpoint epochs, history and
+provenance. A concrete allocation request is ready for the owner. Production training
+has not run, and [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) remains open.
+
+**What's next.** Review the compute request, then evaluate any approved candidate against
+the unchanged offline and coupled criteria before a model decision.
+
+::: {.entry-links}
+**Technical details →** [Surrogates › m4 feedback preparation](/Blog/tokamak-toolkit/technical/surrogates.qmd#m4-feedback-preparation)  
+**Decisions →** [OQ-29](/Blog/tokamak-toolkit/decisions.qmd#oq-29)
+:::

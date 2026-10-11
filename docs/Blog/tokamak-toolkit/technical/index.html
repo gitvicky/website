@@ -189,22 +189,22 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="sections">Sections</h2>
 <p>In roughly the order you would build the system:</p>
 <ol type="1">
-<li><a href="../../../Blog/tokamak-toolkit/technical/invariants.html">Invariants and environment</a>: precision, units, coordinates, purity, the open/gated split and how each rule is enforced; versions and build notes.</li>
-<li><a href="../../../Blog/tokamak-toolkit/technical/core-state.html">Core state and interfaces</a>: the data structures, the model contract, input domains and features.</li>
-<li><a href="../../../Blog/tokamak-toolkit/technical/transport-solver.html">Transport solver</a>: the implicit finite-volume step.</li>
-<li><a href="../../../Blog/tokamak-toolkit/technical/coupling-loop.html">Coupling loop</a>: the fixed point per time step, Newton and Picard, the corrector solve, and the fixed-step driver over TORAX.</li>
-<li><a href="../../../Blog/tokamak-toolkit/technical/backends.html">Backends</a>: TORAX, FreeGSNKE, ASCOT5, Aurora.</li>
-<li><a href="../../../Blog/tokamak-toolkit/technical/physics-models.html">Physics models</a>: the analytic Tier A models and the Gaussian RF source.</li>
-<li><a href="../../../Blog/tokamak-toolkit/technical/guard.html">Guard and fallback</a>: the per-point decision, in the core loop and inside TORAX.</li>
-<li><a href="../../../Blog/tokamak-toolkit/technical/imas-adapters.html">IMAS adapters</a>: mapping tables and conversions.</li>
-<li><a href="../../../Blog/tokamak-toolkit/technical/provenance.html">Provenance and tracking</a>.</li>
-<li><a href="../../../Blog/tokamak-toolkit/technical/tests.html">Tests</a>: what each category proves, with counts.</li>
-<li><a href="../../../Blog/tokamak-toolkit/technical/datasets.html">Datasets</a>: TGLF, the sampling space per machine, the version 1 datasets and their domain against the measured equilibria.</li>
-<li><a href="surrogates.qmd">Surrogates</a>: the baseline ensembles, the recreated TGLF-NN network, output scaling, learning curves, active learning round 1, and the heat-flux sign (M3, in progress).</li>
+<li><p><a href="../../../Blog/tokamak-toolkit/technical/invariants.html">Invariants and environment</a>: precision, units, coordinates, purity, the open/gated split and how each rule is enforced; versions and build notes.</p></li>
+<li><p><a href="../../../Blog/tokamak-toolkit/technical/core-state.html">Core state and interfaces</a>: the data structures, the model contract, input domains and features.</p></li>
+<li><p><a href="../../../Blog/tokamak-toolkit/technical/transport-solver.html">Transport solver</a>: the implicit finite-volume step.</p></li>
+<li><p><a href="../../../Blog/tokamak-toolkit/technical/coupling-loop.html">Coupling loop</a>: the fixed point per time step, Newton and Picard, the corrector solve, and the fixed-step driver over TORAX.</p></li>
+<li><p><a href="../../../Blog/tokamak-toolkit/technical/backends.html">Backends</a>: TORAX, FreeGSNKE, ASCOT5, Aurora.</p></li>
+<li><p><a href="../../../Blog/tokamak-toolkit/technical/physics-models.html">Physics models</a>: the analytic Tier A models and the Gaussian RF source.</p></li>
+<li><p><a href="../../../Blog/tokamak-toolkit/technical/guard.html">Guard and fallback</a>: the per-point decision, in the core loop and inside TORAX.</p></li>
+<li><p><a href="../../../Blog/tokamak-toolkit/technical/imas-adapters.html">IMAS adapters</a>: mapping tables and conversions.</p></li>
+<li><p><a href="../../../Blog/tokamak-toolkit/technical/provenance.html">Provenance and tracking</a>.</p></li>
+<li><p><a href="../../../Blog/tokamak-toolkit/technical/tests.html">Tests</a>: what each category proves, with counts.</p></li>
+<li><p><a href="../../../Blog/tokamak-toolkit/technical/datasets.html">Datasets</a>: TGLF, the sampling space per machine, the version 1 datasets and their domain against the measured equilibria.</p></li>
+<li><p><a href="../../../Blog/tokamak-toolkit/technical/surrogates.html">Surrogates</a>: the baseline ensembles, the recreated TGLF-NN network, output scaling, learning curves, active learning round 1, and the heat-flux sign (M3, in progress).</p></li>
+<li><p><a href="../../../Blog/tokamak-toolkit/technical/verification.html">Verification</a>: checked exports, property contracts and saved-run closed-loop comparison. Proof certificates and calibrated intervals remain pending.</p></li>
 </ol>
 <p>Not yet built (one line each until their milestone arrives):</p>
 <ul>
-<li><strong>Verification</strong> (M4): properties proved over input boxes, conformal calibration, closed-loop comparison against the Tier A model, one certificate per surrogate.</li>
 <li><strong>Uncertainty propagation</strong> (M5): Monte Carlo over ensemble members and sampled inputs, linearised propagation cross-checked against it, sensitivity ranking, Bayesian calibration.</li>
 </ul>
 </section>

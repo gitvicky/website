@@ -13,19 +13,13 @@ context and a recommended answer, carries on with whatever isn't blocked, and wa
 
 ## Awaiting a decision
 
-### OQ-21 · RF and pedestal references {#oq-21}
+### OQ-32 · Reference treatment for signed heat transport {#oq-32}
 
-Reference, model and channel choices have been recorded. The EC baseline and ITER pedestal
-port can proceed independently; launch/current conventions and the coupled pedestal
-boundary mapping remain owner decisions. The prescribed MAST-U pedestal remains, with
-predictive closure deferred; IC is deferred.
-
-The original ITER deck was selected for a bounded numerical pilot, which is now
-complete ([the corrected EC reference completes in 83.16 s with readable native profiles]{.claim}[C-156](/Blog/tokamak-toolkit/claims.qmd#c-156){.cid .st-measured}). Its numerical accounting and saved-reference
-comparison precede any physical acceptance. Production source conversion,
-conservative radial mapping, fallback/rejection rules, grouped sampling and its
-budget still need to be recorded. The pilot write-up is draft entry 34 in the
-private review copy.
+The diagnostic identifies negative raw heat diffusivity with valid solver inputs
+([final face 4 at normalized radius 0.16 has valid inputs but raw electron heat diffusivity -0.02792124888 m²/s; negative heat diffusivity rejects that face at 8 of 40 accepted states; reference rejection is 323/1040 accepted-state face records (31.0577%)]{.claim}[C-194](/Blog/tokamak-toolkit/claims.qmd#c-194){.cid .st-measured}). Its physical/numerical origin and a physically justified
+reference treatment need review. Keep the current guard and reference admissibility
+criterion while reviewing the source/input evidence. New collection, remedies and
+matched acceptance compute need separate concrete reviews.
 
 ### OQ-17 · Package licence metadata {#oq-17}
 
@@ -33,6 +27,118 @@ What licence text the package metadata should carry while no release licence is 
 remains open. It blocks nothing while the code is private.
 
 ## Settled
+
+### OQ-31 · Reference diagnostic compute {#oq-31}
+
+*Decided 11 Oct 2026.* Approve the exact prepared diagnostic once. It completes
+and reproduces the historical profiles/mask ([the diagnostic completes in 517 seconds within its 30-minute bound, with 40 finite converged steps, exact historical temperature/density/poloidal-flux-profile and final-mask equality, and 171 passing saved-output integrity checks]{.claim}[C-193](/Blog/tokamak-toolkit/claims.qmd#c-193){.cid .st-measured}); signed heat
+transport explains the uncovered face ([final face 4 at normalized radius 0.16 has valid inputs but raw electron heat diffusivity -0.02792124888 m²/s; negative heat diffusivity rejects that face at 8 of 40 accepted states; reference rejection is 323/1040 accepted-state face records (31.0577%)]{.claim}[C-194](/Blog/tokamak-toolkit/claims.qmd#c-194){.cid .st-measured}). The diagnostic approval
+is consumed. It approves no reference remedy, fitting, new candidate replay,
+synchronization or replacement. Formal R6 acceptance remains not evaluable.
+
+### OQ-30 · Candidate coupled replay {#oq-30}
+
+*Decided 11 Oct 2026.* Approve the exact bounded local CPU replay once after its
+source and reference preparation. Its solver completes, but the comparison refuses
+saved-reference coverage at a candidate-served face ([the single approved replay finishes in 65 seconds within its 240-second bound, with 40 finite converged steps and 146 passing integrity checks; comparison exits with a reference-coverage failure at candidate-served face 4, normalized radius 0.16]{.claim}[C-189](/Blog/tokamak-toolkit/claims.qmd#c-189){.cid .st-measured};
+[entry 49](log/49-mastu-replay-reference-coverage-fails.qmd)). The attempt is consumed;
+no retry or new reference compute is approved. [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) and the current model/guard
+remain in place, with follow-up experiments and replacement requiring review.
+
+### OQ-29 · MAST-U candidate training compute {#oq-29}
+
+*Decided 11 Oct 2026.* Approve the prepared bounded candidate-training experiment after
+split/lineage checks and the training-only smoke
+([entry 46](log/46-mastu-retraining-preparation.qmd)). Synchronization, new coupled
+reference compute and model replacement remain separate reviews. The single approved
+job completed and passes its integrity audit ([entry 47](log/47-mastu-candidate-trained-and-checked.qmd));
+local offline checks are recorded, with coupled revalidation pending.
+
+### OQ-28 · Private refresh artifact synchronization {#oq-28}
+
+*Decided 11 Oct 2026.* Approve the reviewed private upload for the completed refresh.
+Remote artifact checksums and downloaded bytes match ([all 26 uploaded artifact records covering 18 distinct files match both remote SHA-256 metadata and downloaded bytes; the folder and private visibility match the approved request, and the offline payload queue is empty]{.claim}[C-184](/Blog/tokamak-toolkit/claims.qmd#c-184){.cid .st-measured}), and the
+run remains private. This approval covers synchronization; training remains separate work.
+
+### OQ-27 · Bounded MAST-U remediation compute {#oq-27}
+
+*Decided 11 Oct 2026.* Approve one bounded training-only feedback label refresh after
+the failure diagnosis, keeping both test equilibria excluded. The approval covers label
+collection; training and model or guard replacement remain separate work.
+
+### OQ-26 · Floating-point export parity {#oq-26}
+
+*Decided 11 Oct 2026.* Keep the relative allowance and add an explicit absolute allowance
+in each declared output unit (including signed-log training space), after diagnosing
+cancellation near zero. The selected criterion passes: [13 export checks pass in each mode: all selected members, random box points, local holdouts, physical transforms and served means, with rtol=1e-12 and atol=1e-12 in each declared output unit]{.claim}[C-180](/Blog/tokamak-toolkit/claims.qmd#c-180){.cid .st-tested}. No physics
+or closed-loop tolerance changed.
+
+### OQ-25 · MAST-U remediation first {#oq-25}
+
+*Decided 11 Oct 2026.* Prioritize diagnosing and remediating the failed MAST-U transport
+comparison ([served-face T_e 35.33%, T_i 49.15%, both failing 15%; whole profile 41.51/62.39%; cells with both adjacent faces served give 11.86/23.24%, still failing T_i; 13 of 26 final-state faces served]{.claim}[C-179](/Blog/tokamak-toolkit/claims.qmd#c-179){.cid .st-measured}), with the chosen limit unchanged. A new compute request
+requires separate approval after a concrete remedy is prepared.
+
+### OQ-24 · Verification engine {#oq-24}
+
+*Decided 11 Oct 2026.* Use auto_LiRPA with input-box splitting, keeping a patched
+alpha,beta-CROWN package as a fallback if local-robustness proofs are too slow.
+Certificates will name the actual engine and pinned version. Gurobi is not installed.
+
+### OQ-23 · Model storage for CI {#oq-23}
+
+*Decided 11 Oct 2026.* Store the selected model versions, explicit input boxes and their
+certificates with the code. CI will re-prove the quick properties and fail on mismatched
+model/certificate digests. The training datasets are not required to read the stored boxes.
+
+### OQ-22 · Properties, coverage and tolerances for verification {#oq-22}
+
+*Decided 11 Oct 2026.* M4 proves properties of the surrogates over input boxes, calibrates
+their uncertainty and compares closed-loop trajectories with the physics codes; the brief
+leaves the choice of properties to the owner.
+
+**Decision.** The owner accepted the agent's recommendations. Transport: heat flux
+non-decreasing in its temperature gradient, certified output bounds over the training box, and
+local robustness on sub-boxes around the loop's states. EC: certified bounds of current, centres
+and widths per launcher, and the heating centre moving by at most 0.05 for input changes of one
+percent of their ranges. ITER pedestal: certified bounds of pressure and width around the ITER
+states TORAX visits. Calibrated intervals with 90% coverage. Closed-loop tolerances: transport
+within 15% of TGLF on the radii the surrogate serves, EC within 10% of GENRAY on sampled loop
+states. The original verification tool was alpha,beta-CROWN on checked PyTorch copies;
+[OQ-24](/Blog/tokamak-toolkit/decisions.qmd#oq-24) selects auto_LiRPA with input splitting instead.
+
+
+### OQ-21 · RF and pedestal references {#oq-21}
+
+*Decided 10 Oct 2026.* Reference, model and channel
+choices were recorded on 8 Oct: GENRAY for EC heating and current drive, and the pretrained
+EPEDNN network for the ITER pedestal. The prescribed MAST-U pedestal remains, with predictive
+closure deferred; IC is deferred. A bounded numerical pilot of the original ITER deck
+completed ([the corrected EC reference completes in 83.16 s with readable native profiles]{.claim}[C-156](/Blog/tokamak-toolkit/claims.qmd#c-156){.cid .st-measured}).
+
+**Question (8 Oct).** How do the reference outputs become labels and TORAX inputs: the
+current-drive method, heating channels, the current definition and its sign, the radial
+mapping, the pedestal branch, temperature split, density, pedestal-top location and the
+fallbacks; and what to label first.
+
+**Decision (10 Oct).** The owner accepted the agent's recommendations as written. EC: the
+deck's adjoint current drive, with the momentum-conserving method as a check on a few cases;
+electron heating from both channels, kept separately; current as GENRAY's flux-surface average
+of $j \cdot B$ over $B_0$, the same $B_0$ as TORAX's, signed positive along the plasma current;
+a remap that keeps every cell's heating and current integrals; labels per MW injected; the
+Gaussian EC model fitted to the labels as fallback; targets after a baseline. Pedestal: both
+diamagnetic corrections, solution 0; equal ion and electron temperatures; the prescribed
+density; top at one minus twice the half-width in poloidal flux, mapped through the
+equilibrium; the prescribed pedestal as fallback. The first EC dataset samples ITER states from
+the transport dataset's TORAX runs, with two launcher families
+([entry 36](log/36-ec-and-pedestal-contracts.qmd)).
+
+**Targets and [K-028](/Blog/tokamak-toolkit/ceilings.qmd#k-028) (10 Oct, later).** The owner accepted the recommended EC targets: absorbed
+power and driven current within a median relative error of one tenth, heating centre within
+0.05 in radius, on held-out runs. For [K-028](/Blog/tokamak-toolkit/ceilings.qmd#k-028) the owner chose to drop states whose current is
+far from the equilibrium's, and approved compute for the structured model. The structured
+EC surrogate meets all three targets ([entry 38](log/38-structured-ec-surrogate.qmd)).
+
 
 ### OQ-20 · Monotonicity where TGLF is not monotone; the ITER collisionality range {#oq-20}
 

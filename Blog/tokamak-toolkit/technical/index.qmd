@@ -36,10 +36,11 @@ In roughly the order you would build the system:
 12. [Surrogates](surrogates.qmd): the baseline ensembles, the recreated TGLF-NN network, output
     scaling, learning curves, active learning round 1, and the heat-flux sign (M3, in progress).
 
+13. [Verification](verification.qmd): checked exports, property contracts and saved-run
+    closed-loop comparison. Proof certificates and calibrated intervals remain pending.
+
 Not yet built (one line each until their milestone arrives):
 
-- **Verification** (M4): properties proved over input boxes, conformal calibration,
-  closed-loop comparison against the Tier A model, one certificate per surrogate.
 - **Uncertainty propagation** (M5): Monte Carlo over ensemble members and sampled inputs,
   linearised propagation cross-checked against it, sensitivity ranking, Bayesian calibration.
 

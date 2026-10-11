@@ -339,7 +339,7 @@ ul.task-list li input[type="checkbox"] {
 <td class="cid-cell">K-022</td>
 <td>transport-surrogate</td>
 <td>the TGLF surrogate inside TORAX's Newton solver evaluates all 20 members on every face, including faces the guard hands to the fallback</td>
-<td>about 2 s per Newton step on one core: the RAPTOR L-mode case takes 374-405 s against 29 s with QLKNN (14x slower end to end), although one surrogate call is 3.3e4 times faster than TGLF (3.1 ms against 103 s for 51 faces). Final v3 locally takes 60.58 s for 40 tightly converged Newton steps (median 1.47 s), while isolated 51-face inference takes 4.36 ms. A three-step execution trace is captured; fused HLO labels have not yet separated ensemble inference from Jacobian construction. The offline interval-union audit (C-148) confirms that all HLO events share one fused module and runtime source; component attribution remains unresolved</td>
+<td>about 2 s per Newton step on one core: the RAPTOR L-mode case takes 374-405 s against 29 s with QLKNN (14x slower end to end), although one surrogate call is 3.3e4 times faster than TGLF (3.1 ms against 103 s for 51 faces). Final v3 locally takes 60.58 s for 40 tightly converged Newton steps (median 1.47 s), while isolated 51-face inference takes 4.36 ms. A three-step execution trace is captured; fused HLO labels have not yet separated ensemble inference from Jacobian construction. The offline interval-union audit (C-148) confirms that all HLO events share one fused module and runtime source; component attribution remains unresolved. With the linear predictor-corrector solver (job 2650336, RAPTOR L-mode, 40 steps, compilation excluded) final v3 takes 1.25 s against 0.117 s with QLKNN (10.7x) and 539 s with TGLF on 51 workers</td>
 <td>profile the Newton step (Jacobian through the ensemble), then evaluate only guarded faces, fewer members in the Jacobian, or a linear/predictor-corrector solver</td>
 <td><span class="badge st-open">open</span></td>
 </tr>
@@ -378,10 +378,42 @@ ul.task-list li input[type="checkbox"] {
 <tr id="k-027" class="odd">
 <td class="cid-cell">K-027</td>
 <td>rf-pedestal-surrogates</td>
-<td>response training uses synthetic fixtures; the owner-selected pretrained ITER pedestal model is ported and checked numerically; the EC reader is checked on synthetic files and one saved upstream output, and the pilot lifecycle uses fake executables; the first external EC reference attempt stops at an unsupported plotting device before scientific output; after an isolated alias correction, one numerical pilot completes with readable native output and descriptive accounting/comparison checks, while physical acceptance and plotted-content parity remain unestablished; EC labels and coupled adapters remain unfinished. The selected single network has no ensemble-spread estimate</td>
-<td>no new reference-physics accuracy, coupled pedestal validation or response speed-up is established; whole-profile selection alone does not enforce absorbed power or the driven-current convention. MAST-U predictive pedestal and IC are deferred by the owner</td>
-<td>settle EC launch/current and ITER boundary contracts, label grouped EC cases, set targets after a baseline, train EC ensembles and integrate both responses into TORAX; validate coupled derivatives, balance, fallback and matched cost, then calibrate at M4</td>
+<td>the EC surrogate learns one code (GENRAY) with one equilibrium (K-028) and one ray per case; the ITER pedestal is the selected pretrained EPEDNN network, used as is</td>
+<td>EC accuracy holds on held-out runs of the training family (C-168); outside the training box (for example core T_e above the largest training value) the Gaussian fallback serves the source, so central EC at high power falls back on part of a trajectory. EPEDNN has no ensemble spread; its input box and range checks are the only guard. Neither model's spread or error is calibrated (M4). MAST-U predictive pedestal and IC are deferred by the owner</td>
+<td>wider EC sampling (beam width, equilibria per state, higher T_e), calibration at M4, and a MAST-U pedestal reference if the owner adds one</td>
 <td><span class="badge st-open">open</span></td>
+</tr>
+<tr id="k-028" class="even">
+<td class="cid-cell">K-028</td>
+<td>rf-dataset</td>
+<td>every EC dataset v1 case traces rays through one equilibrium (the upstream deck's 15 MA ITER EQDSK); only T_e, n_e and Z_eff come from the TORAX state</td>
+<td>states whose own geometry or current differ from 15 MA get labels for an inconsistent plasma; all 27 cases above 60 kA/MW (up to 279 kA/MW) are early ramp-up states at t = 8 s (T_e0 16-41 keV, n_e0 1.3e19 m^-3, I_p about 3-4 MA in TORAX). The collisional heating channel is zero in every case (not enabled in the deck)</td>
+<td>write an EQDSK per state from the TORAX geometry, or restrict EC states to those near the equilibrium's current and shape. Restriction applied 2026-10-10 (owner, option b) for the structured EC dataset, states with prescribed I_p of at least 10 MA (2910 of 3120 cases); the remaining states (10.5-11.5 MA, different shape) still use the 15 MA equilibrium</td>
+<td><span class="badge st-open">open</span></td>
+</tr>
+<tr id="k-029" class="odd">
+<td class="cid-cell">K-029</td>
+<td>transport-surrogate</td>
+<td>the MAST-U v3 surrogate in TORAX's Newton solver from dataset-v3 initial states</td>
+<td>Newton reaches TORAX's default tolerance on every step only at small steps for some equilibria (eq57 at 0.5 ms); at the runs' 5 ms steps the first step does not converge and at 1 ms steps are accepted at the coarse tolerance. The runs' own linear predictor-corrector converges on every step at 5 ms. The initial states are not in equilibrium (native Bohm/gyro-Bohm transport raises core T_e by about 0.1 keV per 5 ms step)</td>
+<td>start Newton from an equilibrated state, adaptive steps with retry, or a smoother surrogate near the guard boundary</td>
+<td><span class="badge st-open">open</span></td>
+</tr>
+<tr id="k-030" class="even">
+<td class="cid-cell">K-030</td>
+<td>transport-surrogate</td>
+<td>final monotone v3 MAST-U surrogate serves half the faces at the final accepted state</td>
+<td>M4 V8 saved matched run 2650876 fails the unchanged 15% closed-loop limit: served-face NRMSD T_e 35.3331%, T_i 49.1458%. Both cell-centred profiles are interpolated to the guard faces. Whole-profile errors are 41.5052/62.3861%; using only cells with both adjacent faces served gives 11.8629/23.2419%, still failing ion temperature. This mask is a final-state diagnostic, not trajectory fallback-call accounting. ITER passes at 7.4235/8.1840%. The approved feedback-candidate replay completes finite and converged, but its formal comparison cannot reuse the saved reference: candidate-served face 4 (rho 0.16) uses reference fallback. Candidate fixed-baseline-mask errors 42.1252/48.1182% retain the electron regression; own-mask descriptive distances against the hybrid trajectory are not acceptance metrics. Current model/guard remain selected. The consumed OQ-31 diagnostic reproduces the historical profiles/mask exactly. Final face 4 has valid inputs but negative raw electron heat diffusivity; reference coverage remains ineligible. The physical/numerical origin and reference remedy remain unresolved (OQ-32).</td>
+<td>MAST-U model/domain remediation and a new matched comparison under a separately approved compute request, or an explicit limited scope at the certification review (OQ-25)</td>
+<td><span class="badge st-open">open</span></td>
+</tr>
+<tr id="k-031" class="odd">
+<td class="cid-cell">K-031</td>
+<td>verification-export</td>
+<td>strict 1e-12 relative-only parity compares different float64 reduction implementations</td>
+<td>V2 has 17 scalar discrepancies on the complete random/held-out audit (raw and physical views counted separately), all failing absolute errors below 8e-15 in the declared units. Worst relative error is 9.0625e-12 near a 0.000330872 gB particle flux; JAX JIT versus eager also reaches 9.1148e-12 on the same near-zero member output. This was the strict relative-only criterion, before OQ-26; served ensemble means and the pedestal passed it.</td>
+<td>Owner approved rtol=1e-12 and atol=1e-12 in each declared output unit (OQ-26, 2026-10-11). All 13 export tests pass per mode under that explicit mixed criterion; no physics or closed-loop tolerance changed.</td>
+<td><span class="badge st-lifted">lifted</span></td>
 </tr>
 </tbody>
 </table>

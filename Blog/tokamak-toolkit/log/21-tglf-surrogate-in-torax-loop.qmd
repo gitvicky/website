@@ -1,0 +1,80 @@
+---
+title: The TGLF surrogate inside the TORAX loop
+date: '2026-10-03'
+categories:
+- built
+- measured
+entry: 21
+milestone: M3
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} [measurement]{.chip .measured} Entry 21 · milestone M3
+:::
+
+<!-- Results complete; retained as a draft for owner review. The completed comparison is
+job 2354632, not the earlier cancelled job 2354162. Timings below refer to the v1 model. -->
+
+Two of the M3 acceptance criteria are about the coupled simulation: the surrogate must be
+differentiable and run inside the M1 loop, and the end-to-end speed-up must be measured. This
+entry puts the TGLF surrogate of [entry 18](18-tglf-surrogates-baseline.qmd) into TORAX as a
+transport model, behind the guard (see the [Primer](../primer.qmd)).
+
+## How it is wired
+
+At every face and every solver iteration, the TORAX state is turned into TGLF inputs by TORAX's
+own TGLF input builder, so the conventions are those of the datasets. The ensemble returns the
+members' mean and spread in gyro-Bohm units, and TORAX's own conversion turns the fluxes into
+diffusivities and a particle pinch. Where a face's inputs leave the box of the training inputs,
+the surrogate returns a non-finite value with finite derivatives; the guard rejects that face
+and serves the Bohm/gyro-Bohm fallback ([OQ-1](/Blog/tokamak-toolkit/decisions.qmd#oq-1)). The domain is checked in the surrogate's own input
+coordinates, as [OQ-10](/Blog/tokamak-toolkit/decisions.qmd#oq-10) recommended. The whole chain is a JAX function, so TORAX's Newton solver
+can differentiate it.
+
+What checks the derivatives: tests compare reverse-mode gradients with central finite
+differences and with forward mode, for the guarded coefficients and for the core electron
+temperature after three Newton steps: [reverse mode within 10^−6^ (coefficients) and 10^−7^ (after 3 Newton steps) of central differences, and within 10^−9^ and 10^−12^ of forward mode]{.claim}[C-116](/Blog/tokamak-toolkit/claims.qmd#c-116){.cid .st-tested}.
+
+## Cost and agreement with TGLF
+
+| | one call, 51 faces | RAPTOR L-mode, Newton, 200 steps |
+|---|---|---|
+| TGLF | [about 103 s (2.0 s per face)]{.claim}[C-118](/Blog/tokamak-toolkit/claims.qmd#c-118){.cid .st-measured} | not run with Newton: TGLF has no derivatives |
+| TGLF surrogate | [3.1 ms]{.claim}[C-117](/Blog/tokamak-toolkit/claims.qmd#c-117){.cid .st-measured} | [374 s and 405 s (two runs); no stalled step, 57 steps accepted at the coarse tolerance]{.claim}[C-120](/Blog/tokamak-toolkit/claims.qmd#c-120){.cid .st-measured} |
+| QLKNN | — | [29 s and 30 s (two runs); 179 of 200 steps stalled, 6 at the coarse tolerance]{.claim}[C-121](/Blog/tokamak-toolkit/claims.qmd#c-121){.cid .st-measured} |
+
+One surrogate call costs a small fraction of a TGLF call on the same faces. End to end the
+picture is reversed with respect to QLKNN, the neural network TORAX ships: on the M1 benchmark
+case under Newton the surrogate run takes far longer than the QLKNN run. Every one of the 20
+members is evaluated on every face, including the faces the guard hands to the fallback, and
+Newton differentiates through all of them. What dominates a step has not been profiled; this is
+ceiling [K-022](/Blog/tokamak-toolkit/ceilings.qmd#k-022). With the linear solver, and on TORAX's ITER hybrid case, the run times are much
+shorter ([RAPTOR L-mode, linear solver: surrogate 5.2 s, QLKNN 0.57 s; Newton with the published constant transport 0.35 s, with Bohm/gyro-Bohm 1.6 s. ITER hybrid: surrogate 0.56 s, QLKNN 0.066 s, Bohm/gyro-Bohm 0.030 s]{.claim}[C-122](/Blog/tokamak-toolkit/claims.qmd#c-122){.cid .st-measured}).
+
+On the final state of the benchmark run, TGLF and the surrogate were evaluated on the same
+inputs: [Q_e 0.28 (11 faces) and Q_i 0.44 (12 faces); the surrogate is below TGLF on 10 of the 11 and on all 12]{.claim}[C-119](/Blog/tokamak-toolkit/claims.qmd#c-119){.cid .st-preliminary}. This is one state, not a held-out statistic.
+
+The guard served the fallback on a large share of points ([0.51 on the RAPTOR L-mode case and 0.27 on the ITER hybrid case]{.claim}[C-123](/Blog/tokamak-toolkit/claims.qmd#c-123){.cid .st-measured}): the training box
+of the v1 dataset does not cover the axis, the edge geometry or the collisionality of the outer
+radii on these ITER cases ([K-023](/Blog/tokamak-toolkit/ceilings.qmd#k-023)). Dataset v3 is sampled along TORAX trajectories to close that
+gap ([entry 22](22-dataset-v3-torax-trajectories.qmd)), and [OQ-20](/Blog/tokamak-toolkit/decisions.qmd#oq-20) widened the ITER collisionality
+range for it. The surrogate's ion heat flux is the main ion's, while TORAX's TGLF model passes the
+sum over ions ([K-024](/Blog/tokamak-toolkit/ceilings.qmd#k-024)).
+
+The completed comparison uses the linear solver for both models, the same case, fixed steps,
+post-processing and fallback. Compilation is excluded: [TGLF 540.38 s, v1 surrogate 0.780 s, QLKNN 0.126 s; v1 is about 693 times faster than TGLF]{.claim}[C-132](/Blog/tokamak-toolkit/claims.qmd#c-132){.cid .st-measured}. Final profile
+differences from TGLF: [T_e 18.52%, T_i 22.09%, n_e 10.25%, psi 0.44%]{.claim}[C-133](/Blog/tokamak-toolkit/claims.qmd#c-133){.cid .st-preliminary}. The runs finish without solver stalls, but this
+single case does not establish a closed-loop error bound. These timings belong to the earlier
+v1 model; the final v3 model needs its own matched comparison.
+
+M3: the v1 surrogate runs inside the loop and its gradients are checked. It is faster than
+TGLF in the matched linear-solver run and slower than QLKNN under Newton; the QLKNN Newton
+run itself has stalled steps, so its runtime is not evidence of an equivalent successful solve.
+
+Technical details → [Surrogates: in the loop](../technical/surrogates.qmd#in-the-loop).
+Decisions → [OQ-1](../decisions.qmd#oq-1), [OQ-10](../decisions.qmd#oq-10), [OQ-20](../decisions.qmd#oq-20).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › in the loop](/Blog/tokamak-toolkit/technical/surrogates.qmd#in-the-loop)  
+**Decisions →** [OQ-1](/Blog/tokamak-toolkit/decisions.qmd#oq-1) · [OQ-10](/Blog/tokamak-toolkit/decisions.qmd#oq-10) · [OQ-20](/Blog/tokamak-toolkit/decisions.qmd#oq-20)
+:::

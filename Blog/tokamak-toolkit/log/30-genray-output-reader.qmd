@@ -1,0 +1,51 @@
+---
+title: Reading EC heating and current without losing their conventions
+date: '2026-10-08'
+categories:
+- built
+entry: 30
+milestone: M3
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 30 · milestone M3
+:::
+
+We need to read electron-cyclotron (EC) heating and driven current before coupling
+them to transport. The [Primer](../primer.qmd) explains this source coupling;
+terminology is in the [Glossary](../glossary.qmd). The selected reference writes
+profiles with different averages in centimetre–gram–second (CGS) units. Their
+units, radial coordinate and physical meaning must be explicit.
+
+We added a host-side reader that preserves those distinctions. It converts units to SI,
+retains the native bins and reduced-boundary flag, and hashes the exact bytes
+read. Missing channels, ambiguous units, invalid grids and missing or nonfinite
+values fail explicitly. Current signs are preserved.
+
+The reader reports volume-integrated power and area-integrated toroidal current
+against the corresponding reference totals. These are diagnostics: no physical
+acceptance tolerance has been selected. Focused checks pass in both modes:
+[24 focused tests pass in full and Tier-A-only modes]{.claim}[C-151](/Blog/tokamak-toolkit/claims.qmd#c-151){.cid .st-tested}. They use synthetic output files, so they establish reader
+behaviour rather than reference-physics accuracy. The fixtures are constructed
+separately from the reader, but are not an independent physical reference.
+Installed-wheel checks also
+pass in both modes; the displayed full-suite statistics remain historical.
+
+The transport solver expects the surface average of current dotted with magnetic
+field for its EC current source. The reference's current-density profiles need
+an explicit field/sign and geometry conversion before coupling. Its native bins
+also need mapping to the transport grid. Neither conversion is inferred here.
+
+Two upstream ITER regression decks are prepared for the owner's baseline choice.
+At this reader checkpoint, no reference execution, EC labels or training are claimed. The independent ITER
+pedestal port still needs its branch and boundary prescription; M3 remains open.
+The [later numerical pilot](34-genray-corrected-numerical-pilot.qmd) exercises
+the reader on freshly generated reference output.
+
+Technical details → [EC native-output boundary](../technical/surrogates.qmd#genray-output).
+Decision → [OQ-21](../decisions.qmd#oq-21).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › genray output](/Blog/tokamak-toolkit/technical/surrogates.qmd#genray-output)  
+**Decisions →** [OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21)
+:::

@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Verification – Vignesh Gopakumar</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../Images/dy_dx.png" rel="icon" type="image/png">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../styles.css">
+<link rel="stylesheet" href="../tokamak-toolkit.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">Vignesh Gopakumar</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../research.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../talks.html"> 
+<span class="menu-text">Talks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../Blog/blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../Blog/tokamak-toolkit/index.html"> 
+<span class="menu-text">Tokamak Toolkit</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#scope" id="toc-scope" class="nav-link active" data-scroll-target="#scope">Scope</a></li>
+  <li><a href="#exports" id="toc-exports" class="nav-link" data-scroll-target="#exports">Checked exports</a></li>
+  <li><a href="#properties" id="toc-properties" class="nav-link" data-scroll-target="#properties">Property contracts</a></li>
+  <li><a href="#closed-loop" id="toc-closed-loop" class="nav-link" data-scroll-target="#closed-loop">Closed-loop comparison</a></li>
+  <li><a href="#mastu-remediation" id="toc-mastu-remediation" class="nav-link" data-scroll-target="#mastu-remediation">MAST-U remediation diagnosis</a></li>
+  <li><a href="#remaining-acceptance-work" id="toc-remaining-acceptance-work" class="nav-link" data-scroll-target="#remaining-acceptance-work">Remaining acceptance work</a></li>
+  <li><a href="#candidate-replay-preparation" id="toc-candidate-replay-preparation" class="nav-link" data-scroll-target="#candidate-replay-preparation">Candidate replay preparation</a></li>
+  <li><a href="#candidate-replay-result" id="toc-candidate-replay-result" class="nav-link" data-scroll-target="#candidate-replay-result">Candidate replay result</a></li>
+  <li><a href="#reference-diagnostic-preparation" id="toc-reference-diagnostic-preparation" class="nav-link" data-scroll-target="#reference-diagnostic-preparation">Reference diagnostic preparation</a></li>
+  <li><a href="#reference-diagnostic-result" id="toc-reference-diagnostic-result" class="nav-link" data-scroll-target="#reference-diagnostic-result">Reference diagnostic result</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Verification</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-left">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">October 11, 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="scope" class="level2">
+<h2 class="anchored" data-anchor-id="scope">Scope</h2>
+<p>M4 separates formal properties over declared domains, statistical calibration and closed-loop comparisons. The owner-selected scope is <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-22">OQ-22</a>. No M4 certification review has occurred and no formal property is yet certified.</p>
+</section>
+<section id="exports" class="level2">
+<h2 class="anchored" data-anchor-id="exports">Checked exports</h2>
+<p><code>tkit.verify.export</code> makes fixed float64 PyTorch copies of the Equinox networks. It includes input transforms, normalization and physical output transforms. Transport’s served response averages members in training space before inverse signed-log; EC clamps the raw mean after averaging. The selected pedestal retains its power-law residual, tanh-GELU, squared outputs and density scaling, with every solution explicit.</p>
+<p><code>check_parity</code> rejects nonfinite arrays, shape differences and a discrepancy beyond the selected numeric criterion. <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-26">OQ-26</a> approves mixed relative and absolute parity after the relative-only check exposed cancellation near zero: <span class="claim">13 export checks pass in each mode: all selected members, random box points, local holdouts, physical transforms and served means, with rtol=1e-12 and atol=1e-12 in each declared output unit</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-180" class="cid st-tested">C-180</a>. Formal proofs may not bypass this gate. The artifact manifests bind model, metadata and explicit box files and allow transport exports to load without opening the large training datasets. They establish storage consistency, not proved physical behavior (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-23">OQ-23</a>).</p>
+</section>
+<section id="properties" class="level2">
+<h2 class="anchored" data-anchor-id="properties">Property contracts</h2>
+<p><span class="claim">six property contracts load; 14 property-validation tests pass in each mode, including malformed-domain, tolerance and output-schema rejection</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-177" class="cid st-tested">C-177</a>. <code>tkit.verify.properties</code> validates model scopes, output names, finite ordered boxes, the declared box data source, robustness tolerances and owner decisions. The existing <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-20">OQ-20</a> monotonicity contract is retained.</p>
+<p>The formal engine is auto_LiRPA with an input-splitting loop under <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-24">OQ-24</a>. The loop and proof certificates are later work. Bounds target every member; local robustness targets the served ensemble response. Launcher families stay categorical, and complete perturbation boxes that leave a training domain will be reported separately. No training box is silently shrunk to make a property pass.</p>
+</section>
+<section id="closed-loop" class="level2">
+<h2 class="anchored" data-anchor-id="closed-loop">Closed-loop comparison</h2>
+<p><code>tkit.verify.closed_loop</code> reads provenance-bound saved runs and rejects unmatched settings, time/radial grids, nonfinite profiles or unconverged solver records. It checks that a face served by the surrogate was served by TGLF in the reference.</p>
+<p>The historical paper eq. 41 convention is retained:</p>
+<p><span class="math display">\[ E = 100\frac{\sqrt{\operatorname{mean}((T_{sur}-T_{ref})^2)}}
+                    {\operatorname{mean}(T_{sur})}. \]</span></p>
+<p>The guard is defined on faces, while temperatures are cell-centred. Both temperatures are linearly interpolated to the same served faces. Whole-profile errors and a supplementary comparison using cells with both adjacent faces served remain visible. The saved runs’ grids are uniform; the reader rejects other grids without explicit face coordinates.</p>
+<p>ITER passes (<span class="claim">served-face T_e 7.42%, T_i 8.18%, both passing the 15% limit; whole profile 7.72/9.23%; 34 of 51 final-state faces served</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-178" class="cid st-measured">C-178</a>). MAST-U fails (<span class="claim">served-face T_e 35.33%, T_i 49.15%, both failing 15%; whole profile 41.51/62.39%; cells with both adjacent faces served give 11.86/23.24%, still failing T_i; 13 of 26 final-state faces served</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-179" class="cid st-measured">C-179</a>), with the conservative cell diagnostic also failing ion temperature. Its failure remains ceiling <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-030">K-030</a>. The mask is only the final accepted state’s guard diagnostic; it does not measure fallback calls throughout the trajectory.</p>
+</section>
+<section id="mastu-remediation" class="level2">
+<h2 class="anchored" data-anchor-id="mastu-remediation">MAST-U remediation diagnosis</h2>
+<p>The owner prioritizes the failed MAST-U criterion (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-25">OQ-25</a>). Matched final-state probes show substantial flux error: <span class="claim">all 17 in-domain final-state probes succeed; on 12 served faces with reference flux above 1 gB, median relative errors are 41.17% Q_e and 74.27% Q_i; an unconstrained v3 control gives 38.05/71.88%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-181" class="cid st-measured">C-181</a>. The existing unconstrained v3 model also misses those feedback states. That control is diagnostic and does not meet the owner’s monotonicity contract; pointwise scores are not a coupled comparison.</p>
+<p>The accepted-state replay reproduces the failed saved trajectory: <span class="claim">all saved temperature, density and psi values are reproduced exactly; four final inner faces exceed the existing ion-diffusivity guard bound; 44.81% of accepted-state face diagnostics reject the surrogate</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-182" class="cid st-measured">C-182</a>. Four final inner faces lie in the model’s box but exceed the ion-diffusivity guard bound. Captured masks cover accepted states, not the solver’s intermediate evaluations. The isolated inner served face has zero final heat flux in both model and TGLF even though its temperature differs. No face is removed from the acceptance comparison.</p>
+<p>The approved refresh collected feedback-state labels on training equilibria only, with both test equilibria excluded. It retains full solver inputs and applies the approved-region filter. The local result review checks the finished artifacts: <span class="claim">eight local checks pass for approved allocation/time, hashes and lineage, full-input alignment, case budget, unique coordinates, training-only equilibria, source model and finite successful labels</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-183" class="cid st-measured">C-183</a>. It compares each label input row with the selected case and the source trajectory’s accepted-state solver arrays, and binds lineage by hash. These checks establish collection integrity; they do not establish held-out accuracy or a successful coupled remedy. The owner approved artifact synchronization in <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-28">OQ-28</a>. We checked remote privacy settings and downloaded every uploaded record by artifact identifier: <span class="claim">all 26 uploaded artifact records covering 18 distinct files match both remote SHA-256 metadata and downloaded bytes; the folder and private visibility match the approved request, and the offline payload queue is empty</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-184" class="cid st-measured">C-184</a>. Duplicate provenance sidecars are retained as distinct records; name-based retrieval is ambiguous for those duplicates. Downloads by identifier verify every record without changing the remote artifacts. Retraining and an improved closed-loop result remain pending. No new certificate or domain is deployed, and the 15% tolerance is unchanged.</p>
+</section>
+<section id="remaining-acceptance-work" class="level2">
+<h2 class="anchored" data-anchor-id="remaining-acceptance-work">Remaining acceptance work</h2>
+<p>Formal certificates, conformal coverage, the EC coupled reference check, certificate-bound guards, CI proof reruns and the human certification review remain pending. Pedestal has no labelled split for conformal calibration and no local full-EPED physics reference. The owner prioritizes diagnosing and remediating the MAST-U closed-loop failure first (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-25">OQ-25</a>).</p>
+</section>
+<section id="candidate-replay-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="candidate-replay-preparation">Candidate replay preparation</h2>
+<p><a href="../../../Blog/tokamak-toolkit/log/48-mastu-candidate-replay-preparation.html">Entry 48</a> records R6 tooling. The runner supports an explicit immutable candidate directory while preserving default model selection. New trajectories record the full scenario configuration, source runner, model and metadata, scenario plan and equilibrium provenance. Preparation binds a source snapshot and checks every external input digest and environment version before execution.</p>
+<p>Reference reuse reconstructs the historical scenario from its checksum-bound runner and clean source revision. Physics/core/dataset modules and the scenario plan are byte-identical to that revision. Solver, fallback, wrapper post-processing and guard settings match recorded metadata; the candidate differs in its model path. Its previously audited box stays fixed. Historical metadata lacks the run index, but its bound runner selects the first scenario explicitly. External dependency bytes and a full resolved configuration were not recorded historically; the audit states that limitation and checks pinned/current versions instead of supplying retrospective hashes. Actual post-run configuration, grids, time points, provenance and finite convergence remain required.</p>
+<p>The formal comparison uses every candidate-served face, interpolating both profiles onto those coordinates and normalizing RMS difference by the candidate temperature mean. The report retains original served-mask counts, overlap and faces added/removed. A separate fixed-baseline-mask diagnostic evaluates the candidate temperatures on the old faces; it never replaces the formal mask. Whole-profile and both-adjacent-faces cell errors are retained. An isolated served face remains eligible for the formal metric even when the supplementary cell metric is unavailable. Existing comparison defaults are preserved.</p>
+<p>Accepted-state history captures generic guard features and raw coefficients before post-processing. Rejection diagnostics count model-domain violations, generic feature finiteness/box failures, nonfinite coefficients, negative diffusivities, excessive diffusivity and convection. Predicate counts overlap, so a separate priority partition provides counts that sum to the number of rejected face states. Candidate diagnostics must reproduce the saved raw predicate exactly. The historical replay lacks generic features; its unavailable predicate evidence stays explicit. These rates describe accepted states, not intermediate transport calls, and no fallback acceptance threshold is chosen.</p>
+<p><span class="claim">40 focused checks pass in normal and Tier A modes; the two-step training-only candidate smoke is finite and reconstructs the raw accepted-state guard predicate exactly</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-188" class="cid st-tested">C-188</a> checks configuration/mask isolation, raw guard accounting, immutable package/input rejection and historical runner compatibility. A bounded two-step smoke uses a training equilibrium only and validates source-package execution, finite profiles and raw guard reconstruction. Saved baseline artifacts also reproduce the existing comparison exactly through the new report. No held-out candidate result or formal certificate is claimed.</p>
+</section>
+<section id="candidate-replay-result" class="level2">
+<h2 class="anchored" data-anchor-id="candidate-replay-result">Candidate replay result</h2>
+<p><a href="../../../Blog/tokamak-toolkit/log/49-mastu-replay-reference-coverage-fails.html">Entry 49</a> records the consumed owner-approved attempt. The bounded solver run completes finite and converged; actual scenario settings, time/radial grids and checksum-bound inputs match preparation. The comparison rejects reference coverage (<span class="claim">the single approved replay finishes in 65 seconds within its 240-second bound, with 40 finite converged steps and 146 passing integrity checks; comparison exits with a reference-coverage failure at candidate-served face 4, normalized radius 0.16</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-189" class="cid st-measured">C-189</a>). The saved physics trajectory used fallback at a candidate-served face. A formal temperature pass/fail cannot be computed against that reference under the existing contract. Its original success report is absent; a separate provenance-bound, read-only saved-output audit records the failure without executing another solver.</p>
+<p>Mask comparison retains every candidate face, added/removed faces and overlap. Descriptive distances to the saved hybrid physics/fallback trajectory use the same RMS normalization and are explicitly ineligible for acceptance. The fixed-baseline-mask comparison remains supplementary. All values and the electron regression remain visible: <span class="claim">candidate/baseline serve 15/13 faces with 11 overlapping; fixed-baseline-mask candidate T_e/T_i errors are 42.1252%/48.1182%, versus baseline 35.3331%/49.1458%; candidate whole-profile errors are 29.7365%/41.8856%, and own-mask descriptive distances to the hybrid reference are 29.8865%/40.0063%</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-190" class="cid st-preliminary">C-190</a>. No unfavorable face is removed and no criterion is replaced by a whole-profile metric.</p>
+<p>Accepted-state raw predicate reconstruction remains exact. Counts distinguish overlapping predicates from an exclusive partition: <span class="claim">candidate rejects 415/1040 accepted-state face records (39.9038%), versus baseline 466/1040 (44.8077%); exclusive candidate reasons are 341 model-box exits, 50 excessive diffusivities and 24 excessive convection values, with exact raw guard reconstruction</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-191" class="cid st-measured">C-191</a>. Model-domain exits produce nonfinite raw surrogate coefficients on rejected faces; no accepted coefficient is nonfinite. Historical generic-feature evidence is absent. These are accepted-state face records rather than intermediate transport-call counts; V10 sets no acceptance threshold yet.</p>
+<p>The historical reference contains no raw guard reasons, so its rejection cause cannot be reconstructed from its saved arrays. Diagnose reference admissibility before proposing new reference compute; rerunning an identical scenario does not ensure coverage. A separate single sampling experiment is proposed using training-only evidence, with unchanged original holdouts and physics. It needs a frozen implementation, checks, smoke and concrete resource review before fitting. Neither that proposal nor the consumed replay approves new compute, synchronization or model/guard replacement. <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-030">K-030</a> stays open; no formal proof is supplied.</p>
+</section>
+<section id="reference-diagnostic-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="reference-diagnostic-preparation">Reference diagnostic preparation</h2>
+<p>The saved reference retains its final mask and finite profiles but lacks full solver inputs, raw coefficients and accepted-state reasons. Its log confirms settings and convergence; it does not distinguish an input-policy failure from a nonfinite, negative or excessive transport coefficient at the uncovered face. No cause is inferred.</p>
+<p>The prepared diagnostic preserves the scenario, physics sources, solver, guard and fallback. Each accepted state supplies full prepared inputs, worker-input validity, raw reference/fallback coefficients, generic features and the exact guard mask. Post-processing remains unchanged. Reporting retains all faces and both overlapping predicates and an exclusive guard partition. Input-policy invalidity is recorded separately; there is no surrogate model box on the TGLF reference. The last diagnostic supplies the final mask without an additional duplicate reference evaluation.</p>
+<p><span class="claim">32 focused checks pass in each mode; a two-step synthetic training-equilibrium smoke is finite and reconstructs the raw guard exactly; all 77 source modules pass typing, and lint/format plus batch syntax pass</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-192" class="cid st-measured">C-192</a> checks input conversion, mask reconstruction, immutable source/input rejection, allocation refusal and failed-run artifact retention. A bounded synthetic training-equilibrium smoke exercises host stepping and the real input converter while forbidding physical TGLF calls. It also checks canonical paths through source-package symlinks and the full resolved configuration. This is tooling evidence, not new physical labels, TGLF cost or temperature acceptance.</p>
+<p>The source package freezes original inputs, candidate trajectory and dependency records. Numerical/input-stack distributions and the compiled TGLF extension/link closure are byte-bound; other installed distributions are version-bound. Historical missing dependency bytes remain explicit. A dedicated single diagnostic job, resource estimate from historical accounting and timeout limits were prepared for <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-31">OQ-31</a>. That preparation is historical; the approved, consumed diagnostic is recorded below. Failure retains partial outputs and failed offline tracking; uploads require later review.</p>
+<p>If the diagnostic retains the uncovered face, it remains ineligible for the formal temperature criterion. Review the cause and any physically justified remedy before a new acceptance claim. The separate sampling experiment remains a proposal. Draft entry 50 is retained in the private owner review copy. Current model/guard and <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-030">K-030</a> remain.</p>
+</section>
+<section id="reference-diagnostic-result" class="level2">
+<h2 class="anchored" data-anchor-id="reference-diagnostic-result">Reference diagnostic result</h2>
+<p>The owner-approved diagnostic is consumed. <span class="claim">the diagnostic completes in 517 seconds within its 30-minute bound, with 40 finite converged steps, exact historical temperature/density/poloidal-flux-profile and final-mask equality, and 171 passing saved-output integrity checks</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-193" class="cid st-measured">C-193</a> records its bounded completion and exact saved-profile/final-mask reproduction. The accepted-state history retains prepared inputs, raw transport and fallback coefficients, generic features and guards. Source/input/dependency and full resolved configuration bindings match the reviewed package; historical missing external dependency bytes stay missing.</p>
+<p><span class="claim">final face 4 at normalized radius 0.16 has valid inputs but raw electron heat diffusivity -0.02792124888 m²/s; negative heat diffusivity rejects that face at 8 of 40 accepted states; reference rejection is 323/1040 accepted-state face records (31.0577%)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-194" class="cid st-measured">C-194</a> explains the uncovered face. The prepared inputs pass the worker policy. Negative raw heat diffusivity fails the existing guard before diffusivity post-processing. The final rejection is electron heat diffusivity; earlier rejected states include ion heat diffusivity. No face or coefficient is removed, clipped or admitted to change reference coverage. Every worker-input and raw guard decision is reconstructed exactly. Accepted-state rejection reasons retain overlapping counts and an exclusive partition; they are not intermediate solver-call accounting or a fallback acceptance gate.</p>
+<p>The read-only audit uses the same diagnostic-report logic and checks artifact integrity, not independent physics validity. Exact historical array equality is checked separately. Completed offline local artifact copies match by checksum; synchronization still needs payload review. Draft entry 51 is retained in the private owner review copy.</p>
+<p>The saved raw coefficients follow the reference’s flux-to-transport conversion; direct heat-flux and mode-resolved outputs were not retained. Signed transport’s physical or numerical origin and any flux-preserving reference treatment require physics review (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-32">OQ-32</a>). Another identical run does not make the reference admissible. Formal candidate temperature acceptance remains not evaluable, <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-030">K-030</a> stays open and the current model/guard remain selected. The separate sampling proposal has no frozen fitting request.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2026 Vignesh Gopakumar</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<div class="tk-footer">
+Code and first draft by Claude (Anthropic) and Codex, working to a brief by Vignesh Gopakumar,
+who reviewed and approved this page.
+<a href="../../../Blog/tokamak-toolkit/about.html">How this is built</a> ·
+<a href="../../../Blog/tokamak-toolkit/index.html">Tokamak Toolkit home</a>
+</div>
+
+
+
+
+</body></html>

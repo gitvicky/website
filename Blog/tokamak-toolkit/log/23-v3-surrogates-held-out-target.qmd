@@ -1,0 +1,69 @@
+---
+title: The v3 surrogates meet the held-out target
+date: '2026-10-07'
+categories:
+- measured
+- negative
+entry: 23
+milestone: M3
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} [negative result]{.chip .negative} Entry 23 · milestone M3
+:::
+
+Dataset v3 samples where TORAX trajectories go, with whole runs kept out of training
+([entry 22](22-dataset-v3-torax-trajectories.qmd)). The final ensembles have now been trained
+on the broad v1/v2 data plus v3's training points. The monotone variants meet the owner's
+held-out accuracy target on both machines: [MAST-U: Q_e 17.8%, Q_i 25.2%; ITER: Q_e 7.2%, Q_i 10.8%; all meet the 30% target]{.claim}[C-129](/Blog/tokamak-toolkit/claims.qmd#c-129){.cid .st-measured}.
+
+An audit loaded the saved models, checked their metadata and dataset hashes, replayed the
+trajectory split, and recomputed the scores. The v3 test set was never a training input.
+This checks the implementation's reproducibility; it is not independent physics validation.
+
+## Structure and its cost
+
+Electron and ion heat fluxes are nonnegative in use. Each member is built so that its heat flux
+cannot fall as its own temperature gradient rises, with the other inputs fixed. Recomputed
+checks found [no negative member slopes on the tested v1/v3 points or scan grids, and no negative neighbour differences on the scan grids]{.claim}[C-130](/Blog/tokamak-toolkit/claims.qmd#c-130){.cid .st-tested}. Those sampled checks support the construction; proof over
+the whole input domain belongs to M4.
+
+TGLF itself is not always monotone. On the broad scans where its flux decreases, the final
+models depart from it: [MAST-U: Q_e 3.14, Q_i 3.36; ITER: Q_e 2.51, Q_i 2.11 signed-log units]{.claim}[C-131](/Blog/tokamak-toolkit/claims.qmd#c-131){.cid .st-preliminary}. This includes approximation error as well as the
+cost of imposing monotonicity. Passing the v3 median target does not remove that ceiling or
+establish accuracy everywhere in the training box.
+
+Clipping also does not identify every stable point. The exact-zero rates and uncalibrated
+spread coverage are [mean ±2 standard deviations covers Q_e/Q_i at 75.3%/74.4% (MAST-U), 85.6%/80.8% (ITER); exact-zero predictions where TGLF is nonpositive: 44.0%/47.0% (MAST-U), 52.3%/21.1% (ITER)]{.claim}[C-137](/Blog/tokamak-toolkit/claims.qmd#c-137){.cid .st-measured}. Calibration and the guard's uncertainty policy remain
+M4 work.
+
+## Inside the loop
+
+The comparison command now selects the final monotone v3 model explicitly. A local RAPTOR
+L-mode run finished with [all profiles finite; no stalled or coarse-tolerance step; post-step guard rejection 33.1%; execution 1.62 s after compilation]{.claim}[C-135](/Blog/tokamak-toolkit/claims.qmd#c-135){.cid .st-measured}. Against the saved TGLF run at the same final
+time, its profile differences are [T_e 7.72%, T_i 9.23%, n_e 11.36%, psi 0.32%]{.claim}[C-134](/Blog/tokamak-toolkit/claims.qmd#c-134){.cid .st-preliminary}. Electron and ion temperature agreement
+improved relative to v1; density agreement did not. This is one case, not a closed-loop bound.
+
+The strict derivative and discrete-balance checks exposed a stopping-precision limitation:
+[v3 derivative discrepancy about 1.8e-5 relative; peak discrete energy residual 1.11e-5 (v1) and 1.36e-6 (v3)]{.claim}[C-140](/Blog/tokamak-toolkit/claims.qmd#c-140){.cid .st-tested}. Converging Newton more tightly, to `residual_tol=1e-10`, gives
+[v1 and v3 pass: three-step derivative FD tolerance 1e-7, forward/reverse tolerance 1e-12; guard masks unchanged over the stencil]{.claim}[C-138](/Blog/tokamak-toolkit/claims.qmd#c-138){.cid .st-tested} and [v1 and v3 pass: energy residual below 1e-6 and particle residual below 1e-10, with fine solver convergence]{.claim}[C-139](/Blog/tokamak-toolkit/claims.qmd#c-139){.cid .st-tested}. The original assertion limits are retained.
+The runner records the solver setting, and the default-tolerance limitation remains [K-026](/Blog/tokamak-toolkit/ceilings.qmd#k-026).
+
+A second execution check, on ITER hybrid, gives [50 steps to 5 s, all four profiles finite, no stalled or coarse-tolerance steps; accepted-state guard rejection 26.9%]{.claim}[C-142](/Blog/tokamak-toolkit/claims.qmd#c-142){.cid .st-measured}. It checks coupled
+execution and guard behavior, without a TGLF error bound.
+
+The completed earlier timing comparison used v1. A fresh matched v3 comparison was submitted,
+but the scheduler cancelled it before execution and produced no output. There is no matched
+v3 speed-up measurement to report. The job script is prepared for a rerun once that compute
+issue is resolved.
+
+M3 remains in progress: the held-out transport target passes, while matched v3 timing,
+broader coupled comparisons, and the RF and pedestal surrogate tasks remain open.
+
+Technical details → [Surrogates: final v3 results](../technical/surrogates.qmd#v3-results).
+Decisions → [OQ-19](../decisions.qmd#oq-19), [OQ-20](../decisions.qmd#oq-20).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › v3 results](/Blog/tokamak-toolkit/technical/surrogates.qmd#v3-results) · [Surrogates › in the loop](/Blog/tokamak-toolkit/technical/surrogates.qmd#in-the-loop)  
+**Decisions →** [OQ-19](/Blog/tokamak-toolkit/decisions.qmd#oq-19) · [OQ-20](/Blog/tokamak-toolkit/decisions.qmd#oq-20)
+:::

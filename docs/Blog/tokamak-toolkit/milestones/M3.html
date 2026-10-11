@@ -159,7 +159,7 @@ window.Quarto = {
   <li><a href="#acceptance-criteria-fixed-in-the-brief-before-work-started" id="toc-acceptance-criteria-fixed-in-the-brief-before-work-started" class="nav-link" data-scroll-target="#acceptance-criteria-fixed-in-the-brief-before-work-started">Acceptance criteria (fixed in the brief before work started)</a></li>
   <li><a href="#tasks" id="toc-tasks" class="nav-link" data-scroll-target="#tasks">Tasks</a></li>
   <li><a href="#against-the-criteria" id="toc-against-the-criteria" class="nav-link" data-scroll-target="#against-the-criteria">Against the criteria</a></li>
-  <li><a href="#plan-to-completion" id="toc-plan-to-completion" class="nav-link" data-scroll-target="#plan-to-completion">Plan to completion</a></li>
+  <li><a href="#closure" id="toc-closure" class="nav-link" data-scroll-target="#closure">Closure</a></li>
   <li><a href="#deviations-so-far" id="toc-deviations-so-far" class="nav-link" data-scroll-target="#deviations-so-far">Deviations so far</a></li>
   </ul>
 </nav>
@@ -170,7 +170,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">M3 · Surrogates</h1>
-<p class="subtitle lead">In progress</p>
+<p class="subtitle lead">Done 10 Oct 2026</p>
 </div>
 
 
@@ -229,12 +229,12 @@ window.Quarto = {
 <tr class="even">
 <td>active learning near the threshold, round 1 (moved from M2, <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-18">OQ-18</a>)</td>
 <td>done; no gain over uniform sampling</td>
-<td><a href="../log/19-active-learning-round-1.qmd">entry 19</a></td>
+<td><a href="../../../Blog/tokamak-toolkit/log/19-active-learning-round-1.html">entry 19</a></td>
 </tr>
 <tr class="odd">
 <td>accuracy target in the configuration</td>
 <td>set (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-19">OQ-19</a>)</td>
-<td><a href="../log/19-active-learning-round-1.qmd">entry 19</a></td>
+<td><a href="../../../Blog/tokamak-toolkit/log/19-active-learning-round-1.html">entry 19</a></td>
 </tr>
 <tr class="even">
 <td>dataset v3 sampled along TORAX trajectories (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-19">OQ-19</a>, <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-20">OQ-20</a> 2)</td>
@@ -258,23 +258,23 @@ window.Quarto = {
 </tr>
 <tr class="even">
 <td>surrogate inside the M1 loop, behind the guard</td>
-<td>validated on RAPTOR and ITER hybrid with explicit Newton settings; strict gradients and balance pass</td>
-<td>draft entry 26</td>
+<td>ITER: RAPTOR and hybrid validated; MAST-U: linear-solver loop, balance and gradients on a converging Newton case (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-029">K-029</a>)</td>
+<td>entry 26, <a href="../../../Blog/tokamak-toolkit/log/40-mastu-loop-and-m3-audit.html">40</a></td>
 </tr>
 <tr class="odd">
 <td>end-to-end speed-up</td>
-<td>measured for v1; matched final v3 timing awaits compute (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-022">K-022</a>)</td>
-<td></td>
+<td>measured for final v3 against TGLF and QLKNN at matched settings (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-022">K-022</a> for the QLKNN gap)</td>
+<td><a href="../../../Blog/tokamak-toolkit/log/35-matched-comparison-tglf-v3-qlknn.html">entry 35</a></td>
 </tr>
 <tr class="even">
 <td>compute request and saved-trace review</td>
-<td>bounded request reviewed; cancellation cause and fresh approval pending; trace component attribution unresolved</td>
-<td>draft entry 28</td>
+<td>cancellation traced to a recurring node start-up failure; resubmission ran; trace component attribution unresolved</td>
+<td>entries 28, <a href="../../../Blog/tokamak-toolkit/log/35-matched-comparison-tglf-v3-qlknn.html">35</a></td>
 </tr>
 <tr class="odd">
 <td>RF deposition and pedestal surrogates</td>
-<td>corrected EC numerical pilot complete with native accounting and descriptive comparison; pretrained pedestal port passes raw checks; production labels/coupling and boundary contracts pending; MAST-U predictive pedestal and IC deferred (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-21">OQ-21</a>)</td>
-<td>draft entries 24–25, 29–34</td>
+<td>EC surrogate meets the owner’s targets and runs in TORAX with its fallback; ITER EPEDNN pedestal runs in TORAX; MAST-U predictive pedestal and IC deferred (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-21">OQ-21</a>)</td>
+<td>entries 24–25, 29–34, <a href="../../../Blog/tokamak-toolkit/log/36-ec-and-pedestal-contracts.html">36</a>–<a href="../../../Blog/tokamak-toolkit/log/39-ec-and-pedestal-surrogates-in-torax.html">39</a></td>
 </tr>
 </tbody>
 </table>
@@ -294,19 +294,23 @@ window.Quarto = {
 <td>passes on v3: <span class="claim">MAST-U: Q_e 17.8%, Q_i 25.2%; ITER: Q_e 7.2%, Q_i 10.8%; all meet the 30% target</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-129" class="cid st-measured">C-129</a>; dataset/model provenance and scores audited</td>
 </tr>
 <tr class="even">
+<td>held-out EC accuracy</td>
+<td>passes: <span class="claim">all three targets pass: absorbed power 0.01% and driven current 2.7% median relative error (targets 10%), heating centre 0.0036 median absolute error in rho (target 0.05)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-168" class="cid st-measured">C-168</a></td>
+</tr>
+<tr class="odd">
 <td>differentiable, inside the loop</td>
 <td>ITER v1 and v3 strict gradients pass (<span class="claim">v1 and v3 pass: three-step derivative FD tolerance 1e-7, forward/reverse tolerance 1e-12; guard masks unchanged over the stencil</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-138" class="cid st-tested">C-138</a>), as does discrete balance (<span class="claim">v1 and v3 pass: energy residual below 1e-6 and particle residual below 1e-10, with fine solver convergence</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-139" class="cid st-tested">C-139</a>); extended RAPTOR/ITER hybrid checks pass (<span class="claim">15 gradient, JIT, fallback and discrete-balance checks pass across RAPTOR and ITER hybrid in each mode</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-146" class="cid st-tested">C-146</a>); <a href="../../../Blog/tokamak-toolkit/ceilings.html#k-026">K-026</a> records the default-tolerance limitation</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>speed-up</td>
-<td>historical v1 comparison: <span class="claim">TGLF 540.38 s, v1 surrogate 0.780 s, QLKNN 0.126 s; v1 is about 693 times faster than TGLF</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-132" class="cid st-measured">C-132</a>; final v3 matched timing has no result because the scheduler cancelled its job before execution</td>
+<td>ITER final v3 at matched settings: <span class="claim">TGLF 539.1 s, final v3 surrogate 1.249 s, QLKNN 0.117 s; the v3 surrogate is about 432 times faster than TGLF and 10.7 times slower than QLKNN</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-158" class="cid st-measured">C-158</a> (historical v1: <span class="claim">TGLF 540.38 s, v1 surrogate 0.780 s, QLKNN 0.126 s; v1 is about 693 times faster than TGLF</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-132" class="cid st-measured">C-132</a>); MAST-U: <span class="claim">TGLF 364.1 s, surrogate 0.492 s, Bohm/gyro-Bohm 0.043 s: the surrogate is about 740 times faster than TGLF; profile deviation from TGLF at 0.2 s, T_e 41.5% and T_i 62.4% (Bohm/gyro-Bohm 47.9% and 84.6%), with half the faces outside the training window and on the fallback</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-176" class="cid st-measured">C-176</a></td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="plan-to-completion" class="level2">
-<h2 class="anchored" data-anchor-id="plan-to-completion">Plan to completion</h2>
-<p>Follow the <a href="../../../Blog/tokamak-toolkit/action-plan.html">action plan</a>: resolve the performance blocker and complete the EC production and ITER pedestal boundary contracts independently. Then label EC cases, agree accuracy targets, train EC ensembles and integrate both responses. Prescribed MAST-U pedestal and deferred IC follow the owner’s revised scope. Close M3 only when all required tasks meet its criteria. M4 begins after that acceptance.</p>
+<section id="closure" class="level2">
+<h2 class="anchored" data-anchor-id="closure">Closure</h2>
+<p>All three criteria have evidence for every required surrogate (<a href="../../../Blog/tokamak-toolkit/technical/surrogates.html#m3-audit">audit</a>); the MAST-U end-to-end timing was measured last (<span class="claim">TGLF 364.1 s, surrogate 0.492 s, Bohm/gyro-Bohm 0.043 s: the surrogate is about 740 times faster than TGLF; profile deviation from TGLF at 0.2 s, T_e 41.5% and T_i 62.4% (Bohm/gyro-Bohm 47.9% and 84.6%), with half the faces outside the training window and on the fallback</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-176" class="cid st-measured">C-176</a>). The owner confirmed the closure on 10 Oct 2026 (<a href="../../../Blog/tokamak-toolkit/log/41-m3-closed.html">entry 41</a>). Open ceilings carry into M4.</p>
 </section>
 <section id="deviations-so-far" class="level2">
 <h2 class="anchored" data-anchor-id="deviations-so-far">Deviations so far</h2>
@@ -317,7 +321,7 @@ window.Quarto = {
 <li><strong>Monotonicity imposed where TGLF itself is not monotone</strong> (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-20">OQ-20</a> 1): the surrogate departs from TGLF there by construction: <span class="claim">MAST-U: Q_e 3.14, Q_i 3.36; ITER: Q_e 2.51, Q_i 2.11 signed-log units</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-131" class="cid st-preliminary">C-131</a>. Sampled monotonicity checks are not a formal certificate.</li>
 <li><strong>Accuracy target measured on dataset v3</strong>, not on the M2 datasets (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-19">OQ-19</a>); errors on the M2 test splits are reported, not gated.</li>
 </ul>
-<p>Technical details → <a href="../technical/surrogates.qmd">Surrogates</a>.</p>
+<p>Technical details → <a href="../../../Blog/tokamak-toolkit/technical/surrogates.html">Surrogates</a>.</p>
 <p>The corrected original ITER numerical pilot completes with readable native heating and signed-current profiles (<span class="claim">the corrected EC reference completes in 83.16 s with readable native profiles</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-156" class="cid st-measured">C-156</a>). Native accounting and descriptive saved-reference comparisons are retained; the rendered PostScript page is blank. Production EC coupling contracts, grouped sampling and ITER boundary choices remain open.</p>
 <p>Repository checks: <span class="claim">56 focused checks pass in full and Tier-A-only modes</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-157" class="cid st-tested">C-157</a>. The generated status combines fresh affected-file reports with retained reports for unchanged tests; it is not a fresh full-suite execution.</p>
 

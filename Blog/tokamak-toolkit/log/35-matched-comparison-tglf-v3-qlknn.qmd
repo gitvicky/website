@@ -1,0 +1,58 @@
+---
+title: Matched comparison of TGLF, the final v3 surrogate and QLKNN inside TORAX
+date: '2026-10-10'
+categories:
+- measured
+entry: 35
+milestone: M3
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 35 · milestone M3
+:::
+
+M3's third acceptance criterion asks for the end-to-end speed-up of the surrogate inside the
+coupling loop, measured and reported. The earlier measurement used the first (v1) surrogate.
+The final monotone v3 surrogate had not been timed against TGLF on the same node, because the
+scheduler cancelled the prepared job before it started. The [Primer](../primer.qmd) explains
+the transport loop; terms are in the [Glossary](../glossary.qmd).
+
+We first looked for the cause of the cancellation in the project's accounting records. The
+same record (cancelled by root, zero elapsed time, no reason) appears on seven full-node jobs
+since 2 October, and two nodes appear twice; every resubmission ran on another node
+([seven full-node jobs since 2 Oct were cancelled by root at start with no reason; each resubmission landed on another node and ran]{.claim}[C-161](/Blog/tokamak-toolkit/claims.qmd#c-161){.cid .st-preliminary}). We read this as a node start-up failure rather than a property of the
+job. The owner approved a resubmission that excludes those nodes, with one automatic retry.
+The retry was not needed.
+
+The job runs the M1 benchmark case (the RAPTOR L-mode scenario) three times on one node with
+the same solver, grid and time steps: TGLF itself through TORAX's in-process model, the guarded
+v3 surrogate, and QLKNN. Compilation and one warm-up step are timed separately and excluded.
+The runner rejects stalled, non-finite and coarse-tolerance solves; none occurred.
+
+| quantity | result |
+|---|---|
+| run time for 40 steps (TGLF on 51 worker processes, the others on one core) | [TGLF 539.1 s, final v3 surrogate 1.249 s, QLKNN 0.117 s; the v3 surrogate is about 432 times faster than TGLF and 10.7 times slower than QLKNN]{.claim}[C-158](/Blog/tokamak-toolkit/claims.qmd#c-158){.cid .st-measured} |
+| profile deviation from TGLF at t = 2 s | [final v3 surrogate: T_e 7.7%, T_i 9.2%, n_e 11.4%, psi 0.32%; QLKNN: T_e 155%, T_i 128%, n_e 86%, psi 2.4%]{.claim}[C-159](/Blog/tokamak-toolkit/claims.qmd#c-159){.cid .st-measured} |
+
+The v3 surrogate is slower than v1 in the same comparison ([TGLF 540.38 s, v1 surrogate 0.780 s, QLKNN 0.126 s; v1 is about 693 times faster than TGLF]{.claim}[C-132](/Blog/tokamak-toolkit/claims.qmd#c-132){.cid .st-measured}). The monotone construction
+adds work per evaluation, and the gap to QLKNN remains a recorded ceiling ([K-022](/Blog/tokamak-toolkit/ceilings.qmd#k-022)). Against
+TGLF the surrogate stays close in temperature and density, while QLKNN, trained on a different
+code, does not reproduce TGLF's profiles in this case.
+
+The surrogate result describes the guarded model, not the network alone. In the final state
+the guard sends some faces near the axis and at the edge to the Bohm/gyro-Bohm fallback,
+because their inputs lie outside the training box ([17 of 51 faces (rho_tor_norm up to 0.08 and from 0.78) are outside the guard's domain and use the fallback]{.claim}[C-160](/Blog/tokamak-toolkit/claims.qmd#c-160){.cid .st-measured}). The comparison is one
+trajectory of one case, and the timings come from a single run.
+
+The check is independent of the surrogate's training: TGLF runs inside the loop with its own
+transport, and the deviation is measured on the closed-loop profiles, not on single flux
+evaluations. Runner, script, source commit and source diff are saved with the outputs.
+
+With this result, all three M3 criteria have evidence for the transport surrogate. M3 stays
+open for the RF deposition and pedestal surrogates.
+
+Technical details → [Matched comparison](../technical/surrogates.qmd#matched-comparison).
+
+::: {.entry-links}
+**Technical details →** [Surrogates › matched comparison](/Blog/tokamak-toolkit/technical/surrogates.qmd#matched-comparison)
+:::

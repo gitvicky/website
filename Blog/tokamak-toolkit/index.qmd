@@ -43,12 +43,12 @@ working to a brief by a human owner who makes every physics, licence and publica
 
 | | |
 |---|---|
-| milestone | M3 |
-| log entries | 20 |
-| tests passing | 411 recorded full-mode results, 411 with gated codes disabled |
-| source | 12099 lines + 6067 lines of tests |
-| tested code | `66cc594` |
-| updated | 2026-10-08 |
+| milestone | M4 |
+| log entries | 49 |
+| tests passing | 539 recorded full-mode results, 539 with gated codes disabled |
+| source | 15308 lines + 8083 lines of tests |
+| tested code | `8721f24` |
+| updated | 2026-10-11 |
 
 The aggregate combines fresh affected-file checks ([56 focused checks pass in full and Tier-A-only modes]{.claim}[C-157](/Blog/tokamak-toolkit/claims.qmd#c-157){.cid .st-tested}) with
 retained execution reports for unchanged tests. It is not a fresh full-suite
@@ -794,8 +794,8 @@ human expert, not by the agent that built the code.
 | M0 | [Scaffold](milestones/M0.qmd) | data structures, the guard, the coupling loop, IMAS adapters, tests | [done 18 Sep 2026]{.wf .done} | — |
 | M1 | [Open baseline](milestones/M1.qmd) | open-source physics codes wired in; a published benchmark reproduced | [done 1 Oct 2026]{.wf .done} | [physicist review: passed]{.wf .done} |
 | M2 | [Training data](milestones/M2.qmd) | sampled datasets from first-principles turbulence codes, with provenance | [done 3 Oct 2026]{.wf .done} | — |
-| M3 | [Surrogates](milestones/M3.qmd) | neural ensembles with physics built in, running inside the loop | [in progress]{.wf .wip} | — |
-| M4 | Verification | proved properties, calibrated uncertainty, closed-loop checks per surrogate | [not started]{.wf .todo} | [certification review]{.wf .todo} |
+| M3 | [Surrogates](milestones/M3.qmd) | neural ensembles with physics built in, running inside the loop | [done 10 Oct 2026]{.wf .done} | — |
+| M4 | [Verification](milestones/M4.qmd) | proved properties, calibrated uncertainty, closed-loop checks per surrogate | [in progress]{.wf .active} | [certification review]{.wf .todo} |
 | M5 | Uncertainty and validation | uncertainty propagated through the coupled simulation; validation | [not started]{.wf .todo} | [physicist sign-off]{.wf .todo} |
 
 :::: {.tk-cols}
@@ -803,7 +803,7 @@ human expert, not by the agent that built the code.
 ## The log
 
 <details class="tk-log">
-<summary>Show all 20 entries, newest first</summary>
+<summary>Show all 49 entries, newest first</summary>
 
 ::: {#log}
 :::
@@ -817,21 +817,28 @@ human expert, not by the agent that built the code.
 
 The [action plan](action-plan.qmd) gives dependencies and completion criteria.
 
-- **Measure matched final-model speed-up.** Resolve the cancelled compute run, then compare
-  TGLF, final v3 and QLKNN at matched settings. The local derivative, fallback and balance
-  checks are complete ([15 gradient, JIT, fallback and discrete-balance checks pass across RAPTOR and ITER hybrid in each mode]{.claim}[C-146](/Blog/tokamak-toolkit/claims.qmd#c-146){.cid .st-tested}); runtime evidence remains open.
-- **Complete EC and ITER pedestal contracts** ([OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21)), independently of the compute
-  investigation. Reference/model/channels are selected; launch/current conventions and
-  the coupled pedestal boundary mapping remain open. MAST-U predictive closure and IC
-  are deferred.
-- **Train and integrate response surrogates.** Guards, grouped datasets and baseline training
-  are built, and the selected pretrained ITER pedestal model is ported. Label EC reference
-  cases, agree accuracy targets, train EC ensembles and test guarded coupled execution.
+- **M4: verification.** Properties and tooling are selected ([OQ-22](/Blog/tokamak-toolkit/decisions.qmd#oq-22)–24), property contracts
+  are written, and the saved transport comparisons pass on ITER and fail on MAST-U
+  ([entry 42](log/42-m4-properties-and-transport-check.qmd)). Exports pass the approved numeric
+  gate. The owner prioritized MAST-U remediation before further proofs and calibration.
+  Matched flux probes and an exact replay are complete
+  ([entry 43](log/43-mastu-feedback-diagnosis.qmd)); the approved training-only label refresh
+  completed and passes local artifact checks ([entry 44](log/44-mastu-refresh-artifact-checks.qmd)).
+  Artifact synchronization and downloaded-checksum verification are complete
+  ([entry 45](log/45-mastu-artifact-upload-verified.qmd)). Retraining preparation passes focused checks and a training-only smoke
+  ([entry 46](log/46-mastu-retraining-preparation.qmd)); the concrete compute request
+  was approved and executed once. The candidate completion audit and numerical export
+  checks pass ([entry 47](log/47-mastu-candidate-trained-and-checked.qmd)); the offline
+  comparison retains mixed regressions. Coupled replay preparation now passes its focused
+  checks and training-only smoke ([entry 48](log/48-mastu-candidate-replay-preparation.qmd));
+  the approved solver replay completes, but reference coverage fails
+  ([entry 49](log/49-mastu-replay-reference-coverage-fails.qmd)). Resolve reference admissibility
+  and review the bounded follow-up next. The approved reference diagnostic is
+  consumed ([the diagnostic completes in 517 seconds within its 30-minute bound, with 40 finite converged steps, exact historical temperature/density/poloidal-flux-profile and final-mask equality, and 171 passing saved-output integrity checks]{.claim}[C-193](/Blog/tokamak-toolkit/claims.qmd#c-193){.cid .st-measured}); negative raw heat diffusivity explains the rejected
+  face ([final face 4 at normalized radius 0.16 has valid inputs but raw electron heat diffusivity -0.02792124888 m²/s; negative heat diffusivity rejects that face at 8 of 40 accepted states; reference rejection is 323/1040 accepted-state face records (31.0577%)]{.claim}[C-194](/Blog/tokamak-toolkit/claims.qmd#c-194){.cid .st-measured}). Reference physics disposition remains ahead ([OQ-32](/Blog/tokamak-toolkit/decisions.qmd#oq-32)).
+  [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) remains open.
 - **Profile Newton separately** ([K-022](/Blog/tokamak-toolkit/ceilings.qmd#k-022)), distinguishing compilation, ensemble evaluation and
   Jacobian cost. Historical speed-up belongs to v1.
-- **Close M3 before verification.** Audit accuracy, differentiable guarded execution and
-  measured speed-up for every required task. At M4, agree properties and trajectory tolerances,
-  prove input-box properties, calibrate uncertainty and prepare certification review.
 - **ASCOT5 follow-ups, before neutral-beam ions**: the alphas' mean birth energy ([K-011](/Blog/tokamak-toolkit/ceilings.qmd#k-011)) and the
   core heating profile ([K-012](/Blog/tokamak-toolkit/ceilings.qmd#k-012)).
 - **Future extension:** extending the benchmark to a STEP power-plant flat-top is planned as a
