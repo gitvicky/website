@@ -406,10 +406,72 @@ step, needs about 40–100 h per mode, far beyond the remaining jobs. JOREK's
 hard-coded, so seeding the doubled grid with the 80 × 128 eigenmode would need a source
 patch. The options go to the owner after job 2.
 
+### Case (b) second job {#case-b-job2}
+
+Job 2 continued every n from its own last time slice of job 1, with Δt = 1 on the 80 × 128
+grid, and ran to the time limit (t ≈ 9470–9670) with no solver abort
+([the continuation job ran all eight n to its time limit (t ≈ 9470–9670) with no solver abort; n = 1, 2, 3, 5 and 8 show no measurable growth by t ≈ 9671 (under 6 decades above their minimum energy)]{.claim}[C-243](/Blog/tokamak-toolkit/claims.qmd#c-243){.cid .st-measured}). The window rule ("rule b", `j5_growth.py --rule b`) was fixed in the
+plan before this job's data were read:
+- fit ½ ln E of the total energy from 4 to 10 decades above the run's minimum, or to the end
+  of the record;
+- half-window and magnetic/kinetic fits must agree within 2%;
+- location comes from the flow perturbation (`class_u`);
+- an n that hasn't grown 6 decades is reported as "no measurable growth by t".
+
+| n | result | γ√(μ₀ρ₀) | u peak ψ_N | γ/ω*ᵢ | fit points |
+|---|---|---|---|---|---|
+| 1, 2, 3, 5, 8 | no measurable growth by t ≈ 9671 | — | — | — | — |
+| 12 | linear, edge | 0.00218 | 0.925 | 0.054 | 2669 |
+| 16 | linear, edge | 0.00192 | 0.975 | 0.036 | 3425 |
+| 20 | linear, edge | 0.00288 | 0.975 | 0.043 | 2403 |
+
+([γ√(μ₀ρ₀) = 0.00218 (n = 12), 0.00192 (n = 16) and 0.00288 (n = 20), all with the flow perturbation peaked at ψ_N 0.925–0.975; fits over 2400–3400 points, half-window and magnetic/kinetic fits agreeing within 0.6%, and shifting the fit band by a decade changes γ by under 1e-4]{.claim}[C-244](/Blog/tokamak-toolkit/claims.qmd#c-244){.cid .st-preliminary}, [γ/ω*ᵢ = 0.054 (n = 12), 0.036 (n = 16), 0.043 (n = 20), against the EPED-like threshold 0.25; ω*ᵢ is an estimate from the profiles, not a JOREK output]{.claim}[C-245](/Blog/tokamak-toolkit/claims.qmd#c-245){.cid .st-preliminary}.)
+- **Robustness.** The largest disagreement between half-windows, or between the magnetic and
+  kinetic fits, is 0.6% (n = 16). Shifting the band by a decade either way changes γ by less
+  than 1e-4.
+- **Order of events.** The rule was fixed in the plan first. One look at interim output
+  with the old case (a) band followed while the job ran. The rule's code was then written
+  by a session that had not seen the data.
+
+**Time-step check (job 3).** n = 12, 16 and 20 each restart twice from the same job-2 slice,
+at Δt = 1 and Δt = 0.5. The slice is the first one at or after the mode's rule-b window start
+(time-slice indices 7000, 6200 and 4900). The inputs are frozen with checksums, and the
+comparison window and the 5% test are fixed in `j5_dt_check.py` before the run. The same
+job runs the 160 × 256 axisymmetric start on the spare cores.
+
+**Grid check.** A from-scratch doubled-grid check costs about 10–32 chained jobs
+([repeating the slow emergence (4 decades only by t ≈ 4700–6900) plus a fit window on 160 × 256 means about 7000–9000 steps per mode, about 60–190 h at an estimated 30–75 s per step, so 10–32 chained jobs for the three modes run together]{.claim}[C-246](/Blog/tokamak-toolkit/claims.qmd#c-246){.cid .st-preliminary}). JOREK can't start the fine grid from the coarse mode in this version:
+`jorek2_import_perturbation` needs identical grids, and `regrid` and `refinement` are
+marked as not working. [OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43) asks the owner how to proceed. The recommendation is the grid
+check on case (a)'s two faster pedestal modes, with case (b) reported as converged in Δt only.
+
+### Case (b) time-step check {#case-b-dt-check}
+
+Job 3 restarted n = 12, 16 and 20 twice from the same job-2 time slice (the first slice at or
+after each mode's fit-window start), at Δt = 1 and Δt = 0.5. The inputs were frozen with
+checksums. `j5_dt_check.py`, fixed before the run, fits both runs over the same window: from
+100 time units after the slice to the earlier of either run's end and 10 decades above the
+minimum energy.
+
+| n | window (t) | γ√(μ₀ρ₀), Δt = 1 | γ√(μ₀ρ₀), Δt = 0.5 | relative change | rerun vs job 2 |
+|---|---|---|---|---|---|
+| 12 | 7071–9421 | 0.0021768 | 0.0021768 | 1.3e-5 | 5e-9 |
+| 16 | 6271–8621 | 0.0019219 | 0.0019221 | 9.6e-5 | 3e-8 |
+| 20 | 4971–7066 | 0.0028752 | 0.0028754 | 7.9e-5 | 9e-10 |
+
+([restarting n = 12, 16 and 20 from the same saved state at Δt = 1 and Δt = 0.5 changes γ by 1.3e-5, 9.6e-5 and 7.9e-5, against the 5% tolerance of decision 7; the location stays at the pedestal in both runs]{.claim}[C-248](/Blog/tokamak-toolkit/claims.qmd#c-248){.cid .st-measured}, [the Δt = 1 restarts reproduce the original job's growth rate over the shared window to 9e-10–3e-8]{.claim}[C-249](/Blog/tokamak-toolkit/claims.qmd#c-249){.cid .st-measured}, [γ√(μ₀ρ₀) = 0.00218 (n = 12), 0.00192 (n = 16) and 0.00288 (n = 20), flow perturbation peaked at ψ_N 0.925–0.975; converged in time step ([C-248](/Blog/tokamak-toolkit/claims.qmd#c-248))]{.claim}[C-251](/Blog/tokamak-toolkit/claims.qmd#c-251){.cid .st-preliminary}.)
+- **Result.** All three pass the decision-7 time-step test by more than two orders of
+  magnitude, with the flow perturbation at the edge in every run. Changing the start-up
+  skip from 100 to 50 or 200 changes the relative changes by under 4%.
+- **Doubled grid.** The same job ran the 160 × 256 axisymmetric start on 64 spare cores:
+  about 48 s per step, healthy at the end ([50 axisymmetric steps on the 160 × 256 grid in 40 min on 64 cores; the state passed its health check and is kept as the start for a grid check]{.claim}[C-250](/Blog/tokamak-toolkit/claims.qmd#c-250){.cid .st-measured}). It is kept as the
+  starting state for whichever grid check [OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43) selects.
+
 ## Ceilings {#ceilings}
 
 - No growth rate passes decision 7 yet. Case (a)'s pedestal modes are converged in Δt only;
-  case (b) has no fitted γ.
+  case (b)'s three pedestal modes are converged in Δt at 80 × 128, with the grid check open
+  ([OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43)).
 - The fixed boundary at the separatrix stabilises peeling modes artificially (no vacuum
   region).
 - The case (b) equilibrium is not TORAX's: q differs by up to about 14% in the core
@@ -419,6 +481,10 @@ patch. The options go to the owner after job 2.
 
 ## Changelog {#changelog}
 
+- 2026-10-25: case (b) time-step check passes for n = 12, 16, 20
+  ([entry 75](../log/75-time-step-check-of-the-case-b-pedestal-modes.qmd)).
+- 2026-10-25: case (b) n-scan, second job: three pedestal modes grow
+  ([entry 73](../log/73-case-b-n-scan-three-pedestal-modes.qmd)).
 - 2026-10-25: case (b) n-scan, first job ([entry 72](../log/72-case-b-n-scan-first-job.qmd));
   case (b) equilibrium ([entry 71](../log/71-case-b-equilibrium-from-the-torax-state.qmd));
   time-step check ([entry 69](../log/69-time-step-check-of-the-growth-rates.qmd)).

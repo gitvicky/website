@@ -1,0 +1,68 @@
+---
+title: 'Linear JOREK n-scan of the TORAX ITER hybrid state: three pedestal modes grow'
+date: '2026-10-25'
+categories:
+- measured
+entry: 73
+milestone: JOREK (alongside M4)
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 73 · milestone JOREK (alongside M4)
+:::
+
+The first case (b) job ([entry 72](72-case-b-n-scan-first-job.qmd)) ended before most modes had
+grown far enough to measure. The second job continued every toroidal mode number n from its
+own last saved time slice, with unchanged inputs. The rule for fitting the growth rate γ was
+fixed before this job's data were analysed: fit ½ ln E from 4 to 10 decades above the run's
+minimum energy, require the two halves of the window and the magnetic and kinetic energies
+to give the same γ (the agreement test used for case (a)), and read the location from the
+flow perturbation.
+
+## What happened
+
+All eight runs reached the time limit without a solver abort. Below n = 12 nothing grew
+measurably ([the continuation job ran all eight n to its time limit (t ≈ 9470–9670) with no solver abort; n = 1, 2, 3, 5 and 8 show no measurable growth by t ≈ 9671 (under 6 decades above their minimum energy)]{.claim}[C-243](/Blog/tokamak-toolkit/claims.qmd#c-243){.cid .st-measured}). The three highest n grew cleanly, all in the pedestal:
+
+| n | γ√(μ₀ρ₀) and location |
+|---|---|
+| 12, 16, 20 | [γ√(μ₀ρ₀) = 0.00218 (n = 12), 0.00192 (n = 16) and 0.00288 (n = 20), all with the flow perturbation peaked at ψ_N 0.925–0.975; fits over 2400–3400 points, half-window and magnetic/kinetic fits agreeing within 0.6%, and shifting the fit band by a decade changes γ by under 1e-4]{.claim}[C-244](/Blog/tokamak-toolkit/claims.qmd#c-244){.cid .st-preliminary} |
+
+By the criterion the owner chose (γ > 0 with diamagnetic terms included), these three modes
+are unstable. They are weak: about 15 times slower than case (a)'s pedestal modes, and far
+below the EPED-like threshold on the ratio of γ to the ion diamagnetic frequency
+([γ/ω*ᵢ = 0.054 (n = 12), 0.036 (n = 16), 0.043 (n = 20), against the EPED-like threshold 0.25; ω*ᵢ is an estimate from the profiles, not a JOREK output]{.claim}[C-245](/Blog/tokamak-toolkit/claims.qmd#c-245){.cid .st-preliminary}). γ is not monotone in n.
+
+One point on process. The window rule was fixed in the plan before any data from this job
+were read. While the job was still running, we looked once at interim output with the old
+case (a) rule. The code for the new rule was then written by a session that had not seen
+the data.
+
+## What is not yet checked
+
+These growth rates are not converged. Decision 7 asks that halving the time step and doubling
+the grid each leave γ within the agreed tolerance. The time-step check is running now: each of the three
+modes restarts twice from the same saved slice, at Δt = 1 and Δt = 0.5. The slice is the first
+one inside its fit window. The same job also prepares the doubled grid's axisymmetric state.
+
+The grid check is the hard part. These modes take thousands of time units to rise from
+round-off, and JOREK in this version cannot start the fine grid from the coarse mode. A
+from-scratch check on the doubled grid would take many more jobs than remain
+([repeating the slow emergence (4 decades only by t ≈ 4700–6900) plus a fit window on 160 × 256 means about 7000–9000 steps per mode, about 60–190 h at an estimated 30–75 s per step, so 10–32 chained jobs for the three modes run together]{.claim}[C-246](/Blog/tokamak-toolkit/claims.qmd#c-246){.cid .st-preliminary}). The recommendation to the owner ([OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43)) is to measure the grid
+sensitivity on case (a)'s faster pedestal modes instead, and to report case (b) as
+converged in time step only.
+
+Technical details → [JOREK](../technical/jorek.qmd#case-b-job2). Decision → [OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43).
+
+---
+
+*JOREK acknowledgement.* JOREK is developed by the JOREK team and is open source under
+the GNU LGPL v3. Results here use JOREK at commit `01a52be3`. Citations: M. Hoelzl et al.,
+Nuclear Fusion 61, 065001 (2021); M. Hoelzl et al., Nuclear Fusion 66, 116006 (2026). For a list
+of JOREK team members, refer to the author list of M. Hoelzl, G.T.A. Huijsmans, F.J. Artola,
+E. Nardon, M. Becoulet, N. Schwarz, A. Cathey, S.J.P. Pamela et al., Nuclear Fusion 64, 112016 (2024).
+
+::: {.entry-links}
+**Technical details →** [JOREK › case b job2](/Blog/tokamak-toolkit/technical/jorek.qmd#case-b-job2)  
+**Decisions →** [OQ-41](/Blog/tokamak-toolkit/decisions.qmd#oq-41) · [OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43)
+:::

@@ -44,15 +44,15 @@ working to a brief by a human owner who makes every physics, licence and publica
 | | |
 |---|---|
 | milestone | M4 |
-| log entries | 49 |
-| tests passing | 607 recorded full-mode results, 607 with gated codes disabled |
-| source | 15918 lines + 8611 lines of tests |
-| tested code | `ec310a2` |
-| updated | 2026-10-15 |
+| log entries | 73 |
+| tests passing | 764 recorded full-mode results, 765 with gated codes disabled |
+| source | 19059 lines + 10522 lines of tests |
+| tested code | `a558b28` |
+| updated | 2026-10-25 |
 
-The aggregate combines fresh affected-file checks ([56 focused checks pass in full and Tier-A-only modes]{.claim}[C-157](/Blog/tokamak-toolkit/claims.qmd#c-157){.cid .st-tested}) with
-retained execution reports for unchanged tests. It is not a fresh full-suite
-run. Counts and source size are regenerated at the displayed code checkpoint.
+Counts are from a fresh run of both test suites at the displayed code commit, one
+process per test file: the full suite (1 test skipped) and the
+suite with gated codes disabled. Source size is counted at the same commit.
 
 ### Where to start
 
@@ -803,7 +803,7 @@ human expert, not by the agent that built the code.
 ## The log
 
 <details class="tk-log">
-<summary>Show all 49 entries, newest first</summary>
+<summary>Show all 73 entries, newest first</summary>
 
 ::: {#log}
 :::
@@ -820,8 +820,8 @@ The [action plan](action-plan.qmd) gives dependencies and completion criteria.
 - **M4: verification.** The MAST-U closed-loop comparison is not evaluable: no admissible
   TGLF reference trajectory exists for this scenario. The owner limited the MAST-U scope, and
   ITER's pass stands ([OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42), [entry 70](log/70-owner-limits-the-mastu-certification-scope.qmd)).
-  Next come the formal monotonicity proofs and certified output bounds for the four
-  surrogates, local robustness, split-conformal calibration, and the EC closed-loop
+  Transport monotonicity proofs are complete ([all 20 members of each ensemble pass both heat-flux monotonicity properties, with derivative lower bound zero over the full training box]{.claim}[C-247](/Blog/tokamak-toolkit/claims.qmd#c-247){.cid .st-measured}). Next come certified
+  output bounds for the four surrogates, local robustness, split-conformal calibration, and the EC closed-loop
   comparison against GENRAY. After those: guards bound to the certified boxes with a
   fallback-rate check, a verification report per surrogate, CI that re-proves properties when
   a surrogate changes, and the owner's certification review.

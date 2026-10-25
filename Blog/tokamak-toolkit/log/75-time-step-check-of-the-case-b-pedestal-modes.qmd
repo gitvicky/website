@@ -1,0 +1,62 @@
+---
+title: Time-step check of the case (b) pedestal growth rates
+date: '2026-10-25'
+categories:
+- measured
+entry: 75
+milestone: JOREK (alongside M4)
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 75 · milestone JOREK (alongside M4)
+:::
+
+[Entry 73](73-case-b-n-scan-three-pedestal-modes.qmd) found three toroidal mode numbers of the
+TORAX ITER hybrid state growing at the pedestal: n = 12, 16 and 20. Decision 7 asks that a
+growth rate γ change by no more than the agreed tolerance when the time step is halved and when
+the grid is doubled. This entry is the time-step half of that check.
+
+## Method
+
+Repeating the slow rise from round-off at half the time step would have cost several jobs. We
+therefore restarted each mode twice from the same saved state, once at Δt = 1 and once at
+Δt = 0.5, and fitted both runs over the same window. All three rules were fixed before the job
+ran, with every input recorded by checksum:
+- which modes to restart: those growing in entry 73;
+- which saved state: the first one inside each mode's fit window;
+- how to compare the runs.
+
+## What happened
+
+All six runs reached the time limit with no solver abort. Halving the time step changed γ by
+at most about one part in ten thousand, and every mode stayed at the pedestal
+([restarting n = 12, 16 and 20 from the same saved state at Δt = 1 and Δt = 0.5 changes γ by 1.3e-5, 9.6e-5 and 7.9e-5, against the 5% tolerance of decision 7; the location stays at the pedestal in both runs]{.claim}[C-248](/Blog/tokamak-toolkit/claims.qmd#c-248){.cid .st-measured}). As a control, the Δt = 1 restarts reproduce the original job's growth
+rates almost exactly ([the Δt = 1 restarts reproduce the original job's growth rate over the shared window to 9e-10–3e-8]{.claim}[C-249](/Blog/tokamak-toolkit/claims.qmd#c-249){.cid .st-measured}). The case (b) pedestal growth rates are therefore
+converged in time step ([γ√(μ₀ρ₀) = 0.00218 (n = 12), 0.00192 (n = 16) and 0.00288 (n = 20), flow perturbation peaked at ψ_N 0.925–0.975; converged in time step ([C-248](/Blog/tokamak-toolkit/claims.qmd#c-248))]{.claim}[C-251](/Blog/tokamak-toolkit/claims.qmd#c-251){.cid .st-preliminary}).
+
+The same job used its spare cores to run the axisymmetric start of case (b) on the doubled
+grid. It passed its health check and is kept as the starting state for a grid check
+([50 axisymmetric steps on the 160 × 256 grid in 40 min on 64 cores; the state passed its health check and is kept as the start for a grid check]{.claim}[C-250](/Blog/tokamak-toolkit/claims.qmd#c-250){.cid .st-measured}).
+
+## What is still open
+
+The grid check. On the doubled grid these modes would again have to rise from round-off,
+which takes many jobs, and JOREK in this version cannot start the fine grid from the coarse
+mode. The owner's decision on how to proceed is pending ([OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43)). Until then the case (b)
+growth rates are converged in time step only, on a fixed boundary at the separatrix that
+stabilises peeling modes artificially.
+
+Technical details → [JOREK](../technical/jorek.qmd#case-b-dt-check). Decision → [OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43).
+
+---
+
+*JOREK acknowledgement.* JOREK is developed by the JOREK team and is open source under
+the GNU LGPL v3. Results here use JOREK at commit `01a52be3`. Citations: M. Hoelzl et al.,
+Nuclear Fusion 61, 065001 (2021); M. Hoelzl et al., Nuclear Fusion 66, 116006 (2026). For a list
+of JOREK team members, refer to the author list of M. Hoelzl, G.T.A. Huijsmans, F.J. Artola,
+E. Nardon, M. Becoulet, N. Schwarz, A. Cathey, S.J.P. Pamela et al., Nuclear Fusion 64, 112016 (2024).
+
+::: {.entry-links}
+**Technical details →** [JOREK › case b dt check](/Blog/tokamak-toolkit/technical/jorek.qmd#case-b-dt-check)  
+**Decisions →** [OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39) · [OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43)
+:::

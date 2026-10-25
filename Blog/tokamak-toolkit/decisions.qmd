@@ -13,8 +13,14 @@ context and a recommended answer, carries on with whatever isn't blocked, and wa
 
 ## Awaiting a decision
 
-No question is open. The next one expected is how to run the grid-resolution check of the
-JOREK case (b) growth rates, once the second case (b) job has been analysed.
+### OQ-43 · Grid check for the JOREK case (b) growth rates {#oq-43}
+
+Awaiting a decision on how to check the case (b) growth rates against grid resolution. A
+from-scratch check on the doubled grid costs far more than the approved compute, because
+these modes rise slowly from round-off. The options are: the grid check on case (a)'s two
+faster pedestal modes, with case (b) reported as converged in time step only (recommended);
+a long chain of case (b) jobs; a JOREK patch to carry a mode across grids; or the time-step
+check alone.
 
 ## Settled
 

@@ -17,23 +17,26 @@ are done, and so is the closed-loop transport comparison: ITER passes
 ([served-face T_e 7.42%, T_i 8.18%, both passing the 15% limit; whole profile 7.72/9.23%; 34 of 51 final-state faces served]{.claim}[C-178](/Blog/tokamak-toolkit/claims.qmd#c-178){.cid .st-measured}) and MAST-U fails ([served-face T_e 35.33%, T_i 49.15%, both failing 15%; whole profile 41.51/62.39%; cells with both adjacent faces served give 11.86/23.24%, still failing T_i; 13 of 26 final-state faces served]{.claim}[C-179](/Blog/tokamak-toolkit/claims.qmd#c-179){.cid .st-measured}). The MAST-U remediation stopped at
 its reference step, because no admissible TGLF reference trajectory exists for this
 scenario. The owner limited the MAST-U scope ([OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42),
-[entry 70](log/70-owner-limits-the-mastu-certification-scope.qmd)). MAST-U is certified with
-that limitation stated, and ITER's pass stands.
+[entry 70](log/70-owner-limits-the-mastu-certification-scope.qmd)). MAST-U will be presented for certification with
+that limitation stated. ITER's recorded pass predates full-scenario metadata; it remains
+historical evidence. The M4 human review has not occurred.
 
 **JOREK, alongside M4.** Linear pedestal-stability scans of the ITER hybrid case. Case (a),
 the EQDSK as given, is closed on the time-step check
 ([entry 69](log/69-time-step-check-of-the-growth-rates.qmd)). Case (b), the TORAX state, has an
-accepted equilibrium ([entry 71](log/71-case-b-equilibrium-from-the-torax-state.qmd)) and a
-first n-scan ([entry 72](log/72-case-b-n-scan-first-job.qmd)). Two of its five approved jobs
-are used.
+accepted equilibrium ([entry 71](log/71-case-b-equilibrium-from-the-torax-state.qmd)) and an
+n-scan in which n = 12, 16 and 20 grow at the pedestal
+([entry 73](log/73-case-b-n-scan-three-pedestal-modes.qmd)), converged in time step
+([entry 75](log/75-time-step-check-of-the-case-b-pedestal-modes.qmd)). Three of its five approved
+jobs are used; the grid check awaits [OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43).
 
 ## M4 to the certification review {#m4}
 
 | step | work | done when | needs |
 |---|---|---|---|
-| proofs | transport monotonicity in the normalised temperature gradients, by a structural certificate and by derivative bounds with input splitting | a certificate per model, both routes agreeing | — |
+| proofs (done) | transport monotonicity in the normalised temperature gradients | both proof routes agree ([all 20 members of each ensemble pass both heat-flux monotonicity properties, with derivative lower bound zero over the full training box]{.claim}[C-247](/Blog/tokamak-toolkit/claims.qmd#c-247){.cid .st-measured}) | — |
 | output bounds | certified output bounds per ensemble member over each training box: transport, EC per launcher family, pedestal around the ITER states the loop visits | certificates; transport bounds wired into the guard | — |
-| calibration | split-conformal intervals at the agreed coverage, fitted on validation splits and reported on test splits; not applicable to the pedestal model, which has no labelled data | coverage table, intervals stored with the model hash | — |
+| calibration (done) | split-conformal intervals for transport and EC; the pedestal model has no labelled data; a second transport calibration on loop states for M5 | coverage tables ([90% intervals calibrated on the v1 validation split cover 0.887–0.907 on the v1 test and v2-random splits (6 outputs, ITER and MAST-U); 9 of 12 lie in the 0.893–0.907 range expected for exchangeable data, the other three miss it by at most 0.006]{.claim}[C-256](/Blog/tokamak-toolkit/claims.qmd#c-256){.cid .st-measured}, [90% intervals calibrated on 190 guard-accepted validation states (4 runs) cover 0.876–0.978 of 548 served test states (8 runs); all six outputs lie within or above the 0.856–0.938 range expected for exchangeable data; per-run coverage 0.78–1.00]{.claim}[C-258](/Blog/tokamak-toolkit/claims.qmd#c-258){.cid .st-measured}); loop states: MAST-U usable ([calibrated on 16 held-out runs and tested on the other 16, coverage is 0.870–0.894; the reverse direction gives 0.905–0.924; single runs 0.75–0.97]{.claim}[C-260](/Blog/tokamak-toolkit/claims.qmd#c-260){.cid .st-measured}), ITER needs more held-out runs ([calibrated on 4 held-out runs, the intervals cover 0.936–0.966 of the other 4; calibrated the other way they cover 0.711–0.818; not reliable for a new ITER run]{.claim}[C-261](/Blog/tokamak-toolkit/claims.qmd#c-261){.cid .st-measured}) | — |
 | robustness | local robustness on small boxes around loop states | proved, falsified (with counterexample) or timed out, per surrogate | a CPU node if the proofs are heavy |
 | EC closed loop | about 20 states per launcher from coupled runs, compared with GENRAY on the same launches | comparison table, pass or fail | one small batch job |
 | guards | guards read the certified boxes and bounds; fallback rates checked against a threshold | rates reported against the threshold | owner: the threshold |
@@ -45,13 +48,14 @@ reported, and the boxes are not shrunk to make bounds tighter.
 
 ## JOREK: finish J5, then decide its role {#jorek}
 
-1. Analyse the second case (b) job. The fit window for case (b) is fixed before looking at
-   that job: 4 to 10 decades above each run's minimum energy, with the same agreement checks,
-   and location from the flow perturbation. An n that has not grown 6 decades by the end is
-   reported as "no measurable growth", not as stable.
-2. The time-step check: restart each growing pedestal mode from the same snapshot at Δt = 1
-   and Δt = 0.5, and compare over matching windows.
-3. The grid check needs an owner decision. Repeating the slow emergence on the doubled grid
+1. Done: the second case (b) job is analysed with the pre-registered window rule. n = 12, 16
+   and 20 grow at the pedestal, weakly; n = 1–8 show no measurable growth by the end
+   ([entry 73](log/73-case-b-n-scan-three-pedestal-modes.qmd)).
+2. Done: the time-step check. Each of n = 12, 16 and 20 restarted from the same snapshot at
+   Δt = 1 and Δt = 0.5; halving the step changes γ by about one part in ten thousand
+   ([entry 75](log/75-time-step-check-of-the-case-b-pedestal-modes.qmd)). The doubled grid's
+   axisymmetric state is ready.
+3. The grid check needs an owner decision ([OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43)). Repeating the slow emergence on the doubled grid
    costs far more than the remaining jobs. The options are a grid check on case (a)'s two fast
    pedestal modes instead, a long chain of case (b) jobs, a JOREK patch to carry an eigenmode
    across grids, or the time-step check alone.
@@ -65,7 +69,7 @@ reported, and the boxes are not shrunk to make bounds tighter.
 
 | when | decision |
 |---|---|
-| after the second case (b) job | how to run the JOREK grid check |
+| now ([OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43)) | how to run the JOREK grid check; recommendation: case (a)'s two fast pedestal modes, case (b) converged in Δt only |
 | at the guard step | the fallback-rate threshold, one value per machine |
 | end of J5 | JOREK's role: surrogate, reference runs, or neither |
 | end of M4 | the certification review |

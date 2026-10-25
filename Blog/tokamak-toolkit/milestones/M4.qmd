@@ -22,8 +22,9 @@ review is the human gate; it has not occurred.
 | model storage and verification tooling | approved: committed model candidates/boxes ([OQ-23](/Blog/tokamak-toolkit/decisions.qmd#oq-23)), auto_LiRPA/input splitting ([OQ-24](/Blog/tokamak-toolkit/decisions.qmd#oq-24)) |
 | PyTorch export | [13 export checks pass in each mode: all selected members, random box points, local holdouts, physical transforms and served means, with rtol=1e-12 and atol=1e-12 in each declared output unit]{.claim}[C-180](/Blog/tokamak-toolkit/claims.qmd#c-180){.cid .st-tested}; numerical parity is not a formal certificate |
 | property contracts | [six property contracts load; 14 property-validation tests pass in each mode, including malformed-domain, tolerance and output-schema rejection]{.claim}[C-177](/Blog/tokamak-toolkit/claims.qmd#c-177){.cid .st-tested} |
-| transport closed-loop comparison | ITER passes ([served-face T_e 7.42%, T_i 8.18%, both passing the 15% limit; whole profile 7.72/9.23%; 34 of 51 final-state faces served]{.claim}[C-178](/Blog/tokamak-toolkit/claims.qmd#c-178){.cid .st-measured}); MAST-U fails ([served-face T_e 35.33%, T_i 49.15%, both failing 15%; whole profile 41.51/62.39%; cells with both adjacent faces served give 11.86/23.24%, still failing T_i; 13 of 26 final-state faces served]{.claim}[C-179](/Blog/tokamak-toolkit/claims.qmd#c-179){.cid .st-measured}, [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030)); the MAST-U reference comparison is not evaluable and MAST-U is certified with that limitation ([OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42)) |
-| formal proofs, output bounds and local robustness | pending |
+| transport closed-loop comparison | ITER passes ([served-face T_e 7.42%, T_i 8.18%, both passing the 15% limit; whole profile 7.72/9.23%; 34 of 51 final-state faces served]{.claim}[C-178](/Blog/tokamak-toolkit/claims.qmd#c-178){.cid .st-measured}); MAST-U fails ([served-face T_e 35.33%, T_i 49.15%, both failing 15%; whole profile 41.51/62.39%; cells with both adjacent faces served give 11.86/23.24%, still failing T_i; 13 of 26 final-state faces served]{.claim}[C-179](/Blog/tokamak-toolkit/claims.qmd#c-179){.cid .st-measured}, [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030)); the MAST-U reference comparison is not evaluable and MAST-U certification scope is limited accordingly ([OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42)) |
+| transport monotonicity | [all 20 members of each ensemble pass both heat-flux monotonicity properties, with derivative lower bound zero over the full training box]{.claim}[C-247](/Blog/tokamak-toolkit/claims.qmd#c-247){.cid .st-measured} |
+| output bounds and local robustness | pending |
 | conformal calibration and EC trajectory comparison | pending |
 | certificate-bound guards, per-surrogate reports and CI re-proofs | pending |
 | certification review | pending |
@@ -32,9 +33,8 @@ review is the human gate; it has not occurred.
 admissible TGLF reference trajectory exists for comparing the retrained candidate, and the
 projected reference of [OQ-38](/Blog/tokamak-toolkit/decisions.qmd#oq-38) cannot complete on this scenario ([150 negative raw heat diffusivities at 19 faces; 46 would reach the 1 gB stop, at 31 of 40 states, the first at state 1]{.claim}[C-240](/Blog/tokamak-toolkit/claims.qmd#c-240){.cid .st-measured}). The
 owner limited the MAST-U scope ([OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42),
-[entry 70](../log/70-owner-limits-the-mastu-certification-scope.qmd)): MAST-U is certified
-with that limitation stated, and ITER's pass stands. The remaining work is the formal proofs
-and output bounds, conformal calibration, the EC closed-loop comparison, certificate-bound
+[entry 70](../log/70-owner-limits-the-mastu-certification-scope.qmd)): MAST-U will be presented for certification
+with that limitation stated, and ITER's pass stands. The remaining work is output bounds, conformal calibration, the EC closed-loop comparison, certificate-bound
 guards with a fallback-rate check, the per-surrogate reports, CI re-proofs, and then the
 certification review. The paragraphs below record the remediation in order.
 
@@ -108,4 +108,8 @@ search often stops at its upper bound. Convergence is still not established.
 The basis and width-range extension is complete and audited ([3029 integrity checks pass on the complete 78-pair extension and all 36 control comparisons reproduce job 2687308; NBASIS_MAX 16 still moves electron flux by up to 0.48 gB per step, and widening the width search from 1.65 to 3.3 changes it from about 1e-3 gB to as much as 181 gB]{.claim}[C-206](/Blog/tokamak-toolkit/claims.qmd#c-206){.cid .st-measured}).
 A larger final basis does not settle the flux, and widening the width search
 changes it by orders of magnitude; the standard settings act as a convention
-([K-032](/Blog/tokamak-toolkit/ceilings.qmd#k-032)). The reference choice is back with the owner.
+([K-032](/Blog/tokamak-toolkit/ceilings.qmd#k-032)). [OQ-38](/Blog/tokamak-toolkit/decisions.qmd#oq-38) selects the standard-settings projected-reference convention.
+That attempt is consumed and stopped at its approved limit ([the projected-reference job failed after 108 s when the log reported 3.93119 gB against the 1 gB stop limit; no completed reference was saved]{.claim}[C-217](/Blog/tokamak-toolkit/claims.qmd#c-217){.cid .st-measured}).
+The review fixes lost stop diagnostics and tightens future acceptance checks.
+There is no completed reference, so R6/R7 and [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) remain open. [OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42) then limited
+the MAST-U scope, as recorded above.

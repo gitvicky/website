@@ -9,7 +9,7 @@ date-modified: '2026-10-25'
 
 M4 separates formal properties over declared domains, statistical calibration and
 closed-loop comparisons. The owner-selected scope is [OQ-22](/Blog/tokamak-toolkit/decisions.qmd#oq-22). No M4 certification review
-has occurred and no formal property is yet certified.
+has occurred. The transport monotonicity property now has the certificates described below.
 
 ## Checked exports {#exports}
 
@@ -32,8 +32,7 @@ They establish storage consistency, not proved physical behavior ([OQ-23](/Blog/
 finite ordered boxes, the declared box data source, robustness tolerances and owner decisions.
 The existing [OQ-20](/Blog/tokamak-toolkit/decisions.qmd#oq-20) monotonicity contract is retained.
 
-The formal engine is auto_LiRPA with an input-splitting loop under [OQ-24](/Blog/tokamak-toolkit/decisions.qmd#oq-24). The loop and proof
-certificates are later work. Bounds target every member; local robustness targets the served
+The formal engine is auto_LiRPA with the input-splitting loop described below, under [OQ-24](/Blog/tokamak-toolkit/decisions.qmd#oq-24). Bounds target every member; local robustness targets the served
 ensemble response. Launcher families stay categorical, and complete perturbation boxes that
 leave a training domain will be reported separately. No training box is silently shrunk to
 make a property pass.
@@ -503,3 +502,183 @@ the flux by up to five orders of magnitude, almost entirely at ky≤1; the defau
 bound is selected often, and the search optimum becomes interior only at 3.3 for
 the standard basis. These are observations of the pinned solver, not error bounds
 or causes. The standard settings remain the training-label convention ([K-032](/Blog/tokamak-toolkit/ceilings.qmd#k-032)).
+
+## Projected-reference stop review {#projected-reference-stop-review}
+
+[OQ-38](/Blog/tokamak-toolkit/decisions.qmd#oq-38) selects the standard-settings convention and permits projecting finite
+negative heat diffusivities to zero in the reference only. The consumed trajectory
+stopped at the approved projection limit ([the projected-reference job failed after 108 s when the log reported 3.93119 gB against the 1 gB stop limit; no completed reference was saved]{.claim}[C-217](/Blog/tokamak-toolkit/claims.qmd#c-217){.cid .st-measured}). The saved exception
+reports a magnitude but no triggering face, state or channel. This supplies no
+completed reference and cannot close [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030); the convention does not lift the
+numerical sensitivity in [K-032](/Blog/tokamak-toolkit/ceilings.qmd#k-032). [OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42) then limited the MAST-U scope
+([MAST-U scope](#mastu-scope)).
+
+The original host runner accumulated projection history in memory and raised on
+the limit before saving it. Existing tests checked that it stopped and wrote no
+successful trajectory, so they missed the lost evidence. The corrected runner
+writes a bound projection log before enforcing the limit and saves a separate
+raw diagnostic snapshot on failure. Regression tests check those bytes and their
+provenance after the actual loop raises, with physical solver calls forbidden.
+
+Only finite negative heat coefficients are zeroed. Both infinities and NaN remain
+invalid; a numerical maximum alone would incorrectly map negative infinity to
+zero. The saved-output audit requires full guard features and exact boolean-mask
+dimensions. Future acceptance also checks parent hashes and the complete frozen
+scenario, so individually valid sidecars cannot hide substituted inputs. These
+changes do not modify the selected surrogate or production guard settings.
+
+The original failed package and missing information remain recorded. No repeated
+reference run or recovered face identity is claimed. Draft entry 66 records the
+review and remains held for publication.
+
+
+## Transport monotonicity {#transport-monotonicity}
+
+The V4 result is [all 20 members of each ensemble pass both heat-flux monotonicity properties, with derivative lower bound zero over the full training box]{.claim}[C-247](/Blog/tokamak-toolkit/claims.qmd#c-247){.cid .st-measured}. Draft narrative entry 74 accompanies this
+technical account and remains pending publication. The result proves an imposed network
+property, with the [K-025](/Blog/tokamak-toolkit/ceilings.qmd#k-025) physical-model departure caveat retained.
+
+For one constrained head, write its derivative as
+
+$$
+\frac{\partial Q}{\partial g}
+= \frac{s_y}{s_x} W_{out} D_L W_L \cdots D_0 w_g.
+$$
+
+The gradient coordinate is excluded from the free trunk and from its own head's free
+input vector. The effective constrained weights are absolute values of saved parameters;
+all normalization scales are positive. For ELU, the derivative is $\exp(\min(z,0))$;
+for reflected ELU it is $\exp(\min(-z,0))$; for the saturated mix it is
+$\exp(-\max(|z|-1,0))$. Every derivative lies in $[0,1]$.
+
+The structural route checks the saved routing, finite parameters, scales and supported
+transforms. The second route exports the derivative product itself and uses
+[auto_LiRPA interval bound propagation](https://github.com/Verified-Intelligence/auto_LiRPA)
+over independent diagonal entries in $[0,1]$. This enlarged slope domain contains the
+image of the entire raw-input box; no box shrinking or input split is required. The
+result is a non-negative derivative before the output ReLU. The positive affine maps,
+ReLU, inverse signed-log transform and mean preserve monotonicity through serving.
+
+Each export and derivative graph is checked against JAX before the corresponding proof,
+on random-box and original held-out points, under [OQ-26](/Blog/tokamak-toolkit/decisions.qmd#oq-26). These numerical comparisons
+validate the implementation path; the domain-wide result comes from the structural and
+interval arguments. The certificates cover real-valued functions represented by the
+saved parameters, not directed-rounding guarantees for every floating-point execution.
+
+Certificates retain individual member/pair bounds, model and box hashes, verifier versions
+and source digests. V4 is complete for the two baseline transport ensembles. Physical
+reference admissibility, output bounds, conformal calibration, production guard binding,
+CI re-proofs and the final certification review remain separate obligations.
+
+## Output bounds {#output-bounds}
+
+V5 now has an executable CROWN calculation and complete input splitting. The verifier
+first checks each proof export against JAX on random box points and the original held-out
+inputs. Transport's input logarithms map interval endpoints monotonically. Its signed-log
+inverse is applied only after bounding the training-space output. EC fixes the launcher
+indicator to one family at a time while retaining every other stored input range, then
+applies the serving clamps to each member's interval.
+
+The proof graph expresses ELU as
+
+$$\operatorname{ELU}(x)=\operatorname{ReLU}(x)
+  +\exp(-\operatorname{ReLU}(-x))-1.$$
+
+The saturated monotone-head activation uses the equivalent expression
+
+$$\operatorname{clip}(x,-1,1)
+ +\exp(-\operatorname{ReLU}(-x-1))
+ -\exp(-\operatorname{ReLU}(x-1)).$$
+
+These identities avoid unsupported export operators. They preserve the real-valued
+function, but the separate relaxations can be loose; passing parity does not guarantee
+useful bounds. The retained certificate names the float64 calculation and does not claim
+directed-rounding verification of IEEE execution.
+
+Each split bisects the largest side relative to the original box. A parent is replaced
+only after both children have bounds. Child intervals are intersected with their parent,
+and the final interval is the minimum lower and maximum upper bound across all retained
+leaves. The leaf and time budgets are explicit. The time budget is checked between bound
+calls; the execution wrapper supplies the hard process limit. Sampled extrema measure the
+interval's tightness and must lie inside it; samples never supply the proof.
+
+For the pedestal, the diagnostic now saves the upstream input vector at every retained
+output state, its feature names and model hash. The proof box encloses those vectors,
+widened by a declared fraction of the upstream range on each axis. Any clipping of that
+margin at the upstream domain is recorded; a visited point outside the upstream domain
+fails. The upstream box alone cannot replace a missing trajectory. CROWN bounds the
+neural residual; interval composition adds the power law, squares each solution and
+multiplies each pressure by the positive density interval. All pressure and half-width
+solutions remain explicit, including the GH solution used by TORAX.
+
+Reports bind the model, property, boxes, datasets, producing source and verifier library.
+A nonfinite physical interval is recorded as unknown. Such a row supplies no guard domain;
+V10 integration requires usable certified bounds and the owner's fallback-rate threshold.
+
+## Conformal calibration {#conformal}
+
+V7 is complete for the three labelled surrogates ([90% intervals calibrated on the v1 validation split cover 0.887–0.907 on the v1 test and v2-random splits (6 outputs, ITER and MAST-U); 9 of 12 lie in the 0.893–0.907 range expected for exchangeable data, the other three miss it by at most 0.006]{.claim}[C-256](/Blog/tokamak-toolkit/claims.qmd#c-256){.cid .st-measured},
+[the same intervals cover 0.996–1.000 of the v3 test states; there the half-width that would give 90% is 3.3–5.5 times smaller in signed-log units (ITER Q_e 0.48 against 2.21)]{.claim}[C-257](/Blog/tokamak-toolkit/claims.qmd#c-257){.cid .st-measured}, [90% intervals calibrated on 190 guard-accepted validation states (4 runs) cover 0.876–0.978 of 548 served test states (8 runs); all six outputs lie within or above the 0.856–0.938 range expected for exchangeable data; per-run coverage 0.78–1.00]{.claim}[C-258](/Blog/tokamak-toolkit/claims.qmd#c-258){.cid .st-measured}). Draft entry 76 is the narrative account.
+
+For each served output, with prediction $\hat y$ and label $y$ on $n$ calibration points,
+the score is $s_i = |y_i - \hat y_i|$. The half-width is the $k$-th smallest score, with
+$k = \lceil (n+1)(1-\alpha) \rceil$ and $\alpha = 0.1$. The interval is
+$[\hat y - q, \hat y + q]$. If calibration and test points are exchangeable, the interval
+covers a new label with probability at least $1-\alpha$. The probability is marginal,
+over both the calibration draw and the new point. MAPIE's prefit `SplitConformalRegressor`
+computes $q$, and the code checks each value against the exact rank.
+
+The prediction is the one each guard serves.
+- **Transport.** The prediction is the members' mean in training space,
+  $t = \operatorname{sign}(Q)\log(1 + |Q|)$. The score is taken in $t$, and the physical
+  interval is the inverse transform of $[\hat t - q, \hat t + q]$. The transform is
+  increasing, so coverage is the same in both spaces. A half-width $q$ spans a factor
+  $e^{q}$ on $1 + |Q|$.
+- **EC.** The prediction is the bounded per-MW output. Only states that the EC source's
+  guard would accept count: padded box, finite outputs, and member spreads within the
+  source defaults. Transport counts only points inside its training box.
+
+Calibration uses the split recorded with each model, which also chose each member's
+early-stopping epoch. Test coverage is the evidence. For $m$ test points, the number
+covered under exchangeability is beta-binomial with parameters $(m, k, n+1-k)$. Its central
+90% range, which includes both random draws, is stored beside each coverage. Before
+calibrating, the code re-scores every split and must match the model's stored RMSE to
+$10^{-4}$; the match was exact.
+
+The results, stored per surrogate:
+- **Transport, data drawn like the calibration split.** Coverage is close to 0.9.
+- **Transport, held-out TORAX trajectory states.** Coverage is 0.996–1.000. The half-widths
+  that would give 90% there are 3.3–5.5 times smaller. Whether to add a loop-state
+  calibration for M5 awaits an owner decision.
+- **Transport, by flux size.** The score is uniform in $t$, so coverage is lower where
+  $|Q| > 1$ gB (0.86–0.90 on v1 test) and higher below it.
+- **EC.** Pooled coverage of the 548 served states from eight held-out runs is 0.876–0.978.
+  Per run it ranges from 0.78 to 1.00. Within a run, states are correlated.
+- **Pedestal.** EPEDNN has no labelled data here, so it has no interval.
+
+Records bind the model and manifest hashes through provenance sidecars. Readers obtain
+them through `load_record`, which refuses a record whose model hash differs.
+
+### Loop-state calibration (OQ-44) {#conformal-loop}
+
+The owner chose a second transport calibration on the states the coupled runs visit, for
+M5 ([calibrated on half of the held-out v3 trajectory runs, the 90% half-widths are 0.21–0.32 of the V7 values; the intervals span a factor 1.8–3.3 on 1 + |flux| instead of 9–60]{.claim}[C-259](/Blog/tokamak-toolkit/claims.qmd#c-259){.cid .st-measured}, [calibrated on 16 held-out runs and tested on the other 16, coverage is 0.870–0.894; the reverse direction gives 0.905–0.924; single runs 0.75–0.97]{.claim}[C-260](/Blog/tokamak-toolkit/claims.qmd#c-260){.cid .st-measured}, [calibrated on 4 held-out runs, the intervals cover 0.936–0.966 of the other 4; calibrated the other way they cover 0.711–0.818; not reliable for a new ITER run]{.claim}[C-261](/Blog/tokamak-toolkit/claims.qmd#c-261){.cid .st-measured}). Draft entry 77 is the
+narrative account. The V7 records above remain the M4 deliverable.
+
+The held-out v3 test runs are whole TORAX trajectories: eight for ITER and 32 for MAST-U.
+The split rule was committed before any residual on these states was computed:
+- group the runs by scenario family (ITER) or equilibrium (MAST-U);
+- permute each group's runs with a fixed seed;
+- deal the runs alternately to half A (calibration) and half B (report);
+- drop states shared by runs in both halves (common start-up states).
+
+The method is otherwise the V7 one. The reverse direction, calibrating on B and reporting
+on A, tests whether runs are exchangeable.
+
+The half-widths fall to 0.21–0.32 of the box-wide values. For MAST-U, coverage of the other
+half is 0.870–0.894, and 0.905–0.924 in reverse; single runs range from 0.75 to 0.97. For
+ITER, coverage of B is 0.936–0.966, but only 0.711–0.818 in reverse. The marginal
+guarantee assumes that calibration and test points are exchangeable. With four runs per
+half and systematic differences between runs, that assumption fails for ITER. A
+calibration that treats runs as the unit needs more held-out trajectories than the eight
+available.

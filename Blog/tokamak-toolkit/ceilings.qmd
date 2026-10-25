@@ -46,7 +46,7 @@ A ceiling is *lifted*, never deleted, so the history stays visible.
 </td><td>Owner approved rtol=1e-12 and atol=1e-12 in each declared output unit (OQ-26, 2026-10-11). All 13 export tests pass per mode under that explicit mixed criterion; no physics or closed-loop tolerance changed.
 </td><td><span class='badge st-lifted'>lifted</span></td></tr>
 <tr id='k-032'><td class='cid-cell'>K-032</td><td>transport-reference</td><td>TGLF-SAT2 reference at MAST-U face-4 states depends on numerical controls, not a converged value</td><td>Three bounded studies (jobs 2687254, 2687308, 2687392) at six near-marginal face-4 states find no settled TGLF flux. Final basis up to NBASIS_MAX 16 still moves electron heat by up to 0.48 gB per step; widening the width-search range from 1.65 to 3.3 changes it from about 1e-3 to as much as 181 gB, and the default range is binding. The standard settings (NBASIS 2/6, width 0.3-1.65) that labelled all training data act as a model-defining convention at these states.
-</td><td>Owner decision on the reference definition (OQ-38): adopt the standard-settings convention with a stated treatment of negative values, or limit MAST-U scope.
+</td><td>Demonstrate an admissible MAST-U reference. OQ-38 adopted the standard-settings convention; it does not establish numerical convergence, and its projected trajectory stopped at the approved heat-flux limit. OQ-42 (25 Oct 2026) then limited the MAST-U certification scope, which states this ceiling as a limitation instead of lifting it.
 </td><td><span class='badge st-open'>open</span></td></tr>
 </tbody>
 </table>
