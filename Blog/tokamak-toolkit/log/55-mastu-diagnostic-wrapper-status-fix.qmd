@@ -1,0 +1,49 @@
+---
+title: The diagnostic reports only status fields the wrapper exposes
+date: '2026-10-11'
+categories:
+- fixed
+entry: 55
+milestone: M4
+---
+
+::: {.entry-meta}
+[bug fix]{.chip .fixed} Entry 55 · milestone M4
+:::
+
+The first richer signed-heat diagnostic stopped after its initial control case.
+The native solve produced full-precision output, but paired reporting tried to
+read an error-status register that the compiled in-memory wrapper does not expose.
+That field exists in the Fortran interface source, which does not guarantee it
+is part of the compiled Python interface. The failed attempt and partial evidence
+are retained; the diagnostic collection was incomplete.
+
+The reporting code now queries actual capabilities. It explicitly records absent
+status, checks finite returned fluxes, preserves signed species values and retains
+any reported failure status where available. It does not manufacture a successful
+status or independent convergence evidence. Three synthetic worker checks cover
+those cases without calling the physical solver.
+
+| evidence | result |
+|---|---|
+| focused capability regressions | [25 diagnostic checks pass in each mode, including unavailable status, exposed failure status and nonfinite output; 33 unchanged focused checks are retained for 58 focused recorded passes per mode]{.claim}[C-198](/Blog/tokamak-toolkit/claims.qmd#c-198){.cid .st-tested} |
+| original collection | failed and retained; no completion claim |
+
+A new immutable request follows the diagnosed fix. It keeps the same cases,
+settings and hard allocation limits and is covered by the owner's bounded-run
+permission. It is not a repeat of the consumed source package. New package
+summaries have separate filenames so earlier provenance stays verifiable.
+
+The native route supplies its supported status/message; paired wrapper output
+supplies finite-flux evidence only. Numerical parity, direct signed-flux origin,
+physical admissibility and candidate acceptance remain separate conclusions.
+Nothing changes the selected model, guard, training inputs or physical contract.
+This entry records the failed execution and correction; no artifacts were
+synchronized externally.
+
+**What's next.** Audit the corrected collection before drawing physics conclusions.
+
+::: {.entry-links}
+**Technical details →** [Verification › diagnostic wrapper status fix](/Blog/tokamak-toolkit/technical/verification.qmd#diagnostic-wrapper-status-fix)  
+**Decisions →** [OQ-33](/Blog/tokamak-toolkit/decisions.qmd#oq-33)
+:::

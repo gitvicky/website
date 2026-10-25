@@ -155,13 +155,21 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#awaiting-a-decision" id="toc-awaiting-a-decision" class="nav-link active" data-scroll-target="#awaiting-a-decision">Awaiting a decision</a>
-  <ul class="collapse">
-  <li><a href="#oq-32" id="toc-oq-32" class="nav-link" data-scroll-target="#oq-32">OQ-32 · Reference treatment for signed heat transport</a></li>
-  <li><a href="#oq-17" id="toc-oq-17" class="nav-link" data-scroll-target="#oq-17">OQ-17 · Package licence metadata</a></li>
-  </ul></li>
+  <li><a href="#awaiting-a-decision" id="toc-awaiting-a-decision" class="nav-link active" data-scroll-target="#awaiting-a-decision">Awaiting a decision</a></li>
   <li><a href="#settled" id="toc-settled" class="nav-link" data-scroll-target="#settled">Settled</a>
   <ul class="collapse">
+  <li><a href="#oq-42" id="toc-oq-42" class="nav-link" data-scroll-target="#oq-42">OQ-42 · MAST-U closed-loop check after the projected reference stopped</a></li>
+  <li><a href="#oq-41" id="toc-oq-41" class="nav-link" data-scroll-target="#oq-41">OQ-41 · Core and axis modes hide the pedestal in the JOREK n-scan</a></li>
+  <li><a href="#oq-40" id="toc-oq-40" class="nav-link" data-scroll-target="#oq-40">OQ-40 · Reconciling the TORAX state with a JOREK equilibrium</a></li>
+  <li><a href="#oq-39" id="toc-oq-39" class="nav-link" data-scroll-target="#oq-39">OQ-39 · Physics settings for the first JOREK stability runs</a></li>
+  <li><a href="#oq-38" id="toc-oq-38" class="nav-link" data-scroll-target="#oq-38">OQ-38 · Standard-settings MAST-U reference</a></li>
+  <li><a href="#oq-37" id="toc-oq-37" class="nav-link" data-scroll-target="#oq-37">OQ-37 · Scope of a JOREK integration</a></li>
+  <li><a href="#oq-36" id="toc-oq-36" class="nav-link" data-scroll-target="#oq-36">OQ-36 · Reference treatment after basis refinement did not converge</a></li>
+  <li><a href="#oq-35" id="toc-oq-35" class="nav-link" data-scroll-target="#oq-35">OQ-35 · Storage for the bounded convergence artefacts</a></li>
+  <li><a href="#oq-34" id="toc-oq-34" class="nav-link" data-scroll-target="#oq-34">OQ-34 · Literature-based reference method</a></li>
+  <li><a href="#oq-33" id="toc-oq-33" class="nav-link" data-scroll-target="#oq-33">OQ-33 · Bounded runs toward M4 completion</a></li>
+  <li><a href="#oq-32" id="toc-oq-32" class="nav-link" data-scroll-target="#oq-32">OQ-32 · Reference treatment for signed heat transport</a></li>
+  <li><a href="#oq-17" id="toc-oq-17" class="nav-link" data-scroll-target="#oq-17">OQ-17 · Project licence</a></li>
   <li><a href="#oq-31" id="toc-oq-31" class="nav-link" data-scroll-target="#oq-31">OQ-31 · Reference diagnostic compute</a></li>
   <li><a href="#oq-30" id="toc-oq-30" class="nav-link" data-scroll-target="#oq-30">OQ-30 · Candidate coupled replay</a></li>
   <li><a href="#oq-29" id="toc-oq-29" class="nav-link" data-scroll-target="#oq-29">OQ-29 · MAST-U candidate training compute</a></li>
@@ -223,17 +231,58 @@ window.Quarto = {
 <p>The brief lists the decisions that belong to a human: physics modelling choices, licence and data questions, which properties to prove, use of the compute cluster, and benchmark failures that aren’t explained by a bug. When the agent reaches one, it writes the question down with context and a recommended answer, carries on with whatever isn’t blocked, and waits. Numbers (OQ-<em>n</em>) match the project’s internal record. Newest first within each group.</p>
 <section id="awaiting-a-decision" class="level2">
 <h2 class="anchored" data-anchor-id="awaiting-a-decision">Awaiting a decision</h2>
-<section id="oq-32" class="level3">
-<h3 class="anchored" data-anchor-id="oq-32">OQ-32 · Reference treatment for signed heat transport</h3>
-<p>The diagnostic identifies negative raw heat diffusivity with valid solver inputs (<span class="claim">final face 4 at normalized radius 0.16 has valid inputs but raw electron heat diffusivity -0.02792124888 m²/s; negative heat diffusivity rejects that face at 8 of 40 accepted states; reference rejection is 323/1040 accepted-state face records (31.0577%)</span><a href="../../Blog/tokamak-toolkit/claims.html#c-194" class="cid st-measured">C-194</a>). Its physical/numerical origin and a physically justified reference treatment need review. Keep the current guard and reference admissibility criterion while reviewing the source/input evidence. New collection, remedies and matched acceptance compute need separate concrete reviews.</p>
-</section>
-<section id="oq-17" class="level3">
-<h3 class="anchored" data-anchor-id="oq-17">OQ-17 · Package licence metadata</h3>
-<p>What licence text the package metadata should carry while no release licence is chosen remains open. It blocks nothing while the code is private.</p>
-</section>
+<p>No question is open. The next one expected is how to run the grid-resolution check of the JOREK case (b) growth rates, once the second case (b) job has been analysed.</p>
 </section>
 <section id="settled" class="level2">
 <h2 class="anchored" data-anchor-id="settled">Settled</h2>
+<section id="oq-42" class="level3">
+<h3 class="anchored" data-anchor-id="oq-42">OQ-42 · MAST-U closed-loop check after the projected reference stopped</h3>
+<p><em>Decided 25 Oct 2026.</em> Limited MAST-U scope. The one projected-reference run of <a href="../../Blog/tokamak-toolkit/decisions.html#oq-38">OQ-38</a> stopped on its own 1 gB rule, and a read-only screen of the 40 saved states shows that the rule cannot complete on this scenario (<span class="claim">150 negative raw heat diffusivities at 19 faces; 46 would reach the 1 gB stop, at 31 of 40 states, the first at state 1</span><a href="../../Blog/tokamak-toolkit/claims.html#c-240" class="cid st-measured">C-240</a>). The MAST-U comparison against a TGLF reference trajectory is recorded as not evaluable, and MAST-U is certified at the M4 review with that limitation stated (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-030">K-030</a>, <a href="../../Blog/tokamak-toolkit/ceilings.html#k-032">K-032</a>). ITER’s measured pass stands. The model, guard, acceptance limits and frozen splits are unchanged, and no further MAST-U reference compute is planned. Options not taken: redefining the comparison against the guarded TGLF/fallback hybrid, which would still fail the limit on the descriptive distance (<span class="claim">T_e 32.0%, T_i 41.5% on the 14 faces where both serve TGLF, against the 15% limit</span><a href="../../Blog/tokamak-toolkit/claims.html#c-242" class="cid st-measured">C-242</a>), and raising the stop threshold, when projected magnitudes reach thousands of gB.</p>
+</section>
+<section id="oq-41" class="level3">
+<h3 class="anchored" data-anchor-id="oq-41">OQ-41 · Core and axis modes hide the pedestal in the JOREK n-scan</h3>
+<p><em>Decided 25 Oct 2026.</em> In case (a), quote pedestal growth rates only where the pedestal mode is the fastest mode (n = 12, 16), and report the other n as “not measured: core or axis mode faster”. Close case (a) on the time-step check: n = 12 and 16 are “converged in Δt, grid not checked”, not quotable (<span class="claim">n = 12: 0.04397 → 0.04397 (−0.01%); n = 16: 0.03744 → 0.03633 (−2.94%); both within the 5% tolerance</span><a href="../../Blog/tokamak-toolkit/claims.html#c-227" class="cid st-measured">C-227</a>). Move to case (b), the TORAX state, where the core q minimum is higher, and run the full convergence check there. Compute: up to five one-node jobs of at most six hours for case (b), each announced before submission. Options not taken: damping the core with ψ-dependent dissipation (which <code>model303</code> doesn’t support without a source patch), changing the case (a) core, and running the case (a) grid check now.</p>
+</section>
+<section id="oq-40" class="level3">
+<h3 class="anchored" data-anchor-id="oq-40">OQ-40 · Reconciling the TORAX state with a JOREK equilibrium</h3>
+<p><em>Decided 25 Oct 2026.</em> TORAX evolves the current on a fixed geometry, so its state is not a Grad–Shafranov equilibrium, and JOREK’s equilibrium from TORAX’s pressure and current misses the q and current tolerance. Use that equilibrium with FF′ multiplied by one factor so that the plasma current equals TORAX’s. Acceptance: current within 1%, and pressure as TORAX’s by construction. The q difference from TORAX is reported as a known inconsistency (<span class="claim">median q difference +10.7% (psi_N 0.1–0.5), +3.2% (0.5–0.9), −4.9% (0.9–0.95); q95 4.64 against 4.89, q_min 1.84 against 1.64</span><a href="../../Blog/tokamak-toolkit/claims.html#c-235" class="cid st-measured">C-235</a>). Options not taken: tuning FF′ until q matches, which changes the current profile, and building a self-consistent free-boundary TORAX state first.</p>
+</section>
+<section id="oq-39" class="level3">
+<h3 class="anchored" data-anchor-id="oq-39">OQ-39 · Physics settings for the first JOREK stability runs</h3>
+<p><em>Decided 16 Oct 2026.</em> Case (a), the EQDSK as given, first; then case (b), the TORAX state. Before any stability run, the equilibrium must match its source: q within 2% over normalised flux 0.1–0.95 and plasma current within 1%, starting with the separatrix as boundary (<span class="claim">I_p −0.93%, largest q difference 1.1%, q 4.668 against 4.668 at psi_N 0.95: passes the tolerance of q within 2% and I_p within 1%</span><a href="../../Blog/tokamak-toolkit/claims.html#c-221" class="cid st-measured">C-221</a>). Model <code>model303</code> with diamagnetic terms, with full MHD later as a one-n cross-check. Spitzer resistivity, temperature-dependent, with viscosity at Prandtl number about 1; enhanced resistivity only as a scan, if resolution demands it. Toroidal mode numbers 1, 2, 3, 5, 8, 12, 16, 20, one per run. Unstable means a positive growth rate with diamagnetic terms; ω* and the EPED-like ratio are reported too. A growth rate is quoted only if halving the time step and doubling the radial and poloidal resolution each change it by at most 5%. Compute: up to three one-node jobs of at most six hours, each announced.</p>
+</section>
+<section id="oq-38" class="level3">
+<h3 class="anchored" data-anchor-id="oq-38">OQ-38 · Standard-settings MAST-U reference</h3>
+<p><em>Decided 16 Oct 2026.</em> The MAST-U reference for the closed-loop check is TGLF at its standard settings, the convention that labelled all training data (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-032">K-032</a>). In the reference only, negative raw heat diffusivities are set to zero instead of sending the face to the fallback; every projection is logged, and the run stops if any projected heat-flux magnitude reaches 1 gB. The production surrogate, raw guard and acceptance limits are unchanged. One run was approved. It stopped on the 1 gB rule and saved no trajectory; <a href="../../Blog/tokamak-toolkit/decisions.html#oq-42">OQ-42</a> records what followed.</p>
+</section>
+<section id="oq-37" class="level3">
+<h3 class="anchored" data-anchor-id="oq-37">OQ-37 · Scope of a JOREK integration</h3>
+<p><em>Decided 16 Oct 2026.</em> Use JOREK as an external open-source (Tier A) MHD reference, run outside the JAX loop and never a runtime dependency of a surrogate. First use: linear pedestal-stability scans over toroidal mode number on ITER hybrid, then an internal-kink check of the sawtooth trigger, then MAST-U. Build the sparse solver ourselves; one short CPU job to repeat JOREK’s regression cases and measure step cost. Nonlinear ELM runs are later reference runs; disruption studies are deferred. Log entries reporting JOREK work are public and acknowledge the JOREK team.</p>
+</section>
+<section id="oq-36" class="level3">
+<h3 class="anchored" data-anchor-id="oq-36">OQ-36 · Reference treatment after basis refinement did not converge</h3>
+<p><em>Decided 16 Oct 2026.</em> More refinement first: extend the final TGLF basis beyond its earlier maximum, widen the width search, and track the high-wavenumber roots in the saved spectra, as bounded diagnostics under <a href="../../Blog/tokamak-toolkit/decisions.html#oq-33">OQ-33</a>. No projected reference, signed closure, model or guard change, or threshold change. The MAST-U comparison stays not evaluable. The extension did not settle the flux (<span class="claim">3029 integrity checks pass on the complete 78-pair extension and all 36 control comparisons reproduce job 2687308; NBASIS_MAX 16 still moves electron flux by up to 0.48 gB per step, and widening the width search from 1.65 to 3.3 changes it from about 1e-3 gB to as much as 181 gB</span><a href="../../Blog/tokamak-toolkit/claims.html#c-206" class="cid st-measured">C-206</a>), and the question went back to the owner as <a href="../../Blog/tokamak-toolkit/decisions.html#oq-38">OQ-38</a>.</p>
+</section>
+<section id="oq-35" class="level3">
+<h3 class="anchored" data-anchor-id="oq-35">OQ-35 · Storage for the bounded convergence artefacts</h3>
+<p><em>Decided 15 Oct 2026.</em> The requested project storage was over its quota, so the owner approved another shared work area on the same cluster for this diagnostic only. It approves storage, not a physics closure, model or guard change, upload or publication.</p>
+</section>
+<section id="oq-34" class="level3">
+<h3 class="anchored" data-anchor-id="oq-34">OQ-34 · Literature-based reference method</h3>
+<p><em>Decided 11 Oct 2026.</em> The owner delegated the choice of reference method to a literature-based review. The review approves the specification of a reproducible, signed, species-resolved TGLF reference with unchanged settings, scenario, faces and acceptance limits, and keeps the production non-negative surrogate contract and raw guard. No projected reference or signed-heat closure is adopted. The specification is not an admissible trajectory.</p>
+</section>
+<section id="oq-33" class="level3">
+<h3 class="anchored" data-anchor-id="oq-33">OQ-33 · Bounded runs toward M4 completion</h3>
+<p><em>Decided 11 Oct 2026.</em> Standing permission for M4 runs with a hard wall-clock limit below six hours. Each run is prepared, validated and frozen first, with its purpose, resources, duration and expected outputs recorded; it is announced before submission, with the queue checked in the same command. A failed run is diagnosed before any new request. The permission doesn’t cover a projected reference, a signed closure, threshold changes, model replacement, uploads or publication, and it doesn’t cover JOREK.</p>
+</section>
+<section id="oq-32" class="level3">
+<h3 class="anchored" data-anchor-id="oq-32">OQ-32 · Reference treatment for signed heat transport</h3>
+<p><em>Decided 11 Oct 2026.</em> Retain the existing nonnegative heat-flux approximation, physical contract and raw guard while investigating signed transport. The conversion review narrows the sign diagnosis (<span class="claim">the final electron heat flux is inferred as -0.001689376033 gB; all 9 negative channel records at 8 accepted states have outward-decreasing temperature and no denominator-epsilon sign reversal, with maximum epsilon ratio 1.03e-11; all negative magnitudes are below 1 gB</span><a href="../../Blog/tokamak-toolkit/claims.html#c-195" class="cid st-measured">C-195</a>), but does not establish the physical/numerical origin. Prepare the richer diagnostic output route, validation and allocation before requesting execution review. No projected reference or signed-heat closure is selected; formal R6 acceptance remains not evaluable and <a href="../../Blog/tokamak-toolkit/ceilings.html#k-030">K-030</a> remains open. No new compute is approved.</p>
+</section>
+<section id="oq-17" class="level3">
+<h3 class="anchored" data-anchor-id="oq-17">OQ-17 · Project licence</h3>
+<p><em>Decided 11 Oct 2026.</em> Select MIT for the toolkit’s original code and documentation. The repository now carries the MIT licence text and package metadata references it. Third-party licences/notices and experimental-data restrictions still apply; repository privacy and separate publication review remain in force.</p>
+</section>
 <section id="oq-31" class="level3">
 <h3 class="anchored" data-anchor-id="oq-31">OQ-31 · Reference diagnostic compute</h3>
 <p><em>Decided 11 Oct 2026.</em> Approve the exact prepared diagnostic once. It completes and reproduces the historical profiles/mask (<span class="claim">the diagnostic completes in 517 seconds within its 30-minute bound, with 40 finite converged steps, exact historical temperature/density/poloidal-flux-profile and final-mask equality, and 171 passing saved-output integrity checks</span><a href="../../Blog/tokamak-toolkit/claims.html#c-193" class="cid st-measured">C-193</a>); signed heat transport explains the uncovered face (<span class="claim">final face 4 at normalized radius 0.16 has valid inputs but raw electron heat diffusivity -0.02792124888 m²/s; negative heat diffusivity rejects that face at 8 of 40 accepted states; reference rejection is 323/1040 accepted-state face records (31.0577%)</span><a href="../../Blog/tokamak-toolkit/claims.html#c-194" class="cid st-measured">C-194</a>). The diagnostic approval is consumed. It approves no reference remedy, fitting, new candidate replay, synchronization or replacement. Formal R6 acceptance remains not evaluable.</p>

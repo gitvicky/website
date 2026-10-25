@@ -1,0 +1,50 @@
+---
+title: Preparing a bounded reference convergence study
+date: '2026-10-15'
+categories:
+- built
+- fixed
+entry: 58
+milestone: M4
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} [bug fix]{.chip .fixed} Entry 58 · milestone M4
+:::
+
+The next reference diagnostic varies numerical resolution at the same saved
+states. Separate basis, quadrature and high-wavenumber ladders retain the original
+settings as controls; two combined levels check whether the refinements interact.
+Both backends keep their own signed species outputs at every level.
+
+| preparation evidence | result |
+|---|---|
+| synthetic protocol and output checks | [40 focused synthetic checks pass in each mode after the input-path correction, covering signed channels, refinement identities, baseline drift, incomplete evidence and existing diagnostic output handling]{.claim}[C-202](/Blog/tokamak-toolkit/claims.qmd#c-202){.cid .st-tested} |
+| physical convergence or temperature acceptance | not established by preparation |
+
+Reporting preserves the full observed flux range and the changes between
+successive levels. Those quantities measure numerical sensitivity; they are not
+certified error bounds or confidence intervals. The selected wavenumber control
+leaves the low-wavenumber nodes unchanged, so the study cannot certify full
+spectral convergence. It also leaves mode count and width-search resolution fixed.
+
+The first submission failed during preflight, before any physical solver call.
+Moving to a different working directory exposed two relative evidence paths.
+The controller now resolves those paths before freezing the package. A separate
+preparation attempt encountered the requested project's storage quota; the owner
+approved alternate shared-work storage for this diagnostic. Both failures remain
+recorded, and the corrected package must pass verification from its actual run
+directory before another submission.
+
+The current model, guard and temperature criterion remain fixed. Reference
+admissibility depends on the numerical results and a subsequent reviewed energy
+treatment. The separate feedback-sampling proposal is still unapproved.
+
+**What's next.** Execute and audit the bounded refinement study, retaining every
+disagreement and unresolved resolution limit before choosing further reference work.
+No external artifact synchronization occurs.
+
+::: {.entry-links}
+**Technical details →** [Verification › reference convergence](/Blog/tokamak-toolkit/technical/verification.qmd#reference-convergence)  
+**Decisions →** [OQ-33](/Blog/tokamak-toolkit/decisions.qmd#oq-33) · [OQ-34](/Blog/tokamak-toolkit/decisions.qmd#oq-34) · [OQ-35](/Blog/tokamak-toolkit/decisions.qmd#oq-35)
+:::

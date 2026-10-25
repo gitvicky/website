@@ -1,0 +1,57 @@
+---
+title: 'JOREK integration: scope, build and regression checks'
+date: '2026-10-16'
+categories:
+- decision
+- built
+entry: 63
+milestone: JOREK (alongside M4)
+---
+
+::: {.entry-meta}
+[decision]{.chip .decision} [new component]{.chip .built} Entry 63 · milestone JOREK (alongside M4)
+:::
+
+JOREK is a nonlinear extended magnetohydrodynamics (MHD) code for edge-localised modes
+(ELMs), disruptions and tearing modes in realistic X-point geometry. The toolkit's
+transport loop has no MHD stability model: its pedestal is prescribed or predicted by
+EPEDNN, and the sawtooth model is a reduced trigger. JOREK has been open source since
+this year, so it can be used as an independent open (Tier A) reference for those parts.
+
+The owner chose the scope ([OQ-37](/Blog/tokamak-toolkit/decisions.qmd#oq-37)). JOREK is an external reference code. It runs
+outside the JAX loop, never inside compiled code, and is never a runtime dependency of
+a surrogate. The first use is linear pedestal-stability scans over toroidal mode
+number on the ITER hybrid case, then an internal-kink check for the sawtooth model,
+then MAST-U. Nonlinear ELM runs are later reference runs only. Disruption studies are
+outside the brief.
+
+We built JOREK from source on a CPU cluster with our own build of the MUMPS sparse
+solver, because the cluster's shared JOREK libraries were not available to us. Two
+input changes were needed for the GNU Fortran compiler and the solver choice. Neither
+changes a value. As a check that does not depend on our code, we ran JOREK's own
+regression cases against the reference data the JOREK team publishes
+([3 of 4 upstream regression cases reproduce their public reference data: MAST-U grid and equilibrium (largest difference 2.0e-5, tolerance 1e-4), MAST equilibrium with coils (1.2e-10), and one implicit tearing-mode step (4.1e-13, tolerance 1e-12); the full-MHD kink case was not run because its upstream input is out of date for this code version]{.claim}[C-210](/Blog/tokamak-toolkit/claims.qmd#c-210){.cid .st-measured}). One case could not be run: its input predates a consistency check
+in the current code, and fixing it would mean changing physics inputs.
+
+A single one-hour CPU job then repeated the regression cases on the compute nodes and
+measured the cost of an implicit time step on the MAST-U X-point grid
+([all three regression cases pass on a 256-core AMD node; one implicit step on the MAST-U X-point grid (8050 elements, toroidal modes n = 0 and 1) takes 5.8 s at 2 ranks x 16 threads, 6.7 s at 4 x 32 and 8.1 s at 2 x 64; the whole job used 22.4 core-hours]{.claim}[C-211](/Blog/tokamak-toolkit/claims.qmd#c-211){.cid .st-measured}). That cost sets the size of the compute request for the
+stability scans.
+
+Where this stands: build and regression checks done; physics settings for the first
+stability runs await the owner ([OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39)).
+
+Technical details → [JOREK](../technical/jorek.qmd#build). Decision → [OQ-37](/Blog/tokamak-toolkit/decisions.qmd#oq-37).
+
+---
+
+*JOREK acknowledgement.* JOREK is developed by the JOREK team and is open source under
+the GNU LGPL v3. Results here use JOREK at commit `01a52be3`. Citations: M. Hoelzl et al.,
+Nuclear Fusion 61, 065001 (2021); M. Hoelzl et al., Nuclear Fusion 66, 116006 (2026). For a list
+of JOREK team members, refer to the author list of M. Hoelzl, G.T.A. Huijsmans, F.J. Artola,
+E. Nardon, M. Becoulet, N. Schwarz, A. Cathey, S.J.P. Pamela et al., Nuclear Fusion 64, 112016 (2024).
+
+::: {.entry-links}
+**Technical details →** [JOREK › scope](/Blog/tokamak-toolkit/technical/jorek.qmd#scope) · [JOREK › build](/Blog/tokamak-toolkit/technical/jorek.qmd#build)  
+**Decisions →** [OQ-37](/Blog/tokamak-toolkit/decisions.qmd#oq-37)
+:::

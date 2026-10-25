@@ -1,0 +1,72 @@
+---
+title: Owner limits the MAST-U certification scope
+date: '2026-10-25'
+categories:
+- decision
+- measured
+entry: 70
+milestone: M4
+---
+
+::: {.entry-meta}
+[decision]{.chip .decision} [measurement]{.chip .measured} Entry 70 · milestone M4
+:::
+
+M4's closed-loop check runs the coupled simulation once with the transport surrogate and once
+with TGLF, the turbulence code it was trained on, and compares the temperature profiles. The
+limit is 15%. ITER passes ([served-face T_e 7.42%, T_i 8.18%, both passing the 15% limit; whole profile 7.72/9.23%; 34 of 51 final-state faces served]{.claim}[C-178](/Blog/tokamak-toolkit/claims.qmd#c-178){.cid .st-measured}) and MAST-U fails ([served-face T_e 35.33%, T_i 49.15%, both failing 15%; whole profile 41.51/62.39%; cells with both adjacent faces served give 11.86/23.24%, still failing T_i; 13 of 26 final-state faces served]{.claim}[C-179](/Blog/tokamak-toolkit/claims.qmd#c-179){.cid .st-measured}). The
+MAST-U remediation retrained the surrogate. It then stopped at the step that needs a TGLF
+reference trajectory to compare the retrained candidate with. At some MAST-U states TGLF
+returns negative heat diffusivities, which the guard rejects, so those faces of the reference
+use the fallback transport model instead. Refining TGLF's numerical settings did not converge
+those values (entries 59–62, last [entry 62](62-width-search-range-controls-the-flux.qmd)).
+
+## The projected reference
+
+For the reference only, the owner chose TGLF at its standard settings with every negative heat
+diffusivity set to zero, each projection logged, and a stop if any projected heat flux reaches
+1 gB (the gyro-Bohm flux unit) ([OQ-38](/Blog/tokamak-toolkit/decisions.qmd#oq-38)). The production surrogate and guard were unchanged. The
+single approved run stopped on that limit and saved no trajectory.
+
+To see whether a rerun could pass, we applied the same rule, read-only, to every face of the
+40 saved states of the earlier unprojected reference run, which has identical profiles:
+
+| quantity | result |
+|---|---|
+| projections, and those reaching the stop | [150 negative raw heat diffusivities at 19 faces; 46 would reach the 1 gB stop, at 31 of 40 states, the first at state 1]{.claim}[C-240](/Blog/tokamak-toolkit/claims.qmd#c-240){.cid .st-measured} |
+| of those, on faces the reference would serve | [26 would be served, the first at state 4 (faces 11 and 12, ion, −8.0 and −33.8 gB); near the axis the projected magnitude reaches 6020 gB]{.claim}[C-241](/Blog/tokamak-toolkit/claims.qmd#c-241){.cid .st-measured} |
+| candidate against the guarded reference where both serve TGLF | [T_e 32.0%, T_i 41.5% on the 14 faces where both serve TGLF, against the 15% limit]{.claim}[C-242](/Blog/tokamak-toolkit/claims.qmd#c-242){.cid .st-measured} |
+
+The stop applies to every projection, served or not, and the first one to reach it comes at
+state 1 (first table row). So the rule cannot complete on this scenario, and no rerun can produce
+the reference. Even counting only served faces, it would stop early. The screen is not a
+replay: its fluxes are inferred by inverting TORAX's conversion, and a projected run would
+leave the saved trajectory after its first served projection. The last row compares against the
+guarded TGLF/fallback hybrid, so it describes the distance and is not a gate result.
+
+## Decision
+
+The owner chose the recommended option of [OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42), limited MAST-U scope:
+- the MAST-U closed-loop comparison is recorded as not evaluable;
+- MAST-U is certified at the M4 review with that limitation stated, with ceilings [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) and
+  [K-032](/Blog/tokamak-toolkit/ceilings.qmd#k-032);
+- ITER's measured pass stands;
+- the model, the guard, the temperature and flux acceptance limits and the frozen data splits
+  are unchanged;
+- no further MAST-U reference compute is planned.
+
+The other two options were to redefine the comparison against the guarded hybrid, which the
+last row suggests would still fail the limit, or to raise the stop threshold, rejected because
+projected magnitudes reach thousands of gB.
+
+Where this stands: M4 moves on to the formal proofs, calibration, the EC closed-loop
+comparison, certificate-bound guards and the per-surrogate reports, then the certification
+review.
+
+Technical details → [verification](../technical/verification.qmd#mastu-scope). Decisions →
+[OQ-38](/Blog/tokamak-toolkit/decisions.qmd#oq-38), [OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42).
+
+::: {.entry-links}
+**Technical details →** [Verification › mastu scope](/Blog/tokamak-toolkit/technical/verification.qmd#mastu-scope)  
+**Decisions →** [OQ-38](/Blog/tokamak-toolkit/decisions.qmd#oq-38) · [OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42)
+:::

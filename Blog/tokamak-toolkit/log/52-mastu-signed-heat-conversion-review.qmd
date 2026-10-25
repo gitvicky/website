@@ -1,0 +1,51 @@
+---
+title: Saved heat transport implies inward flux at the rejected MAST-U face
+date: '2026-10-11'
+categories:
+- measured
+- negative
+entry: 52
+milestone: M4
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} [negative result]{.chip .negative} Entry 52 · milestone M4
+:::
+
+We reviewed the completed reference diagnostic without running another physics
+solver. Its raw negative heat diffusivities already explain why the guard uses
+fallback. The next question is whether their signs arise when heat flux is
+converted to diffusivity.
+
+We reconstructed temperatures and geometry from the saved trajectory and inverted
+the recorded conversion. All negative channels have temperatures decreasing
+outward. The conversion's denominator correction changes none of their signs.
+The resulting fluxes are algebraically inferred values, not independently saved
+solver outputs. Their magnitudes are below the floor used by the offline flux
+accuracy gate, which supplies no guarantee in this region.
+
+| evidence | result |
+|---|---|
+| signed heat conversion | [the final electron heat flux is inferred as -0.001689376033 gB; all 9 negative channel records at 8 accepted states have outward-decreasing temperature and no denominator-epsilon sign reversal, with maximum epsilon ratio 1.03e-11; all negative magnitudes are below 1 gB]{.claim}[C-195](/Blog/tokamak-toolkit/claims.qmd#c-195){.cid .st-measured} |
+| conversion and software checks | [33 focused checks pass in each mode, including 14 new sign/units/history tests; all 80 native heat-converter round trips meet the mixed 1e-12 parity criterion (maximum absolute difference 8.88e-16 m²/s), 32 numerical source files match the diagnostic bindings, and all 78 source modules pass typing]{.claim}[C-196](/Blog/tokamak-toolkit/claims.qmd#c-196){.cid .st-tested} |
+| formal candidate temperature comparison | remains not evaluable |
+
+The guard checks raw transport before the diffusivity floor is applied. Moving
+clipping before that check would change the reference model. The current
+nonnegative surrogate heat outputs also cannot reproduce inward heat flux.
+Neither observation establishes a physically justified replacement closure.
+
+The installed in-memory solver wrapper does not expose mode spectra. Another
+unchanged trajectory replay would therefore leave the mode evidence missing.
+A richer local-state diagnostic is proposed; its output route and compute
+request remain to be prepared and reviewed. No new solver, training or cluster
+job ran. The current model, guard, faces and tolerances remain selected; [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030)
+stays open. Nothing was synchronized, replaced or published.
+
+**What's next.** Owner review of reference physics, followed by preparation of
+any additional diagnostic or changed closure under its own concrete review.
+
+::: {.entry-links}
+**Technical details →** [Verification › signed heat conversion review](/Blog/tokamak-toolkit/technical/verification.qmd#signed-heat-conversion-review)  
+**Decisions →** [OQ-32](/Blog/tokamak-toolkit/decisions.qmd#oq-32)
+:::

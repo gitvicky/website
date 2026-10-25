@@ -2028,6 +2028,427 @@ Superseded by <a href="#c-067">C-067</a></td>
 <code>Inspect the bound face-4 history and reconstruct the saved raw guard without calling TGLF</code></td>
 <td><code>8721f24</code></td>
 </tr>
+<tr id="c-195" class="odd">
+<td class="cid-cell">C-195</td>
+<td>Saved negative heat coefficients imply inward flux without a converter denominator sign reversal<br>
+<span class="tol">inverse conversion only; not independent direct flux or mode evidence; physical/numerical origin unresolved; no reference remedy or temperature acceptance</span></td>
+<td class="val">the final electron heat flux is inferred as -0.001689376033 gB; all 9 negative channel records at 8 accepted states have outward-decreasing temperature and no denominator-epsilon sign reversal, with maximum epsilon ratio 1.03e-11; all negative magnitudes are below 1 gB</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-heat-conversion-review.json and bound sidecar; reviews/m4-mastu-reference-physics-review.md<br>
+<code>Run scripts/m4_mastu_heat_review.py with a new output path; reads saved trajectory and geometry and forbids TGLF execution</code></td>
+<td><code>1154e09</code></td>
+</tr>
+<tr id="c-196" class="even">
+<td class="cid-cell">C-196</td>
+<td>Signed heat review passes native conversion parity and focused synthetic isolation checks<br>
+<span class="tol">normal and Tier A modes; no physical solver execution; round trips check conversion algebra and units rather than independent physics</span></td>
+<td class="val">33 focused checks pass in each mode, including 14 new sign/units/history tests; all 80 native heat-converter round trips meet the mixed 1e-12 parity criterion (maximum absolute difference 8.88e-16 m²/s), 32 numerical source files match the diagnostic bindings, and all 78 source modules pass typing</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>reviews/m4-mastu-heat-review-validation.json and bound sidecar; retained JUnit records and array audit<br>
+<code>Run tests/unit/test_signed_heat.py, tests/unit/test_m4_reference.py and tests/unit/test_blog_export.py in both modes; run the saved-output review without TGLF</code></td>
+<td><code>1154e09</code></td>
+</tr>
+<tr id="c-197" class="odd">
+<td class="cid-cell">C-197</td>
+<td>The richer signed heat diagnostic route passes synthetic preparation checks<br>
+<span class="tol">synthetic and input/schema validation only; no direct physical flux or mode evidence; no reference remedy or temperature acceptance</span></td>
+<td class="val">55 focused checks pass in each mode, including 22 direct-output and settings checks; all 79 source modules pass typing; the compiled synthetic writer preserves signed species heat and passes total/low-k spectral parity without calling TGLF</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>reviews/m4-mastu-rich-diagnostic-preparation.json and bound sidecar; retained JUnit records and compiled synthetic writer fixture<br>
+<code>Run tests/unit/test_tglf_diagnostic.py, test_signed_heat.py, test_m4_reference.py and test_blog_export.py in both modes; prepare the native synthetic writer without physical execution</code></td>
+<td><code>be87dbd</code></td>
+</tr>
+<tr id="c-198" class="even">
+<td class="cid-cell">C-198</td>
+<td>Diagnostic paired reporting is checked against the wrapper's actual exposed capabilities<br>
+<span class="tol">synthetic worker responses only; unavailable convergence/status evidence remains unavailable; consumed failed run and all original bindings retained</span></td>
+<td class="val">25 diagnostic checks pass in each mode, including unavailable status, exposed failure status and nonfinite output; 33 unchanged focused checks are retained for 58 focused recorded passes per mode</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>reviews/m4-mastu-rich-diagnostic-preparation-v6.json and bound sidecar; retained diagnostic JUnit records<br>
+<code>Run tests/unit/test_tglf_diagnostic.py in normal and Tier A modes; physical solver calls are replaced with synthetic responses</code></td>
+<td><code>6e60d64</code></td>
+</tr>
+<tr id="c-199" class="odd">
+<td class="cid-cell">C-199</td>
+<td>The richer diagnostic retains signed local-state flux and backend discrepancies<br>
+<span class="tol">integrity and local numerical evidence only; no physical validity, complete reference coverage or formal temperature acceptance</span></td>
+<td class="val">648 integrity checks pass on the complete 15-state collection; all affected signed states agree between backends, but four control states fail the existing parity criterion; original terminal tracking failure is preserved and archive recovery calls no solver</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-rich-diagnostic-result.json and bound sidecar; reviews/m4-mastu-rich-diagnostic-result.md<br>
+<code>Inspect bound saved outputs and archive checksum; do not repeat consumed submissions or recovery</code></td>
+<td><code>7fb6b47</code></td>
+</tr>
+<tr id="c-200" class="even">
+<td class="cid-cell">C-200</td>
+<td>Repeatability checks retain separate signed backend replicates and reject incomplete evidence<br>
+<span class="tol">synthetic fixtures only; no physical solver calls or reference admissibility from these tests</span></td>
+<td class="val">31 synthetic diagnostic tests pass in each mode, including archive identity and repeatability completeness/discrepancy checks; 33 unchanged focused records are retained, giving 64 focused recorded passes per mode</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>data/m4/validation/mastu-rich/repeat-v1-report-suites; reviews/m4-mastu-rich-repeat-preparation.json<br>
+<code>Run tests/unit/test_tglf_diagnostic.py in normal and Tier A modes</code></td>
+<td><code>0880d29</code></td>
+</tr>
+<tr id="c-201" class="odd">
+<td class="cid-cell">C-201</td>
+<td>Both numerical reference backends reproduce their own signed outputs exactly<br>
+<span class="tol">local repeatability and artifact/accounting integrity only; no physical validity, numerical convergence, reference remedy or formal temperature acceptance</span></td>
+<td class="val">521 saved-output checks pass; every within-backend fresh-process repeat is exactly equal and agrees with its consumed output, while all four cross-backend discrepancies persist; native accounting completes within the reviewed bound and the offline archive copy matches its checksum</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-rich-repeat-result.json and bound sidecar; reviews/m4-mastu-rich-repeat-result.md<br>
+<code>Inspect the bound saved-output repeatability report; the consumed diagnostic is not resubmitted</code></td>
+<td><code>7c6bc46</code></td>
+</tr>
+<tr id="c-202" class="even">
+<td class="cid-cell">C-202</td>
+<td>The bounded reference refinement protocol preserves signed evidence and validates its reporting<br>
+<span class="tol">synthetic tests only; no solver convergence, physical validity or temperature acceptance</span></td>
+<td class="val">40 focused synthetic checks pass in each mode after the input-path correction, covering signed channels, refinement identities, baseline drift, incomplete evidence and existing diagnostic output handling</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>reviews/m4-mastu-convergence-path-fix.json and bound sidecar; data/m4/validation/mastu-rich/convergence-v2-report-suites<br>
+<code>Run tests/unit/test_tglf_convergence.py and tests/unit/test_tglf_diagnostic.py in normal and Tier A modes</code></td>
+<td><code>f3ceaa3</code></td>
+</tr>
+<tr id="c-203" class="odd">
+<td class="cid-cell">C-203</td>
+<td>The bounded reference refinement completes but does not establish numerical convergence<br>
+<span class="tol">artifact integrity and observed numerical sensitivity only; no converged-reference uncertainty bound or temperature acceptance</span></td>
+<td class="val">2076 integrity checks pass on the complete bounded study; baseline reproduction, signed species outputs, spectral accounting, native completion and the local archive copy are verified, while electron-flux signs change across refinement levels and finest-level backend differences remain</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-convergence-result.json and bound sidecar; reviews/m4-mastu-convergence-result.md<br>
+<code>Run the saved-output convergence review to a new destination; do not resubmit the consumed diagnostic</code></td>
+<td><code>f929e2a</code></td>
+</tr>
+<tr id="c-204" class="even">
+<td class="cid-cell">C-204</td>
+<td>Separated-basis reporting preserves fixed inputs, signed effects and consumed controls<br>
+<span class="tol">synthetic preparation only; no reference convergence or coupled-temperature acceptance</span></td>
+<td class="val">54 focused synthetic checks pass in each mode, including separated basis effects, interactions, signed channels, incomplete evidence and consumed-control drift; 553 unchanged recorded checks are retained separately</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>reviews/m4-mastu-basis-preparation.json and bound sidecar; data/m4/validation/mastu-rich/basis-report-suites<br>
+<code>Run test_tglf_basis.py, test_tglf_convergence.py and test_tglf_diagnostic.py in normal and Tier A modes</code></td>
+<td><code>ec310a2</code></td>
+</tr>
+<tr id="c-205" class="odd">
+<td class="cid-cell">C-205</td>
+<td>The separated-basis diagnostic completes; both basis roles change the flux and convergence is still not established<br>
+<span class="tol">artifact integrity and observed numerical sensitivity only; no converged-reference uncertainty bound, cause or temperature acceptance</span></td>
+<td class="val">2139 integrity checks pass on the complete 54-pair basis grid and all 36 consumed-control comparisons reproduce the preceding study; electron flux changes sign at every state, steps reach 4.28 gB along the final basis and 4.11 gB along the search basis, and at the largest final basis the flux is a residual of order 1e-3 gB</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-basis-result.json, reviews/m4-mastu-basis-interpretation.json and bound sidecars; reviews/m4-mastu-basis-result.md<br>
+<code>Run the saved-output convergence review and basis interpretation to new destinations; do not resubmit the consumed diagnostic</code></td>
+<td><code>118d8bd</code></td>
+</tr>
+<tr id="c-206" class="even">
+<td class="cid-cell">C-206</td>
+<td>Extending the final basis and the width-search range does not converge the MAST-U reference flux<br>
+<span class="tol">artifact integrity and observed numerical sensitivity only; no converged-reference uncertainty bound, cause or temperature acceptance</span></td>
+<td class="val">3029 integrity checks pass on the complete 78-pair extension and all 36 control comparisons reproduce job 2687308; NBASIS_MAX 16 still moves electron flux by up to 0.48 gB per step, and widening the width search from 1.65 to 3.3 changes it from about 1e-3 gB to as much as 181 gB</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-extension-result.json and bound sidecar; reviews/m4-mastu-extension-result.md<br>
+<code>Run the saved-output convergence review to a new destination; do not resubmit the consumed diagnostic</code></td>
+<td><code>f2954ba</code></td>
+</tr>
+<tr id="c-210" class="odd">
+<td class="cid-cell">C-210</td>
+<td>JOREK 01a52be3 built from source with an own MUMPS 5.7.3 reproduces three of four upstream regression cases<br>
+<span class="tol">each case's own upstream tolerance on the stored solution values; build check only, no physics result</span></td>
+<td class="val">3 of 4 upstream regression cases reproduce their public reference data: MAST-U grid and equilibrium (largest difference 2.0e-5, tolerance 1e-4), MAST equilibrium with coils (1.2e-10), and one implicit tearing-mode step (4.1e-13, tolerance 1e-12); the full-MHD kink case was not run because its upstream input is out of date for this code version</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/jorek-j1-build.json<br>
+<code>scripts/jorek/build_config.sh and scripts/jorek/run_regcase.sh for each case</code></td>
+<td><code>1de9a46</code></td>
+</tr>
+<tr id="c-211" class="even">
+<td class="cid-cell">C-211</td>
+<td>On the target CPU nodes the regression cases pass and one implicit step on the MAST-U X-point grid costs about 6 s at 32 cores<br>
+<span class="tol">three steps per layout, timing only; first step includes the matrix factorisation</span></td>
+<td class="val">all three regression cases pass on a 256-core AMD node; one implicit step on the MAST-U X-point grid (8050 elements, toroidal modes n = 0 and 1) takes 5.8 s at 2 ranks x 16 threads, 6.7 s at 4 x 32 and 8.1 s at 2 x 64; the whole job used 22.4 core-hours</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/jorek-j2-cost.json<br>
+<code>scripts/jorek/j2_cost.sbatch (one CPU node, at most one hour)</code></td>
+<td><code>c05b9fc</code></td>
+</tr>
+<tr id="c-212" class="odd">
+<td class="cid-cell">C-212</td>
+<td>Threaded JOREK runs intermittently abort in grid set-up and are not bitwise repeatable; single-threaded runs repeat exactly<br>
+<span class="tol">small samples; cause inside JOREK not identified</span></td>
+<td class="val">an assertion in the element search tree aborts 3 of 8 grid set-up runs at 8 OpenMP threads and 0 of 8 at 1 thread; two 4-thread runs of the same input differ at round-off, while 1-thread runs repeat bit for bit</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/jorek-j2-cost.json; spec/reviews/jorek-j3-adapter.json<br>
+<code>part B of scripts/jorek/j2_cost.sbatch; repeat runs of the MAST-U grid case</code></td>
+<td><code>c05b9fc</code></td>
+</tr>
+<tr id="c-213" class="even">
+<td class="cid-cell">C-213</td>
+<td>The toolkit's JOREK unit conversion reproduces the time and resistivity units JOREK stores<br>
+<span class="tol">uses the constants of the pinned JOREK version</span></td>
+<td class="val">time and resistivity units computed by the toolkit match the values JOREK stored in three restart files to 1e-15 relative</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/unit/test_jorek_adapter.py::test_normalisation_matches_values_jorek_stored<br>
+<code>pytest tests/unit/test_jorek_adapter.py</code></td>
+<td><code>c05b9fc</code></td>
+</tr>
+<tr id="c-214" class="odd">
+<td class="cid-cell">C-214</td>
+<td>A JOREK input rewritten by the toolkit gives a restart file identical to the original input's<br>
+<span class="tol">exact (bitwise) at one OpenMP thread</span></td>
+<td class="val">the MAST-U input (356 entries) parsed and rewritten by the toolkit gives, with one thread, a restart file identical in every dataset to a run of the original input</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/jorek-j3-adapter.json<br>
+<code>parse and rewrite the input with tkit.adapters.jorek, run jorek_model303 with OMP_NUM_THREADS=1, h5diff the restart files</code></td>
+<td><code>0a5553c</code></td>
+</tr>
+<tr id="c-215" class="even">
+<td class="cid-cell">C-215</td>
+<td>JOREK adapter and runner tests pass in normal and Tier-A-only modes<br>
+<span class="tol">fake executables only for the runner; no JOREK needed</span></td>
+<td class="val">26 tests pass in normal and Tier-A-only modes: unit conversion, profile files, namelists, the energy reader, and the runner with fake executables (snapshots, retry, timeout, provenance)</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>tests/unit/test_jorek_adapter.py, tests/unit/test_jorek_run.py, tests/tier_a<br>
+<code>pytest tests/unit/test_jorek_adapter.py tests/unit/test_jorek_run.py tests/tier_a (also with TKIT_TIER_A_ONLY=1)</code></td>
+<td><code>c05b9fc</code></td>
+</tr>
+<tr id="c-216" class="odd">
+<td class="cid-cell">C-216</td>
+<td>JOREK reproduces the ITER hybrid EQDSK safety factor in the core but not yet at the edge<br>
+<span class="tol">one grid and boundary choice; no acceptance tolerance agreed yet (OQ-39)</span><br>
+Superseded by <a href="#c-221">C-221</a></td>
+<td class="val">JOREK solving the ITER hybrid equilibrium from the TORAX EQDSK matches its safety factor q to 0.4% (median) for normalised flux 0.1-0.5, but is 3.6% high for 0.5-0.9 and 5.8% high for 0.9-0.95 (q 5.12 vs 4.67 at 0.95); plasma current 12.06 vs 11.77 MA</td>
+<td><span class="badge st-superseded">superseded</span></td>
+<td>spec/reviews/jorek-j3-eqdsk-iter.json<br>
+<code>eqdsk2jorek (smth 3e-5) on iterhybrid_cocos02.eqdsk, toolkit-written temperature file, jorek_model303 n_tor=1, nstep 0</code></td>
+<td><code>c05b9fc</code></td>
+</tr>
+<tr id="c-220" class="even">
+<td class="cid-cell">C-220</td>
+<td>JOREK ITER hybrid equilibrium on the EQDSK separatrix, 40 x 64 grid<br>
+<span class="tol">OQ-39 decision 2: q within 2% for psi_N 0.1-0.95, I_p within 1%; fixed boundary at the separatrix</span></td>
+<td class="val">I_p −1.38%, largest q difference 1.1%: fails the current tolerance</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/jorek-j5-iter-equilibrium.json<br>
+<code>scripts/jorek/iter_lcfs_input.py, then JOREK model303 equilibrium only (nstep 0) on the EQDSK separatrix, n_flux 40, n_tht 64</code></td>
+<td><code>2d48956</code></td>
+</tr>
+<tr id="c-221" class="odd">
+<td class="cid-cell">C-221</td>
+<td>JOREK ITER hybrid equilibrium on the EQDSK separatrix, 80 x 128 grid (used for the n-scans)<br>
+<span class="tol">OQ-39 decision 2: q within 2% for psi_N 0.1-0.95, I_p within 1%; fixed boundary at the separatrix</span></td>
+<td class="val">I_p −0.93%, largest q difference 1.1%, q 4.668 against 4.668 at psi_N 0.95: passes the tolerance of q within 2% and I_p within 1%</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/jorek-j5-iter-equilibrium.json<br>
+<code>scripts/jorek/iter_lcfs_input.py, then JOREK model303 equilibrium only (nstep 0) on the EQDSK separatrix, n_flux 80, n_tht 128</code></td>
+<td><code>2d48956</code></td>
+</tr>
+<tr id="c-222" class="even">
+<td class="cid-cell">C-222</td>
+<td>JOREK ITER hybrid equilibrium on the EQDSK separatrix, 160 x 256 grid (grid check)<br>
+<span class="tol">OQ-39 decision 2: q within 2% for psi_N 0.1-0.95, I_p within 1%; fixed boundary at the separatrix</span></td>
+<td class="val">I_p −0.20%, largest q difference 1.1%: passes</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/jorek-j5-iter-equilibrium.json<br>
+<code>scripts/jorek/iter_lcfs_input.py, then JOREK model303 equilibrium only (nstep 0) on the EQDSK separatrix, n_flux 160, n_tht 256</code></td>
+<td><code>2d48956</code></td>
+</tr>
+<tr id="c-223" class="odd">
+<td class="cid-cell">C-223</td>
+<td>JOREK case (a) n = 12 pedestal mode, linear growth rate at dt 1 on 80 x 128<br>
+<span class="tol">converged in dt (C-227); grid check not run, so not quotable under OQ-39 decision 7: quoted only if halving dt and doubling the grid each change gamma by at most 5%</span></td>
+<td class="val">γ√(μ₀ρ₀) 0.0440 (γ 8.3 × 10<sup>4</sup> s⁻¹), peak at psi_N 0.975, γ/ω* 0.23</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>spec/reviews/jorek-j5-iter-case-a-job2.json<br>
+<code>python scripts/jorek/j5_growth.py &lt;case dir&gt; &lt;runs&gt; (energy band 1e-15..1e-7)</code></td>
+<td><code>1312c27</code></td>
+</tr>
+<tr id="c-224" class="even">
+<td class="cid-cell">C-224</td>
+<td>JOREK case (a) n = 16 pedestal mode, linear growth rate at dt 1 on 80 x 128<br>
+<span class="tol">converged in dt (C-227); grid check not run, so not quotable under OQ-39 decision 7: quoted only if halving dt and doubling the grid each change gamma by at most 5%</span></td>
+<td class="val">γ√(μ₀ρ₀) 0.0374 (γ 7.1 × 10<sup>4</sup> s⁻¹), peak at psi_N 0.975, γ/ω* 0.14</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>spec/reviews/jorek-j5-iter-case-a-job2.json<br>
+<code>python scripts/jorek/j5_growth.py &lt;case dir&gt; &lt;runs&gt; (energy band 1e-15..1e-7)</code></td>
+<td><code>1312c27</code></td>
+</tr>
+<tr id="c-225" class="odd">
+<td class="cid-cell">C-225</td>
+<td>JOREK case (a) core modes n = 1, 2, 3, 5 at the q minimum of the reversed-shear EQDSK q profile<br>
+<span class="tol">not convergence-checked (they do not bear on the pedestal question); case (a) core pressure is overstated (C-239)</span></td>
+<td class="val">γ√(μ₀ρ₀) 0.012–0.028, peak at psi_N 0.12–0.18, where q has its minimum of about 1.11</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>spec/reviews/jorek-j5-iter-case-a-job2.json<br>
+<code>python scripts/jorek/j5_growth.py &lt;case dir&gt; &lt;runs&gt; (energy band 1e-15..1e-7)</code></td>
+<td><code>1312c27</code></td>
+</tr>
+<tr id="c-226" class="even">
+<td class="cid-cell">C-226</td>
+<td>JOREK case (a) axis modes n = 8 and 20<br>
+<span class="tol">fail the dt check (C-228); probably numerical</span></td>
+<td class="val">γ√(μ₀ρ₀) 0.028 and 0.033, confined to psi_N below 0.02</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>spec/reviews/jorek-j5-iter-case-a-job2.json<br>
+<code>python scripts/jorek/j5_growth.py &lt;case dir&gt; &lt;runs&gt; (energy band 1e-15..1e-7)</code></td>
+<td><code>1312c27</code></td>
+</tr>
+<tr id="c-227" class="odd">
+<td class="cid-cell">C-227</td>
+<td>Halving the JOREK time step leaves the case (a) pedestal growth rates within 5%<br>
+<span class="tol">OQ-39 decision 7: quoted only if halving dt and doubling the grid each change gamma by at most 5%; location class unchanged; grid half of the check not run</span></td>
+<td class="val">n = 12: 0.04397 → 0.04397 (−0.01%); n = 16: 0.03744 → 0.03633 (−2.94%); both within the 5% tolerance</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/jorek-j5-job3-result.json<br>
+<code>python scripts/jorek/j5_convergence.py (job 2704714 against job 2688559)</code></td>
+<td><code>c93d5a2</code></td>
+</tr>
+<tr id="c-228" class="even">
+<td class="cid-cell">C-228</td>
+<td>Halving the JOREK time step moves the case (a) axis-mode growth rates by more than 5%<br>
+<span class="tol">OQ-39 decision 7: quoted only if halving dt and doubling the grid each change gamma by at most 5%</span></td>
+<td class="val">n = 8: 0.02810 → 0.02967 (+5.56%); n = 20: 0.03300 → 0.03473 (+5.27%); both outside the 5% tolerance</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/jorek-j5-job3-result.json<br>
+<code>python scripts/jorek/j5_convergence.py (job 2704714 against job 2688559)</code></td>
+<td><code>c93d5a2</code></td>
+</tr>
+<tr id="c-229" class="odd">
+<td class="cid-cell">C-229</td>
+<td>Cost of the JOREK axisymmetric start on the doubled 160 x 256 grid<br>
+<span class="tol">one job; the linear-run cost on this grid is an estimate scaled from it, not measured</span></td>
+<td class="val">about 126 s per step against 9.7 s on 80 x 128 (13x); timed out after 43 of 50 steps, so no doubled-grid linear run started</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/jorek-j5-job3-result.json<br>
+<code>branch B of scripts/jorek/j5_iter_a_job3.sbatch</code></td>
+<td><code>c93d5a2</code></td>
+</tr>
+<tr id="c-230" class="even">
+<td class="cid-cell">C-230</td>
+<td>JOREK's GMRES abort exits with code 0; every case (a) linear run ended on it after its linear phase<br>
+<span class="tol">the abort follows the linear phase in every run</span></td>
+<td class="val">8 of 8 case (a) runs ended on the GMRES abort with exit code 0; a test now checks that such a run is recorded as solver_aborted and not retried</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>spec/reviews/jorek-j5-iter-case-a-job2.json; tests/unit/test_jorek_run.py::test_gmres_abort_with_exit_zero_is_not_completed<br>
+<code>pytest tests/unit/test_jorek_run.py</code></td>
+<td><code>1312c27</code></td>
+</tr>
+<tr id="c-231" class="odd">
+<td class="cid-cell">C-231</td>
+<td>Consistency of the JOREK case (a) growth-rate fits<br>
+<span class="tol">energy band 1e-15..1e-7 chosen after inspecting the traces</span></td>
+<td class="val">half-window and magnetic/kinetic fits agree within 1.1% (tolerance 2%) in all 8 runs; moving the energy band one decade either way changes γ by at most 0.6%</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/jorek-j5-iter-case-a-job2.json<br>
+<code>python scripts/jorek/j5_growth.py &lt;case dir&gt; &lt;runs&gt; (energy band 1e-15..1e-7)</code></td>
+<td><code>1312c27</code></td>
+</tr>
+<tr id="c-232" class="even">
+<td class="cid-cell">C-232</td>
+<td>Idle core-hours in JOREK job 2704714 from a batch-script wait bug<br>
+<span class="tol">from scheduler accounting and the run end times</span></td>
+<td class="val">about 290 of 1046 core-h: after the last run ended the script waited on its watchdog (an empty wait list became a bare wait); fixed in both job scripts</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/jorek-j5-job3-result.json<br>
+<code>sacct for job 2704714</code></td>
+<td><code>c93d5a2</code></td>
+</tr>
+<tr id="c-233" class="odd">
+<td class="cid-cell">C-233</td>
+<td>JOREK case (b) equilibrium from the TORAX state, FF' x 0.947 with under-relaxation 0.5<br>
+<span class="tol">OQ-40 (a) acceptance: I_p within 1%, p(psi_N) as TORAX by construction</span></td>
+<td class="val">I_p 10.501 MA against TORAX's 10.5 MA (+0.01%), converged in 43 iterations; on 160 x 256 −0.07% with q equal to about 1e-5</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/jorek-j5-iter-case-b-ip.json<br>
+<code>python scripts/jorek/j5_case_b_ip.py 0.947 &lt;out&gt; 0.5</code></td>
+<td><code>a3713dd</code></td>
+</tr>
+<tr id="c-234" class="even">
+<td class="cid-cell">C-234</td>
+<td>Without under-relaxation the JOREK case (b) Grad-Shafranov iteration does not converge<br>
+<span class="tol">case (a) converges to 7e-7 in 15 iterations with the same settings</span></td>
+<td class="val">the iteration cycles between two states for all 200 iterations (axis moves about 5 mm, residual about 7e-3); I_p +3.7% at FF' x 1, −0.0002% at x 0.952, neither converged</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/jorek-j5-iter-case-b-ip.json<br>
+<code>python scripts/jorek/j5_case_b_ip.py &lt;k&gt; &lt;out&gt;</code></td>
+<td><code>5c58ecb</code></td>
+</tr>
+<tr id="c-235" class="odd">
+<td class="cid-cell">C-235</td>
+<td>Safety factor of the accepted JOREK case (b) equilibrium against TORAX<br>
+<span class="tol">reported as a known inconsistency of the fixed-geometry TORAX state (OQ-40 (a)), not an acceptance test</span></td>
+<td class="val">median q difference +10.7% (psi_N 0.1–0.5), +3.2% (0.5–0.9), −4.9% (0.9–0.95); q95 4.64 against 4.89, q_min 1.84 against 1.64</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/jorek-j5-iter-case-b-ip.json<br>
+<code>python scripts/jorek/j5_case_b_ip.py 0.947 &lt;out&gt; 0.5</code></td>
+<td><code>5c58ecb</code></td>
+</tr>
+<tr id="c-236" class="even">
+<td class="cid-cell">C-236</td>
+<td>JOREK case (b) n-scan, first job: how the runs ended<br>
+<span class="tol">dt 1, 80 x 128, 32 cores per n</span></td>
+<td class="val">no GMRES abort: all 8 runs reached the job time limit at t ≈ 4790 (about 4770 steps); final energies 1e-24 to 1e-20, below the 1e-15..1e-7 fit band, so no γ is fitted</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/jorek-j5-case-b-job1.json<br>
+<code>scripts/jorek/j5_iter_b_job1.sbatch; python scripts/jorek/j5_growth.py</code></td>
+<td><code>acd794b</code></td>
+</tr>
+<tr id="c-237" class="odd">
+<td class="cid-cell">C-237</td>
+<td>JOREK case (b) n = 20: late local growth rate<br>
+<span class="tol">local rate from 0.5 ln E, not a band fit; no convergence check yet</span></td>
+<td class="val">γ√(μ₀ρ₀) ≈ 0.0029, steady over t 4000–4771; flow perturbation peaks at psi_N 0.95–1</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>spec/reviews/jorek-j5-case-b-job1.json<br>
+<code>python scripts/jorek/j5_growth.py &lt;case dir&gt; lin_n20</code></td>
+<td><code>acd794b</code></td>
+</tr>
+<tr id="c-238" class="even">
+<td class="cid-cell">C-238</td>
+<td>JOREK case (b) n &lt;= 16: late local growth rates<br>
+<span class="tol">local rates over windows of 370 time units; still changing at the end of the job</span></td>
+<td class="val">at t ≈ 4400: n = 1–8 −0.0003 to −0.0001 (decaying), n = 12 +0.00029, n = 16 +0.00173 (rising)</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>spec/reviews/jorek-j5-case-b-job1.json<br>
+<code>python scripts/jorek/j5_growth.py &lt;case dir&gt; &lt;runs&gt;</code></td>
+<td><code>acd794b</code></td>
+</tr>
+<tr id="c-239" class="odd">
+<td class="cid-cell">C-239</td>
+<td>Total axis temperature T_e + T_i of the two JOREK cases<br>
+<span class="tol">case (a) is a higher-pressure state than TORAX at 80 s</span></td>
+<td class="val">66.6 keV in case (a) (EQDSK pressure split by TORAX density) against 14.4 keV in case (b) (TORAX at 80 s)</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>spec/reviews/jorek-j5-iter-case-a.json; spec/reviews/jorek-j5-iter-case-b-equilibrium.json<br>
+<code>scripts/jorek/j5_iter_case.py a / b</code></td>
+<td><code>1312c27</code></td>
+</tr>
+<tr id="c-240" class="even">
+<td class="cid-cell">C-240</td>
+<td>Read-only screen of the OQ-38 projection rule over the 40 saved MAST-U reference states<br>
+<span class="tol">fluxes inferred by inverting TORAX's conversion, not direct TGLF outputs; a projected run diverges from the saved trajectory after its first served projection</span></td>
+<td class="val">150 negative raw heat diffusivities at 19 faces; 46 would reach the 1 gB stop, at 31 of 40 states, the first at state 1</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-projection-screen.json<br>
+<code>python -m scripts.m4_mastu_projection_screen (saved outputs only, no solver)</code></td>
+<td><code>a25e88d</code></td>
+</tr>
+<tr id="c-241" class="odd">
+<td class="cid-cell">C-241</td>
+<td>Projections reaching the 1 gB stop on faces the projected reference would serve<br>
+<span class="tol">same limits as C-240</span></td>
+<td class="val">26 would be served, the first at state 4 (faces 11 and 12, ion, −8.0 and −33.8 gB); near the axis the projected magnitude reaches 6020 gB</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-projection-screen.json<br>
+<code>python -m scripts.m4_mastu_projection_screen (saved outputs only, no solver)</code></td>
+<td><code>a25e88d</code></td>
+</tr>
+<tr id="c-242" class="even">
+<td class="cid-cell">C-242</td>
+<td>Descriptive distance between the retrained MAST-U candidate and the guarded historical reference<br>
+<span class="tol">descriptive only: the reference is the guarded TGLF/fallback hybrid, so this is not an R6 gate result</span></td>
+<td class="val">T_e 32.0%, T_i 41.5% on the 14 faces where both serve TGLF, against the 15% limit</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-mastu-projection-screen.json<br>
+<code>python -m scripts.m4_mastu_projection_screen (saved outputs only, no solver)</code></td>
+<td><code>a25e88d</code></td>
+</tr>
 </tbody>
 </table>
 

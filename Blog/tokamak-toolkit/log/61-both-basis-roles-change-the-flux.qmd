@@ -1,0 +1,38 @@
+---
+title: Both basis roles change the reference flux
+date: '2026-10-16'
+categories:
+- measured
+entry: 61
+milestone: M4
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 61 · milestone M4
+:::
+
+The bounded diagnostic crossing the width-search basis with the final-solve basis
+ran once and completed. All 108 solver calls are retained, and the saved outputs
+pass an independent audit ([2139 integrity checks pass on the complete 54-pair basis grid and all 36 consumed-control comparisons reproduce the preceding study; electron flux changes sign at every state, steps reach 4.28 gB along the final basis and 4.11 gB along the search basis, and at the largest final basis the flux is a residual of order 1e-3 gB]{.claim}[C-205](/Blog/tokamak-toolkit/claims.qmd#c-205){.cid .st-measured}). The three settings shared with
+the previous study reproduce its fluxes exactly in both backends.
+
+Neither setting explains the sensitivity on its own. Changing only the final
+basis moves electron heat flux by up to 4.3 gB; changing only the search basis
+moves it by up to 4.1 gB, and the two effects do not add. At the largest final
+basis tested, the flux at every state shrinks to a residual of about 1e-3 gB,
+which is where most negative values occur. A smaller final basis instead finds
+fast-growing high-wavenumber roots that carry much of the flux.
+
+The native registers confirm the expected solver path: the search depends only
+on its own basis, and a final solve with no unstable mode reports the input width.
+They also show the search often stopping at the top of its width range.
+
+So the reference is still not converged, and its negative values cannot yet be
+used. The next candidates are a larger final basis, a wider width search and
+tracking the high-wavenumber roots, each needing its own frozen request. The
+current model, guard and acceptance criteria are unchanged.
+
+::: {.entry-links}
+**Technical details →** [Verification › reference basis results](/Blog/tokamak-toolkit/technical/verification.qmd#reference-basis-results)  
+**Decisions →** [OQ-33](/Blog/tokamak-toolkit/decisions.qmd#oq-33) · [OQ-35](/Blog/tokamak-toolkit/decisions.qmd#oq-35)
+:::

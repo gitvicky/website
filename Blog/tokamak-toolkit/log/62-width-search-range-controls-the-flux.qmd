@@ -1,0 +1,37 @@
+---
+title: The width-search range controls the reference flux
+date: '2026-10-16'
+categories:
+- measured
+entry: 62
+milestone: M4
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 62 · milestone M4
+:::
+
+The owner chose more numerical refinement before deciding how the MAST-U reference
+should treat its small negative heat fluxes. One bounded diagnostic extended the
+final basis to 16 functions and widened TGLF's width search. It completed, and its
+saved outputs pass an independent audit with all controls reproduced
+([3029 integrity checks pass on the complete 78-pair extension and all 36 control comparisons reproduce job 2687308; NBASIS_MAX 16 still moves electron flux by up to 0.48 gB per step, and widening the width search from 1.65 to 3.3 changes it from about 1e-3 gB to as much as 181 gB]{.claim}[C-206](/Blog/tokamak-toolkit/claims.qmd#c-206){.cid .st-measured}).
+
+Neither change settles the flux. The near-zero values seen at the previous
+largest basis disappear again at larger bases, and the last step still moves the
+electron flux by up to 0.48 gB. Widening the width search matters far more: the
+default range turns out to be binding, and letting the search move past it turns
+a residual of about 1e-3 gB into as much as 181 gB at one state. At the standard
+settings, the two negative values become clearly positive.
+
+Across three bounded studies the "refined" flux at these states spans more than
+five orders of magnitude. The standard settings, which labelled all the training
+data, therefore act as a convention that defines the model here rather than as an
+approximation to a converged answer. How to use that convention for the reference
+goes back to the owner. The current model, guard and acceptance criteria are
+unchanged.
+
+::: {.entry-links}
+**Technical details →** [Verification › reference extension results](/Blog/tokamak-toolkit/technical/verification.qmd#reference-extension-results)  
+**Decisions →** [OQ-33](/Blog/tokamak-toolkit/decisions.qmd#oq-33) · [OQ-35](/Blog/tokamak-toolkit/decisions.qmd#oq-35) · [OQ-36](/Blog/tokamak-toolkit/decisions.qmd#oq-36)
+:::

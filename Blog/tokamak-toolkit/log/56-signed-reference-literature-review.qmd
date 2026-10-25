@@ -1,0 +1,53 @@
+---
+title: The reference must preserve signed energy transport
+date: '2026-10-11'
+categories:
+- measured
+entry: 56
+milestone: M4
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 56 · milestone M4
+:::
+
+The richer local diagnostic saved its complete collection before offline tracking
+failed. Repeated input filenames collided in a tracker that copies by basename.
+The original scheduler failure stays recorded. An archive with relative case paths
+now retains the original files, their provenance and checksum; recovery required
+no additional solver calls.
+
+| evidence | conclusion |
+|---|---|
+| direct signed collection and saved-output audit | [648 integrity checks pass on the complete 15-state collection; all affected signed states agree between backends, but four control states fail the existing parity criterion; original terminal tracking failure is preserved and archive recovery calls no solver]{.claim}[C-199](/Blog/tokamak-toolkit/claims.qmd#c-199){.cid .st-measured} |
+| repeatability tooling | [31 synthetic diagnostic tests pass in each mode, including archive identity and repeatability completeness/discrepancy checks; 33 unchanged focused records are retained, giving 64 focused recorded passes per mode]{.claim}[C-200](/Blog/tokamak-toolkit/claims.qmd#c-200){.cid .st-tested} |
+| coupled reference acceptance | unresolved; the original uncovered face remains |
+
+The collection confirms signed energy flux where the previous coefficient inversion
+had only inferred it. It also reveals backend discrepancies in preceding controls.
+Agreement at the affected states does not excuse disagreement elsewhere, and a
+successful spectral integration is not an independent physics validation.
+
+The owner delegated a literature-based review of what the reference should be.
+Primary TGLF documentation defines species energy fluxes and separate mode outputs.
+Published validation studies compare matched inputs, spectra, fluxes and coupled
+profiles. Literature also contains mechanisms for inward energy transport, but
+their existence does not identify the mechanism in these particular inputs.
+
+The approved method preserves signed, separate-species TGLF transport as the target
+reference and requires numerical reproducibility before a coupled comparison.
+The current guarded trajectory remains a regression baseline. Clipping the signed
+output would define a different modelling baseline; it cannot retroactively supply
+missing reference coverage. A conservative stable energy closure needs its own
+concrete implementation review. The served surrogate contract and current guard
+stay unchanged. M4 and its temperature gate remain open.
+
+**What's next.** Run a frozen bounded repeatability check, keeping each fresh
+backend evaluation and every discrepancy. Then review numerical convergence and
+the energy closure. No remote artifact
+synchronization has occurred.
+
+::: {.entry-links}
+**Technical details →** [Verification › signed reference literature review](/Blog/tokamak-toolkit/technical/verification.qmd#signed-reference-literature-review)  
+**Decisions →** [OQ-33](/Blog/tokamak-toolkit/decisions.qmd#oq-33) · [OQ-34](/Blog/tokamak-toolkit/decisions.qmd#oq-34)
+:::

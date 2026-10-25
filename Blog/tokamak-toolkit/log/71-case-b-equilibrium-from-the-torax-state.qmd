@@ -1,0 +1,78 @@
+---
+title: JOREK equilibrium for the TORAX ITER hybrid state
+date: '2026-10-25'
+categories:
+- decision
+- measured
+entry: 71
+milestone: JOREK (alongside M4)
+---
+
+::: {.entry-meta}
+[decision]{.chip .decision} [measurement]{.chip .measured} Entry 71 · milestone JOREK (alongside M4)
+:::
+
+Case (b) is the physical case of the JOREK stability work: the TORAX ITER hybrid state at the
+end of its ramp-up simulation, whose pedestal comes from the toolkit's own pedestal model.
+JOREK solves its own equilibrium from the pressure, taken from TORAX's density and temperatures, and from FF′,
+derived from TORAX's current density with the bootstrap current included.
+
+## Why the tolerance changed
+
+The first solve missed the tolerance of [entry 67](67-iter-equilibrium-on-the-eqdsk-separatrix.qmd):
+plasma current I_p came out high (first row of the table below), and so did core q. The cause is
+structural. TORAX evolves the current on a fixed geometry taken from the CHEASE EQDSK, so its
+state is not itself a Grad–Shafranov equilibrium. An equilibrium with the same pressure and
+current density has different flux surfaces, and therefore different q.
+
+The owner chose the recommended option of [OQ-40](/Blog/tokamak-toolkit/decisions.qmd#oq-40). FF′ is multiplied by one factor so that I_p
+equals TORAX's. Acceptance is entry 67's current tolerance, with the pressure as a function of
+normalised flux equal to TORAX's by construction. The q difference from TORAX is reported,
+not tested. This keeps TORAX's pressure pedestal and the shape of its current profile, which drive the edge
+modes. The alternatives were to tune FF′ until q matched, which changes the current profile,
+or to build a self-consistent free-boundary state first, which is a larger piece of work.
+
+## What happened
+
+The Grad–Shafranov iteration did not converge as first set up. Without under-relaxation,
+every case (b) solve cycles between two states, with the magnetic axis moving back and forth
+each iteration. This was already true of the first solve, and we didn't flag it then. Case
+(b)'s FF′ is hollow, because the ramp-up current has not yet reached the core, so the axis is
+weakly pinned. JOREK's under-relaxation option, which mixes each new flux half and half with
+the previous one, converges it.
+
+| setting | result |
+|---|---|
+| FF′ × 1 and × 0.952, no under-relaxation | [the iteration cycles between two states for all 200 iterations (axis moves about 5 mm, residual about 7e-3); I_p +3.7% at FF' x 1, −0.0002% at x 0.952, neither converged]{.claim}[C-234](/Blog/tokamak-toolkit/claims.qmd#c-234){.cid .st-measured} |
+| FF′ × 0.947, under-relaxation 0.5 (accepted) | [I_p 10.501 MA against TORAX's 10.5 MA (+0.01%), converged in 43 iterations; on 160 x 256 −0.07% with q equal to about 1e-5]{.claim}[C-233](/Blog/tokamak-toolkit/claims.qmd#c-233){.cid .st-measured} |
+| q of the accepted equilibrium against TORAX | [median q difference +10.7% (psi_N 0.1–0.5), +3.2% (0.5–0.9), −4.9% (0.9–0.95); q95 4.64 against 4.89, q_min 1.84 against 1.64]{.claim}[C-235](/Blog/tokamak-toolkit/claims.qmd#c-235){.cid .st-measured} |
+
+A converged solve at FF′ × 0.952 gives a higher current than the stalled one at the same
+factor, so the stalled solves could not be used to set the factor. The accepted case directory
+is regenerated from the generator's recipe and matches the accepted solve byte for byte. The
+same settings converge on the doubled grid, so the grid check can reuse them. These checks
+compare JOREK's output with TORAX's numbers using our own scripts, so they are not
+independent of the author.
+
+The q difference is largest in the core, where q_min is higher than TORAX's. This matters for
+the next scan: the case (a) core modes of [entry 68](68-linear-n-scan-of-the-eqdsk-case.qmd)
+sat at a q minimum just above 1. Case (b) is unlikely to have them.
+
+Where this stands: under [OQ-41](/Blog/tokamak-toolkit/decisions.qmd#oq-41), case (b) has up to five one-node jobs. The first is the n-scan
+([entry 72](72-case-b-n-scan-first-job.qmd)).
+
+Technical details → [JOREK](../technical/jorek.qmd#case-b-equilibrium). Decisions → [OQ-40](/Blog/tokamak-toolkit/decisions.qmd#oq-40),
+[OQ-41](/Blog/tokamak-toolkit/decisions.qmd#oq-41).
+
+---
+
+*JOREK acknowledgement.* JOREK is developed by the JOREK team and is open source under
+the GNU LGPL v3. Results here use JOREK at commit `01a52be3`. Citations: M. Hoelzl et al.,
+Nuclear Fusion 61, 065001 (2021); M. Hoelzl et al., Nuclear Fusion 66, 116006 (2026). For a list
+of JOREK team members, refer to the author list of M. Hoelzl, G.T.A. Huijsmans, F.J. Artola,
+E. Nardon, M. Becoulet, N. Schwarz, A. Cathey, S.J.P. Pamela et al., Nuclear Fusion 64, 112016 (2024).
+
+::: {.entry-links}
+**Technical details →** [JOREK › case b equilibrium](/Blog/tokamak-toolkit/technical/jorek.qmd#case-b-equilibrium)  
+**Decisions →** [OQ-40](/Blog/tokamak-toolkit/decisions.qmd#oq-40) · [OQ-41](/Blog/tokamak-toolkit/decisions.qmd#oq-41)
+:::

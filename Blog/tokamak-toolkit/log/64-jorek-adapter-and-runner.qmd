@@ -1,0 +1,60 @@
+---
+title: JOREK input adapter, output reader and run wrapper
+date: '2026-10-16'
+categories:
+- built
+entry: 64
+milestone: JOREK (alongside M4)
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 64 · milestone JOREK (alongside M4)
+:::
+
+To use JOREK as a reference, the toolkit has to write JOREK inputs from its own
+equilibria and profiles, read JOREK's outputs, and run cases with a full record of what
+was executed. These parts are now in place as open (Tier A) code that runs without
+JOREK installed.
+
+The design choice that mattered is what the adapter does not do. JOREK's own
+conversion scripts mix unit conversion with physics choices: how profiles continue
+outside the separatrix, a default diffusivity, Spitzer resistivity, grid sizes. The
+toolkit adapter only converts units and writes files. Every physics setting is an
+explicit input from the caller, with no default, so each one is visible and goes to
+the owner for a decision.
+
+The adapter converts to JOREK's normalised units using the constants of the pinned
+JOREK version. Checked against the units JOREK itself stored in three restart files,
+the conversion agrees to round-off ([time and resistivity units computed by the toolkit match the values JOREK stored in three restart files to 1e-15 relative]{.claim}[C-213](/Blog/tokamak-toolkit/claims.qmd#c-213){.cid .st-tested}). The namelist writer was
+tested against the real program. A MAST-U input parsed and rewritten by the toolkit
+gives a restart file identical to the original input's ([the MAST-U input (356 entries) parsed and rewritten by the toolkit gives, with one thread, a restart file identical in every dataset to a run of the original input]{.claim}[C-214](/Blog/tokamak-toolkit/claims.qmd#c-214){.cid .st-measured}). This
+check is independent of our code, because JOREK parses the file.
+
+The same test exposed a property of JOREK we had to account for. Runs with more than
+one OpenMP thread are not bitwise repeatable, and they intermittently abort during grid
+set-up ([an assertion in the element search tree aborts 3 of 8 grid set-up runs at 8 OpenMP threads and 0 of 8 at 1 thread; two 4-thread runs of the same input differ at round-off, while 1-thread runs repeat bit for bit]{.claim}[C-212](/Blog/tokamak-toolkit/claims.qmd#c-212){.cid .st-measured}). The run wrapper therefore does three things:
+- it records ranks and threads, and marks a run as bitwise repeatable only at one thread;
+- it retries the grid-set-up abort once, and only when no time step has completed;
+- it keeps every attempt.
+
+The wrapper snapshots the executable and inputs read-only and writes a provenance
+record beside every file. Its tests use fake executables ([26 tests pass in normal and Tier-A-only modes: unit conversion, profile files, namelists, the energy reader, and the runner with fake executables (snapshots, retry, timeout, provenance)]{.claim}[C-215](/Blog/tokamak-toolkit/claims.qmd#c-215){.cid .st-tested}). On the
+real program it reproduces a manual run exactly.
+
+Where this stands: adapter and wrapper done; the abort is to be reported to the JOREK
+developers.
+
+Technical details → [JOREK](../technical/jorek.qmd#adapter).
+
+---
+
+*JOREK acknowledgement.* JOREK is developed by the JOREK team and is open source under
+the GNU LGPL v3. Results here use JOREK at commit `01a52be3`. Citations: M. Hoelzl et al.,
+Nuclear Fusion 61, 065001 (2021); M. Hoelzl et al., Nuclear Fusion 66, 116006 (2026). For a list
+of JOREK team members, refer to the author list of M. Hoelzl, G.T.A. Huijsmans, F.J. Artola,
+E. Nardon, M. Becoulet, N. Schwarz, A. Cathey, S.J.P. Pamela et al., Nuclear Fusion 64, 112016 (2024).
+
+::: {.entry-links}
+**Technical details →** [JOREK › adapter](/Blog/tokamak-toolkit/technical/jorek.qmd#adapter) · [JOREK › runner](/Blog/tokamak-toolkit/technical/jorek.qmd#runner)  
+**Decisions →** [OQ-37](/Blog/tokamak-toolkit/decisions.qmd#oq-37)
+:::

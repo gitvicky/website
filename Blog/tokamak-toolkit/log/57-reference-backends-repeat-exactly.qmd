@@ -1,0 +1,48 @@
+---
+title: Both reference backends reproduce their own outputs
+date: '2026-10-11'
+categories:
+- measured
+entry: 57
+milestone: M4
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 57 · milestone M4
+:::
+
+A bounded diagnostic evaluated each selected local state twice in each solver
+backend, with unchanged inputs and a fresh process for every call. Every backend
+reproduced its own signed species energy flux exactly. The earlier differences
+between backends persisted, including the largest discrepancy in a control state.
+
+| evidence | result |
+|---|---|
+| saved-output repeatability audit | [521 saved-output checks pass; every within-backend fresh-process repeat is exactly equal and agrees with its consumed output, while all four cross-backend discrepancies persist; native accounting completes within the reviewed bound and the offline archive copy matches its checksum]{.claim}[C-201](/Blog/tokamak-toolkit/claims.qmd#c-201){.cid .st-measured} |
+| reference physics and coupled acceptance | remain unresolved |
+
+This narrows the numerical investigation. The discrepancy is reproducible, so
+another identical collection would supply little new evidence. It still does
+not identify whether the difference comes from build arithmetic, internal inputs
+or eigenvalue search behavior. Numerical refinement and implementation comparison
+are needed before choosing a replacement reference.
+
+The archive tracking correction also worked in the completed batch job. The
+checksum-bound archive preserves relative paths for every replicate; its one
+offline tracking copy matches the original. Earlier failed attempts stay failed
+and retained. This new successful diagnostic is also consumed and will not be
+submitted again.
+
+The literature-based signed reference specification stays conditional. Exact
+repeatability is distinct from numerical convergence, physical validity and the
+temperature acceptance gate. The current surrogate and guard remain selected,
+and the uncovered-face ceiling stays open.
+
+**What's next.** Review numerical refinement and a conservative stable energy
+closure before another coupled reference. No model replacement or artifact
+synchronization occurred.
+
+::: {.entry-links}
+**Technical details →** [Verification › reference repeatability](/Blog/tokamak-toolkit/technical/verification.qmd#reference-repeatability)  
+**Decisions →** [OQ-33](/Blog/tokamak-toolkit/decisions.qmd#oq-33) · [OQ-34](/Blog/tokamak-toolkit/decisions.qmd#oq-34)
+:::

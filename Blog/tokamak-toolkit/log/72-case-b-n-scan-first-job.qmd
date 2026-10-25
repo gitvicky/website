@@ -1,0 +1,70 @@
+---
+title: 'Linear JOREK n-scan of the TORAX ITER hybrid state: first job'
+date: '2026-10-25'
+categories:
+- measured
+entry: 72
+milestone: JOREK (alongside M4)
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 72 · milestone JOREK (alongside M4)
+:::
+
+This is the first of up to five jobs for case (b), the TORAX ITER hybrid state, on the
+equilibrium accepted in [entry 71](71-case-b-equilibrium-from-the-torax-state.qmd). The
+protocol is case (a)'s ([entry 68](68-linear-n-scan-of-the-eqdsk-case.qmd)), with only the case
+directory and the health gate's reference flux changed: n = 1, 2, 3, 5, 8, 12, 16, 20, one run
+per n from round-off amplitude, Δt = 1, the 80 × 128 grid, 32 cores per run. The axisymmetric
+start passed its health gate.
+
+## What happened
+
+Where the modes grew at all, they grew far more slowly than in case (a). No run reached
+JOREK's solver abort: all eight ran to the job's time limit ([no GMRES abort: all 8 runs reached the job time limit at t ≈ 4790 (about 4770 steps); final energies 1e-24 to 1e-20, below the 1e-15..1e-7 fit band, so no γ is fitted]{.claim}[C-236](/Blog/tokamak-toolkit/claims.qmd#c-236){.cid .st-measured}). Their energies stayed far below the band
+where case (a)'s growth rates were fitted, so no growth rate γ is fitted or quoted yet. The
+table gives local rates late in the job:
+
+| n | late local rate of change of ½ ln E, in units of 1/√(μ₀ρ₀) |
+|---|---|
+| 1–16 | [at t ≈ 4400: n = 1–8 −0.0003 to −0.0001 (decaying), n = 12 +0.00029, n = 16 +0.00173 (rising)]{.claim}[C-238](/Blog/tokamak-toolkit/claims.qmd#c-238){.cid .st-preliminary} |
+| 20 | [γ√(μ₀ρ₀) ≈ 0.0029, steady over t 4000–4771; flow perturbation peaks at psi_N 0.95–1]{.claim}[C-237](/Blog/tokamak-toolkit/claims.qmd#c-237){.cid .st-preliminary} |
+
+Only n = 20 grows cleanly so far, at a rate about 15 times below case (a)'s pedestal modes.
+Case (b) is the lower-pressure state ([66.6 keV in case (a) (EQDSK pressure split by TORAX density) against 14.4 keV in case (b) (TORAX at 80 s)]{.claim}[C-239](/Blog/tokamak-toolkit/claims.qmd#c-239){.cid .st-measured}), which is consistent with slower
+growth, but we have not separated the causes.
+
+The location rule needed a change. In case (a) a mode's location was read from the peak of its
+temperature perturbation. In case (b) every n keeps a broad temperature perturbation from the
+start of the run, peaked at the magnetic axis, so that rule reads "axis" for every n. The flow
+perturbation does not carry this start-up component. For n = 20 it sits at ψ_N 0.95–1, in the
+pedestal. The analysis script now also reports the location from the flow perturbation. Case
+(a)'s classes are unchanged under it.
+
+These rates come from the same linear model as case (a), on a fixed boundary at the separatrix
+([entry 67](67-iter-equilibrium-on-the-eqdsk-separatrix.qmd)), which stabilises peeling modes
+artificially. They are not yet checked for time step or grid.
+
+## Next
+
+The second job continues every n from its latest saved time slice with unchanged inputs. It
+is running now. JOREK's time slices are full restart files: a restart of n = 20 on a login
+node resumed at the right time and step. The grid check is harder than planned. These modes
+emerge from round-off only late in the run, and repeating that on the doubled grid from scratch
+would take many more jobs than remain. The options go to the owner once the second job shows
+which pedestal modes grow cleanly.
+
+Technical details → [JOREK](../technical/jorek.qmd#case-b-n-scan). Decision → [OQ-41](/Blog/tokamak-toolkit/decisions.qmd#oq-41).
+
+---
+
+*JOREK acknowledgement.* JOREK is developed by the JOREK team and is open source under
+the GNU LGPL v3. Results here use JOREK at commit `01a52be3`. Citations: M. Hoelzl et al.,
+Nuclear Fusion 61, 065001 (2021); M. Hoelzl et al., Nuclear Fusion 66, 116006 (2026). For a list
+of JOREK team members, refer to the author list of M. Hoelzl, G.T.A. Huijsmans, F.J. Artola,
+E. Nardon, M. Becoulet, N. Schwarz, A. Cathey, S.J.P. Pamela et al., Nuclear Fusion 64, 112016 (2024).
+
+::: {.entry-links}
+**Technical details →** [JOREK › case b n scan](/Blog/tokamak-toolkit/technical/jorek.qmd#case-b-n-scan)  
+**Decisions →** [OQ-41](/Blog/tokamak-toolkit/decisions.qmd#oq-41)
+:::

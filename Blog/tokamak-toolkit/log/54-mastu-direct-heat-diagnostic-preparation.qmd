@@ -1,0 +1,53 @@
+---
+title: A full-precision signed-heat diagnostic route is prepared
+date: '2026-10-11'
+categories:
+- built
+entry: 54
+milestone: M4
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 54 · milestone M4
+:::
+
+The current in-memory trapped gyro-Landau fluid (TGLF) wrapper returns integrated
+fluxes but does not expose mode spectra. The next diagnostic therefore uses an
+original driver linked to the installed solver library. It writes signed heat
+flux separately for electrons, main ions and impurities, plus low-k totals,
+eigenvalues and heat spectra by field, wavenumber and mode at full precision.
+
+The driver also has an independent synthetic writer fixture. It fills arrays
+directly and never calls the physical solver. This caught a runtime-library path
+omission before physics execution. Input checks found that the native parser
+spells shape parameters differently from the wrapper; the adapter maps those
+names while preserving every value.
+
+| preparation evidence | result |
+|---|---|
+| synthetic checks, parsing and source quality | [55 focused checks pass in each mode, including 22 direct-output and settings checks; all 79 source modules pass typing; the compiled synthetic writer preserves signed species heat and passes total/low-k spectral parity without calling TGLF]{.claim}[C-197](/Blog/tokamak-toolkit/claims.qmd#c-197){.cid .st-tested} |
+| direct physical heat or mode evidence | requires the prepared bounded run |
+
+The report preserves tiny negative numbers, impurity cancellation and backend
+differences. Native spectral quadrature is compared with integrated heat in the
+same declared units. Eigenvalues from the native sheared double-pass algorithm
+can describe its unsheared first pass; they are not automatically a mode identity
+or an independently certified convergence result.
+
+The owner authorized continued M4 runs shorter than six hours ([OQ-33](/Blog/tokamak-toolkit/decisions.qmd#oq-33)). Each
+request still has a frozen package, an explicit purpose and allocation, checks,
+an announced submission and native accounting. This compute permission changes
+no physics contract or acceptance threshold. The diagnostic stays separate from
+training, normalization and smoke fixtures. It advances no coupled trajectory.
+
+The current model and guard remain selected, and [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) stays open. Reference
+admissibility and formal candidate temperature acceptance remain unresolved.
+No artifact synchronization is authorized.
+
+**What's next.** Collect the bounded diagnostic, audit its signed channels and
+spectra, then review whether the evidence identifies a justified reference remedy.
+
+::: {.entry-links}
+**Technical details →** [Verification › direct heat diagnostic route](/Blog/tokamak-toolkit/technical/verification.qmd#direct-heat-diagnostic-route)  
+**Decisions →** [OQ-32](/Blog/tokamak-toolkit/decisions.qmd#oq-32) · [OQ-33](/Blog/tokamak-toolkit/decisions.qmd#oq-33)
+:::

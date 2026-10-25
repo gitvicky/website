@@ -1,0 +1,82 @@
+---
+title: Linear JOREK n-scan of the ITER hybrid EQDSK case
+date: '2026-10-24'
+categories:
+- measured
+- fixed
+entry: 68
+milestone: JOREK (alongside M4)
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} [bug fix]{.chip .fixed} Entry 68 · milestone JOREK (alongside M4)
+:::
+
+The first JOREK stability scan uses case (a): the ITER hybrid EQDSK as given, with the TORAX
+density used only to split its pressure into density and temperature. Each toroidal mode
+number n runs separately from round-off amplitude on the accepted 80 × 128 equilibrium
+([entry 67](67-iter-equilibrium-on-the-eqdsk-separatrix.qmd)). The growth rate γ is the slope
+of ½ ln E, where E is the mode's energy. We give γ in JOREK's time unit √(μ₀ρ₀), about half a
+microsecond here.
+
+## What happened
+
+The first job was lost. At Δt = 3 the axisymmetric start went numerically unstable, and every
+linear run then failed on its first step. The rerun used Δt = 1, with a health gate: the
+linear runs start only if the axisymmetric state keeps its equilibrium flux on axis and
+positive density and temperature. It passed.
+
+Every linear run then grew over about 16 decades and stopped on JOREK's own GMRES abort
+(GMRES is the iterative linear solver). JOREK exits with code 0 when this happens, so our run
+wrapper recorded all eight runs as completed ([8 of 8 case (a) runs ended on the GMRES abort with exit code 0; a test now checks that such a run is recorded as solver_aborted and not retried]{.claim}[C-230](/Blog/tokamak-toolkit/claims.qmd#c-230){.cid .st-tested}). The cause: in this JOREK
+version a "linear" run freezes the n = 0 part, but the n ≠ 0 equations stay nonlinear, so the
+matrix drifts as the mode grows. The abort comes after the linear phase, so the growth data
+are usable. The wrapper now classifies the abort as `solver_aborted`, keeps the energies and
+does not retry, and a unit test covers it.
+
+## Growth rates
+
+γ is fitted over the energy band 1e-15 to 1e-7, a band we chose after seeing the traces. A
+fit counts only if its two half-windows, and separate fits to the magnetic and kinetic
+energy, agree. All eight runs pass ([half-window and magnetic/kinetic fits agree within 1.1% (tolerance 2%) in all 8 runs; moving the energy band one decade either way changes γ by at most 0.6%]{.claim}[C-231](/Blog/tokamak-toolkit/claims.qmd#c-231){.cid .st-measured}).
+
+| n | where the mode peaks | γ√(μ₀ρ₀) |
+|---|---|---|
+| 1, 2, 3, 5 | core, at the q minimum | [γ√(μ₀ρ₀) 0.012–0.028, peak at psi_N 0.12–0.18, where q has its minimum of about 1.11]{.claim}[C-225](/Blog/tokamak-toolkit/claims.qmd#c-225){.cid .st-preliminary} |
+| 8, 20 | magnetic axis | [γ√(μ₀ρ₀) 0.028 and 0.033, confined to psi_N below 0.02]{.claim}[C-226](/Blog/tokamak-toolkit/claims.qmd#c-226){.cid .st-preliminary} |
+| 12 | pedestal | [γ√(μ₀ρ₀) 0.0440 (γ 8.3 × 10^4^ s⁻¹), peak at psi_N 0.975, γ/ω* 0.23]{.claim}[C-223](/Blog/tokamak-toolkit/claims.qmd#c-223){.cid .st-preliminary} |
+| 16 | pedestal | [γ√(μ₀ρ₀) 0.0374 (γ 7.1 × 10^4^ s⁻¹), peak at psi_N 0.975, γ/ω* 0.14]{.claim}[C-224](/Blog/tokamak-toolkit/claims.qmd#c-224){.cid .st-preliminary} |
+
+Every n is unstable with diamagnetic terms included, but only n = 12 and 16 are pedestal
+modes. Their ratio γ/ω* to the ion diamagnetic frequency is below the EPED-like threshold of
+¼, but that reading assumes an ideal growth rate, and these include diamagnetic
+stabilisation.
+
+- **Core modes.** n = 1–5 sit where the reversed-shear q profile of this EQDSK has its
+  minimum, just above 1. Case (a) also overstates the core pressure
+  ([66.6 keV in case (a) (EQDSK pressure split by TORAX density) against 14.4 keV in case (b) (TORAX at 80 s)]{.claim}[C-239](/Blog/tokamak-toolkit/claims.qmd#c-239){.cid .st-measured}), which favours such modes.
+- **Axis modes.** n = 8 and 20 are confined to the magnetic axis. A high-n mode there is
+  probably numerical.
+- **Hidden modes.** Where a core or axis mode grows fastest, a slower pedestal mode of the same
+  n is hidden, because the fastest mode dominates the energy.
+
+None of these values meets the convergence rule yet: γ is quoted only after halving Δt and
+doubling the grid. That check is [entry 69](69-time-step-check-of-the-growth-rates.qmd).
+
+Where this stands: how to get pedestal growth rates at the six n where a core or axis mode
+dominates went to the owner ([OQ-41](/Blog/tokamak-toolkit/decisions.qmd#oq-41)).
+
+Technical details → [JOREK](../technical/jorek.qmd#case-a-n-scan). Decision → [OQ-41](/Blog/tokamak-toolkit/decisions.qmd#oq-41).
+
+---
+
+*JOREK acknowledgement.* JOREK is developed by the JOREK team and is open source under
+the GNU LGPL v3. Results here use JOREK at commit `01a52be3`. Citations: M. Hoelzl et al.,
+Nuclear Fusion 61, 065001 (2021); M. Hoelzl et al., Nuclear Fusion 66, 116006 (2026). For a list
+of JOREK team members, refer to the author list of M. Hoelzl, G.T.A. Huijsmans, F.J. Artola,
+E. Nardon, M. Becoulet, N. Schwarz, A. Cathey, S.J.P. Pamela et al., Nuclear Fusion 64, 112016 (2024).
+
+::: {.entry-links}
+**Technical details →** [JOREK › case a n scan](/Blog/tokamak-toolkit/technical/jorek.qmd#case-a-n-scan) · [JOREK › runner](/Blog/tokamak-toolkit/technical/jorek.qmd#runner)  
+**Decisions →** [OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39) · [OQ-41](/Blog/tokamak-toolkit/decisions.qmd#oq-41)
+:::

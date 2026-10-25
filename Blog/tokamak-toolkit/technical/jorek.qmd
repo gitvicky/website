@@ -1,0 +1,439 @@
+---
+title: JOREK
+toc: true
+toc-depth: 3
+date-modified: '2026-10-25'
+---
+
+## Purpose {#purpose}
+
+JOREK is a nonlinear extended-MHD code with a flux-aligned finite-element grid that
+includes the X-point, scrape-off layer and divertor. The Tokamak Toolkit uses it as an
+external, open (Tier A) reference for MHD stability, which its transport loop does not
+model. It serves brief invariants 1–3: JOREK runs outside JAX, is never called inside
+compiled code, and is never a runtime dependency of a surrogate.
+
+## Scope {#scope}
+
+Owner decision [OQ-37](/Blog/tokamak-toolkit/decisions.qmd#oq-37):
+
+| step | what | status |
+|---|---|---|
+| A | linear pedestal-stability scans over toroidal mode number, ITER hybrid first, then MAST-U | ITER: case (a) closed on the time-step check; case (b) running ([J5](#j5)) |
+| B | n = 1 internal-kink check of the sawtooth trigger, same pipeline | after A |
+| C | a surrogate of a JOREK quantity behind a guard | decided after A's cost is known |
+| D | nonlinear ELM crash runs | reference runs only, later |
+| E | disruptions, vertical displacement events, shattered pellet injection | outside the brief; deferred |
+
+Licence: GNU LGPL v3 or later. JOREK is executed as a separate program and is not
+vendored, so the toolkit's own licence is unaffected. Results that use JOREK cite the
+JOREK overview papers and acknowledge the JOREK team (bottom of this page).
+
+## Build {#build}
+
+JOREK is built from source at a pinned commit; there are no tagged releases. The
+build uses GNU Fortran 12.3 and OpenMPI 4.1 with OpenBLAS, ScaLAPACK, FFTW, HDF5,
+METIS and ParMETIS. The sparse direct solver is our own MUMPS 5.7.3 build, with PORD,
+METIS and ParMETIS orderings. Binaries are compiled for x86-64-v3, so the same binary
+runs on the Intel login nodes and the AMD compute nodes. `util/config.sh` fixes the
+physics model and toroidal resolution at compile time and edits a source file, so each
+configuration is built in its own git worktree.
+
+::: {.callout-note collapse="true"}
+## Build notes
+
+- MUMPS: build the real and complex libraries one after the other. A parallel build
+  of both races on Fortran module files.
+- GNU Fortran rejects a space between a namelist name and its subscript
+  (`name (1) = …`), which Intel Fortran accepts. Upstream inputs are rewritten without
+  it; values are unchanged.
+- The code's default solver is STRUMPACK. Runs with MUMPS set `use_mumps = .t.` and
+  `use_strumpack = .f.` in the namelist.
+- `eqdsk2jorek` needs the DIERCKX (FITPACK) spline library, built from netlib with
+  double-precision default reals.
+- With more than one toroidal harmonic, JOREK needs at least two MPI ranks.
+:::
+
+**Regression checks.** These use JOREK's own cases and the reference data the JOREK
+team publishes, so the check does not depend on toolkit code ([3 of 4 upstream regression cases reproduce their public reference data: MAST-U grid and equilibrium (largest difference 2.0e-5, tolerance 1e-4), MAST equilibrium with coils (1.2e-10), and one implicit tearing-mode step (4.1e-13, tolerance 1e-12); the full-MHD kink case was not run because its upstream input is out of date for this code version]{.claim}[C-210](/Blog/tokamak-toolkit/claims.qmd#c-210){.cid .st-measured}).
+On the compute nodes, one job repeated them and measured the step cost
+([all three regression cases pass on a 256-core AMD node; one implicit step on the MAST-U X-point grid (8050 elements, toroidal modes n = 0 and 1) takes 5.8 s at 2 ranks x 16 threads, 6.7 s at 4 x 32 and 8.1 s at 2 x 64; the whole job used 22.4 core-hours]{.claim}[C-211](/Blog/tokamak-toolkit/claims.qmd#c-211){.cid .st-measured}).
+
+| case | exercises | result |
+|---|---|---|
+| `grid_with_patches_mastu_303` | MAST-U EQDSK → flux-aligned grid to the wall, fixed-boundary equilibrium | pass |
+| `inmast_coils_600` | MAST equilibrium with coils, `model600` | pass |
+| `tear_circ_199` | one implicit time step with MUMPS, three harmonics | pass |
+| `kink_circ_710` | one time step, full MHD | not run: the upstream input sets a removed parameter and fails a newer consistency check |
+
+## Unit conversion and input files {#adapter}
+
+`tkit.adapters.jorek` (Tier A, host side) converts between SI/eV and JOREK's
+normalised units. With $n_0 = \texttt{central\_density}\cdot10^{20}\,\mathrm{m^{-3}}$
+and $\rho_0 = \texttt{central\_mass}\cdot m_\mathrm{u}\, n_0$:
+
+$$
+n = \rho\, n_0,\qquad T_\mathrm{eV} = \frac{T}{e\,\mu_0\, n_0},\qquad
+t_\mathrm{SI} = t\,\sqrt{\mu_0\rho_0},\qquad \gamma_\mathrm{SI} = \frac{\gamma}{\sqrt{\mu_0\rho_0}},
+$$
+
+using the constants of the pinned JOREK version (`models/constants.f90`), not CODATA.
+Single-temperature models evolve $T = T_e + T_i$, with $p = \rho T/\mu_0$. The toroidal
+mode number of Fourier component $k$ (1-based) is $\lfloor k/2\rfloor\, n_\mathrm{period}$.
+
+What the adapter covers:
+
+- **Profile files** are two bare numeric columns ($\psi_N$, value). JOREK's reader stops
+  silently at the first unparseable line, so the writer emits no header and reads every
+  file back for an exact match.
+- **Namelists** are written one entry per line, with full precision and no space before
+  subscripts. Index ranges such as `fbnd(2:4)` and both quote styles are supported. A
+  parser for JOREK inputs is included.
+- **Energy reader.** It reads magnetic and kinetic energy per Fourier component from a
+  restart file, and checks the array shapes and that the stored time unit matches the
+  normalisation.
+- **Growth rates** are a least-squares fit of $\tfrac12\ln E$ against time over a
+  window the caller must give. No default window is offered, because choosing the
+  linear phase is part of the analysis.
+
+**Correctness.**
+- The conversion matches the units JOREK stored in three restart files
+  ([time and resistivity units computed by the toolkit match the values JOREK stored in three restart files to 1e-15 relative]{.claim}[C-213](/Blog/tokamak-toolkit/claims.qmd#c-213){.cid .st-tested}).
+- A rewritten MAST-U input gives an identical restart file ([the MAST-U input (356 entries) parsed and rewritten by the toolkit gives, with one thread, a restart file identical in every dataset to a run of the original input]{.claim}[C-214](/Blog/tokamak-toolkit/claims.qmd#c-214){.cid .st-measured}).
+- The tests are in [26 tests pass in normal and Tier-A-only modes: unit conversion, profile files, namelists, the energy reader, and the runner with fake executables (snapshots, retry, timeout, provenance)]{.claim}[C-215](/Blog/tokamak-toolkit/claims.qmd#c-215){.cid .st-tested}.
+
+**Design decisions.**
+- *Conversion only, deliberately.* JOREK's own scripts hard-code physics choices: the
+  scrape-off-layer extension, diffusivities, resistivity and grid sizes. Here each of
+  them is a required input, so it reaches the owner as a decision ([OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39)).
+- *Native HDF5, not IMAS output.* JOREK's IDS writer needs the IMAS Fortran access
+  layer, and its Python scripts use the pre-2.0 IMAS API.
+
+## Run wrapper {#runner}
+
+`tkit.datasets.jorek_run` runs one case in a new directory:
+
+1. It snapshots the executable and every input read-only, and verifies any input
+   provenance.
+2. Each attempt gets fresh working copies. The namelist goes on standard input, and
+   the launcher sets MPI ranks and OpenMP threads explicitly.
+3. The process group is killed at the timeout, and partial output is kept.
+4. The outcome is classified: completed, solver aborted, grid set-up abort, JOREK
+   error, non-zero exit or timeout.
+5. A provenance record is written beside every retained file. `result.json` records
+   ranks, threads and whether the run is bitwise repeatable.
+
+Two measured JOREK properties shape it ([an assertion in the element search tree aborts 3 of 8 grid set-up runs at 8 OpenMP threads and 0 of 8 at 1 thread; two 4-thread runs of the same input differ at round-off, while 1-thread runs repeat bit for bit]{.claim}[C-212](/Blog/tokamak-toolkit/claims.qmd#c-212){.cid .st-measured}):
+- Threaded runs are not bitwise repeatable, so only one-thread runs are marked
+  repeatable.
+- Threaded runs intermittently abort on an assertion in the element search tree during
+  grid set-up, before any time step. The wrapper retries only that case, only before
+  the first step, and keeps every attempt.
+
+On the real program the wrapper reproduces a manual run exactly. A completed run is
+not physical acceptance.
+
+::: {.callout-note collapse="true"}
+## Post-mortem: a GMRES abort recorded as a completed run (2026-10-24)
+
+- **What was written, and what was correct.** The wrapper classified any run that exited
+  with code 0 as completed, unless it had timed out or hit the known grid set-up assertion.
+  JOREK stops a run whose iterative linear solver (GMRES) fails to converge, but it exits
+  with code 0. The correct classification is a separate outcome,
+  `solver_aborted`: the energies up to the abort are valid data, and the run is not
+  retried, because a retry would fail the same way.
+- **What it looked like from inside.** All eight linear runs of the first case (a) scan
+  ended this way and were recorded as `completed` ([8 of 8 case (a) runs ended on the GMRES abort with exit code 0; a test now checks that such a run is recorded as solver_aborted and not retried]{.claim}[C-230](/Blog/tokamak-toolkit/claims.qmd#c-230){.cid .st-tested}). Every wrapper
+  check passed: the exit code was 0, the output files existed, and the provenance records
+  were complete. None of them reads the end of the log.
+- **What caught it.** The growth-rate analysis: the energy traces ended at different
+  times, and each run's log ended with the abort message. The analysis reads JOREK's own
+  output, not the wrapper's status, so it is independent of the classifier.
+- **Before and after.** Before: 8 of 8 runs `completed`. After: 8 of 8 `solver_aborted`,
+  energies kept.
+- **What changed.** The abort string is now an outcome of its own. The test
+  `test_gmres_abort_with_exit_zero_is_not_completed` runs a stub JOREK that prints the abort
+  and exits 0, and checks that the run is classified `solver_aborted` and is not retried.
+- **Blast radius.** None published: no growth rate had been reported from these runs. The
+  abort follows the linear phase in every run, so the growth data stay usable.
+:::
+
+## ITER hybrid equilibrium {#iter-equilibrium}
+
+Input: the ITER hybrid EQDSK distributed with TORAX (COCOS 2, $I_p$ 11.77 MA,
+$B_0$ 5.3 T). A JOREK stability run starts from an equilibrium JOREK solves itself, from
+a boundary, a pressure profile and FF′. The acceptance tolerance ([OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39), decision 2) is
+q within 2% of the source over $\psi_N$ 0.1–0.95, and $I_p$ within 1%, before any
+stability run.
+
+**Current route: fixed boundary on the EQDSK separatrix.** The boundary is the EQDSK
+separatrix itself: 300 points on the flux surface $\psi = \psi_\mathrm{bnd}$, ordered by
+angle about the geometric centre, with no X-point and a polar flux-aligned grid
+(`scripts/jorek/iter_lcfs_input.py`). Pressure and FF′ are those of the first route below.
+JOREK `model303` solves the fixed-boundary equilibrium on one core.
+
+| grid ($n_\mathrm{flux}$ × $n_\theta$) | result | accepted |
+|---|---|---|
+| 40 × 64 | [I_p −1.38%, largest q difference 1.1%: fails the current tolerance]{.claim}[C-220](/Blog/tokamak-toolkit/claims.qmd#c-220){.cid .st-measured} | no |
+| 80 × 128 | [I_p −0.93%, largest q difference 1.1%, q 4.668 against 4.668 at psi_N 0.95: passes the tolerance of q within 2% and I_p within 1%]{.claim}[C-221](/Blog/tokamak-toolkit/claims.qmd#c-221){.cid .st-measured} | yes |
+| 160 × 256 | [I_p −0.20%, largest q difference 1.1%: passes]{.claim}[C-222](/Blog/tokamak-toolkit/claims.qmd#c-222){.cid .st-measured} | yes |
+
+The largest q difference, 1.1%, is in the core and is the same on all three grids. Edge q
+agrees to better than 0.3%. The current deficit shrinks with resolution but is not yet in
+a clean asymptotic regime. The 80 × 128 grid is used for the n-scans and 160 × 256 for
+the doubled-resolution check.
+
+*Limitation.* A fixed boundary at the separatrix acts as an ideal conducting wall there,
+with no vacuum region. Peeling modes, which need one, are artificially stabilised. All
+growth rates on this page carry this limitation.
+
+**First route: `eqdsk2jorek` (2026-10-16).** `eqdsk2jorek` produced the boundary, FF′ and
+namelist after three changes:
+- the spline smoothing was raised from 1e-6 to 3e-5, the smallest value for which the
+  fit succeeds; the RMS fit error is about 2e-7 Wb;
+- the converter's pressure continuation went to −10 Pa outside the separatrix, because
+  the EQDSK pressure there is 0 and the converter's edge value is 10 Pa;
+- the temperature file was therefore written by the toolkit: EQDSK pressure inside,
+  a 10 Pa floor outside, check-only.
+
+Its result, [JOREK solving the ITER hybrid equilibrium from the TORAX EQDSK matches its safety factor q to 0.4% (median) for normalised flux 0.1-0.5, but is 3.6% high for 0.5-0.9 and 5.8% high for 0.9-0.95 (q 5.12 vs 4.67 at 0.95); plasma current 12.06 vs 11.77 MA]{.claim}[C-216](/Blog/tokamak-toolkit/claims.qmd#c-216){.cid .st-superseded} (superseded by [C-221](/Blog/tokamak-toolkit/claims.qmd#c-221)), failed the tolerance at the edge.
+
+::: {.callout-note collapse="true"}
+## Post-mortem: the edge mismatch came from the converter's boundary (2026-10-16)
+
+- **What was written, and what was correct.** `eqdsk2jorek` builds a free-boundary-style
+  domain from a default ITER contour outside the wall, and takes ψ on that contour from
+  the EQDSK. That is correct only if the EQDSK grid covers the contour. The TORAX EQDSK
+  comes from a fixed-boundary CHEASE solve: its R–Z grid holds no X-point ($|\nabla\psi|$
+  has no zero inside it, and a minimiser leaves the grid), and 187 of the contour's 257
+  points lay outside the grid. ψ there was extrapolated, and JOREK built its own X-point and
+  separatrix, enclosing a larger plasma than the EQDSK's. The correct boundary for this
+  source is its own separatrix.
+- **What it looked like from inside.** The converter ran without error once the
+  smoothing was raised, the sign conventions all came out right, and core q matched to
+  0.4%. Only edge q and the current were off, by a few percent, which entry 65 listed with
+  three candidate causes.
+- **What caught it.** Checking where the contour points fall relative to the EQDSK grid,
+  then solving on the separatrix, which removes the edge mismatch at every resolution.
+- **Before and after** (q difference against the EQDSK; $I_p$ against 11.77 MA):
+
+  | route | $\psi_N$ 0.5–0.9, median | $\psi_N$ 0.9–0.95, median | $I_p$ |
+  |---|---|---|---|
+  | converter contour | +3.6% | +5.8% | +2.5% |
+  | EQDSK separatrix, 80 × 128 | +0.2% | +0.1% | −0.93% |
+
+- **What changed.** The EQDSK separatrix is the boundary for every ITER case, and the
+  equilibrium is checked against the decision-2 tolerance before any stability run.
+- **Blast radius.** Entry 65's claim [C-216](/Blog/tokamak-toolkit/claims.qmd#c-216) is marked superseded by [C-221](/Blog/tokamak-toolkit/claims.qmd#c-221). It was measured
+  correctly for the route it describes, so it is not retracted. No stability result used
+  the first route.
+:::
+
+## Linear stability scans (J5) {#j5}
+
+### Settings {#j5-settings}
+
+Owner decisions [OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39) (16 Oct) and [OQ-41](/Blog/tokamak-toolkit/decisions.qmd#oq-41) (25 Oct):
+
+| setting | value |
+|---|---|
+| model | `model303`: reduced MHD with parallel flow, one temperature, diamagnetic terms on |
+| dissipation | Spitzer η ($Z_\mathrm{eff}$ 1), temperature-dependent, with the axis value at $T_e = T(0)/2$, because JOREK sets $T_0$ to the axis value of the temperature file; viscosity at Prandtl number 1; parallel viscosity 10×; $D_\perp = \chi_\perp$ = 1 m²/s; Spitzer parallel conduction |
+| diamagnetic terms | `tauIC` $= m_i / (2 e F_0 \sqrt{\mu_0\rho_0})$ |
+| toroidal modes | n = 1, 2, 3, 5, 8, 12, 16, 20, one harmonic per run (`n_tor` 3, `n_period` n) |
+| time step, grid | Δt = 1 (JOREK units), 80 × 128; one node, 32 cores per run |
+| unstable | γ > 0 with diamagnetic terms; ω* and the EPED-like ratio γ/ω* also reported |
+| quotable | only if halving Δt and doubling both resolutions each change γ by at most 5%, with the same location class (decision 7) |
+
+Each job runs an axisymmetric start, then a health gate, then all n in parallel from that
+state. The gate requires the minimum of ψ within 1e-3 (relative) of the equilibrium's axis
+value, since a deeper minimum signals a blow-up, and positive density and temperature. Two keys that JOREK's own IMAS input script sets
+(`eta_coul_log_dep`, `T_min_ZKpar`) don't exist in `model303` and are left out.
+
+**Growth-rate analysis** (`scripts/jorek/j5_growth.py`). γ is the least-squares slope of
+½ ln E of the total (magnetic + kinetic) energy over an energy band. A phase counts as
+linear only if the two half-windows and the separate magnetic and kinetic fits agree within
+2%, over at least 20 points. The band, 1e-15 to 1e-7, was chosen after inspecting the case
+(a) traces; the first rule, a steady per-step rate over the final segment, cannot work when
+every run ends in a solver abort and some modes exchange energy between the magnetic and
+kinetic parts every few steps. Location is the peak of the RMS perturbation over $\psi_N$
+bins: axis if the peak is below 0.05, edge at or above 0.8, otherwise core. Since case (b), it is reported from
+both the temperature (`class`) and the flow perturbation (`class_u`). ω*ᵢ and γ/ω* are
+estimates computed from the profiles, not JOREK outputs.
+
+### Case (a): the EQDSK as given {#case-a-n-scan}
+
+Pressure from the EQDSK, split into density and temperature with TORAX's main-ion density
+at 80 s (D-T, mean mass 2.515 amu). The total axis temperature is therefore high
+([66.6 keV in case (a) (EQDSK pressure split by TORAX density) against 14.4 keV in case (b) (TORAX at 80 s)]{.claim}[C-239](/Blog/tokamak-toolkit/claims.qmd#c-239){.cid .st-measured}): the EQDSK is a higher-pressure state than TORAX at that time, and
+diamagnetic stabilisation is overstated.
+
+- **Job 1** (Δt = 3) was lost: its axisymmetric start went numerically unstable, and
+  every linear run failed on its first step. The health gate was added after it.
+- **Job 2** (Δt = 1) ran 3 h 51 min. Every linear run grew from about 1e-20 over roughly
+  16 decades and then stopped on JOREK's GMRES abort ([8 of 8 case (a) runs ended on the GMRES abort with exit code 0; a test now checks that such a run is recorded as solver_aborted and not retried]{.claim}[C-230](/Blog/tokamak-toolkit/claims.qmd#c-230){.cid .st-tested}). In this JOREK
+  version `linear_run` is `keep_n0_const`: n = 0 is frozen, but the n ≠ 0 equations stay
+  nonlinear, so the matrix drifts as the mode grows and the GMRES iteration count rises
+  step by step until it fails. Fit consistency: [half-window and magnetic/kinetic fits agree within 1.1% (tolerance 2%) in all 8 runs; moving the energy band one decade either way changes γ by at most 0.6%]{.claim}[C-231](/Blog/tokamak-toolkit/claims.qmd#c-231){.cid .st-measured}.
+
+γ is in units of $1/\sqrt{\mu_0\rho_0}$, with $\sqrt{\mu_0\rho_0}$ = 5.305e-7 s:
+
+| n | γ√(μ₀ρ₀) | γ (s⁻¹) | peak $\psi_N$ | class | γ/ω*_pi,max |
+|---|---|---|---|---|---|
+| 1 | 0.0284 | 5.36e4 | 0.175 | core | — |
+| 2 | 0.0126 | 2.38e4 | 0.175 | core | — |
+| 3 | 0.0120 | 2.25e4 | 0.175 | core | — |
+| 5 | 0.0275 | 5.19e4 | 0.125 | core | — |
+| 8 | 0.0281 | 5.30e4 | < 0.02 | axis | — |
+| 12 | 0.0440 | 8.29e4 | 0.975 | edge | 0.23 |
+| 16 | 0.0374 | 7.06e4 | 0.975 | edge | 0.14 |
+| 20 | 0.0330 | 6.22e4 | < 0.02 | axis | — |
+
+Claims: n = 12 [γ√(μ₀ρ₀) 0.0440 (γ 8.3 × 10^4^ s⁻¹), peak at psi_N 0.975, γ/ω* 0.23]{.claim}[C-223](/Blog/tokamak-toolkit/claims.qmd#c-223){.cid .st-preliminary}; n = 16 [γ√(μ₀ρ₀) 0.0374 (γ 7.1 × 10^4^ s⁻¹), peak at psi_N 0.975, γ/ω* 0.14]{.claim}[C-224](/Blog/tokamak-toolkit/claims.qmd#c-224){.cid .st-preliminary}; core modes
+[γ√(μ₀ρ₀) 0.012–0.028, peak at psi_N 0.12–0.18, where q has its minimum of about 1.11]{.claim}[C-225](/Blog/tokamak-toolkit/claims.qmd#c-225){.cid .st-preliminary}; axis modes [γ√(μ₀ρ₀) 0.028 and 0.033, confined to psi_N below 0.02]{.claim}[C-226](/Blog/tokamak-toolkit/claims.qmd#c-226){.cid .st-preliminary}.
+
+- **Pedestal modes.** Only n = 12 and 16. Their γ/ω* is below the EPED-like ¼, but that
+  reading assumes an ideal γ, and these include diamagnetic stabilisation.
+- **Core modes.** n = 1–5 peak at $\psi_N$ 0.12–0.18, where the case (a) q profile has its
+  minimum: reversed shear, q 2.32 on axis, $q_\mathrm{min}$ ≈ 1.11 at $\psi_N$ 0.15–0.2,
+  $q_{95}$ 4.67. Low shear just above q = 1, with the overstated core pressure, favours
+  infernal-type core modes.
+- **Axis modes.** n = 8 and 20 are confined to $\psi_N$ < 0.02; a high-n mode at the axis is
+  probably numerical.
+- **Hidden modes.** For these six n, a slower pedestal mode of the same n, if one exists,
+  is hidden, because the fastest mode dominates the energy.
+
+### Convergence check {#convergence-check}
+
+The third and last [OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39) job: Δt = 0.5 on 80 × 128 for n = 8, 12, 16, 20, restarting
+from job 2's axisymmetric state so that only Δt changes; then the doubled grid, 160 × 256,
+for n = 12 and 16, and n = 8 and 20 after the Δt runs. The analysis
+(`scripts/jorek/j5_convergence.py`) applies the same band fit to both jobs and requires a
+change of at most 5% and the same location class.
+
+| n | class | Δt = 1 → 0.5 | 160 × 256 | verdict |
+|---|---|---|---|---|
+| 12, 16 | edge | [n = 12: 0.04397 → 0.04397 (−0.01%); n = 16: 0.03744 → 0.03633 (−2.94%); both within the 5% tolerance]{.claim}[C-227](/Blog/tokamak-toolkit/claims.qmd#c-227){.cid .st-measured} | not run | converged in Δt; grid not checked |
+| 8, 20 | axis | [n = 8: 0.02810 → 0.02967 (+5.56%); n = 20: 0.03300 → 0.03473 (+5.27%); both outside the 5% tolerance]{.claim}[C-228](/Blog/tokamak-toolkit/claims.qmd#c-228){.cid .st-measured} | not run | not converged |
+
+All four Δt = 0.5 runs have clean linear phases (spread ≤ 1.5%, band sensitivity ≤ 0.3%),
+keep their location, and end on the GMRES abort after it.
+
+The doubled grid never got past its axisymmetric start ([about 126 s per step against 9.7 s on 80 x 128 (13x); timed out after 43 of 50 steps, so no doubled-grid linear run started]{.claim}[C-229](/Blog/tokamak-toolkit/claims.qmd#c-229){.cid .st-measured}). Scaling the
+step cost by the same factor gives roughly 50–75 s per linear step; the n = 12 and 16 fit
+windows need about 700–800 steps, so about 10–17 h at 32 cores. These are estimates, not
+measurements; either way a linear run on this grid needs more than one 6 h job.
+
+The job also lost compute to a batch-script bug ([about 290 of 1046 core-h: after the last run ended the script waited on its watchdog (an empty wait list became a bare wait); fixed in both job scripts]{.claim}[C-232](/Blog/tokamak-toolkit/claims.qmd#c-232){.cid .st-measured}). The script waited on
+its background jobs other than the watchdog, `wait $(jobs -p | grep -v …)`. When that list
+was empty, the command became a bare `wait`, which also waits for the watchdog, and the
+watchdog never exits. Both J5 job scripts now skip the wait when the list is empty.
+
+*Decision [OQ-41](/Blog/tokamak-toolkit/decisions.qmd#oq-41).* Case (a) is closed on the Δt check: n = 12 and 16 are "converged in Δt,
+grid not checked", not quotable; the other six n are "not measured: core or axis mode
+faster". The full check moves to case (b), with up to five one-node jobs of ≤ 6 h, each
+announced.
+
+### Case (b) equilibrium {#case-b-equilibrium}
+
+Case (b) is the TORAX ITER hybrid state at 80 s: pressure from TORAX's density and
+temperatures, FF′ from TORAX's current density with the bootstrap current. The FF′
+formula reproduces the EQDSK's own FF′ from the CHEASE geometry to 2.4%.
+
+The first solve gave $I_p$ +3.7% (10.89 against 10.5 MA) and q +7.8% (median, $\psi_N$
+0.1–0.5), outside decision 2. The cause is structural: TORAX evolves the current on a fixed
+CHEASE geometry, so its state is not a Grad–Shafranov equilibrium, and a consistent
+equilibrium with the same p and j has different flux surfaces and q.
+
+*Decision [OQ-40](/Blog/tokamak-toolkit/decisions.qmd#oq-40) (a).* FF′ is multiplied by one factor k so that $I_p$ = 10.5 MA.
+Acceptance: $I_p$ within 1%, and p($\psi_N$) as TORAX's by construction. The q difference
+from TORAX is reported as a known inconsistency of the fixed-geometry TORAX state.
+Rejected: (b) tuning FF′ until q matches, which moves the current profile away from
+TORAX's; (c) a self-consistent free-boundary TORAX state first, a larger piece of work.
+
+**Convergence of the Grad–Shafranov iteration.** Without under-relaxation every case (b)
+solve stalls ([the iteration cycles between two states for all 200 iterations (axis moves about 5 mm, residual about 7e-3); I_p +3.7% at FF' x 1, −0.0002% at x 0.952, neither converged]{.claim}[C-234](/Blog/tokamak-toolkit/claims.qmd#c-234){.cid .st-measured}): the magnetic axis moves between R 6.2986 and 6.3038 m on
+alternate iterations. The 2026-10-16 solve already had this (residual 8.2e-3) and it was not
+flagged then. Case (b)'s FF′ is hollow, because the ramp-up current has not yet reached the
+core, so the axis is weakly pinned. JOREK's `amix` 0.5 ($\psi_\mathrm{new}$ = 0.5
+$\psi_\mathrm{old}$ + 0.5 $\psi_\mathrm{solve}$) converges it to 1e-6 in 43 iterations.
+
+| k | `amix` | $I_p$ (MA) | against 10.5 MA | converged |
+|---|---|---|---|---|
+| 1.000 | 0 | 10.887 | +3.7% | no |
+| 0.963 | 0 | 10.589 | +0.84% | no |
+| 0.952 | 0 | 10.49998 | −0.0002% | no |
+| 0.952 | 0.5 | 10.541 | +0.39% | yes |
+| **0.947** | **0.5** | **10.501** | **+0.01%** | **yes** |
+
+Accepted: [I_p 10.501 MA against TORAX's 10.5 MA (+0.01%), converged in 43 iterations; on 160 x 256 −0.07% with q equal to about 1e-5]{.claim}[C-233](/Blog/tokamak-toolkit/claims.qmd#c-233){.cid .st-measured}. q against TORAX: [median q difference +10.7% (psi_N 0.1–0.5), +3.2% (0.5–0.9), −4.9% (0.9–0.95); q95 4.64 against 4.89, q_min 1.84 against 1.64]{.claim}[C-235](/Blog/tokamak-toolkit/claims.qmd#c-235){.cid .st-measured}. The largest
+difference is in the core, where case (b)'s $q_\mathrm{min}$ is well above case (a)'s, so
+q = 1-type core modes are unlikely. Login-node equilibrium solves run one at a time: two
+concurrent solves exceeded the time limit.
+
+### Case (b) n-scan {#case-b-n-scan}
+
+Job 1 of 5 used the case (a) job-2 protocol with three changes: the case directory, the job
+group, and the health gate's reference flux on axis. It completed in 5 h 45 min
+([no GMRES abort: all 8 runs reached the job time limit at t ≈ 4790 (about 4770 steps); final energies 1e-24 to 1e-20, below the 1e-15..1e-7 fit band, so no γ is fitted]{.claim}[C-236](/Blog/tokamak-toolkit/claims.qmd#c-236){.cid .st-measured}).
+
+| n | t ≈ 2800 | t ≈ 3600 | t ≈ 4400 | at the end |
+|---|---|---|---|---|
+| 1–8 | −0.0005 … −0.0003 | −0.0004 … −0.0002 | −0.0003 … −0.0001 | decaying, rates approaching 0 |
+| 12 | −0.00024 | −0.00012 | +0.00029 | just turned positive |
+| 16 | −0.00021 | +0.00046 | +0.00173 | growing, still accelerating |
+| 20 | +0.00011 | +0.00267 | +0.00287 | growing, steady over t 4000–4771 |
+
+Local rates of ½ ln E in units of $1/\sqrt{\mu_0\rho_0}$, over windows of 370 time units
+([γ√(μ₀ρ₀) ≈ 0.0029, steady over t 4000–4771; flow perturbation peaks at psi_N 0.95–1]{.claim}[C-237](/Blog/tokamak-toolkit/claims.qmd#c-237){.cid .st-preliminary}, [at t ≈ 4400: n = 1–8 −0.0003 to −0.0001 (decaying), n = 12 +0.00029, n = 16 +0.00173 (rising)]{.claim}[C-238](/Blog/tokamak-toolkit/claims.qmd#c-238){.cid .st-preliminary}).
+
+- **Growth.** Only n = 20 grows cleanly so far, at about 0.0029, roughly 15× below case
+  (a)'s edge modes, in the lower-pressure state ([66.6 keV in case (a) (EQDSK pressure split by TORAX density) against 14.4 keV in case (b) (TORAX at 80 s)]{.claim}[C-239](/Blog/tokamak-toolkit/claims.qmd#c-239){.cid .st-measured}).
+- **Location.** The growing flow perturbation of n = 20 sits at $\psi_N$ 0.95–1. The
+  temperature perturbation still carries a broad, n-independent start-up component peaked at
+  the axis, so the temperature-based class reads "axis" for every n. `j5_growth.py` now
+  also reports `class_u`; case (a)'s classes are unchanged under it.
+- **Energies.** 1e-24 to 1e-20 at the end, below the case (a) band, so no γ is fitted.
+
+**Job 2** continues every n from its own latest time slice, with unchanged inputs. JOREK's
+time slices are full restart files, written by the same routine as `jorek_restart.h5`; a
+login-node restart of n = 20 resumed at t = 4771.11, step 4801.
+
+**The grid check does not fit as planned.** Case (b)'s modes emerge from round-off only after
+t ≈ 3000–4500. A 160 × 256 run repeating that from scratch, at the estimated 30–75 s per
+step, needs about 40–100 h per mode, far beyond the remaining jobs. JOREK's
+`jorek2_import_perturbation` needs identical grids, and the initial perturbation is
+hard-coded, so seeding the doubled grid with the 80 × 128 eigenmode would need a source
+patch. The options go to the owner after job 2.
+
+## Ceilings {#ceilings}
+
+- No growth rate passes decision 7 yet. Case (a)'s pedestal modes are converged in Δt only;
+  case (b) has no fitted γ.
+- The fixed boundary at the separatrix stabilises peeling modes artificially (no vacuum
+  region).
+- The case (b) equilibrium is not TORAX's: q differs by up to about 14% in the core
+  ([median q difference +10.7% (psi_N 0.1–0.5), +3.2% (0.5–0.9), −4.9% (0.9–0.95); q95 4.64 against 4.89, q_min 1.84 against 1.64]{.claim}[C-235](/Blog/tokamak-toolkit/claims.qmd#c-235){.cid .st-measured}), by construction of [OQ-40](/Blog/tokamak-toolkit/decisions.qmd#oq-40) (a).
+- A doubled-grid check of slowly emerging modes costs far more than the approved compute.
+- The grid set-up abort under OpenMP is unexplained; it is to be reported upstream.
+
+## Changelog {#changelog}
+
+- 2026-10-25: case (b) n-scan, first job ([entry 72](../log/72-case-b-n-scan-first-job.qmd));
+  case (b) equilibrium ([entry 71](../log/71-case-b-equilibrium-from-the-torax-state.qmd));
+  time-step check ([entry 69](../log/69-time-step-check-of-the-growth-rates.qmd)).
+- 2026-10-24: case (a) n-scan and the solver-abort classification
+  ([entry 68](../log/68-linear-n-scan-of-the-eqdsk-case.qmd)).
+- 2026-10-16: equilibrium on the EQDSK separatrix
+  ([entry 67](../log/67-iter-equilibrium-on-the-eqdsk-separatrix.qmd)).
+- 2026-10-16: scope, build and regression checks ([entry 63](../log/63-jorek-integration-scoped-and-built.qmd));
+  adapter and run wrapper ([entry 64](../log/64-jorek-adapter-and-runner.qmd));
+  ITER hybrid equilibrium ([entry 65](../log/65-iter-hybrid-equilibrium-in-jorek.qmd)).
+
+---
+
+*JOREK acknowledgement.* JOREK is developed by the JOREK team and is open source under
+the GNU LGPL v3. Results here use JOREK at commit `01a52be3`. Citations: M. Hoelzl et al.,
+Nuclear Fusion 61, 065001 (2021); M. Hoelzl et al., Nuclear Fusion 66, 116006 (2026). For a list
+of JOREK team members, refer to the author list of M. Hoelzl, G.T.A. Huijsmans, F.J. Artola,
+E. Nardon, M. Becoulet, N. Schwarz, A. Cathey, S.J.P. Pamela et al., Nuclear Fusion 64, 112016 (2024).

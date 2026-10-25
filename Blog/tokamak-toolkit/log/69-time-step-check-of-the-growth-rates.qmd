@@ -1,0 +1,78 @@
+---
+title: Time-step check of the JOREK growth rates; the grid check did not run
+date: '2026-10-25'
+categories:
+- measured
+entry: 69
+milestone: JOREK (alongside M4)
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 69 · milestone JOREK (alongside M4)
+:::
+
+Under the owner's convergence rule ([OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39), decision 7), a JOREK growth rate γ is quoted only
+if halving the time step Δt and doubling the radial and poloidal resolution each leave it within
+a fixed tolerance, with the mode staying where it was. This entry applies the rule to the case (a)
+modes of [entry 68](68-linear-n-scan-of-the-eqdsk-case.qmd): the pedestal modes n = 12 and 16,
+and the axis modes n = 8 and 20, to test whether the latter are numerical.
+
+## What ran
+
+The third and last job allowed under [OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39) had three parts:
+- **Δt = 0.5** on the 80 × 128 grid for n = 8, 12, 16, 20, restarting from the same
+  axisymmetric state as entry 68, so that only Δt changes;
+- **the doubled grid, 160 × 256**: a new axisymmetric start, then n = 12 and 16 at Δt = 1;
+- **n = 8 and 20 on the doubled grid**, after the first part, until the time limit.
+
+The comparison uses the same energy-band fit as entry 68 and also requires the same location
+class. It reads both runs' saved energies, so it doesn't depend on how the runs were launched.
+It is still our own fit applied to our own runs.
+
+## Result
+
+| n | where the mode peaks | Δt = 1 → 0.5 | 160 × 256 | verdict |
+|---|---|---|---|---|
+| 12, 16 | pedestal | [n = 12: 0.04397 → 0.04397 (−0.01%); n = 16: 0.03744 → 0.03633 (−2.94%); both within the 5% tolerance]{.claim}[C-227](/Blog/tokamak-toolkit/claims.qmd#c-227){.cid .st-measured} | not run | converged in Δt only |
+| 8, 20 | magnetic axis | [n = 8: 0.02810 → 0.02967 (+5.56%); n = 20: 0.03300 → 0.03473 (+5.27%); both outside the 5% tolerance]{.claim}[C-228](/Blog/tokamak-toolkit/claims.qmd#c-228){.cid .st-measured} | not run | fails the Δt check |
+
+All four Δt = 0.5 runs have clean linear phases, keep their location, and end on the same
+solver abort after it. The pedestal modes pass the time-step check. The axis modes fail it,
+which is consistent with a numerical origin.
+
+The doubled grid never got past its axisymmetric start ([about 126 s per step against 9.7 s on 80 x 128 (13x); timed out after 43 of 50 steps, so no doubled-grid linear run started]{.claim}[C-229](/Blog/tokamak-toolkit/claims.qmd#c-229){.cid .st-measured}). Scaled from that
+cost, each linear run on the doubled grid would take longer than one job allows. So no growth
+rate is quotable under decision 7: n = 12 and 16 are converged in time step only.
+
+The job also wasted compute ([about 290 of 1046 core-h: after the last run ended the script waited on its watchdog (an empty wait list became a bare wait); fixed in both job scripts]{.claim}[C-232](/Blog/tokamak-toolkit/claims.qmd#c-232){.cid .st-measured}). After the last run ended, the batch script
+kept waiting on its watchdog process: an empty list of process IDs turned the wait command
+into a wait for every background process. We cancelled the job once it was idle, and both J5
+job scripts are fixed.
+
+## Decision
+
+The owner chose the recommended options of [OQ-41](/Blog/tokamak-toolkit/decisions.qmd#oq-41):
+- Case (a) is closed on the time-step check. n = 12 and 16 are reported as "converged in Δt,
+  grid not checked", not quotable. The other six n are "not measured: core or axis mode
+  faster".
+- The full check, time step and grid, moves to case (b), the TORAX state.
+- Case (b) gets up to five one-node jobs of at most six hours, each announced before
+  submission.
+
+Where this stands: case (b) needs its own equilibrium first
+([entry 71](71-case-b-equilibrium-from-the-torax-state.qmd)).
+
+Technical details → [JOREK](../technical/jorek.qmd#convergence-check). Decision → [OQ-41](/Blog/tokamak-toolkit/decisions.qmd#oq-41).
+
+---
+
+*JOREK acknowledgement.* JOREK is developed by the JOREK team and is open source under
+the GNU LGPL v3. Results here use JOREK at commit `01a52be3`. Citations: M. Hoelzl et al.,
+Nuclear Fusion 61, 065001 (2021); M. Hoelzl et al., Nuclear Fusion 66, 116006 (2026). For a list
+of JOREK team members, refer to the author list of M. Hoelzl, G.T.A. Huijsmans, F.J. Artola,
+E. Nardon, M. Becoulet, N. Schwarz, A. Cathey, S.J.P. Pamela et al., Nuclear Fusion 64, 112016 (2024).
+
+::: {.entry-links}
+**Technical details →** [JOREK › convergence check](/Blog/tokamak-toolkit/technical/jorek.qmd#convergence-check)  
+**Decisions →** [OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39) · [OQ-41](/Blog/tokamak-toolkit/decisions.qmd#oq-41)
+:::

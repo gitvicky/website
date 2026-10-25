@@ -2,7 +2,7 @@
 title: Verification
 toc: true
 toc-depth: 3
-date-modified: '2026-10-11'
+date-modified: '2026-10-25'
 ---
 
 ## Scope
@@ -58,6 +58,36 @@ ITER passes ([served-face T_e 7.42%, T_i 8.18%, both passing the 15% limit; whol
 cell diagnostic also failing ion temperature. Its failure remains ceiling [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030). The mask
 is only the final accepted state's guard diagnostic; it does not measure fallback calls
 throughout the trajectory.
+
+### MAST-U scope (OQ-42) {#mastu-scope}
+
+*Decided 25 Oct 2026.* The MAST-U comparison against a TGLF reference trajectory (remediation
+step R6) is recorded as not evaluable, and MAST-U is certified at the M4 review with that
+limitation stated, alongside [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) and [K-032](/Blog/tokamak-toolkit/ceilings.qmd#k-032). ITER's pass stands. The model, guard,
+acceptance limits and frozen splits are unchanged, and no further MAST-U reference compute is
+planned ([entry 70](../log/70-owner-limits-the-mastu-certification-scope.qmd)).
+
+The evidence is a read-only screen (`scripts/m4_mastu_projection_screen.py`) of [OQ-38](/Blog/tokamak-toolkit/decisions.qmd#oq-38)'s
+projection rule: in the reference only, set each negative raw TGLF heat diffusivity to zero,
+log it, and stop if a projected heat-flux magnitude reaches 1 gB. The single approved
+projected run stopped on that rule and saved no trajectory. The screen applies the rule to
+every interior face of the 40 saved states of the unprojected reference run (same profiles),
+inverting TORAX's conversion to obtain the signed fluxes:
+
+| quantity | result |
+|---|---|
+| negative raw heat diffusivities, and those reaching the stop | [150 negative raw heat diffusivities at 19 faces; 46 would reach the 1 gB stop, at 31 of 40 states, the first at state 1]{.claim}[C-240](/Blog/tokamak-toolkit/claims.qmd#c-240){.cid .st-measured} |
+| of those, on faces the projected reference would serve | [26 would be served, the first at state 4 (faces 11 and 12, ion, −8.0 and −33.8 gB); near the axis the projected magnitude reaches 6020 gB]{.claim}[C-241](/Blog/tokamak-toolkit/claims.qmd#c-241){.cid .st-measured} |
+| candidate against the guarded historical reference, shared TGLF faces | [T_e 32.0%, T_i 41.5% on the 14 faces where both serve TGLF, against the 15% limit]{.claim}[C-242](/Blog/tokamak-toolkit/claims.qmd#c-242){.cid .st-measured} |
+
+The stop applies to every projection, served or not, so on this trajectory it fires at
+state 1; served faces alone would stop it at state 4. Projection would also change
+which faces are served: 840 of the 1040 face-states against 717 historically. Limits: the
+fluxes are inferred, not direct TGLF outputs; a projected run diverges from the saved
+trajectory after its first served projection, so the screen is not a replay; the edge faces
+0 and 25 have no interior inversion.
+The last row compares with the guarded TGLF/fallback hybrid and is descriptive, not a gate
+result.
 
 ## MAST-U remediation diagnosis {#mastu-remediation}
 
@@ -228,3 +258,248 @@ numerical origin and any flux-preserving reference treatment require physics rev
 ([OQ-32](/Blog/tokamak-toolkit/decisions.qmd#oq-32)). Another identical run does not make the reference admissible. Formal candidate
 temperature acceptance remains not evaluable, [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) stays open and the current model/guard
 remain selected. The separate sampling proposal has no frozen fitting request.
+
+## Signed heat conversion review {#signed-heat-conversion-review}
+
+The saved-state review reconstructs face temperatures and radial derivatives
+with the pinned transport solver's cell representation and bound magnetic
+geometry. Source checks cover the recorded conversion, geometry and gradient
+files. No simulation or transport model is prepared; physical solver calls are
+forbidden. Every state of the investigated face is retained.
+
+For each heat channel the converter uses
+
+\[
+P_s=Q_s^{gB}Q_{GB}\,V'/\rho_b,\qquad
+\chi_s=-P_s/(n_s\partial_{\rho_n}T_s\,g_1/V'+\epsilon),
+\]
+
+with temperature in joules and the fixed numerical denominator correction.
+Inverting this equation gives an inferred heat flux, which is converted back
+through the native implementation. [33 focused checks pass in each mode, including 14 new sign/units/history tests; all 80 native heat-converter round trips meet the mixed 1e-12 parity criterion (maximum absolute difference 8.88e-16 m²/s), 32 numerical source files match the diagnostic bindings, and all 78 source modules pass typing]{.claim}[C-196](/Blog/tokamak-toolkit/claims.qmd#c-196){.cid .st-tested} records those numerical
+checks and synthetic tests. A round trip checks algebra and units; it cannot
+independently validate the originating solver flux.
+
+[the final electron heat flux is inferred as -0.001689376033 gB; all 9 negative channel records at 8 accepted states have outward-decreasing temperature and no denominator-epsilon sign reversal, with maximum epsilon ratio 1.03e-11; all negative magnitudes are below 1 gB]{.claim}[C-195](/Blog/tokamak-toolkit/claims.qmd#c-195){.cid .st-measured} narrows the sign diagnosis. Temperatures decrease outward
+in all negative heat-channel records, and the denominator correction changes
+none of their signs. The saved coefficients therefore imply inward signed heat
+flux in this representation. Their magnitudes are below the offline accuracy
+gate's reference-flux floor; neither that gate nor their small size establishes
+physical validity or a numerical-error explanation. The inferred ion channel
+is the reference worker's sum over main and impurity ions, whereas the surrogate
+learns main-ion heat flux. Separate species contributions remain unobserved.
+
+The current raw guard rejects negative diffusivity before post-processing.
+Moving a positive floor before that rejection changes reference physics and
+coverage. A signed-flux-preserving closure would require an explicit stable
+representation and compatible surrogate contract; it cannot be inferred from
+one effective coefficient. The current in-memory interface does not expose
+mode spectra, so richer collection requires another prepared output route.
+
+This is an algebraic/source review, not an adopted physical remedy. [OQ-32](/Blog/tokamak-toolkit/decisions.qmd#oq-32) now
+selects retaining the current nonnegative contract while investigating. Formal
+candidate acceptance remains not evaluable, and [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) stays open. Current model/guard, every face, splits and
+tolerances are preserved. Draft entry 52 is held for private owner review.
+
+
+## Owner disposition and licence {#owner-disposition-and-licence}
+
+The owner selected retaining the existing positive-flux approximation, physical
+contract and raw guard ([OQ-32](/Blog/tokamak-toolkit/decisions.qmd#oq-32)). Richer direct-flux and supported mode evidence
+requires a prepared diagnostic output route, validated tooling and a concrete
+execution review. The existing inferred-flux and conversion evidence remains
+qualified as in [C-195](/Blog/tokamak-toolkit/claims.qmd#c-195)/C-196; this decision supplies no new physics measurement
+and makes no rejected face admissible.
+
+[OQ-17](/Blog/tokamak-toolkit/decisions.qmd#oq-17) selects MIT for original toolkit code/documentation. The root licence has
+copyright 2026 Vignesh Gopakumar; package metadata reads the licence file. Local
+source and wheel builds contain that text and declare the licence file. The wheel
+retains the existing EPEDNN licence and notice byte-for-byte. These packaging
+checks do not replace dependency/data redistribution reviews or authorize a
+public release. Runtime source, tests and model selection are unchanged; the
+retained test statistics remain historical execution evidence.
+
+## Direct heat diagnostic route {#direct-heat-diagnostic-route}
+
+An original native driver links the byte-bound TGLF library, reads the complete
+generated input and executes one local-state solve. Full-precision text retains
+particle and heat flux by species, low-k heat totals, the native ky grid and
+weights, growth/frequency pairs, and saturated and quasilinear heat spectra by
+species, field, ky and mode. An independent synthetic branch fills those arrays
+without reading an equilibrium or calling the solver. The strict reader rejects
+missing, extra, nonfinite or dimensionally inconsistent records.
+
+The paired route runs the pinned in-memory wrapper in a fresh process with the
+same complete defaults, global settings and prepared local inputs. Input precedence
+matches the reference worker. Native shape parameter names omit the wrapper's
+local suffix; mapping them preserves register values and the native generated-file
+audit checks all settings. No parser default silently replaces a declared value.
+
+For the declared logarithmic ky grid, each interval uses
+`D = log(k1/k0)/(k1-k0)`, `w1 = k1*(1-k0*D)` and
+`w0 = k0*(k1*D-1)`, with first weights zero and the first ky. The contribution
+is `w0*previous_spectrum + w1*current_spectrum`. Sum all fields, modes and
+intervals for total heat; native low-k heat retains phi and perpendicular
+magnetic fields through ky at most one. Keep all signed contributions and
+compare totals at mixed relative/absolute tolerance 1e-12 in gyro-Bohm units.
+
+Separate comparisons report native versus paired species fluxes, and paired
+electron/total-ion flux versus the saved inverse conversion. Any disagreement
+is retained as diagnostic evidence. The native sheared double-pass eigenvalues
+may retain unsheared first-pass values; growth/frequency pairs alone neither
+label a mode physically nor prove numerical convergence. Solver status and
+finite output checks supply only the supported numerical diagnostics.
+
+[55 focused checks pass in each mode, including 22 direct-output and settings checks; all 79 source modules pass typing; the compiled synthetic writer preserves signed species heat and passes total/low-k spectral parity without calling TGLF]{.claim}[C-197](/Blog/tokamak-toolkit/claims.qmd#c-197){.cid .st-tested} records preparation checks. This does not establish direct
+physical flux parity, reference admissibility or coupled acceptance. [OQ-33](/Blog/tokamak-toolkit/decisions.qmd#oq-33)'s
+permission for runs shorter than six hours leaves the selected model/guard,
+physical contract, training isolation and owner physics decisions in force.
+
+## Diagnostic wrapper status fix {#diagnostic-wrapper-status-fix}
+
+The first rich diagnostic failed in paired reporting after its first solve:
+the compiled wrapper exposes integrated flux registers but not the Fortran
+interface's error-status register. Source availability is insufficient evidence
+of Python-interface availability. The consumed attempt retains partial native
+output, failed logs, executed-call count and final scheduler accounting.
+
+Paired reporting now records whether status is exposed, preserves absent status
+as unavailable, validates finite fluxes and retains any reported failure status.
+Native status remains available through the driver. This checks software/output
+integrity; unavailable convergence evidence is not replaced by a zero status.
+[25 diagnostic checks pass in each mode, including unavailable status, exposed failure status and nonfinite output; 33 unchanged focused checks are retained for 58 focused recorded passes per mode]{.claim}[C-198](/Blog/tokamak-toolkit/claims.qmd#c-198){.cid .st-tested} binds the synthetic worker regressions. A new package is frozen
+after the correction, with a separate summary and retained test-report directory;
+consumed request evidence is never overwritten.
+## Signed reference literature review {#signed-reference-literature-review}
+
+The complete local-state collection is retained despite a subsequent tracking
+failure ([648 integrity checks pass on the complete 15-state collection; all affected signed states agree between backends, but four control states fail the existing parity criterion; original terminal tracking failure is preserved and archive recovery calls no solver]{.claim}[C-199](/Blog/tokamak-toolkit/claims.qmd#c-199){.cid .st-measured}). The offline tracker copied repeated basenames;
+archival recovery instead preserves relative case paths in one checksum-bound
+bundle. Recovery does not call the solver or alter original accounting.
+
+The owner delegates approval of the recommended reference method ([OQ-34](/Blog/tokamak-toolkit/decisions.qmd#oq-34)).
+The target is signed, species-resolved TGLF with fixed turbulence settings and
+matched geometry, normalization and transport equations. The present guarded
+hybrid trajectory remains a regression baseline with unresolved coverage.
+Numerical reproducibility, physical validation and coupled acceptance are distinct.
+
+[GACODE output definitions](https://gacode.io/tglf/tglf_output_list.html) distinguish
+species energy weights, eigenvalues and integrated spectra.
+[Staebler et al. (2024), §5.2](https://doi.org/10.1088/1741-4326/ad6ba5) motivates
+checking anomalous reduced-model cases before higher-fidelity gyrokinetic study.
+[Snoep et al. (2025)](https://arxiv.org/abs/2506.03459) demonstrates matched
+spectral and heat-flux verification. [Lestz et al. (2025)](https://arxiv.org/abs/2509.04359)
+shows spherical-tokamak predictions depend on turbulence and transport treatment.
+These sources support the verification method, not this case's physical validity.
+
+Repeatability tooling retains two fresh-process results per selected state and
+backend, each compared with its consumed output at the existing mixed 1e-12
+criterion ([31 synthetic diagnostic tests pass in each mode, including archive identity and repeatability completeness/discrepancy checks; 33 unchanged focused records are retained, giving 64 focused recorded passes per mode]{.claim}[C-200](/Blog/tokamak-toolkit/claims.qmd#c-200){.cid .st-tested}). Missing identities or nonfinite values invalidate
+the collection. No averaging, favorable-backend selection, negative-flux clipping
+or physical mode assignment is performed. A flux-preserving conservative stable
+energy closure remains to be reviewed; a negative effective turbulent diffusivity
+does not by itself justify negative total diffusion.
+## Reference repeatability {#reference-repeatability}
+
+The bounded fresh-process diagnostic completes and its saved-output audit passes
+([521 saved-output checks pass; every within-backend fresh-process repeat is exactly equal and agrees with its consumed output, while all four cross-backend discrepancies persist; native accounting completes within the reviewed bound and the offline archive copy matches its checksum]{.claim}[C-201](/Blog/tokamak-toolkit/claims.qmd#c-201){.cid .st-measured}). For each selected state, native and wrapper backends receive
+two unchanged-input calls. Report each species vector separately; compare the
+two vectors within a backend and compare each with that backend's consumed result.
+Retain cross-backend comparisons separately at the existing mixed 1e-12 criterion.
+
+Within-backend vectors repeat exactly; the prior cross-backend differences persist.
+Repeatability cannot establish numerical convergence or physical validity. The
+historical pinned wrapper remains the reproduction anchor, while the native output
+route supplies additional diagnostics. A read-only assignment audit finds no
+observable input-register precision loss. The cause of backend differences remains
+unresolved; no particular compilation or physical mechanism is asserted.
+
+The next reference review should quantify basis/quadrature/wavenumber convergence
+with predeclared refinements and unchanged baseline controls. Any stable signed
+energy closure must retain the reviewed flux, conserve energy and demonstrate
+time/grid convergence. The served surrogate contract, raw guard and temperature
+threshold remain fixed. [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) and M4 stay open.
+
+## Bounded reference refinement {#reference-convergence}
+
+The synthetic refinement and evidence checks pass ([40 focused synthetic checks pass in each mode after the input-path correction, covering signed channels, refinement identities, baseline drift, incomplete evidence and existing diagnostic output handling]{.claim}[C-202](/Blog/tokamak-toolkit/claims.qmd#c-202){.cid .st-tested}).
+Retain original settings, then vary parallel basis, Gauss–Hermite quadrature and
+high-wavenumber resolution separately and together. Both minimum and maximum
+basis settings vary, affecting width optimization and the final eigenvalue solve.
+Their effects are not isolated by that ladder. Pinned KYGRID_MODEL=4 leaves its
+low-wavenumber nodes fixed while NKY refines its logarithmic high-wavenumber part.
+
+For each backend and species, report all fluxes, observed minimum/maximum,
+successive differences and sign changes. Form the ion sum before taking these
+statistics. Relative last-step differences divide by the larger absolute flux
+at the two levels, with zero/zero reported as zero. No flux floor, averaging,
+Richardson extrapolation or new acceptance threshold is introduced. Backend
+parity at the existing mixed tolerance remains separate from physical convergence.
+
+The first execution failed before solver calls on relative historical evidence
+paths after a working-directory change. The path fix and relocated preflight
+preserve source/input bindings. A separate quota-failed preparation is retained;
+[OQ-35](/Blog/tokamak-toolkit/decisions.qmd#oq-35) approves alternate shared-work storage for this diagnostic only. [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030),
+reference admissibility and coupled acceptance remain open pending measurements.
+
+## Reference refinement result {#reference-refinement-result}
+
+The complete bounded collection passes its saved-output audit
+([2076 integrity checks pass on the complete bounded study; baseline reproduction, signed species outputs, spectral accounting, native completion and the local archive copy are verified, while electron-flux signs change across refinement levels and finest-level backend differences remain]{.claim}[C-203](/Blog/tokamak-toolkit/claims.qmd#c-203){.cid .st-measured}), but the reference remains numerically unconverged. Signed
+electron heat changes sign across levels at every selected state in both
+backends. The joint minimum-/maximum-basis ladder has substantially greater
+sensitivity than the separate quadrature and high-ky ladders. Since minimum basis
+sets the width-search calculation and maximum basis sets the final solve, the
+current evidence cannot assign the effect to one component. Finest-level backend
+differences persist. No particular compiler or physical instability is identified.
+
+Next separate those two basis roles and retain width/growth diagnostics before
+extending the refinement budget. Low-ky, width-search resolution and mode-count
+limits remain explicit. A stable conservative signed-energy closure remains a
+later conditional review, not a consequence of seeing negative values at the
+finest tested resolution. Current model/guard, the temperature criterion and
+[K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) remain unchanged; no new coupled acceptance is evaluated.
+
+The archive is checksum-matched in the authoritative local tracking record.
+Simvue's mirror was unavailable; neither a remote record nor an upload is claimed.
+
+## Separate basis roles {#reference-basis-study}
+
+The factorial diagnostic crosses width-search basis and final-solve basis while
+holding other saved settings fixed. Its synthetic reporting checks pass
+([54 focused synthetic checks pass in each mode, including separated basis effects, interactions, signed channels, incomplete evidence and consumed-control drift; 553 unchanged recorded checks are retained separately]{.claim}[C-204](/Blog/tokamak-toolkit/claims.qmd#c-204){.cid .st-tested}). Report changes along each fixed-other-basis axis and the
+cross-difference relative to the original minimum/maximum setting; retain signs,
+species channels, total-ion sums and both backends. Prior diagonal cells serve
+as reproduction controls, not convergence targets.
+
+The native output driver reads selected width, saved search growth and retained
+final-mode spectra from the unchanged linked library. The protocol requires zero
+shear and a fresh width search: the double-pass path could overwrite a register
+with a different meaning. The retained width can revert to its input value if
+the final solve finds no unstable mode. Mode ranks are not tracked physical
+branches. The wrapper supplies fluxes only. Freeze and verify the package before
+the bounded allocation, then reconstruct its saved outputs independently.
+
+### Basis-role results {#reference-basis-results}
+
+The completed grid passes its saved-output audit and reproduces all consumed
+controls ([2139 integrity checks pass on the complete 54-pair basis grid and all 36 consumed-control comparisons reproduce the preceding study; electron flux changes sign at every state, steps reach 4.28 gB along the final basis and 4.11 gB along the search basis, and at the largest final basis the flux is a residual of order 1e-3 gB]{.claim}[C-205](/Blog/tokamak-toolkit/claims.qmd#c-205){.cid .st-measured}). Both roles change the flux: steps along the
+final-solve basis are typically larger, but single steps along the search basis
+also exceed 4 gB, and cross-differences reach 3.96 gB. Search growth is identical
+across final-basis settings, and every width change along the final basis is the
+stable-solve fallback to the input width. At the largest final basis, low-ky flux
+collapses and the remaining signed flux is of order 1e-3 gB; at the middle final
+basis with larger search basis, high-ky roots with growth rates of 2-4 carry much
+of the flux. Up to half of unstable cells select the upper width bound. These are
+register observations; they identify no physical branch, cause or correct setting.
+
+### Extension results {#reference-extension-results}
+
+The extension diagnostic passes its audit and reproduces its controls
+([3029 integrity checks pass on the complete 78-pair extension and all 36 control comparisons reproduce job 2687308; NBASIS_MAX 16 still moves electron flux by up to 0.48 gB per step, and widening the width search from 1.65 to 3.3 changes it from about 1e-3 gB to as much as 181 gB]{.claim}[C-206](/Blog/tokamak-toolkit/claims.qmd#c-206){.cid .st-measured}). Raising the final basis from 10 to 16 does not settle the
+electron flux, and high-ky electron-direction roots appear and vanish along the
+ladder. Raising the width search's upper bound from 1.65 to 2.3 and 3.3 changes
+the flux by up to five orders of magnitude, almost entirely at ky≤1; the default
+bound is selected often, and the search optimum becomes interior only at 3.3 for
+the standard basis. These are observations of the pinned solver, not error bounds
+or causes. The standard settings remain the training-label convention ([K-032](/Blog/tokamak-toolkit/ceilings.qmd#k-032)).

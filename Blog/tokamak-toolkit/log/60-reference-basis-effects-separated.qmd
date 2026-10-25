@@ -1,0 +1,36 @@
+---
+title: Separating width-search and final-basis effects
+date: '2026-10-15'
+categories:
+- built
+- hardened
+entry: 60
+milestone: M4
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} [enforced rule]{.chip .hardened} Entry 60 · milestone M4
+:::
+
+The preceding refinement changed the width-search basis together with the final
+solve basis. Its large flux differences therefore could not distinguish those
+effects. A bounded factorial diagnostic now varies each setting while holding
+the other fixed, preserving every remaining saved input.
+
+The reporting checks pass ([54 focused synthetic checks pass in each mode, including separated basis effects, interactions, signed channels, incomplete evidence and consumed-control drift; 553 unchanged recorded checks are retained separately]{.claim}[C-204](/Blog/tokamak-toolkit/claims.qmd#c-204){.cid .st-tested}). They exercise separated effects,
+interactions, signed flux, missing evidence and disagreement with consumed controls.
+The original output driver now records native selected widths and search growth
+alongside the retained mode spectra. It links the same pinned solver library.
+Preparation checks the single-pass conditions needed to interpret the registers;
+the wrapper's missing diagnostics remain an explicit limit.
+
+The package is frozen, verified from its actual execution directory and submitted
+once under the standing bounded-compute and diagnostic-storage permissions.
+Controls reproduce the preceding basis cells before scientific interpretation.
+Submission does not establish convergence. The current model, guard and acceptance
+criteria remain fixed; the separate feedback-sampling proposal remains unrun.
+
+::: {.entry-links}
+**Technical details →** [Verification › reference basis study](/Blog/tokamak-toolkit/technical/verification.qmd#reference-basis-study)  
+**Decisions →** [OQ-33](/Blog/tokamak-toolkit/decisions.qmd#oq-33) · [OQ-35](/Blog/tokamak-toolkit/decisions.qmd#oq-35)
+:::

@@ -197,16 +197,24 @@ ul.task-list li input[type="checkbox"] {
 <td>several copies of a neural network trained independently; their spread measures how uncertain the prediction is</td>
 </tr>
 <tr class="even">
+<td><strong>EQDSK</strong></td>
+<td>a standard file format for a tokamak equilibrium: flux on an R–Z grid, the boundary, and pressure and current profiles</td>
+</tr>
+<tr class="odd">
 <td><strong>equilibrium</strong></td>
 <td>the shape and internal magnetic structure the plasma settles into</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>fallback</strong></td>
 <td>the trusted physics model used wherever the guard rejects the surrogate</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>fallback fraction</strong></td>
 <td>share of (radius, time step) points served by the fallback; reported for every run</td>
+</tr>
+<tr class="even">
+<td><strong>FF′</strong></td>
+<td>the product of the poloidal current function F and its derivative with respect to flux; with the pressure gradient it sets the current density in a Grad–Shafranov equilibrium</td>
 </tr>
 <tr class="odd">
 <td><strong>finite differences</strong></td>
@@ -223,6 +231,14 @@ ul.task-list li input[type="checkbox"] {
 <tr class="even">
 <td><strong>FreeGSNKE</strong></td>
 <td>open-source free-boundary equilibrium solver (LGPL-3.0)</td>
+</tr>
+<tr class="odd">
+<td><strong>Grad–Shafranov equation</strong></td>
+<td>the force-balance equation an axisymmetric tokamak equilibrium satisfies</td>
+</tr>
+<tr class="even">
+<td><strong>growth rate (γ)</strong></td>
+<td>how fast a linear instability grows: its energy rises as e<sup>2γt</sup></td>
 </tr>
 <tr class="odd">
 <td><strong>guard</strong></td>
@@ -249,12 +265,28 @@ ul.task-list li input[type="checkbox"] {
 <td>just-in-time compilation: turning a Python function into one compiled program</td>
 </tr>
 <tr class="odd">
+<td><strong>JOREK</strong></td>
+<td>open-source nonlinear extended-MHD code (LGPL-3.0), used here for edge-stability reference runs</td>
+</tr>
+<tr class="even">
 <td><strong>MAST-U</strong></td>
 <td>the UK’s spherical tokamak at Culham</td>
+</tr>
+<tr class="odd">
+<td><strong>MHD</strong></td>
+<td>magnetohydrodynamics: the plasma treated as one electrically conducting fluid</td>
 </tr>
 <tr class="even">
 <td><strong>Newton-Raphson</strong></td>
 <td>an iterative solver that uses derivatives; converges very fast near the answer</td>
+</tr>
+<tr class="odd">
+<td><strong>pedestal</strong></td>
+<td>the steep-gradient region just inside the plasma edge in high-confinement mode</td>
+</tr>
+<tr class="even">
+<td><strong>peeling-ballooning modes</strong></td>
+<td>edge instabilities driven by the pedestal’s current (peeling) and pressure gradient (ballooning)</td>
 </tr>
 <tr class="odd">
 <td><strong>Picard iteration</strong></td>
@@ -265,24 +297,32 @@ ul.task-list li input[type="checkbox"] {
 <td>a record, stored next to every artifact, of the code version, configuration and inputs that produced it</td>
 </tr>
 <tr class="odd">
+<td><strong>q (safety factor)</strong></td>
+<td>how many times a field line goes round the torus the long way per turn the short way</td>
+</tr>
+<tr class="even">
 <td><strong>QLKNN</strong></td>
 <td>a neural network trained to reproduce the QuaLiKiz turbulent transport code; part of TORAX</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>ramp-up</strong></td>
 <td>the phase in which the plasma current is raised from zero to its target</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>residual</strong></td>
 <td>how far an iterative solver is from satisfying its equations</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>ρ (rho)</strong></td>
 <td>normalised radius: 0 at the centre, 1 at the edge (strictly, based on toroidal magnetic flux)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>sawtooth</strong></td>
 <td>a periodic internal collapse of the core temperature</td>
+</tr>
+<tr class="odd">
+<td><strong>separatrix</strong></td>
+<td>the plasma’s last closed flux surface; in a diverted plasma it passes through the X-point</td>
 </tr>
 <tr class="even">
 <td><strong>spherical tokamak</strong></td>
@@ -309,6 +349,10 @@ ul.task-list li input[type="checkbox"] {
 <td>open-source tokamak transport simulator in JAX, from Google DeepMind (Apache-2.0)</td>
 </tr>
 <tr class="even">
+<td><strong>toroidal mode number (n)</strong></td>
+<td>how many times a perturbation repeats around the torus</td>
+</tr>
+<tr class="odd">
 <td><strong>transport</strong></td>
 <td>the leakage of heat and particles across the magnetic surfaces</td>
 </tr>

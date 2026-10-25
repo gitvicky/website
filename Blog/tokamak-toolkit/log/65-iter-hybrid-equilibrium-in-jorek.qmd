@@ -1,0 +1,56 @@
+---
+title: ITER hybrid equilibrium solved by JOREK from the TORAX EQDSK
+date: '2026-10-16'
+categories:
+- measured
+entry: 65
+milestone: JOREK (alongside M4)
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 65 · milestone JOREK (alongside M4)
+:::
+
+A JOREK stability run starts from an equilibrium that JOREK solves itself, from a
+boundary, a pressure profile and the poloidal current function FF′. A growth rate is
+only meaningful if that equilibrium matches the one it is meant to represent. We
+therefore solved the ITER hybrid equilibrium in JOREK from the EQDSK file that TORAX
+ships, and compared the safety factor q.
+
+The route needed three changes:
+- JOREK's EQDSK converter needs a spline library, which we built from source.
+- The converter's spline smoothing had to be raised slightly for the fit to succeed.
+- The converter's outside-separatrix pressure went negative, because this EQDSK has
+  zero pressure at the separatrix. JOREK rejects a non-positive temperature, so the
+  temperature file was written by the toolkit adapter instead. Inside the plasma it
+  uses the EQDSK pressure, with a small floor outside it.
+
+JOREK read that file back exactly. The sign conventions agree: q, the toroidal field
+function and the axis flux all come out with the expected signs.
+
+The core agrees, and the edge does not yet ([JOREK solving the ITER hybrid equilibrium from the TORAX EQDSK matches its safety factor q to 0.4% (median) for normalised flux 0.1-0.5, but is 3.6% high for 0.5-0.9 and 5.8% high for 0.9-0.95 (q 5.12 vs 4.67 at 0.95); plasma current 12.06 vs 11.77 MA]{.claim}[C-216](/Blog/tokamak-toolkit/claims.qmd#c-216){.cid .st-superseded}). JOREK's plasma current
+and q are a few percent high towards the edge. That is too large for edge-stability
+work, where the result depends on edge q and current. The likely causes are not yet
+separated: the converter's default boundary contour lies outside the separatrix, and
+the FF′ spline and taper act near the edge. The proposed next step is to use the
+separatrix itself as the boundary and refine the grid. Stability runs would then
+start only once q and current match the EQDSK within an agreed tolerance.
+
+Where this stands: the equilibrium route works end to end. The acceptance tolerance,
+model, dissipation, mode numbers, instability criterion and compute envelope for the
+first stability scans await the owner ([OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39)).
+
+Technical details → [JOREK](../technical/jorek.qmd#iter-equilibrium). Decision → [OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39).
+
+---
+
+*JOREK acknowledgement.* JOREK is developed by the JOREK team and is open source under
+the GNU LGPL v3. Results here use JOREK at commit `01a52be3`. Citations: M. Hoelzl et al.,
+Nuclear Fusion 61, 065001 (2021); M. Hoelzl et al., Nuclear Fusion 66, 116006 (2026). For a list
+of JOREK team members, refer to the author list of M. Hoelzl, G.T.A. Huijsmans, F.J. Artola,
+E. Nardon, M. Becoulet, N. Schwarz, A. Cathey, S.J.P. Pamela et al., Nuclear Fusion 64, 112016 (2024).
+
+::: {.entry-links}
+**Technical details →** [JOREK › iter equilibrium](/Blog/tokamak-toolkit/technical/jorek.qmd#iter-equilibrium)  
+**Decisions →** [OQ-37](/Blog/tokamak-toolkit/decisions.qmd#oq-37) · [OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39)
+:::

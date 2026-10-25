@@ -45,10 +45,10 @@ working to a brief by a human owner who makes every physics, licence and publica
 |---|---|
 | milestone | M4 |
 | log entries | 49 |
-| tests passing | 539 recorded full-mode results, 539 with gated codes disabled |
-| source | 15308 lines + 8083 lines of tests |
-| tested code | `8721f24` |
-| updated | 2026-10-11 |
+| tests passing | 607 recorded full-mode results, 607 with gated codes disabled |
+| source | 15918 lines + 8611 lines of tests |
+| tested code | `ec310a2` |
+| updated | 2026-10-15 |
 
 The aggregate combines fresh affected-file checks ([56 focused checks pass in full and Tier-A-only modes]{.claim}[C-157](/Blog/tokamak-toolkit/claims.qmd#c-157){.cid .st-tested}) with
 retained execution reports for unchanged tests. It is not a fresh full-suite
@@ -817,26 +817,25 @@ human expert, not by the agent that built the code.
 
 The [action plan](action-plan.qmd) gives dependencies and completion criteria.
 
-- **M4: verification.** Properties and tooling are selected ([OQ-22](/Blog/tokamak-toolkit/decisions.qmd#oq-22)–24), property contracts
-  are written, and the saved transport comparisons pass on ITER and fail on MAST-U
-  ([entry 42](log/42-m4-properties-and-transport-check.qmd)). Exports pass the approved numeric
-  gate. The owner prioritized MAST-U remediation before further proofs and calibration.
-  Matched flux probes and an exact replay are complete
-  ([entry 43](log/43-mastu-feedback-diagnosis.qmd)); the approved training-only label refresh
-  completed and passes local artifact checks ([entry 44](log/44-mastu-refresh-artifact-checks.qmd)).
-  Artifact synchronization and downloaded-checksum verification are complete
-  ([entry 45](log/45-mastu-artifact-upload-verified.qmd)). Retraining preparation passes focused checks and a training-only smoke
-  ([entry 46](log/46-mastu-retraining-preparation.qmd)); the concrete compute request
-  was approved and executed once. The candidate completion audit and numerical export
-  checks pass ([entry 47](log/47-mastu-candidate-trained-and-checked.qmd)); the offline
-  comparison retains mixed regressions. Coupled replay preparation now passes its focused
-  checks and training-only smoke ([entry 48](log/48-mastu-candidate-replay-preparation.qmd));
-  the approved solver replay completes, but reference coverage fails
-  ([entry 49](log/49-mastu-replay-reference-coverage-fails.qmd)). Resolve reference admissibility
-  and review the bounded follow-up next. The approved reference diagnostic is
-  consumed ([the diagnostic completes in 517 seconds within its 30-minute bound, with 40 finite converged steps, exact historical temperature/density/poloidal-flux-profile and final-mask equality, and 171 passing saved-output integrity checks]{.claim}[C-193](/Blog/tokamak-toolkit/claims.qmd#c-193){.cid .st-measured}); negative raw heat diffusivity explains the rejected
-  face ([final face 4 at normalized radius 0.16 has valid inputs but raw electron heat diffusivity -0.02792124888 m²/s; negative heat diffusivity rejects that face at 8 of 40 accepted states; reference rejection is 323/1040 accepted-state face records (31.0577%)]{.claim}[C-194](/Blog/tokamak-toolkit/claims.qmd#c-194){.cid .st-measured}). Reference physics disposition remains ahead ([OQ-32](/Blog/tokamak-toolkit/decisions.qmd#oq-32)).
-  [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) remains open.
+- **M4: verification.** The MAST-U closed-loop comparison is not evaluable: no admissible
+  TGLF reference trajectory exists for this scenario. The owner limited the MAST-U scope, and
+  ITER's pass stands ([OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42), [entry 70](log/70-owner-limits-the-mastu-certification-scope.qmd)).
+  Next come the formal monotonicity proofs and certified output bounds for the four
+  surrogates, local robustness, split-conformal calibration, and the EC closed-loop
+  comparison against GENRAY. After those: guards bound to the certified boxes with a
+  fallback-rate check, a verification report per surrogate, CI that re-proves properties when
+  a surrogate changes, and the owner's certification review.
+- **JOREK stability (alongside M4).** Case (a), the EQDSK as given, is closed on the
+  time-step check ([entry 69](log/69-time-step-check-of-the-growth-rates.qmd)). Case (b), the
+  TORAX state, has an accepted equilibrium
+  ([entry 71](log/71-case-b-equilibrium-from-the-torax-state.qmd)) and a first n-scan, in
+  which only n = 20 grows clearly so far ([entry 72](log/72-case-b-n-scan-first-job.qmd)).
+  A second job continues the runs. The time-step check follows, and the method for the grid check
+  goes to the owner. Then comes the decision on what JOREK becomes in the toolkit: a surrogate
+  of a JOREK quantity, reference runs only, or neither.
+- **After M4: M5, uncertainty and validation.** Inputs to be asked for at the M4 review: a
+  Tier A validation set, the uncertain inputs and their priors, the quantity of interest, and
+  how the discrepancy budget is split across modules.
 - **Profile Newton separately** ([K-022](/Blog/tokamak-toolkit/ceilings.qmd#k-022)), distinguishing compilation, ensemble evaluation and
   Jacobian cost. Historical speed-up belongs to v1.
 - **ASCOT5 follow-ups, before neutral-beam ions**: the alphas' mean birth energy ([K-011](/Blog/tokamak-toolkit/ceilings.qmd#k-011)) and the
@@ -845,9 +844,3 @@ The [action plan](action-plan.qmd) gives dependencies and completion criteria.
   future extension. For now the work stays with the ITER benchmark and MAST-U.
 :::
 ::::
-
-The corrected original ITER numerical pilot completes with readable native
-heating and signed-current profiles ([the corrected EC reference completes in 83.16 s with readable native profiles]{.claim}[C-156](/Blog/tokamak-toolkit/claims.qmd#c-156){.cid .st-measured}). Native accounting
-and descriptive saved-reference comparisons are retained; the rendered
-PostScript page is blank. Production EC coupling contracts, grouped sampling
-and ITER boundary choices remain open.

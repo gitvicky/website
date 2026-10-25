@@ -1,0 +1,44 @@
+---
+title: Owner retains the transport contract and selects MIT
+date: '2026-10-11'
+categories:
+- decision
+entry: 53
+milestone: M4
+---
+
+::: {.entry-meta}
+[decision]{.chip .decision} Entry 53 · milestone M4
+:::
+
+The owner chose to retain the current nonnegative heat-flux approximation,
+physical contract and raw guard while investigating the signed TGLF flux. The
+conversion review establishes an inferred negative sign without a denominator
+sign reversal ([the final electron heat flux is inferred as -0.001689376033 gB; all 9 negative channel records at 8 accepted states have outward-decreasing temperature and no denominator-epsilon sign reversal, with maximum epsilon ratio 1.03e-11; all negative magnitudes are below 1 gB]{.claim}[C-195](/Blog/tokamak-toolkit/claims.qmd#c-195){.cid .st-measured}), but does not identify the physical or
+numerical origin. The decision adopts no projected reference or signed-heat
+closure. Formal candidate acceptance remains not evaluable and [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) stays open.
+
+| decision | result |
+|---|---|
+| reference direction | retain the current contract while investigating |
+| original toolkit code/documentation | MIT licence selected |
+| new solver execution | separate concrete review required |
+
+The repository now carries the MIT licence text, attributed to Vignesh Gopakumar,
+and its package metadata reads that file. Local source and wheel builds contain
+the licence and declare it in their metadata. The wheel retains the existing
+EPEDNN licence and notice unchanged. Third-party licences, experimental-data
+restrictions and repository privacy still apply.
+
+No runtime code, tests or models changed. Existing test statistics remain retained
+execution evidence ([33 focused checks pass in each mode, including 14 new sign/units/history tests; all 80 native heat-converter round trips meet the mixed 1e-12 parity criterion (maximum absolute difference 8.88e-16 m²/s), 32 numerical source files match the diagnostic bindings, and all 78 source modules pass typing]{.claim}[C-196](/Blog/tokamak-toolkit/claims.qmd#c-196){.cid .st-tested} supplies the prior focused checks); no
+fresh physics or full-suite run is claimed.
+
+**What's next.** Prepare the richer diagnostic output route, validation and
+allocation before requesting compute review. No solver, training, submission,
+synchronization or replacement occurred.
+
+::: {.entry-links}
+**Technical details →** [Verification › owner disposition and licence](/Blog/tokamak-toolkit/technical/verification.qmd#owner-disposition-and-licence)  
+**Decisions →** [OQ-32](/Blog/tokamak-toolkit/decisions.qmd#oq-32) · [OQ-17](/Blog/tokamak-toolkit/decisions.qmd#oq-17)
+:::

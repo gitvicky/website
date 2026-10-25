@@ -1,0 +1,53 @@
+---
+title: Negative heat diffusivity leaves the MAST-U reference inadmissible
+date: '2026-10-11'
+categories:
+- measured
+- negative
+entry: 51
+milestone: M4
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} [negative result]{.chip .negative} Entry 51 · milestone M4
+:::
+
+We ran the approved trapped gyro-Landau fluid (TGLF) diagnostic to explain why
+the MAST Upgrade reference rejects a face the candidate surrogate serves.
+The matched scenario, solver, inputs, guard and every face were preserved.
+
+The diagnostic reproduces the saved profiles and final reference mask exactly.
+The uncovered face has valid prepared inputs but negative raw electron heat
+diffusivity at the final state. Negative heat diffusivity also rejects it at
+other accepted states. The guard therefore retains its physics fallback.
+
+| evidence | result |
+|---|---|
+| bounded diagnostic and saved-output audit | [the diagnostic completes in 517 seconds within its 30-minute bound, with 40 finite converged steps, exact historical temperature/density/poloidal-flux-profile and final-mask equality, and 171 passing saved-output integrity checks]{.claim}[C-193](/Blog/tokamak-toolkit/claims.qmd#c-193){.cid .st-measured} |
+| uncovered face and rejection history | [final face 4 at normalized radius 0.16 has valid inputs but raw electron heat diffusivity -0.02792124888 m²/s; negative heat diffusivity rejects that face at 8 of 40 accepted states; reference rejection is 323/1040 accepted-state face records (31.0577%)]{.claim}[C-194](/Blog/tokamak-toolkit/claims.qmd#c-194){.cid .st-measured} |
+| formal candidate temperature criterion | remains not evaluable |
+
+A read-only audit verifies sources, inputs, full actual configuration, accounting,
+trajectory provenance and completed offline artifact checksums. It reconstructs
+worker-input policies and the raw guard for every recorded face and state. It
+uses the same report logic, so it checks integrity rather than independently
+validating the physics. Exact historical profile equality is a separate saved-array
+comparison. Missing historical dependency bytes remain explicit.
+
+The diagnostic identifies the guard cause. It does not establish the physical or
+numerical origin of the signed heat coefficients: direct heat-flux and mode-resolved
+solver outputs were not saved. A physically justified reference remedy needs owner
+review before another comparison. The separate feedback-sampling proposal remains
+unapproved for fitting.
+
+[K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) stays open; the current model and guard remain selected. No face, tolerance
+or physical contract changed. This diagnostic approval is consumed. Tracking remains
+offline and nothing has been synchronized, replaced or published.
+
+**What's next.** Review reference treatment for the signed transport evidence,
+then prepare any additional bounded collection or remedy for its own review.
+
+::: {.entry-links}
+**Technical details →** [Verification › reference diagnostic result](/Blog/tokamak-toolkit/technical/verification.qmd#reference-diagnostic-result)  
+**Decisions →** [OQ-31](/Blog/tokamak-toolkit/decisions.qmd#oq-31) · [OQ-32](/Blog/tokamak-toolkit/decisions.qmd#oq-32)
+:::

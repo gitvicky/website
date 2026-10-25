@@ -1,0 +1,51 @@
+---
+title: Reference refinement changes the heat-flux sign
+date: '2026-10-15'
+categories:
+- measured
+- negative
+entry: 59
+milestone: M4
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} [negative result]{.chip .negative} Entry 59 · milestone M4
+:::
+
+The bounded reference diagnostic completes and retains every planned case. Its
+independent saved-output audit reconstructs the results from signed species
+outputs, checks spectral accounting and baseline reproduction, and verifies native
+completion and the local archive copy.
+
+| evidence | result |
+|---|---|
+| completed collection and artifact integrity | [2076 integrity checks pass on the complete bounded study; baseline reproduction, signed species outputs, spectral accounting, native completion and the local archive copy are verified, while electron-flux signs change across refinement levels and finest-level backend differences remain]{.claim}[C-203](/Blog/tokamak-toolkit/claims.qmd#c-203){.cid .st-measured} |
+| numerical reference convergence | not established |
+
+Electron heat changes sign across the tested levels at every selected state in
+both backends. The basis ladder produces much larger changes than the separate
+quadrature and high-wavenumber ladders. It changes the basis used in width
+optimization together with the final eigenvalue basis, so it does not isolate
+which part causes the sensitivity. Backend differences also remain at the finest
+combined level.
+
+The full observed flux ranges are retained. They measure numerical sensitivity,
+not a certified uncertainty bound. Choosing the finest result, averaging the
+backends or clipping the negative values would hide evidence without establishing
+a valid reference. The low-wavenumber grid and other unresolved numerical controls
+still require investigation.
+
+The run uses the owner's approved alternate shared-work storage. Its authoritative
+local archive completes and matches checksums; the Simvue mirror is unavailable,
+and no remote synchronization occurs. Earlier failed execution and preparation
+attempts remain recorded separately.
+
+**What's next.** Isolate width-search basis from final-basis effects before any
+coupled reference remedy. The current model, guard, temperature criterion and
+reference-coverage ceiling remain unchanged. M4 and the candidate's coupled
+acceptance remain open.
+
+::: {.entry-links}
+**Technical details →** [Verification › reference refinement result](/Blog/tokamak-toolkit/technical/verification.qmd#reference-refinement-result)  
+**Decisions →** [OQ-33](/Blog/tokamak-toolkit/decisions.qmd#oq-33) · [OQ-34](/Blog/tokamak-toolkit/decisions.qmd#oq-34) · [OQ-35](/Blog/tokamak-toolkit/decisions.qmd#oq-35)
+:::

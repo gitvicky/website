@@ -1,0 +1,82 @@
+---
+title: ITER hybrid equilibrium in JOREK on the EQDSK separatrix
+date: '2026-10-16'
+categories:
+- fixed
+- measured
+entry: 67
+milestone: JOREK (alongside M4)
+---
+
+::: {.entry-meta}
+[bug fix]{.chip .fixed} [measurement]{.chip .measured} Entry 67 · milestone JOREK (alongside M4)
+:::
+
+[Entry 65](65-iter-hybrid-equilibrium-in-jorek.qmd) left JOREK's ITER hybrid equilibrium with
+safety factor q and plasma current I_p a few percent high towards the edge, and the cause not
+yet separated. Edge-stability results depend on edge q and current, so the owner set an
+acceptance tolerance on q over normalised flux ψ_N 0.1–0.95 and on I_p, to be met before any
+stability run ([OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39); the values are in the table).
+
+## Cause and fix
+
+The TORAX ITER hybrid EQDSK comes from a fixed-boundary CHEASE solve. Its R–Z grid contains
+no X-point: the poloidal-flux gradient has no zero inside it. JOREK's EQDSK converter
+nevertheless traces a default ITER boundary contour outside the plasma, and most of that
+contour lay outside the EQDSK grid. The flux there was extrapolated, and JOREK built an
+X-point and a separatrix of its own. The plasma it solved for was therefore not the EQDSK's
+plasma.
+
+We replaced that contour with the EQDSK separatrix itself: 300 points on the boundary flux
+surface, a fixed-boundary JOREK equilibrium without an X-point, on a polar flux-aligned grid.
+Pressure and FF′ are unchanged from entry 65.
+
+## Result
+
+| grid (radial × poloidal) | JOREK against the EQDSK | accepted |
+|---|---|---|
+| 40 × 64 | [I_p −1.38%, largest q difference 1.1%: fails the current tolerance]{.claim}[C-220](/Blog/tokamak-toolkit/claims.qmd#c-220){.cid .st-measured} | no |
+| 80 × 128 | [I_p −0.93%, largest q difference 1.1%, q 4.668 against 4.668 at psi_N 0.95: passes the tolerance of q within 2% and I_p within 1%]{.claim}[C-221](/Blog/tokamak-toolkit/claims.qmd#c-221){.cid .st-measured} | yes |
+| 160 × 256 | [I_p −0.20%, largest q difference 1.1%: passes]{.claim}[C-222](/Blog/tokamak-toolkit/claims.qmd#c-222){.cid .st-measured} | yes |
+
+q now matches the EQDSK across ψ_N 0.1–0.95 on every grid, more closely at the edge than in
+the core, so the edge mismatch of entry 65 came from the boundary. The largest q difference is
+the same on all three grids; only the current deficit shrinks with resolution. The
+check compares JOREK's q and I_p, which JOREK computes from the boundary, pressure and FF′,
+with the EQDSK's own q and I_p, which JOREK does not read. The comparison script is ours, and
+so is the input generator, so the check is not independent of the author. [C-216](/Blog/tokamak-toolkit/claims.qmd#c-216) is
+superseded by [C-221](/Blog/tokamak-toolkit/claims.qmd#c-221).
+
+This boundary has a known limitation. A fixed boundary on the separatrix acts as an ideal
+conducting wall there, with no vacuum region outside the plasma. That stabilises peeling
+modes artificially. Every growth rate in the following entries carries this limitation.
+
+The owner accepted the rest of [OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39) as recommended:
+- JOREK's model303 (reduced MHD with parallel flow and one temperature) with diamagnetic
+  terms;
+- Spitzer resistivity and viscosity at Prandtl number 1;
+- one toroidal mode number per run, n = 1, 2, 3, 5, 8, 12, 16, 20;
+- a mode counts as unstable if its growth rate γ is positive with diamagnetic terms included;
+- γ is quoted only if halving the time step Δt and doubling the grid each leave it within
+  a fixed tolerance ([entry 69](69-time-step-check-of-the-growth-rates.qmd));
+- up to three one-node jobs.
+
+The 80 × 128 grid is used for the scans and 160 × 256 for the grid check.
+
+Where this stands: the equilibrium for case (a), the EQDSK as given, is accepted, and the
+first stability scan follows ([entry 68](68-linear-n-scan-of-the-eqdsk-case.qmd)).
+
+Technical details → [JOREK](../technical/jorek.qmd#iter-equilibrium). Decision → [OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39).
+
+---
+
+*JOREK acknowledgement.* JOREK is developed by the JOREK team and is open source under
+the GNU LGPL v3. Results here use JOREK at commit `01a52be3`. Citations: M. Hoelzl et al.,
+Nuclear Fusion 61, 065001 (2021); M. Hoelzl et al., Nuclear Fusion 66, 116006 (2026). For a list
+of JOREK team members, refer to the author list of M. Hoelzl, G.T.A. Huijsmans, F.J. Artola,
+E. Nardon, M. Becoulet, N. Schwarz, A. Cathey, S.J.P. Pamela et al., Nuclear Fusion 64, 112016 (2024).
+
+::: {.entry-links}
+**Technical details →** [JOREK › iter equilibrium](/Blog/tokamak-toolkit/technical/jorek.qmd#iter-equilibrium)  
+**Decisions →** [OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39)
+:::

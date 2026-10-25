@@ -1,0 +1,51 @@
+---
+title: The MAST-U reference diagnostic is prepared for review
+date: '2026-10-11'
+categories:
+- built
+entry: 50
+milestone: M4
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 50 · milestone M4
+:::
+
+The saved trapped gyro-Landau fluid (TGLF) reference cannot establish acceptance
+for the retained MAST Upgrade candidate. It rejects a face the candidate serves.
+Its saved profiles and final mask contain no raw coefficient or rejection-reason
+evidence that identifies the cause.
+
+A separate diagnostic runner is now prepared. It preserves the existing scenario,
+solver settings, guards and every face. After stepping, it records inputs, raw
+reference and fallback coefficients, generic guard features and masks at every
+accepted state. Its report reconstructs the guard exactly, retains overlapping
+reasons and identifies the investigated face explicitly.
+
+| preparation evidence | result |
+|---|---|
+| synthetic smoke and focused checks | [32 focused checks pass in each mode; a two-step synthetic training-equilibrium smoke is finite and reconstructs the raw guard exactly; all 77 source modules pass typing, and lint/format plus batch syntax pass]{.claim}[C-192](/Blog/tokamak-toolkit/claims.qmd#c-192){.cid .st-measured} |
+| physical rejection cause and reference admissibility | unresolved; compute awaits review |
+
+The smoke uses a training equilibrium and synthetic worker responses. It forbids
+the physical TGLF solver and produces no physics labels or acceptance metrics.
+The immutable source package binds original inputs, the consumed candidate,
+full resolved configuration and dependency versions/bytes. Historical missing
+dependency bytes remain missing; this preparation does not supply retrospective
+evidence.
+
+The concrete diagnostic job needs the owner's approval in [OQ-31](/Blog/tokamak-toolkit/decisions.qmd#oq-31). It may reproduce
+the same rejected face. Its purpose is to explain that rejection before reviewing
+a physically justified remedy. The separately proposed feedback-sampling change
+still needs its own frozen recipe and compute review.
+
+[K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) remains open. The current model and guard stay selected. No new production
+fitting, reference compute, synchronization or replacement has occurred.
+
+**What's next.** Review the prepared diagnostic request, then inspect its result
+before deciding whether a reference remedy or sampling experiment should proceed.
+
+::: {.entry-links}
+**Technical details →** [Verification › reference diagnostic preparation](/Blog/tokamak-toolkit/technical/verification.qmd#reference-diagnostic-preparation)  
+**Decisions →** [OQ-31](/Blog/tokamak-toolkit/decisions.qmd#oq-31)
+:::
