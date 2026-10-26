@@ -1,0 +1,54 @@
+---
+title: Optimized ELU bounds narrow the intervals; physical limits remain unresolved
+date: '2026-10-26'
+categories:
+- built
+- measured
+entry: 82
+milestone: M4
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} [measurement]{.chip .measured} Entry 82 · milestone M4
+:::
+
+The transport output proof remains open. A small follow-up to the direct-ELU
+pilot narrowed its intervals, but they are still too wide to
+convert from signed-log training units to finite physical flux bounds.
+
+The previous pilot used a fixed lower tangent for each ELU activation. The
+new version optimizes the tangent's slope and includes the limiting constant
+lower bound. It keeps the endpoint secant above the activation and intersects
+the optimized result with the original bounds. The model and its input box
+stay fixed.
+
+| full-box pilot | result |
+|---|---|
+| member 0 of each transport ensemble | [both selected members remain unknown despite interval-width reductions of about 30–275 times against the same-graph fixed-tangent baseline; physical inverse-transform overflow persists]{.claim}[C-272](/Blog/tokamak-toolkit/claims.qmd#c-272){.cid .st-measured} |
+
+Both processes finished in about 45 seconds. The comparison is against the
+fixed-tangent calculation on the same graph in the same process, so it isolates
+the effect of the budgeted optimization. These reductions describe interval
+widths in training space, rather than improved surrogate accuracy.
+
+The runner now saves intermediate activation-input ranges. Their widths reach
+about ten billion in the ITER baseline calculation and one billion in MAST-U.
+Those are relaxation bounds: they do not show that the model reaches such
+activations. They give the next experiment a concrete target—tighten the
+intermediate intervals before another member-level pilot.
+
+The analytic and optimizer checks, parity gates and existing bound helpers pass
+([50 focused checks pass normally and with Tier B disabled; repository lint, formatting and typing of all 91 source modules pass]{.claim}[C-273](/Blog/tokamak-toolkit/claims.qmd#c-273){.cid .st-measured}). An independent saved-output audit checks the frozen source,
+models, full boxes, interval intersections and process results. This is focused
+validation, with no fresh full-suite claim.
+
+The other 38 members were not attempted. V5 and the physical-bound ceiling remain
+open; the guards receive no new output domain. Transport robustness still needs
+a certified physical range. EC robustness and preparation of the EC reference
+comparison can proceed independently. The limited MAST-U reference scope remains
+as recorded by the owner.
+
+::: {.entry-links}
+**Technical details →** [Verification › optimized direct elu](/Blog/tokamak-toolkit/technical/verification.qmd#optimized-direct-elu)  
+**Decisions →** [OQ-22](/Blog/tokamak-toolkit/decisions.qmd#oq-22) · [OQ-24](/Blog/tokamak-toolkit/decisions.qmd#oq-24) · [OQ-26](/Blog/tokamak-toolkit/decisions.qmd#oq-26) · [OQ-33](/Blog/tokamak-toolkit/decisions.qmd#oq-33) · [OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42)
+:::

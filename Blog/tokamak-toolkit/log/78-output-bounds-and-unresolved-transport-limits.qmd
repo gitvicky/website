@@ -1,0 +1,56 @@
+---
+title: EC and pedestal output bounds; transport limits remain unresolved
+date: '2026-10-25'
+categories:
+- built
+- measured
+entry: 78
+milestone: M4
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} [measurement]{.chip .measured} Entry 78 · milestone M4
+:::
+
+The output-bound calculation now runs on the saved surrogate members. It checks each
+export against JAX, bounds the output across the declared input box and splits that box
+within an explicit budget. The results differ between the three surrogates.
+
+| surrogate | result |
+|---|---|
+| EC | [all five EC members have finite CROWN bounds for both launcher families; current and width bounds remain very loose]{.claim}[C-262](/Blog/tokamak-toolkit/claims.qmd#c-262){.cid .st-measured} |
+| pedestal | [all nine pedestal pressure and half-width pairs have finite bounds over the recorded ITER trajectory box, with the widening and domain clipping stated]{.claim}[C-263](/Blog/tokamak-toolkit/claims.qmd#c-263){.cid .st-measured} |
+| transport | [all twenty members of each transport ensemble have finite training-space bounds that overflow the inverse signed-log transform; no finite physical guard domain is certified]{.claim}[C-264](/Blog/tokamak-toolkit/claims.qmd#c-264){.cid .st-measured} |
+
+For EC, each launcher family keeps every other input range from the stored training box.
+The serving clamps limit absorbed power, deposition centres and minimum widths. Bounds on
+current and maximum width remain much broader than the outputs sampled inside the box.
+Finite enclosure therefore does not yet mean a useful physical limit.
+
+The old pedestal diagnostic saved its predictions but omitted the network inputs. The
+updated diagnostic records those inputs and the model hash. A fresh run supplied the
+visited span; the proof box widens it by a stated margin within the upstream domain.
+All pressure and half-width solutions are retained, including the solution used by TORAX.
+There is still no comparison with labelled EPED data.
+
+For transport, the finite bounds in signed-log training space are so wide that the
+inverse transform overflows. The reports retain those bounds and mark the physical result
+unknown. This is a limitation of the bound calculation within its budget, not evidence
+that the network reaches those extremes or a reason to change the acceptance limits.
+
+Each split covers the original domain completely. Sampled extrema check enclosure and
+measure tightness; they never substitute for proof. The audit binds the model, property,
+source and evidence, and checks the retained partitions. Production guards still use their
+existing contracts.
+
+## What's next
+
+Tighter transport bounds are needed before V5 can supply physical guard domains. The
+remaining M4 work also includes local robustness, the EC coupled comparison, guard
+integration and the owner's final certification review. MAST-U's accepted scope limitation
+remains in force.
+
+::: {.entry-links}
+**Technical details →** [Verification › output bounds](/Blog/tokamak-toolkit/technical/verification.qmd#output-bounds)  
+**Decisions →** [OQ-22](/Blog/tokamak-toolkit/decisions.qmd#oq-22) · [OQ-24](/Blog/tokamak-toolkit/decisions.qmd#oq-24) · [OQ-26](/Blog/tokamak-toolkit/decisions.qmd#oq-26) · [OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42)
+:::

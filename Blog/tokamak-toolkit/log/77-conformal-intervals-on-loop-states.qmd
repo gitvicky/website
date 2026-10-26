@@ -1,0 +1,59 @@
+---
+title: Transport intervals calibrated on the states the coupled runs visit
+date: '2026-10-25'
+categories:
+- measured
+- decision
+entry: 77
+milestone: M4
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} [decision]{.chip .decision} Entry 77 · milestone M4
+:::
+
+The transport intervals of [entry 76](76-conformal-intervals-for-the-surrogates.qmd) were
+calibrated on states sampled across the whole input box. On the states that TORAX runs
+actually pass through, they were wider than needed. The owner chose to add a second
+calibration on those states for the uncertainty work of M5 ([OQ-44](/Blog/tokamak-toolkit/decisions.qmd#oq-44)). The first intervals stay
+as the M4 record.
+
+The data are the held-out test trajectories of the v3 dataset: whole TORAX runs, eight for
+ITER and thirty-two for MAST-U, never used in training. We fixed the split rule in a commit
+before computing anything. The runs are grouped by scenario family (ITER) or equilibrium
+(MAST-U) and shuffled within each group with a fixed seed. They are then dealt alternately
+into a calibration half and a report half. The reverse direction, calibrating on the report
+half, is computed as a check.
+
+| | half-width vs the box-wide one | coverage of the other half | reverse direction |
+|---|---|---|---|
+| MAST-U (16 runs per half) | 0.21–0.29 | 0.870–0.894 | 0.905–0.924 |
+| ITER (4 runs per half) | 0.25–0.32 | 0.936–0.966 | 0.711–0.818 |
+
+The intervals become three to five times narrower in the model's signed-log units. In flux
+terms, they shrink from a factor of 9–60 on 1 + |Q| to a factor of 1.8–3.3
+([calibrated on half of the held-out v3 trajectory runs, the 90% half-widths are 0.21–0.32 of the V7 values; the intervals span a factor 1.8–3.3 on 1 + abs(flux) instead of 9–60]{.claim}[C-259](/Blog/tokamak-toolkit/claims.qmd#c-259){.cid .st-measured}).
+
+For MAST-U, both directions land near nine in ten, from 0.870 to 0.924, with coverage of
+single runs between 0.75 and 0.97 ([calibrated on 16 held-out runs and tested on the other 16, coverage is 0.870–0.894; the reverse direction gives 0.905–0.924; single runs 0.75–0.97]{.claim}[C-260](/Blog/tokamak-toolkit/claims.qmd#c-260){.cid .st-measured}). These intervals can serve as M5's
+surrogate-error terms, with the run-to-run spread stated beside them.
+
+For ITER the two directions disagree ([calibrated on 4 held-out runs, the intervals cover 0.936–0.966 of the other 4; calibrated the other way they cover 0.711–0.818; not reliable for a new ITER run]{.claim}[C-261](/Blog/tokamak-toolkit/claims.qmd#c-261){.cid .st-measured}). Calibrated on one half, the
+intervals cover 0.936–0.966 of the other half; calibrated the other way, only 0.711–0.818.
+The surrogate's error differs between runs more than four runs per half can average out, so
+the result depends on which runs did the calibrating. Conformal prediction promises coverage
+only when calibration and test points are exchangeable, and here whole runs differ. The ITER
+loop-state interval is therefore not reliable for a new run. A reliable one needs more
+held-out trajectories, or a method that treats runs as the unit.
+
+## What's next
+
+M5 will need either more ITER test trajectories or a run-level calibration before it
+relies on an ITER loop-state interval. The remaining M4 steps are output bounds, local
+robustness, the EC closed loop and guard integration, followed by the certification
+review.
+
+::: {.entry-links}
+**Technical details →** [Verification › conformal loop](/Blog/tokamak-toolkit/technical/verification.qmd#conformal-loop)  
+**Decisions →** [OQ-44](/Blog/tokamak-toolkit/decisions.qmd#oq-44)
+:::

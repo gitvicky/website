@@ -467,20 +467,56 @@ minimum energy.
   about 48 s per step, healthy at the end ([50 axisymmetric steps on the 160 × 256 grid in 40 min on 64 cores; the state passed its health check and is kept as the start for a grid check]{.claim}[C-250](/Blog/tokamak-toolkit/claims.qmd#c-250){.cid .st-measured}). It is kept as the
   starting state for whichever grid check [OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43) selects.
 
+### Case (b) grid check {#case-b-grid-check}
+
+The owner chose the full check from round-off ([OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43) (b)). n = 12, 16 and 20 run again on
+160 × 256. The grid is the only change; Δt = 1 and every other input are as on 80 × 128. Each
+mode starts from the doubled-grid axisymmetric state of the time-step job. Six-hour jobs form
+a chain, and each job restarts every mode from its own latest time slice, which carries the
+energy history. Fixed before any 160 × 256 linear step, with every input frozen by checksum:
+- **Comparison** (`j5_grid_check.py`). Rule b is applied to both grids unchanged. A mode
+  passes decision 7 if both fits are linear, the flow perturbation peaks at the edge on both
+  grids, and γ changes by at most the 5% tolerance. The 80 × 128 values recompute exactly
+  from the saved runs. The 160 × 256 fit over the 80 × 128 decade band is reported but not
+  gated.
+- **Chain stop.** A mode needs no further job once its record reaches the top of its
+  80 × 128 fit window: 9.04, 9.72 and 10.0 decades above its minimum for n = 12, 16 and 20.
+  It also stops if it ends on the GMRES abort.
+- **Memory gate.** The job script starts runs one at a time. It starts the next only if the
+  memory left after the first-step peaks seen so far is at least 1.3 times the largest peak.
+
+| layout (processes × threads) | cores | s per linear step | first-step peak |
+|---|---|---|---|
+| 2 × 32, two runs per node | 64 | 15.9–16.1 | 234–235 GB |
+| 2 × 64 | 128 | 11.2 | 238 GB |
+| 4 × 32 | 128 | 6.1 | 270 GB |
+| 80 × 128, 2 × 16 (time-step job) | 32 | 4.2 | about 54 GB |
+
+([one linear run on the 160 × 256 grid peaks at 234–238 GB during its first step (270 GB with 4 processes × 32 threads), about four times the 80 × 128 run; two runs fit on one node]{.claim}[C-270](/Blog/tokamak-toolkit/claims.qmd#c-270){.cid .st-measured}, [a linear step on the 160 × 256 grid takes 6.1 s with 4 processes × 32 threads, 11.2 s with 2 × 64 and 16 s with 2 × 32 (two runs per node); on 80 × 128 it takes 4.2 s with 2 × 16]{.claim}[C-271](/Blog/tokamak-toolkit/claims.qmd#c-271){.cid .st-measured}.)
+- In the first job the gate held n = 20 back after n = 12 and 16 had started, as designed.
+  n = 20 now runs as a second chain on its own node, and a mode filter keeps each mode in one
+  chain.
+- From the second job on, both chains run at 4 × 32. The 4 × 32 and 8 × 16 runs used for
+  timing restart from the axisymmetric state and are not part of the chain.
+- About seven jobs in all are expected, against an approved envelope of 32.
+
 ## Ceilings {#ceilings}
 
 - No growth rate passes decision 7 yet. Case (a)'s pedestal modes are converged in Δt only;
-  case (b)'s three pedestal modes are converged in Δt at 80 × 128, with the grid check open
-  ([OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43)).
+  case (b)'s three pedestal modes are converged in Δt at 80 × 128, and their grid check is
+  running ([OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43) (b)).
 - The fixed boundary at the separatrix stabilises peeling modes artificially (no vacuum
   region).
 - The case (b) equilibrium is not TORAX's: q differs by up to about 14% in the core
   ([median q difference +10.7% (psi_N 0.1–0.5), +3.2% (0.5–0.9), −4.9% (0.9–0.95); q95 4.64 against 4.89, q_min 1.84 against 1.64]{.claim}[C-235](/Blog/tokamak-toolkit/claims.qmd#c-235){.cid .st-measured}), by construction of [OQ-40](/Blog/tokamak-toolkit/decisions.qmd#oq-40) (a).
-- A doubled-grid check of slowly emerging modes costs far more than the approved compute.
+- A doubled-grid check of slowly emerging modes costs several node-days: one 160 × 256
+  linear run needs about 235 GB, so a node holds two ([one linear run on the 160 × 256 grid peaks at 234–238 GB during its first step (270 GB with 4 processes × 32 threads), about four times the 80 × 128 run; two runs fit on one node]{.claim}[C-270](/Blog/tokamak-toolkit/claims.qmd#c-270){.cid .st-measured}).
 - The grid set-up abort under OpenMP is unexplained; it is to be reported upstream.
 
 ## Changelog {#changelog}
 
+- 2026-10-26: case (b) grid check started, set-up and cost
+  ([entry 81](../log/81-grid-check-of-the-case-b-pedestal-modes-set-up-and-cost.qmd)).
 - 2026-10-25: case (b) time-step check passes for n = 12, 16, 20
   ([entry 75](../log/75-time-step-check-of-the-case-b-pedestal-modes.qmd)).
 - 2026-10-25: case (b) n-scan, second job: three pedestal modes grow

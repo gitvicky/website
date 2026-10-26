@@ -44,15 +44,16 @@ working to a brief by a human owner who makes every physics, licence and publica
 | | |
 |---|---|
 | milestone | M4 |
-| log entries | 73 |
-| tests passing | 764 recorded full-mode results, 765 with gated codes disabled |
-| source | 19059 lines + 10522 lines of tests |
-| tested code | `a558b28` |
-| updated | 2026-10-25 |
+| log entries | 74 |
+| tests passing | 845 recorded full-mode results, 846 with gated codes disabled |
+| source | 19900 lines + 11234 lines of tests |
+| tested code | `c47a380` |
+| updated | 2026-10-26 |
 
-Counts are from a fresh run of both test suites at the displayed code commit, one
-process per test file: the full suite (1 test skipped) and the
-suite with gated codes disabled. Source size is counted at the same commit.
+Counts aggregate retained execution reports for the displayed code revision, with
+affected files rerun after code changes. The full suite has
+1 test skipped; the second suite disables gated codes.
+Source size is counted at the displayed revision.
 
 ### Where to start
 
@@ -72,9 +73,9 @@ suite with gated codes disabled. Source size is counted at the same commit.
 <figure class="tk-physics-fig">
 <!-- SVG below is written by blog/figures/make_physics_coupling.py; edit the script, not the SVG -->
 <!-- physics-svg:start -->
-<svg class="tk-diagram tk-physics" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="tkp-title tkp-desc">
+<svg class="tk-diagram tk-physics" viewBox="0 0 1200 960" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="tkp-title tkp-desc">
 <title id="tkp-title">How the physics codes in the Tokamak Toolkit exchange information</title>
-<desc id="tkp-desc">Diagram. TORAX, the core transport solver, sits in the centre and evolves electron and ion temperature, electron density and poloidal flux. Above it, the equilibrium: a prescribed CHEASE EQDSK for the ITER hybrid scenario supplies flux-surface geometry every step; FreeGSNKE computes MAST-U-like free-boundary equilibria from coil currents and its two-way coupling to TORAX is planned. On the left, the sources: TORAX sends density, temperature and Z_eff; RF heating (Gaussian deposition), ASCOT5 fusion alphas (with the magnetic field from the EQDSK, updated outside the loop and held between updates) and other TORAX source models return heat, particle and current sources. On the right, the transport coefficients: TORAX sends gradients, q, magnetic shear, temperature ratio and collisionality; QLKNN, a neural network trained offline on QuaLiKiz, and the Bohm/gyro-Bohm fallback both feed the guard, which picks one per face; with the Sauter neoclassical model they return diffusivities, convection, bootstrap current and conductivity. Below, the pedestal and sawtooth models exchange pressure and q for edge values and profile resets, and TORAX writes profiles, sources and fluxes to IMAS IDSs.</desc>
+<desc id="tkp-desc">Diagram. TORAX, the core transport solver, sits in the centre and evolves electron and ion temperature, electron density and poloidal flux. Above it, the equilibrium: a prescribed CHEASE EQDSK for the ITER hybrid scenario supplies flux-surface geometry every step; FreeGSNKE computes MAST-U-like free-boundary equilibria from coil currents and its two-way coupling to TORAX is planned. On the left, the sources: TORAX sends density, temperature and Z_eff; RF heating (Gaussian deposition), ASCOT5 fusion alphas (with the magnetic field from the EQDSK, updated outside the loop and held between updates) and other TORAX source models return heat, particle and current sources. On the right, the transport coefficients: TORAX sends gradients, q, magnetic shear, temperature ratio and collisionality; QLKNN, a neural network trained offline on QuaLiKiz, and the Bohm/gyro-Bohm fallback both feed the guard, which picks one per face; with the Sauter neoclassical model they return diffusivities, convection, bootstrap current and conductivity. Below, the pedestal and sawtooth models exchange pressure and q for edge values and profile resets, and TORAX writes profiles, sources and fluxes to IMAS IDSs. A separate offline branch takes the CHEASE EQDSK or a saved TORAX state through a unit and input adapter into JOREK. Its run wrapper records provenance for fixed-boundary equilibria and linear pedestal-stability scans. Native HDF5 energies and perturbations provide growth rates and mode locations. ITER hybrid time-step checks have passed; grid convergence is open. There is no JOREK feedback into TORAX or trained JOREK surrogate.</desc>
 <defs><marker id="tkp-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker><marker id="tkp-ahp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker></defs>
 <style>.tk-diagram text{font-family:inherit}.tk-diagram text.halo{paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}</style>
 <rect x="300" y="20" width="600" height="150" rx="4" fill="#fafafa" stroke="#bdbdbd" stroke-width="1"/>
@@ -92,6 +93,10 @@ suite with gated codes disabled. Source size is counted at the same commit.
 <rect x="875" y="255" width="290" height="190" rx="4" fill="#f0f0f0" stroke="#bdbdbd" stroke-width="1"/>
 <text font-size="12.5" text-anchor="start" fill="#6b6b6b">
 <tspan x="887" y="271.0" dominant-baseline="middle">Turbulence, behind the guard</tspan>
+</text>
+<rect x="20" y="650" width="1160" height="200" rx="4" fill="#fafafa" stroke="#bdbdbd" stroke-width="1"/>
+<text font-size="12.5" text-anchor="start" fill="#6b6b6b">
+<tspan x="32" y="666.0" dominant-baseline="middle">MHD stability · outside the loop</tspan>
 </text>
 <g data-node="eqdsk">
 <rect x="330" y="55" width="210" height="90" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
@@ -198,6 +203,40 @@ suite with gated codes disabled. Source size is counted at the same commit.
 <tspan x="715.0" y="566.0" dominant-baseline="middle">IMAS IDSs</tspan>
 </text>
 </g>
+<g data-node="jorek-inputs">
+<rect x="45" y="690" width="260" height="95" rx="3" fill="#f6f6f6" stroke="#8a8a8a" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="175.0" y="712.2" dominant-baseline="middle"><tspan font-weight="600">Stability inputs</tspan></tspan>
+<tspan x="175.0" y="729.1" dominant-baseline="middle">Case (a): CHEASE EQDSK</tspan>
+<tspan x="175.0" y="745.9" dominant-baseline="middle">Case (b): saved TORAX state</tspan>
+<tspan x="175.0" y="762.8" dominant-baseline="middle">on the same EQDSK boundary</tspan>
+</text>
+</g>
+<g data-node="jorek-adapter">
+<rect x="345" y="690" width="235" height="95" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="13" text-anchor="middle" fill="#000">
+<tspan x="462.5" y="720.0" dominant-baseline="middle"><tspan font-weight="600">Input adapter</tspan></tspan>
+<tspan x="462.5" y="737.5" dominant-baseline="middle">SI/eV → normalised units</tspan>
+<tspan x="462.5" y="755.1" dominant-baseline="middle">profiles and namelist</tspan>
+</text>
+</g>
+<g data-node="jorek">
+<rect x="620" y="690" width="240" height="95" rx="3" fill="#fff" stroke="#555" stroke-width="1"/>
+<text font-size="13" text-anchor="middle" fill="#000">
+<tspan x="740.0" y="711.2" dominant-baseline="middle"><tspan font-weight="600">JOREK + run wrapper</tspan></tspan>
+<tspan x="740.0" y="728.7" dominant-baseline="middle">fixed-boundary equilibrium</tspan>
+<tspan x="740.0" y="746.3" dominant-baseline="middle">linear pedestal n-scans</tspan>
+<tspan x="740.0" y="763.8" dominant-baseline="middle">MPI runs with provenance</tspan>
+</text>
+</g>
+<g data-node="jorek-analysis">
+<rect x="900" y="690" width="255" height="95" rx="3" fill="#f6f6f6" stroke="#8a8a8a" stroke-width="1"/>
+<text font-size="12.5" text-anchor="middle" fill="#000">
+<tspan x="1027.5" y="720.6" dominant-baseline="middle"><tspan font-weight="600">Stability analysis</tspan></tspan>
+<tspan x="1027.5" y="737.5" dominant-baseline="middle">HDF5 energies → growth rates</tspan>
+<tspan x="1027.5" y="754.4" dominant-baseline="middle">mode location; Δt / grid checks</tspan>
+</text>
+</g>
 <path d="M500,145 L500,288" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkp-ah)"/>
 <text font-size="12" text-anchor="end" fill="#000" class="halo">
 <tspan x="492" y="216.9" dominant-baseline="middle">flux-surface</tspan>
@@ -258,28 +297,47 @@ suite with gated codes disabled. Source size is counted at the same commit.
 <tspan x="708" y="465.9" dominant-baseline="middle">profiles, sources,</tspan>
 <tspan x="708" y="482.1" dominant-baseline="middle">fluxes</tspan>
 </text>
-<line x1="300" y1="650" x2="900" y2="650" stroke="#d9d9d9"/>
-<path d="M40,682 L84,682" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkp-ah)"/>
-<text font-size="12" text-anchor="start" fill="#000">
-<tspan x="94" y="682.0" dominant-baseline="middle">every time step, inside the compiled loop</tspan>
+<path d="M330,80 L10,80 L10,738 L43,738" fill="none" stroke="#000" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#tkp-ah)"/>
+<text font-size="12" text-anchor="start" fill="#000" class="halo">
+<tspan x="22" y="181.9" dominant-baseline="middle">EQDSK boundary,</tspan>
+<tspan x="22" y="198.1" dominant-baseline="middle">p(ψ), FF′(ψ)</tspan>
 </text>
-<path d="M370,682 L414,682" fill="none" stroke="#000" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#tkp-ah)"/>
-<text font-size="12" text-anchor="start" fill="#000">
-<tspan x="424" y="682.0" dominant-baseline="middle">outside the loop (ASCOT5 updates, offline training)</tspan>
+<path d="M615,420 L615,625 L275,625 L275,688" fill="none" stroke="#000" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#tkp-ah)"/>
+<text font-size="12" text-anchor="middle" fill="#000" class="halo">
+<tspan x="440" y="614.0" dominant-baseline="middle">saved profiles and current</tspan>
 </text>
-<path d="M790,682 L834,682" fill="none" stroke="#9a9a9a" stroke-width="1.4" stroke-dasharray="3 4" marker-end="url(#tkp-ahp)"/>
-<text font-size="12" text-anchor="start" fill="#000">
-<tspan x="844" y="682.0" dominant-baseline="middle">planned, not yet coupled</tspan>
+<path d="M305,738 L343,738" fill="none" stroke="#000" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#tkp-ah)"/>
+<path d="M580,738 L618,738" fill="none" stroke="#000" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#tkp-ah)"/>
+<path d="M860,738 L898,738" fill="none" stroke="#000" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#tkp-ah)"/>
+<text font-size="12" text-anchor="middle" fill="#6b6b6b">
+<tspan x="600" y="807.9" dominant-baseline="middle">ITER hybrid: Δt checks passed; grid convergence open.</tspan>
+<tspan x="600" y="824.1" dominant-baseline="middle">Reference analysis only; feedback and a guarded JOREK surrogate remain undecided.</tspan>
 </text>
-<rect x="1030" y="672" width="30" height="20" rx="3" fill="#e6e6e6" stroke="#555"/>
+<line x1="300" y1="880" x2="900" y2="880" stroke="#d9d9d9"/>
+<path d="M40,915 L84,915" fill="none" stroke="#000" stroke-width="1.4" marker-end="url(#tkp-ah)"/>
 <text font-size="12" text-anchor="start" fill="#000">
-<tspan x="1068" y="682.0" dominant-baseline="middle">neural network</tspan>
+<tspan x="94" y="915.0" dominant-baseline="middle">every time step, inside the compiled loop</tspan>
+</text>
+<path d="M370,915 L414,915" fill="none" stroke="#000" stroke-width="1.4" stroke-dasharray="6 4" marker-end="url(#tkp-ah)"/>
+<text font-size="12" text-anchor="start" fill="#000">
+<tspan x="424" y="915.0" dominant-baseline="middle">outside the loop (updates, training, JOREK)</tspan>
+</text>
+<path d="M790,915 L834,915" fill="none" stroke="#9a9a9a" stroke-width="1.4" stroke-dasharray="3 4" marker-end="url(#tkp-ahp)"/>
+<text font-size="12" text-anchor="start" fill="#000">
+<tspan x="844" y="915.0" dominant-baseline="middle">planned, not yet coupled</tspan>
+</text>
+<rect x="1030" y="905" width="30" height="20" rx="3" fill="#e6e6e6" stroke="#555"/>
+<text font-size="12" text-anchor="start" fill="#000">
+<tspan x="1068" y="915.0" dominant-baseline="middle">neural network</tspan>
 </text>
 </svg>
 <!-- physics-svg:end -->
 <figcaption>How the physics codes exchange information during a run. TORAX solves core
-transport; the other codes supply its geometry, transport coefficients and sources. Hover over
-a box for what it does.</figcaption>
+transport; the other codes supply its geometry, transport coefficients and sources. The JOREK
+branch analyses MHD stability offline from the EQDSK or a saved TORAX state, with no feedback
+into the transport loop. Its ITER hybrid time-step checks have passed; grid convergence is
+still open. Hover over a box for what it does.
+<a href="technical/jorek.qmd">JOREK implementation and checks</a>.</figcaption>
 </figure>
 ```
 :::
@@ -296,7 +354,9 @@ whole run is one program that can be differentiated end to end. Entries 1 to 3.
 **Prescribed equilibrium.** The CHEASE equilibrium of the ITER hybrid scenario, shipped with
 TORAX as an EQDSK file. TORAX builds its flux-surface geometry (volumes, areas, metric
 coefficients) from it. ASCOT5 takes its magnetic field from the same file, with the poloidal
-flux scaled to TORAX's plasma current. Used for the ITER cases.
+flux scaled to TORAX's plasma current. JOREK uses the same separatrix boundary for its
+ITER stability reference cases: the EQDSK profiles in case (a), and profiles derived from
+a saved TORAX state in case (b).
 :::
 ::: {.tk-note data-node="fgs"}
 **Free-boundary equilibrium: FreeGSNKE.** Solves the free-boundary Grad-Shafranov equation for
@@ -356,6 +416,34 @@ profiles inside the q = 1 surface when the trigger condition is met.
 **IMAS IDSs.** The Tokamak Toolkit writes its state as IMAS data structures (core_profiles, core_sources,
 core_transport, equilibrium). Unit and coordinate conversions happen only in these adapters.
 FreeGSNKE writes its own equilibrium IDS.
+:::
+::: {.tk-note data-node="jorek-inputs"}
+**JOREK stability inputs.** Case (a) takes the CHEASE EQDSK pressure and FF′. Case (b) uses
+pressure and current from the saved TORAX ITER hybrid state, on the same EQDSK separatrix.
+JOREK solves a new equilibrium: case (b) scales FF′ to match the target plasma current,
+so its safety-factor profile differs from TORAX's fixed-geometry state. This is an offline
+snapshot, not a time-step coupling. [Input cases](technical/jorek.qmd#case-b-equilibrium).
+:::
+::: {.tk-note data-node="jorek-adapter"}
+**JOREK input adapter.** Converts SI/eV to JOREK's normalised units and writes profile files
+and namelists on the host, outside JAX. Physics choices are explicit inputs. Output is read
+from native HDF5 restart files, rather than an IMAS IDS.
+[Adapter](technical/jorek.qmd#adapter).
+:::
+::: {.tk-note data-node="jorek"}
+**JOREK and run wrapper.** An external Tier A MHD reference. The implemented ITER workflow
+solves fixed-boundary equilibria and scans toroidal mode number for linear pedestal stability.
+The wrapper snapshots inputs and the executable, launches MPI/OpenMP runs, classifies
+failures and timeouts, and retains outputs with provenance. It is never called inside the
+compiled transport loop. [Run wrapper](technical/jorek.qmd#runner).
+:::
+::: {.tk-note data-node="jorek-analysis"}
+**Stability analysis.** Fits growth rates from magnetic and kinetic energies, locates the
+perturbations, and compares time-step and grid checks. The ITER hybrid pedestal modes have
+passed the time-step check; grid convergence remains open, so the growth rates are not yet
+accepted under the full convergence criterion. There is no feedback into TORAX and no trained
+JOREK surrogate; the later role remains a decision for the owner.
+[Checks and limits](technical/jorek.qmd#ceilings).
 :::
 ::::
 
@@ -803,7 +891,7 @@ human expert, not by the agent that built the code.
 ## The log
 
 <details class="tk-log">
-<summary>Show all 73 entries, newest first</summary>
+<summary>Show all 74 entries, newest first</summary>
 
 ::: {#log}
 :::
@@ -820,17 +908,25 @@ The [action plan](action-plan.qmd) gives dependencies and completion criteria.
 - **M4: verification.** The MAST-U closed-loop comparison is not evaluable: no admissible
   TGLF reference trajectory exists for this scenario. The owner limited the MAST-U scope, and
   ITER's pass stands ([OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42), [entry 70](log/70-owner-limits-the-mastu-certification-scope.qmd)).
-  Transport monotonicity proofs are complete ([all 20 members of each ensemble pass both heat-flux monotonicity properties, with derivative lower bound zero over the full training box]{.claim}[C-247](/Blog/tokamak-toolkit/claims.qmd#c-247){.cid .st-measured}). Next come certified
-  output bounds for the four surrogates, local robustness, split-conformal calibration, and the EC closed-loop
-  comparison against GENRAY. After those: guards bound to the certified boxes with a
+  Transport monotonicity proofs are complete ([all 20 members of each ensemble pass both heat-flux monotonicity properties, with derivative lower bound zero over the full training box]{.claim}[C-247](/Blog/tokamak-toolkit/claims.qmd#c-247){.cid .st-measured}), as is split-conformal
+  calibration ([90% intervals calibrated on the v1 validation split cover 0.887–0.907 on the v1 test and v2-random splits (6 outputs, ITER and MAST-U); 9 of 12 lie in the 0.893–0.907 range expected for exchangeable data, the other three miss it by at most 0.006]{.claim}[C-256](/Blog/tokamak-toolkit/claims.qmd#c-256){.cid .st-measured}, [90% intervals calibrated on 190 guard-accepted validation states (4 runs) cover 0.876–0.978 of 548 served test states (8 runs); all six outputs lie within or above the 0.856–0.938 range expected for exchangeable data; per-run coverage 0.78–1.00]{.claim}[C-258](/Blog/tokamak-toolkit/claims.qmd#c-258){.cid .st-measured}). EC and pedestal output bounds
+  are finite ([all five EC members have finite CROWN bounds for both launcher families; current and width bounds remain very loose]{.claim}[C-262](/Blog/tokamak-toolkit/claims.qmd#c-262){.cid .st-measured}, [all nine pedestal pressure and half-width pairs have finite bounds over the recorded ITER trajectory box, with the widening and domain clipping stated]{.claim}[C-263](/Blog/tokamak-toolkit/claims.qmd#c-263){.cid .st-measured}); transport bounds remain unresolved
+  after the optimized follow-up ([all twenty members of each transport ensemble have finite training-space bounds that overflow the inverse signed-log transform; no finite physical guard domain is certified]{.claim}[C-264](/Blog/tokamak-toolkit/claims.qmd#c-264){.cid .st-measured}, [median width 0.164 of the earlier bound, range 0.082–0.605 across member outputs; all twenty physical member results remain unknown]{.claim}[C-265](/Blog/tokamak-toolkit/claims.qmd#c-265){.cid .st-measured},
+  [median width 0.114 of the earlier bound, range 0.060–0.220 across member outputs; all twenty physical member results remain unknown]{.claim}[C-266](/Blog/tokamak-toolkit/claims.qmd#c-266){.cid .st-measured}); both fixed and optimized direct-ELU pilots also remain
+  unresolved ([member 0 of each ensemble remains unknown; both processes complete in about 23 seconds, with physical inverse-transform overflow and looser intervals than the earlier optimized run]{.claim}[C-268](/Blog/tokamak-toolkit/claims.qmd#c-268){.cid .st-measured}, [both selected members remain unknown despite interval-width reductions of about 30–275 times against the same-graph fixed-tangent baseline; physical inverse-transform overflow persists]{.claim}[C-272](/Blog/tokamak-toolkit/claims.qmd#c-272){.cid .st-measured}, [both selected transport members remain physically unknown; largest baseline activation widths fall to 0.246 and 0.449 of the preceding pilot, but inverse signed-log overflow persists]{.claim}[C-274](/Blog/tokamak-toolkit/claims.qmd#c-274){.cid .st-measured}).
+  All prescribed EC local robustness boxes are out of domain
+  ([all 57 complete EC local boxes are out of domain, including all 45 served states; zero robustness proofs or model counterexamples are claimed]{.claim}[C-276](/Blog/tokamak-toolkit/claims.qmd#c-276){.cid .st-measured}); the owner scope choice is pending ([OQ-45](/Blog/tokamak-toolkit/decisions.qmd#oq-45)).
+  Next freeze the concrete GENRAY package for the selected states
+  ([twenty output states per launcher are selected at evenly spaced indices for the later GENRAY comparison; no reference solver execution or accuracy result]{.claim}[C-278](/Blog/tokamak-toolkit/claims.qmd#c-278){.cid .st-measured}) and a stronger bounded transport proof experiment.
+  After those: guards bound to the certified boxes with a
   fallback-rate check, a verification report per surrogate, CI that re-proves properties when
   a surrogate changes, and the owner's certification review.
 - **JOREK stability (alongside M4).** Case (a), the EQDSK as given, is closed on the
   time-step check ([entry 69](log/69-time-step-check-of-the-growth-rates.qmd)). Case (b), the
   TORAX state, has an accepted equilibrium
-  ([entry 71](log/71-case-b-equilibrium-from-the-torax-state.qmd)) and a first n-scan, in
-  which only n = 20 grows clearly so far ([entry 72](log/72-case-b-n-scan-first-job.qmd)).
-  A second job continues the runs. The time-step check follows, and the method for the grid check
+  ([entry 71](log/71-case-b-equilibrium-from-the-torax-state.qmd)) and an n-scan with three growing pedestal modes
+  ([entry 73](log/73-case-b-n-scan-three-pedestal-modes.qmd)). Their time-step checks
+  passed ([entry 75](log/75-time-step-check-of-the-case-b-pedestal-modes.qmd)); the method for the grid check
   goes to the owner. Then comes the decision on what JOREK becomes in the toolkit: a surrogate
   of a JOREK quantity, reference runs only, or neither.
 - **After M4: M5, uncertainty and validation.** Inputs to be asked for at the M4 review: a

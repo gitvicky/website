@@ -1,0 +1,61 @@
+---
+title: Every EC local robustness box crosses the training boundary
+date: '2026-10-26'
+categories:
+- built
+- measured
+entry: 83
+milestone: M4
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} [measurement]{.chip .measured} Entry 83 · milestone M4
+:::
+
+The next M4 steps are executed. The transport output proof remains unresolved,
+and the EC robustness assessment found a domain limitation that comes before
+the neural bound calculation.
+
+| step | retained result |
+|---|---|
+| transport intermediate ranges | [both selected transport members remain physically unknown; largest baseline activation widths fall to 0.246 and 0.449 of the preceding pilot, but inverse signed-log overflow persists]{.claim}[C-274](/Blog/tokamak-toolkit/claims.qmd#c-274){.cid .st-measured} |
+| exact EC state recording | [30 upper-launcher states (29 served) and 27 equatorial-launcher states (16 served) retain exact features, profiles, outputs, model identity, configurations and guard decisions]{.claim}[C-275](/Blog/tokamak-toolkit/claims.qmd#c-275){.cid .st-measured} |
+| EC local robustness | [all 57 complete EC local boxes are out of domain, including all 45 served states; zero robustness proofs or model counterexamples are claimed]{.claim}[C-276](/Blog/tokamak-toolkit/claims.qmd#c-276){.cid .st-measured} |
+| later reference comparison | [twenty output states per launcher are selected at evenly spaced indices for the later GENRAY comparison; no reference solver execution or accuracy result]{.claim}[C-278](/Blog/tokamak-toolkit/claims.qmd#c-278){.cid .st-measured} |
+
+The transport experiment intersected intermediate backward bounds with interval
+propagation and used ELU's monotone activation range. This reduced the largest
+intermediate ranges, but the physical inverse transform still overflows. The
+final optimized bounds are not uniformly tighter than the preceding pilot, and
+the small pilot was not expanded.
+
+For EC, we ran the existing upper and equatorial launcher scenarios once each
+and recorded every accepted state's exact surrogate inputs. The audit reconstructs
+them from saved profiles and checks model predictions and guard decisions.
+
+The local robustness property uses symmetric perturbations of every continuous
+input, while fixing the launcher flag. The loop states sit near the lower
+effective-charge boundary, and both launch positions are at training-box edges.
+Their perturbations therefore leave the declared domain. This affects even
+states served by the inference guard: serving a point does not establish a
+neighbourhood around it.
+
+The property forbids clipping. We retained every out-of-domain box and issued no
+robustness pass or model counterexample. [OQ-45](/Blog/tokamak-toolkit/decisions.qmd#oq-45) asks the owner whether to carry
+this limitation or approve a distinct perturbation scope. The original result
+remains either way.
+
+An initial package omitted dataset provenance sidecars. Its proof processes
+stopped during loading; those failures are saved. The corrected package passed
+the actual relocated loaders and reused the successful EC traces, without
+repeating the simulations. Focused validation is [70 focused checks pass normally and with Tier B disabled; lint, formatting and typing of all 92 source modules pass]{.claim}[C-277](/Blog/tokamak-toolkit/claims.qmd#c-277){.cid .st-measured}.
+
+Next comes the concrete GENRAY input and compute package for the selected states.
+V5 needs a stronger bounded experiment; EC V6 needs its scope disposition. The
+MAST-U reference limitation remains unchanged, and the certification review is
+still pending.
+
+::: {.entry-links}
+**Technical details →** [Verification › ec local robustness](/Blog/tokamak-toolkit/technical/verification.qmd#ec-local-robustness) · [Verification › intermediate range pilot](/Blog/tokamak-toolkit/technical/verification.qmd#intermediate-range-pilot)  
+**Decisions →** [OQ-22](/Blog/tokamak-toolkit/decisions.qmd#oq-22) · [OQ-24](/Blog/tokamak-toolkit/decisions.qmd#oq-24) · [OQ-26](/Blog/tokamak-toolkit/decisions.qmd#oq-26) · [OQ-33](/Blog/tokamak-toolkit/decisions.qmd#oq-33) · [OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42) · [OQ-45](/Blog/tokamak-toolkit/decisions.qmd#oq-45)
+:::

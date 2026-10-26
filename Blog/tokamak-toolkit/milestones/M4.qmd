@@ -24,19 +24,42 @@ review is the human gate; it has not occurred.
 | property contracts | [six property contracts load; 14 property-validation tests pass in each mode, including malformed-domain, tolerance and output-schema rejection]{.claim}[C-177](/Blog/tokamak-toolkit/claims.qmd#c-177){.cid .st-tested} |
 | transport closed-loop comparison | ITER passes ([served-face T_e 7.42%, T_i 8.18%, both passing the 15% limit; whole profile 7.72/9.23%; 34 of 51 final-state faces served]{.claim}[C-178](/Blog/tokamak-toolkit/claims.qmd#c-178){.cid .st-measured}); MAST-U fails ([served-face T_e 35.33%, T_i 49.15%, both failing 15%; whole profile 41.51/62.39%; cells with both adjacent faces served give 11.86/23.24%, still failing T_i; 13 of 26 final-state faces served]{.claim}[C-179](/Blog/tokamak-toolkit/claims.qmd#c-179){.cid .st-measured}, [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030)); the MAST-U reference comparison is not evaluable and MAST-U certification scope is limited accordingly ([OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42)) |
 | transport monotonicity | [all 20 members of each ensemble pass both heat-flux monotonicity properties, with derivative lower bound zero over the full training box]{.claim}[C-247](/Blog/tokamak-toolkit/claims.qmd#c-247){.cid .st-measured} |
-| output bounds and local robustness | pending |
-| conformal calibration and EC trajectory comparison | pending |
+| output bounds | EC and pedestal bounded ([all five EC members have finite CROWN bounds for both launcher families; current and width bounds remain very loose]{.claim}[C-262](/Blog/tokamak-toolkit/claims.qmd#c-262){.cid .st-measured}, [all nine pedestal pressure and half-width pairs have finite bounds over the recorded ITER trajectory box, with the widening and domain clipping stated]{.claim}[C-263](/Blog/tokamak-toolkit/claims.qmd#c-263){.cid .st-measured}); transport unresolved after ordinary and optimized bounds ([all twenty members of each transport ensemble have finite training-space bounds that overflow the inverse signed-log transform; no finite physical guard domain is certified]{.claim}[C-264](/Blog/tokamak-toolkit/claims.qmd#c-264){.cid .st-measured}, [median width 0.164 of the earlier bound, range 0.082–0.605 across member outputs; all twenty physical member results remain unknown]{.claim}[C-265](/Blog/tokamak-toolkit/claims.qmd#c-265){.cid .st-measured}, [median width 0.114 of the earlier bound, range 0.060–0.220 across member outputs; all twenty physical member results remain unknown]{.claim}[C-266](/Blog/tokamak-toolkit/claims.qmd#c-266){.cid .st-measured}) |
+| local robustness | EC local boxes all out of domain ([all 57 complete EC local boxes are out of domain, including all 45 served states; zero robustness proofs or model counterexamples are claimed]{.claim}[C-276](/Blog/tokamak-toolkit/claims.qmd#c-276){.cid .st-measured}), [OQ-45](/Blog/tokamak-toolkit/decisions.qmd#oq-45) pending; transport depends on V5 |
+| conformal calibration | completed ([90% intervals calibrated on the v1 validation split cover 0.887–0.907 on the v1 test and v2-random splits (6 outputs, ITER and MAST-U); 9 of 12 lie in the 0.893–0.907 range expected for exchangeable data, the other three miss it by at most 0.006]{.claim}[C-256](/Blog/tokamak-toolkit/claims.qmd#c-256){.cid .st-measured}, [90% intervals calibrated on 190 guard-accepted validation states (4 runs) cover 0.876–0.978 of 548 served test states (8 runs); all six outputs lie within or above the 0.856–0.938 range expected for exchangeable data; per-run coverage 0.78–1.00]{.claim}[C-258](/Blog/tokamak-toolkit/claims.qmd#c-258){.cid .st-measured}); loop-state limitations retained |
+| EC trajectory comparison | completed within the fixed-equilibrium convention ([40/40 cases pass the unchanged 10% power and signed-current limits, including 31/31 served states; maximum current error 9.606% EL and 7.393% UL, maximum power error 0.07483% EL and 0.02599% UL]{.claim}[C-281](/Blog/tokamak-toolkit/claims.qmd#c-281){.cid .st-measured}); [K-028](/Blog/tokamak-toolkit/ceilings.qmd#k-028) remains |
 | certificate-bound guards, per-surrogate reports and CI re-proofs | pending |
 | certification review | pending |
 
-**Current position (25 Oct 2026).** The MAST-U remediation stopped at its reference step: no
+**Current position (26 Oct 2026).** The MAST-U remediation stopped at its reference step: no
 admissible TGLF reference trajectory exists for comparing the retrained candidate, and the
 projected reference of [OQ-38](/Blog/tokamak-toolkit/decisions.qmd#oq-38) cannot complete on this scenario ([150 negative raw heat diffusivities at 19 faces; 46 would reach the 1 gB stop, at 31 of 40 states, the first at state 1]{.claim}[C-240](/Blog/tokamak-toolkit/claims.qmd#c-240){.cid .st-measured}). The
 owner limited the MAST-U scope ([OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42),
 [entry 70](../log/70-owner-limits-the-mastu-certification-scope.qmd)): MAST-U will be presented for certification
-with that limitation stated, and ITER's pass stands. The remaining work is output bounds, conformal calibration, the EC closed-loop comparison, certificate-bound
+with that limitation stated, and ITER's pass stands. The remaining work is transport output bounds, local robustness, the EC closed-loop comparison, certificate-bound
 guards with a fallback-rate check, the per-surrogate reports, CI re-proofs, and then the
 certification review. The paragraphs below record the remediation in order.
+
+The alpha-CROWN follow-up tightens the training-space intervals but still cannot
+supply finite physical transport bounds. Its full domains and weights match the
+first run; the splitting budgets differ. See the
+[technical account](../technical/verification.qmd#optimized-output-bounds).
+
+The separate direct-ELU proof pilot also leaves both selected members unknown
+([member 0 of each ensemble remains unknown; both processes complete in about 23 seconds, with physical inverse-transform overflow and looser intervals than the earlier optimized run]{.claim}[C-268](/Blog/tokamak-toolkit/claims.qmd#c-268){.cid .st-measured}); its focused checks pass ([40 focused checks pass in both normal and Tier A modes; lint, formatting and typing pass]{.claim}[C-269](/Blog/tokamak-toolkit/claims.qmd#c-269){.cid .st-measured}). It was not
+expanded to the other members. V5 remains open.
+
+Optimizing the direct-ELU tangents tightens those two members' intervals but
+still leaves their physical bounds unknown ([both selected members remain unknown despite interval-width reductions of about 30–275 times against the same-graph fixed-tangent baseline; physical inverse-transform overflow persists]{.claim}[C-272](/Blog/tokamak-toolkit/claims.qmd#c-272){.cid .st-measured}). The new
+diagnostics point to intermediate interval growth; focused validation is
+[50 focused checks pass normally and with Tier B disabled; repository lint, formatting and typing of all 91 source modules pass]{.claim}[C-273](/Blog/tokamak-toolkit/claims.qmd#c-273){.cid .st-measured}. A further member-level experiment needs tighter intermediate
+intervals before any ensemble expansion.
+
+The intermediate-range pilot also leaves physical transport bounds unknown
+([both selected transport members remain physically unknown; largest baseline activation widths fall to 0.246 and 0.449 of the preceding pilot, but inverse signed-log overflow persists]{.claim}[C-274](/Blog/tokamak-toolkit/claims.qmd#c-274){.cid .st-measured}). EC recordings now retain exact state features
+([30 upper-launcher states (29 served) and 27 equatorial-launcher states (16 served) retain exact features, profiles, outputs, model identity, configurations and guard decisions]{.claim}[C-275](/Blog/tokamak-toolkit/claims.qmd#c-275){.cid .st-measured}), but every prescribed local box leaves the training domain
+([all 57 complete EC local boxes are out of domain, including all 45 served states; zero robustness proofs or model counterexamples are claimed]{.claim}[C-276](/Blog/tokamak-toolkit/claims.qmd#c-276){.cid .st-measured}). [K-034](/Blog/tokamak-toolkit/ceilings.qmd#k-034) and [OQ-45](/Blog/tokamak-toolkit/decisions.qmd#oq-45) preserve that limitation and the owner's
+pending scope choice; no box was clipped. Focused validation is [70 focused checks pass normally and with Tier B disabled; lint, formatting and typing of all 92 source modules pass]{.claim}[C-277](/Blog/tokamak-toolkit/claims.qmd#c-277){.cid .st-measured}.
 
 The transport comparison uses final-state served faces with both temperature profiles
 interpolated onto the same coordinates. It also reports whole-profile errors and cells with

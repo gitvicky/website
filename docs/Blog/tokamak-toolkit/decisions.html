@@ -157,10 +157,11 @@ window.Quarto = {
   <ul>
   <li><a href="#awaiting-a-decision" id="toc-awaiting-a-decision" class="nav-link active" data-scroll-target="#awaiting-a-decision">Awaiting a decision</a>
   <ul class="collapse">
-  <li><a href="#oq-43" id="toc-oq-43" class="nav-link" data-scroll-target="#oq-43">OQ-43 · Grid check for the JOREK case (b) growth rates</a></li>
+  <li><a href="#oq-45" id="toc-oq-45" class="nav-link" data-scroll-target="#oq-45">OQ-45 · EC robustness at training-domain boundaries</a></li>
   </ul></li>
   <li><a href="#settled" id="toc-settled" class="nav-link" data-scroll-target="#settled">Settled</a>
   <ul class="collapse">
+  <li><a href="#oq-43" id="toc-oq-43" class="nav-link" data-scroll-target="#oq-43">OQ-43 · Grid check for the JOREK case (b) growth rates</a></li>
   <li><a href="#oq-42" id="toc-oq-42" class="nav-link" data-scroll-target="#oq-42">OQ-42 · MAST-U closed-loop check after the projected reference stopped</a></li>
   <li><a href="#oq-41" id="toc-oq-41" class="nav-link" data-scroll-target="#oq-41">OQ-41 · Core and axis modes hide the pedestal in the JOREK n-scan</a></li>
   <li><a href="#oq-40" id="toc-oq-40" class="nav-link" data-scroll-target="#oq-40">OQ-40 · Reconciling the TORAX state with a JOREK equilibrium</a></li>
@@ -234,13 +235,17 @@ window.Quarto = {
 <p>The brief lists the decisions that belong to a human: physics modelling choices, licence and data questions, which properties to prove, use of the compute cluster, and benchmark failures that aren’t explained by a bug. When the agent reaches one, it writes the question down with context and a recommended answer, carries on with whatever isn’t blocked, and waits. Numbers (OQ-<em>n</em>) match the project’s internal record. Newest first within each group.</p>
 <section id="awaiting-a-decision" class="level2">
 <h2 class="anchored" data-anchor-id="awaiting-a-decision">Awaiting a decision</h2>
-<section id="oq-43" class="level3">
-<h3 class="anchored" data-anchor-id="oq-43">OQ-43 · Grid check for the JOREK case (b) growth rates</h3>
-<p>Awaiting a decision on how to check the case (b) growth rates against grid resolution. A from-scratch check on the doubled grid costs far more than the approved compute, because these modes rise slowly from round-off. The options are: the grid check on case (a)’s two faster pedestal modes, with case (b) reported as converged in time step only (recommended); a long chain of case (b) jobs; a JOREK patch to carry a mode across grids; or the time-step check alone.</p>
+<section id="oq-45" class="level3">
+<h3 class="anchored" data-anchor-id="oq-45">OQ-45 · EC robustness at training-domain boundaries</h3>
+<p>The assessment gives <span class="claim">all 57 complete EC local boxes are out of domain, including all 45 served states; zero robustness proofs or model counterexamples are claimed</span><a href="../../Blog/tokamak-toolkit/claims.html#c-276" class="cid st-measured">C-276</a>: all prescribed complete local boxes leave the training domain, including every state served by the surrogate. Effective charge and launcher positions sit at domain boundaries. The owner can retain this as a stated certification limitation, or approve a distinct one-sided or reduced perturbation scope. The recommendation for this phase is to retain the strict result and carry the limitation. No scope change is made; the selected reference-comparison states (<span class="claim">twenty output states per launcher are selected at evenly spaced indices for the later GENRAY comparison; no reference solver execution or accuracy result</span><a href="../../Blog/tokamak-toolkit/claims.html#c-278" class="cid st-measured">C-278</a>) can proceed to their concrete solver package independently.</p>
 </section>
 </section>
 <section id="settled" class="level2">
 <h2 class="anchored" data-anchor-id="settled">Settled</h2>
+<section id="oq-43" class="level3">
+<h3 class="anchored" data-anchor-id="oq-43">OQ-43 · Grid check for the JOREK case (b) growth rates</h3>
+<p><em>Decided 26 Oct 2026.</em> The full grid check for case (b): the three pedestal modes run again on the doubled grid, from round-off, as a chain of one-node jobs. Up to 32 jobs, each announced before submission. The comparison rule and the point at which each mode stops were fixed before any doubled-grid step ran. If the measured cost would take the chain past 32 jobs, the owner is asked again. Options not taken: a grid check on case (a)’s two faster pedestal modes as a stand-in, with case (b) reported as converged in time step only (the recommendation); a JOREK patch to carry a mode from one grid to the other; and the time-step check alone. Set-up and cost: <a href="../../Blog/tokamak-toolkit/log/81-grid-check-of-the-case-b-pedestal-modes-set-up-and-cost.html">entry 81</a>.</p>
+</section>
 <section id="oq-42" class="level3">
 <h3 class="anchored" data-anchor-id="oq-42">OQ-42 · MAST-U closed-loop check after the projected reference stopped</h3>
 <p><em>Decided 25 Oct 2026.</em> Limited MAST-U scope. The one projected-reference run of <a href="../../Blog/tokamak-toolkit/decisions.html#oq-38">OQ-38</a> stopped on its own 1 gB rule, and a read-only screen of the 40 saved states shows that the rule cannot complete on this scenario (<span class="claim">150 negative raw heat diffusivities at 19 faces; 46 would reach the 1 gB stop, at 31 of 40 states, the first at state 1</span><a href="../../Blog/tokamak-toolkit/claims.html#c-240" class="cid st-measured">C-240</a>). The MAST-U comparison against a TGLF reference trajectory is recorded as not evaluable, and MAST-U is certified at the M4 review with that limitation stated (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-030">K-030</a>, <a href="../../Blog/tokamak-toolkit/ceilings.html#k-032">K-032</a>). ITER’s measured pass stands. The model, guard, acceptance limits and frozen splits are unchanged, and no further MAST-U reference compute is planned. Options not taken: redefining the comparison against the guarded TGLF/fallback hybrid, which would still fail the limit on the descriptive distance (<span class="claim">T_e 32.0%, T_i 41.5% on the 14 faces where both serve TGLF, against the 15% limit</span><a href="../../Blog/tokamak-toolkit/claims.html#c-242" class="cid st-measured">C-242</a>), and raising the stop threshold, when projected magnitudes reach thousands of gB.</p>

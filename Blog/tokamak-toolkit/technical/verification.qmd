@@ -226,8 +226,8 @@ Failure retains partial outputs and failed offline tracking; uploads require lat
 
 If the diagnostic retains the uncovered face, it remains ineligible for the formal
 temperature criterion. Review the cause and any physically justified remedy before a
-new acceptance claim. The separate sampling experiment remains a proposal. Draft entry
-50 is retained in the private owner review copy. Current model/guard and [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) remain.
+new acceptance claim. The separate sampling experiment remains a proposal. Entry 50 is the
+narrative account. Current model/guard and [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) remain.
 
 ## Reference diagnostic result {#reference-diagnostic-result}
 
@@ -249,7 +249,7 @@ fallback acceptance gate.
 The read-only audit uses the same diagnostic-report logic and checks artifact integrity,
 not independent physics validity. Exact historical array equality is checked separately.
 Completed offline local artifact copies match by checksum; synchronization still needs
-payload review. Draft entry 51 is retained in the private owner review copy.
+payload review. Entry 51 is the narrative account.
 
 The saved raw coefficients follow the reference's flux-to-transport conversion; direct
 heat-flux and mode-resolved outputs were not retained. Signed transport's physical or
@@ -298,7 +298,7 @@ mode spectra, so richer collection requires another prepared output route.
 This is an algebraic/source review, not an adopted physical remedy. [OQ-32](/Blog/tokamak-toolkit/decisions.qmd#oq-32) now
 selects retaining the current nonnegative contract while investigating. Formal
 candidate acceptance remains not evaluable, and [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) stays open. Current model/guard, every face, splits and
-tolerances are preserved. Draft entry 52 is held for private owner review.
+tolerances are preserved. Entry 52 is the narrative account.
 
 
 ## Owner disposition and licence {#owner-disposition-and-licence}
@@ -528,14 +528,14 @@ scenario, so individually valid sidecars cannot hide substituted inputs. These
 changes do not modify the selected surrogate or production guard settings.
 
 The original failed package and missing information remain recorded. No repeated
-reference run or recovered face identity is claimed. Draft entry 66 records the
-review and remains held for publication.
+reference run or recovered face identity is claimed. Entry 66 records the
+review.
 
 
 ## Transport monotonicity {#transport-monotonicity}
 
-The V4 result is [all 20 members of each ensemble pass both heat-flux monotonicity properties, with derivative lower bound zero over the full training box]{.claim}[C-247](/Blog/tokamak-toolkit/claims.qmd#c-247){.cid .st-measured}. Draft narrative entry 74 accompanies this
-technical account and remains pending publication. The result proves an imposed network
+The V4 result is [all 20 members of each ensemble pass both heat-flux monotonicity properties, with derivative lower bound zero over the full training box]{.claim}[C-247](/Blog/tokamak-toolkit/claims.qmd#c-247){.cid .st-measured}. Narrative entry 74 accompanies this
+technical account. The result proves an imposed network
 property, with the [K-025](/Blog/tokamak-toolkit/ceilings.qmd#k-025) physical-model departure caveat retained.
 
 For one constrained head, write its derivative as
@@ -571,6 +571,10 @@ reference admissibility, output bounds, conformal calibration, production guard 
 CI re-proofs and the final certification review remain separate obligations.
 
 ## Output bounds {#output-bounds}
+
+The first bounded run is audited: EC [all five EC members have finite CROWN bounds for both launcher families; current and width bounds remain very loose]{.claim}[C-262](/Blog/tokamak-toolkit/claims.qmd#c-262){.cid .st-measured}; pedestal [all nine pedestal pressure and half-width pairs have finite bounds over the recorded ITER trajectory box, with the widening and domain clipping stated]{.claim}[C-263](/Blog/tokamak-toolkit/claims.qmd#c-263){.cid .st-measured}.
+Transport remains unresolved ([all twenty members of each transport ensemble have finite training-space bounds that overflow the inverse signed-log transform; no finite physical guard domain is certified]{.claim}[C-264](/Blog/tokamak-toolkit/claims.qmd#c-264){.cid .st-measured}). V5 is not complete and these bounds
+are not installed in production guards. Narrative entry 78 accompanies this record.
 
 V5 now has an executable CROWN calculation and complete input splitting. The verifier
 first checks each proof export against JAX on random box points and the original held-out
@@ -615,10 +619,49 @@ Reports bind the model, property, boxes, datasets, producing source and verifier
 A nonfinite physical interval is recorded as unknown. Such a row supplies no guard domain;
 V10 integration requires usable certified bounds and the owner's fallback-rate threshold.
 
+### Optimized output bounds {#optimized-output-bounds}
+
+The runner also supports `--method alpha-CROWN`, with explicit optimizer iteration and
+soft time budgets. Ordinary CROWN remains the default. On every sub-box, the optimized
+route computes ordinary CROWN, interval propagation and alpha-CROWN, then intersects
+their output intervals. Thus it cannot loosen the same sub-box's baseline bound, and
+interval propagation retains structural ranges such as nonnegative heat-flux outputs.
+Invalid or nonfinite optimizer results fail explicitly.
+
+The optimizer budget applies separately to lower and upper bound calculations and is
+checked between iterations. Graph setup and an in-progress iteration can exceed it;
+a separate process timeout supplies the hard limit. Certificates and their provenance
+record the selected method, iteration cap and soft time budget. Arithmetic remains
+float64 throughout. A physical-transform overflow now identifies inverse signed-log and
+the largest training-bound magnitude in the retained failure reason.
+
+The retained follow-up uses the original complete transport boxes and weights. Its
+settings are [three optimizer iterations, a five-second soft budget per bound side and one leaf per member; both twenty-member runs finished within the nine-minute hard process limit]{.claim}[C-267](/Blog/tokamak-toolkit/claims.qmd#c-267){.cid .st-measured}. The widths relative to the earlier run are
+[median width 0.164 of the earlier bound, range 0.082–0.605 across member outputs; all twenty physical member results remain unknown]{.claim}[C-265](/Blog/tokamak-toolkit/claims.qmd#c-265){.cid .st-measured} for ITER and [median width 0.114 of the earlier bound, range 0.060–0.220 across member outputs; all twenty physical member results remain unknown]{.claim}[C-266](/Blog/tokamak-toolkit/claims.qmd#c-266){.cid .st-measured} for MAST-U. This compares one-leaf
+optimized bounds with four-leaf ordinary CROWN bounds; it is not an experiment that
+holds the partition budget fixed. Every physical member result remains unknown.
+No production guard domain follows from this experiment.
+
+For intervals $[l_C,u_C]$, $[l_I,u_I]$ and $[l_A,u_A]$ enclosing the same output,
+the returned interval is
+
+$$[\max(l_C,l_I,l_A),\;\min(u_C,u_I,u_A)].$$
+
+This cannot loosen the ordinary CROWN interval on that same sub-box. Nonfinite or
+inconsistent intervals are rejected. The retained audit checks model and property
+identity against the earlier run, frozen source digests, complete input coverage,
+all member outcomes and the physical-transform overflow reasons. This audit shares
+the toolkit's provenance machinery; it does not supply independent verification of
+auto_LiRPA or directed-rounding guarantees.
+
+The implementation is retained in the experiment's frozen source snapshot and
+was integrated in the subsequent proof-tool commit after focused validation.
+Narrative entry 79 accompanies this account.
+
 ## Conformal calibration {#conformal}
 
 V7 is complete for the three labelled surrogates ([90% intervals calibrated on the v1 validation split cover 0.887–0.907 on the v1 test and v2-random splits (6 outputs, ITER and MAST-U); 9 of 12 lie in the 0.893–0.907 range expected for exchangeable data, the other three miss it by at most 0.006]{.claim}[C-256](/Blog/tokamak-toolkit/claims.qmd#c-256){.cid .st-measured},
-[the same intervals cover 0.996–1.000 of the v3 test states; there the half-width that would give 90% is 3.3–5.5 times smaller in signed-log units (ITER Q_e 0.48 against 2.21)]{.claim}[C-257](/Blog/tokamak-toolkit/claims.qmd#c-257){.cid .st-measured}, [90% intervals calibrated on 190 guard-accepted validation states (4 runs) cover 0.876–0.978 of 548 served test states (8 runs); all six outputs lie within or above the 0.856–0.938 range expected for exchangeable data; per-run coverage 0.78–1.00]{.claim}[C-258](/Blog/tokamak-toolkit/claims.qmd#c-258){.cid .st-measured}). Draft entry 76 is the narrative account.
+[the same intervals cover 0.996–1.000 of the v3 test states; there the half-width that would give 90% is 3.3–5.5 times smaller in signed-log units (ITER Q_e 0.48 against 2.21)]{.claim}[C-257](/Blog/tokamak-toolkit/claims.qmd#c-257){.cid .st-measured}, [90% intervals calibrated on 190 guard-accepted validation states (4 runs) cover 0.876–0.978 of 548 served test states (8 runs); all six outputs lie within or above the 0.856–0.938 range expected for exchangeable data; per-run coverage 0.78–1.00]{.claim}[C-258](/Blog/tokamak-toolkit/claims.qmd#c-258){.cid .st-measured}). Entry 76 is the narrative account.
 
 For each served output, with prediction $\hat y$ and label $y$ on $n$ calibration points,
 the score is $s_i = |y_i - \hat y_i|$. The half-width is the $k$-th smallest score, with
@@ -662,7 +705,7 @@ them through `load_record`, which refuses a record whose model hash differs.
 ### Loop-state calibration (OQ-44) {#conformal-loop}
 
 The owner chose a second transport calibration on the states the coupled runs visit, for
-M5 ([calibrated on half of the held-out v3 trajectory runs, the 90% half-widths are 0.21–0.32 of the V7 values; the intervals span a factor 1.8–3.3 on 1 + |flux| instead of 9–60]{.claim}[C-259](/Blog/tokamak-toolkit/claims.qmd#c-259){.cid .st-measured}, [calibrated on 16 held-out runs and tested on the other 16, coverage is 0.870–0.894; the reverse direction gives 0.905–0.924; single runs 0.75–0.97]{.claim}[C-260](/Blog/tokamak-toolkit/claims.qmd#c-260){.cid .st-measured}, [calibrated on 4 held-out runs, the intervals cover 0.936–0.966 of the other 4; calibrated the other way they cover 0.711–0.818; not reliable for a new ITER run]{.claim}[C-261](/Blog/tokamak-toolkit/claims.qmd#c-261){.cid .st-measured}). Draft entry 77 is the
+M5 ([calibrated on half of the held-out v3 trajectory runs, the 90% half-widths are 0.21–0.32 of the V7 values; the intervals span a factor 1.8–3.3 on 1 + abs(flux) instead of 9–60]{.claim}[C-259](/Blog/tokamak-toolkit/claims.qmd#c-259){.cid .st-measured}, [calibrated on 16 held-out runs and tested on the other 16, coverage is 0.870–0.894; the reverse direction gives 0.905–0.924; single runs 0.75–0.97]{.claim}[C-260](/Blog/tokamak-toolkit/claims.qmd#c-260){.cid .st-measured}, [calibrated on 4 held-out runs, the intervals cover 0.936–0.966 of the other 4; calibrated the other way they cover 0.711–0.818; not reliable for a new ITER run]{.claim}[C-261](/Blog/tokamak-toolkit/claims.qmd#c-261){.cid .st-measured}). Entry 77 is the
 narrative account. The V7 records above remain the M4 deliverable.
 
 The held-out v3 test runs are whole TORAX trajectories: eight for ITER and 32 for MAST-U.
@@ -682,3 +725,192 @@ guarantee assumes that calibration and test points are exchangeable. With four r
 half and systematic differences between runs, that assumption fails for ITER. A
 calibration that treats runs as the unit needs more held-out trajectories than the eight
 available.
+
+### Direct ELU pilot {#direct-elu-pilot}
+
+A separate proof graph replaces the ELU decomposition with a direct convex
+relaxation. For alpha=1, let $f(x)=x$ for $x\ge0$ and $f(x)=e^x-1$ otherwise.
+On a finite interval $[l,u]$, the tangent at $t$ gives
+$f(x)\ge f(t)+f'(t)(x-t)$, and convexity gives
+$f(x)\le f(l)+(f(u)-f(l))(x-l)/(u-l)$. Point intervals use the local derivative;
+positive intervals are exactly linear. The fixed tangent uses the interval midpoint
+clipped to $[-1,0]$, with exact handling for point and positive intervals. This
+choice is valid but does not optimize tightness.
+
+The saturated head has the equivalent expression
+$f(1-\operatorname{ReLU}(-s))-f(1-\operatorname{ReLU}(s))$.
+Each term is in $[-1,1]$, so the expression retains the structural range $[-2,2]$
+without subtracting unbounded linear terms. Input preprocessing, normalization,
+weights, heat-output ReLU and inverse signed-log remain those of the saved model.
+The direct-ELU operator is used only by the separate experimental proof runner.
+
+Fresh JAX parity on random-box and original held-out points precedes each proof,
+including the existing physical-export check. CROWN is intersected with interval
+propagation. The focused checks are [40 focused checks pass in both normal and Tier A modes; lint, formatting and typing pass]{.claim}[C-269](/Blog/tokamak-toolkit/claims.qmd#c-269){.cid .st-measured}. The pilot outcome is
+[member 0 of each ensemble remains unknown; both processes complete in about 23 seconds, with physical inverse-transform overflow and looser intervals than the earlier optimized run]{.claim}[C-268](/Blog/tokamak-toolkit/claims.qmd#c-268){.cid .st-measured}: both selected members remain unknown, and the unoptimized
+bounds are looser than the previous optimized calculation. The other members were
+not attempted. No physical counterexample or new guard domain follows.
+
+The audit binds saved source, model, property, full-box intervals and process
+outcomes. Arithmetic has the same float64 real-network scope as the earlier V5
+calculations. Improve intermediate intervals and tangent selection before another
+frozen pilot; a larger run of the current method is not justified by these results.
+
+### Optimized direct ELU and intermediate diagnostics {#optimized-direct-elu}
+
+The direct-ELU lower relaxation can be parameterized by slope rather than tangent
+location. For $a\in[0,1]$,
+
+$$f(x)\ge ax+a-1-a\log a.$$
+
+For $a>0$ this is the tangent at $\log a$; at $a=0$ its continuous limit is the
+constant $-1$. This includes strongly saturated lower bounds that the earlier
+fixed tangent, clipped to $[-1,0]$, could not select. Optimizer parameters are
+clipped to $[0,1]$ separately per objective and bound side. Positive-only and
+point intervals retain their exact affine expression. The upper secant and the
+saved network remain unchanged. A finite logarithm floor handles the zero-slope
+limit with a conservative intercept and finite gradients.
+
+The runner computes CROWN and interval propagation first, then alpha-CROWN, and
+intersects all three results. It saves each interval separately so the effect
+of optimization can be assessed on the same graph and domain. It also records
+the minimum lower endpoint, maximum upper endpoint, largest neuron width and
+sign-region counts for each ELU input in the baseline CROWN pass. Completed
+diagnostics remain available if subsequent optimization fails.
+
+The new frozen pilot uses member 0 of each baseline ensemble, a single leaf and
+twelve optimizer iterations with a ten-second soft budget per bound side. Each
+process finishes in about 45 seconds. Its outcome is [both selected members remain unknown despite interval-width reductions of about 30–275 times against the same-graph fixed-tangent baseline; physical inverse-transform overflow persists]{.claim}[C-272](/Blog/tokamak-toolkit/claims.qmd#c-272){.cid .st-measured}; its
+validation is [50 focused checks pass normally and with Tier B disabled; repository lint, formatting and typing of all 91 source modules pass]{.claim}[C-273](/Blog/tokamak-toolkit/claims.qmd#c-273){.cid .st-measured}. The training-space interval widths are
+0.00364–0.02586 of the same-process unoptimized widths for ITER and
+0.00549–0.03332 for MAST-U. No finite physical enclosure results.
+
+There are 39 direct-ELU nodes in each graph. Baseline activation-input widths
+reach $1.1014\times10^{10}$ for ITER and $1.1079\times10^9$ for MAST-U. These
+intervals describe a relaxation and need not be reachable model activations.
+The retained source/model/property hashes and saved-output audit preserve the
+comparison. Next tighten intermediate intervals, using analytic activation
+ranges while retaining complete input coverage, before another member-level
+pilot. The present result does not justify an ensemble expansion or a guard
+output domain. V5 and [K-033](/Blog/tokamak-toolkit/ceilings.qmd#k-033) remain open.
+
+### Intermediate range pilot {#intermediate-range-pilot}
+
+The next proof setting enables the verifier's intersection of intermediate
+CROWN and interval-propagation bounds. Direct ELU activation intervals are
+obtained from monotonicity once the preactivation interval is bounded. The
+setting is explicit and opt-in; prior calculations keep their defaults.
+
+The two-member full-box pilot gives [both selected transport members remain physically unknown; largest baseline activation widths fall to 0.246 and 0.449 of the preceding pilot, but inverse signed-log overflow persists]{.claim}[C-274](/Blog/tokamak-toolkit/claims.qmd#c-274){.cid .st-measured}. Largest baseline
+activation-input widths fall to 0.2456 of the preceding ITER width and 0.4491
+for MAST-U. The physical inverse still overflows. Final optimized intervals
+are not uniformly tighter: the soft optimization time limits stop iterations
+at different points. Neither a finite physical bound nor a full ensemble
+certificate follows, and the other members were not attempted.
+
+### EC local robustness and recorded states {#ec-local-robustness}
+
+The EC robustness property applies to the served ensemble heating centre. If
+$g_i(x)$ is member $i$'s raw output in physical units, the source returns
+
+$$c(x)=\operatorname{clip}\left(\frac{1}{M}\sum_i g_i(x)_2,0,1\right).$$
+
+The proof graph sums raw member centres and divides by the member count. This
+preserves the batch axis for the verifier. A monotone clamp is applied to the
+final raw enclosure. Clamping each member first would change the response.
+Fresh parity against JAX is checked on recorded states and original held-out
+inputs before any local bound can be issued.
+
+The exact input matrix is recorded from TORAX's accepted output states using
+the source's own interpolation: electron temperature, density and effective
+charge at the reference tabular radii, then the launcher flag and launch
+coordinates. Saved face profiles allow an independent reconstruction. Model
+and metadata hashes, complete input and resolved configurations, times,
+numerical outputs and raw guard decisions accompany the trace. The result is
+[30 upper-launcher states (29 served) and 27 equatorial-launcher states (16 served) retain exact features, profiles, outputs, model identity, configurations and guard decisions]{.claim}[C-275](/Blog/tokamak-toolkit/claims.qmd#c-275){.cid .st-measured}. This is state recording, not a new physical reference pass.
+
+At a state $x$, continuous coordinates receive half-width
+$\delta_j=0.01(u_j-l_j)$ from the full stored training ranges; the launcher flag
+has zero half-width. The full local box is $[x-\delta,x+\delta]$. The property
+requires it to lie inside $[l,u]$; boundary sides are not clipped. Only an
+eligible box can be certified against $|c(z)-c(x)|\le0.05$ throughout the box.
+A true evaluated violating point can falsify the property. An enclosure that
+extends past the tolerance is unknown unless such a point is found.
+
+Every recorded box is out of domain ([all 57 complete EC local boxes are out of domain, including all 45 served states; zero robustness proofs or model counterexamples are claimed]{.claim}[C-276](/Blog/tokamak-toolkit/claims.qmd#c-276){.cid .st-measured}). Effective charge
+lies near the lower 1.6 boundary and its symmetric perturbation extends to
+about 1.596. Upper and equatorial launcher positions occupy opposite training
+R/Z edges; perturbing either position symmetrically crosses a boundary at every
+state. Some late equatorial temperature profiles are outside the trained range
+as well. The state guard can serve a point at an edge without certifying a
+neighbourhood. No CROWN state-bound calculation is needed for these exclusions.
+
+[K-034](/Blog/tokamak-toolkit/ceilings.qmd#k-034) records this limitation. [OQ-45](/Blog/tokamak-toolkit/decisions.qmd#oq-45) asks whether to retain the strict result
+or approve a separately stated perturbation scope. No property or tolerance
+has changed. The deterministic later reference selection is [twenty output states per launcher are selected at evenly spaced indices for the later GENRAY comparison; no reference solver execution or accuracy result]{.claim}[C-278](/Blog/tokamak-toolkit/claims.qmd#c-278){.cid .st-measured}:
+equally spaced state indices including both endpoints, independent of guard
+outcome or surrogate error. Equilibrium, profile conversion, launch settings,
+executable and resource bounds still need a concrete GENRAY package.
+
+The first frozen package omitted dataset provenance sidecars. Its proof stages
+failed during loading; the successful EC recordings were retained and reused.
+A corrected package binds those sidecars and exercises all actual relocated
+loaders before proof execution. Independent audits check the saved bounds,
+feature reconstruction, inference outputs, raw guard masks, complete local
+boxes, boundary reasons, process results and reference selection. Focused
+validation is [70 focused checks pass normally and with Tier B disabled; lint, formatting and typing of all 92 source modules pass]{.claim}[C-277](/Blog/tokamak-toolkit/claims.qmd#c-277){.cid .st-measured}; it does not claim a fresh full-suite run.
+
+## EC–GENRAY reference comparison {#ec-genray-reference-comparison}
+
+The EC reference package is [forty decks bound to the unchanged selection, exact model and traces, frozen source, equilibrium, executable and runtime; eight workers with a thirty-minute hard limit]{.claim}[C-279](/Blog/tokamak-toolkit/claims.qmd#c-279){.cid .st-measured}. The implementation lives in
+`tkit.verify.ec_reference`; entry 84 is the narrative account.
+State selection is inherited without alteration from
+the evenly spaced indices in the retained traces. The preparer checks model
+and metadata hashes, feature names and dimensions, and exact state, time,
+launch and guard identities. It independently reconstructs each input from
+the saved face profiles at the reference tabular radii. The recorded feature
+vector supplies the deck: temperature converts from electron-volts to
+kilo-electron-volts and density to the reference tabular units. Launcher
+positions and angles keep their original convention.
+
+The request binds rendered decks, all toolkit source, the reference template
+and equilibrium, executable, resolved shared-library bytes and Python version.
+The batch process imports the frozen source explicitly. Preflight rechecks
+those identities from the actual execution path. Exclusive evidence paths and
+a request-level consumed marker prevent accidental reruns, including attempts
+with different output paths. Each case has a hard timeout and retains the
+actual deck, native output, logs, status and checksums. An audit reconstructs
+the comparison from these bytes without rerunning the reference solver.
+
+The reference absorbed power is the sum of Landau and collisional electron
+heating. The existing current label and sign convention are retained: multiply
+the native total current by the sign of the equilibrium plasma-current and
+magnetic-field product, so co-current is positive. Native totals are normalized
+by the actual injected power to the model's reference injection. Compare with
+the physically bounded ensemble outputs recorded before guard selection.
+
+For prediction $p$ and reference $r$, the per-case error is
+$|p-r|/|r|$, checked against the unchanged tolerance in [C-279](/Blog/tokamak-toolkit/claims.qmd#c-279). No flux or
+current denominator floor is introduced. An exactly zero reference passes
+only with an exactly zero prediction; the remaining zero-reference errors
+are undefined and fail. The report retains every case and its power and
+current error. It reports both all-selected and served-only conjunctions;
+any missing or failed reference makes the overall comparison incomplete.
+Rejected-state predictions are diagnostic and cannot establish accuracy of
+the source actually used by TORAX.
+
+[K-028](/Blog/tokamak-toolkit/ceilings.qmd#k-028) still applies: the reference uses the existing fixed equilibrium, rather
+than a sequence matched to the evolving TORAX geometry. Agreement in this
+comparison would test the retained surrogate/reference convention on loop
+states; it would not establish a reference-coupled trajectory or certify M4.
+[OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42) and the measured EC local-domain limitation remain unchanged. Focused
+validation is [40 affected tests pass normally and with Tier B disabled; repository lint, formatting, typing of 93 modules and batch syntax pass]{.claim}[C-280](/Blog/tokamak-toolkit/claims.qmd#c-280){.cid .st-measured}.
+
+The completed run and independent saved-output audit give [40/40 cases pass the unchanged 10% power and signed-current limits, including 31/31 served states; maximum current error 9.606% EL and 7.393% UL, maximum power error 0.07483% EL and 0.02599% UL]{.claim}[C-281](/Blog/tokamak-toolkit/claims.qmd#c-281){.cid .st-measured}.
+Every preselected case has a successful reference and meets both criteria,
+including the subset served by the actual guard. The independent audit reloads
+the frozen model, recomputes its predictions and reconstructs guard decisions
+before comparing native-total algebra against the report. Rejected predictions
+remain separately identified. This completes the sampled V9 comparison under
+the existing reference convention; it does not lift [K-028](/Blog/tokamak-toolkit/ceilings.qmd#k-028) or the EC local-box
+limitation, and the M4 certification review remains pending.

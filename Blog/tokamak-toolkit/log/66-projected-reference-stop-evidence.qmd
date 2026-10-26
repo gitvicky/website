@@ -1,0 +1,43 @@
+---
+title: The projected reference stopped at its heat-flux limit
+date: '2026-10-24'
+categories:
+- fixed
+- measured
+entry: 66
+milestone: M4
+---
+
+::: {.entry-meta}
+[bug fix]{.chip .fixed} [measurement]{.chip .measured} Entry 66 · milestone M4
+:::
+
+The owner chose a standard-settings reference for the MAST Upgrade transport
+comparison, with negative heat coefficients projected to zero and a stop limit
+on the size of the projected heat flux. A review of the saved job shows that it reached
+that limit and failed ([the projected-reference job failed after 108 s when the log reported 3.93119 gB against the 1 gB stop limit; no completed reference was saved]{.claim}[C-217](/Blog/tokamak-toolkit/claims.qmd#c-217){.cid .st-measured}). No completed reference trajectory
+exists, so the candidate's coupled temperature acceptance remains unevaluable.
+
+The runner checked the limit before saving its diagnostic history. The log
+retains the magnitude, but the triggering face, state and channel were lost.
+The revised runner saves each accepted-state projection before checking the
+limit and retains raw triggering diagnostics on a stop. It also keeps nonfinite
+coefficients invalid, and the result reviewer requires complete guard evidence
+and comparison inputs bound to the executed package.
+
+Synthetic tests exercise the stop through the real loop with the physical solver
+forbidden. The frozen training manifest and model hashes remain consistent with
+the approved experiment. The plan now records the consumed failed job and the
+missing evidence. The current model, guard and acceptance limits remain unchanged.
+
+## What's next
+
+[OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42) (25 Oct 2026) limited the MAST-U scope: the closed-loop reference comparison
+is reported as not evaluable, and no further MAST-U reference compute is planned.
+Entry 70 covers that decision. The reporting fix does not establish reference
+admissibility.
+
+::: {.entry-links}
+**Technical details →** [Verification › projected reference stop review](/Blog/tokamak-toolkit/technical/verification.qmd#projected-reference-stop-review)  
+**Decisions →** [OQ-33](/Blog/tokamak-toolkit/decisions.qmd#oq-33) · [OQ-38](/Blog/tokamak-toolkit/decisions.qmd#oq-38) · [OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42)
+:::

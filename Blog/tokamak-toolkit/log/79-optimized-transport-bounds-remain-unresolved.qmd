@@ -1,0 +1,62 @@
+---
+title: Optimized transport bounds remain too wide for physical limits
+date: '2026-10-26'
+categories:
+- built
+- measured
+entry: 79
+milestone: M4
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} [measurement]{.chip .measured} Entry 79 · milestone M4
+:::
+
+We tried a tighter bound calculation for the transport surrogates. The first
+[output-bound run](78-output-bounds-and-unresolved-transport-limits.qmd) enclosed the
+network outputs in their signed-log training units, but converting those intervals
+back to flux overflowed. A [guard](../primer.qmd) needs finite physical
+limits before it can use these certificates.
+
+The follow-up uses alpha-CROWN, which optimizes the linear relaxations used to bound
+the network. On each input box, we intersect its interval with ordinary CROWN and
+interval propagation. Each interval encloses the same network, so their intersection
+retains that enclosure while taking the tightest available endpoint. Interval
+propagation also preserves the nonnegative range of the heat-flux heads.
+
+The saved runs kept the original weights and complete input boxes. Their budgets
+were [three optimizer iterations, a five-second soft budget per bound side and one leaf per member; both twenty-member runs finished within the nine-minute hard process limit]{.claim}[C-267](/Blog/tokamak-toolkit/claims.qmd#c-267){.cid .st-measured}. We did not narrow the domain or change the physical
+acceptance contract.
+
+| ensemble | training-space interval width relative to the first run |
+|---|---|
+| ITER | [median width 0.164 of the earlier bound, range 0.082–0.605 across member outputs; all twenty physical member results remain unknown]{.claim}[C-265](/Blog/tokamak-toolkit/claims.qmd#c-265){.cid .st-measured} |
+| MAST-U | [median width 0.114 of the earlier bound, range 0.060–0.220 across member outputs; all twenty physical member results remain unknown]{.claim}[C-266](/Blog/tokamak-toolkit/claims.qmd#c-266){.cid .st-measured} |
+
+These are comparisons of two budgeted runs: the optimized calculation used one leaf,
+whereas the original CROWN calculation used four. The reductions therefore describe
+the retained calculations, rather than isolating the effect of optimization.
+
+Every member still has an upper or lower bound too large for the inverse signed-log
+transform. The reports preserve the finite training-space bounds and explicitly mark
+the physical result unknown. The larger numerical values are bounds produced by
+relaxation; we have no counterexample showing that the network actually reaches them.
+
+Before bounding, each member export is compared with JAX on random-box and held-out
+inputs. The evidence audit checks the saved hashes, complete boxes, member outcomes
+and overflow reasons. These checks share the toolkit's export and audit machinery;
+they are not an independent implementation of the proof. The calculation concerns
+real-valued networks represented by saved parameters, with float64 arithmetic and no
+directed-rounding guarantee.
+
+## What's next
+
+V5 remains incomplete. Tighter physical transport bounds are still required for
+certificate-bound guards. EC and pedestal keep their earlier finite enclosures, and
+MAST-U's accepted certification limitation remains in force. Local robustness, the
+EC coupled comparison and the owner's certification review remain ahead.
+
+::: {.entry-links}
+**Technical details →** [Verification › optimized output bounds](/Blog/tokamak-toolkit/technical/verification.qmd#optimized-output-bounds)  
+**Decisions →** [OQ-22](/Blog/tokamak-toolkit/decisions.qmd#oq-22) · [OQ-24](/Blog/tokamak-toolkit/decisions.qmd#oq-24) · [OQ-26](/Blog/tokamak-toolkit/decisions.qmd#oq-26) · [OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42)
+:::

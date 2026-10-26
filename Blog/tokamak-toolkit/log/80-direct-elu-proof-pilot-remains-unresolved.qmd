@@ -1,0 +1,53 @@
+---
+title: Direct ELU bounds do not resolve the transport proof
+date: '2026-10-26'
+categories:
+- built
+- measured
+entry: 80
+milestone: M4
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} [measurement]{.chip .measured} Entry 80 · milestone M4
+:::
+
+The transport output proof remains open. The earlier optimized bounds were too wide
+to convert from signed-log units back to flux. We tested whether changing the proof
+graph could help, while preserving the saved model and its complete input box.
+
+The new graph treats ELU directly. This activation is increasing and convex: a
+tangent lies below it, and a line through an interval's endpoints lies above it.
+The saturated part of each monotone head also has an equivalent expression whose
+terms stay bounded. This changes the bound calculation while preserving the
+network's predictions.
+
+We checked the analytic relaxation and compared selected exports with JAX. The
+proof runner also requires fresh random-box and held-out parity before each member
+calculation. The focused validation is [40 focused checks pass in both normal and Tier A modes; lint, formatting and typing pass]{.claim}[C-269](/Blog/tokamak-toolkit/claims.qmd#c-269){.cid .st-measured}.
+
+The pilot bounded one member per machine before considering a larger run:
+
+| calculation | outcome |
+|---|---|
+| direct-ELU CROWN intersect interval propagation | [member 0 of each ensemble remains unknown; both processes complete in about 23 seconds, with physical inverse-transform overflow and looser intervals than the earlier optimized run]{.claim}[C-268](/Blog/tokamak-toolkit/claims.qmd#c-268){.cid .st-measured} |
+
+Both processes finished and retained their training-space intervals, physical
+conversion failures and source hashes. The intervals are looser than the preceding
+optimized calculation. This is not a controlled comparison of graph representations:
+the earlier run optimized its relaxation, while this pilot used fixed tangents.
+
+We did not expand the unsuccessful pilot to the other members. A loose relaxation
+is not a counterexample showing that the model reaches these extremes. It also
+cannot supply a finite physical output domain to a guard.
+
+V5 remains incomplete. Next comes improving intermediate activation intervals and
+optimizing tangent choices before another small pilot. Transport local robustness
+needs a certified full-box output range for its relative tolerance; EC robustness
+and preparation of the EC reference comparison can proceed independently. The
+MAST-U reference limitation and the final certification review remain open.
+
+::: {.entry-links}
+**Technical details →** [Verification › direct elu pilot](/Blog/tokamak-toolkit/technical/verification.qmd#direct-elu-pilot)  
+**Decisions →** [OQ-22](/Blog/tokamak-toolkit/decisions.qmd#oq-22) · [OQ-24](/Blog/tokamak-toolkit/decisions.qmd#oq-24) · [OQ-26](/Blog/tokamak-toolkit/decisions.qmd#oq-26) · [OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42)
+:::

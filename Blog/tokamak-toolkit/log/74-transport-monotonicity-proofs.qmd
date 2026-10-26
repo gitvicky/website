@@ -1,0 +1,43 @@
+---
+title: Both transport ensembles pass the monotonicity proof
+date: '2026-10-25'
+categories:
+- built
+- measured
+entry: 74
+milestone: M4
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} [measurement]{.chip .measured} Entry 74 · milestone M4
+:::
+
+The transport networks now have a proof of an imposed response: increasing the paired
+temperature gradient cannot reduce the predicted heat flux when the other network inputs
+stay fixed ([all 20 members of each ensemble pass both heat-flux monotonicity properties, with derivative lower bound zero over the full training box]{.claim}[C-247](/Blog/tokamak-toolkit/claims.qmd#c-247){.cid .st-measured}). This is a statement about the networks. It does not
+establish that they reproduce the underlying physics where TGLF itself is non-monotone.
+
+The checks take two routes. The first inspects the saved weights and confirms that every
+path from the selected gradient to its heat-flux output has non-negative gain. The second
+asks the bound-propagation library to bound the derivative. Each activation slope stays
+between zero and one; letting those slopes vary independently gives a larger domain that
+contains every state reachable within the training box. Both routes agree.
+
+Before proving each member, its exported predictions and derivative calculation are checked
+against the JAX model on random-box and held-out inputs. The certificates bind the model,
+box, property, verifier source and numerical results. A negative-path regression checks that
+a deliberately decreasing derivative is detected.
+
+The proof belongs to the saved model and its declared property. The deployed model and
+guard are unchanged, and the MAST-U reference limitation remains. The owner's final M4
+certification review is still ahead.
+
+## What's next
+
+V5 will bound the outputs of transport, EC and pedestal models. Those bounds, calibration,
+remaining coupled checks and guard integration are needed before the certification review.
+
+::: {.entry-links}
+**Technical details →** [Verification › transport monotonicity](/Blog/tokamak-toolkit/technical/verification.qmd#transport-monotonicity)  
+**Decisions →** [OQ-20](/Blog/tokamak-toolkit/decisions.qmd#oq-20) · [OQ-22](/Blog/tokamak-toolkit/decisions.qmd#oq-22) · [OQ-24](/Blog/tokamak-toolkit/decisions.qmd#oq-24) · [OQ-26](/Blog/tokamak-toolkit/decisions.qmd#oq-26) · [OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42)
+:::

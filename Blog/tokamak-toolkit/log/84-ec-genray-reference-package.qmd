@@ -1,0 +1,56 @@
+---
+title: EC loop-state power and current pass the fixed GENRAY reference criterion
+date: '2026-10-26'
+categories:
+- built
+- measured
+entry: 84
+milestone: M4
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} [measurement]{.chip .measured} Entry 84 · milestone M4
+:::
+
+M4 needs a reference check of the electron-cyclotron heating surrogate on states
+the coupled simulation actually visits. The saved state selection now has a
+complete GENRAY comparison, with every case retained.
+
+The package reconstructs the model inputs from saved plasma profiles before
+rendering the solver decks. It retains the original state indices, times,
+launch settings and guard decisions. Source, model, traces, decks, reference
+equilibrium, executable and runtime libraries are bound by checksums. An
+exclusive attempt marker prevents a changed output path from rerunning the
+same request.
+
+| item | evidence |
+|---|---|
+| frozen reference cases | [forty decks bound to the unchanged selection, exact model and traces, frozen source, equilibrium, executable and runtime; eight workers with a thirty-minute hard limit]{.claim}[C-279](/Blog/tokamak-toolkit/claims.qmd#c-279){.cid .st-measured} |
+| affected validation | [40 affected tests pass normally and with Tier B disabled; repository lint, formatting, typing of 93 modules and batch syntax pass]{.claim}[C-280](/Blog/tokamak-toolkit/claims.qmd#c-280){.cid .st-measured} |
+| completed reference comparison | [40/40 cases pass the unchanged 10% power and signed-current limits, including 31/31 served states; maximum current error 9.606% EL and 7.393% UL, maximum power error 0.07483% EL and 0.02599% UL]{.claim}[C-281](/Blog/tokamak-toolkit/claims.qmd#c-281){.cid .st-measured} |
+
+The comparison includes both electron heating channels and preserves the
+current sign convention. It reports every case, separating states where the
+guard served the surrogate from rejected predictions. A rejected prediction
+is diagnostic: it was not the source used by the simulation. Missing or failed
+reference outputs prevent a complete comparison. A zero reference is handled
+explicitly, without introducing a denominator floor.
+
+The reference keeps the existing fixed-equilibrium convention. Substituting
+new profiles into that equilibrium does not produce an equilibrium-matched
+reference trajectory. The package and result retain this limitation.
+
+Tests check reconstruction, units, signed errors, failure accounting and
+evidence tampering. They use synthetic outputs and fake executables; physical
+agreement comes from the separate batch execution. The bounded request
+completed under the standing M4 compute authorization. The independent audit
+reconstructs native totals, reloads the model for fresh inference parity and
+checks every guard decision. Every selected case passes both criteria,
+including the served subset. The rejected predictions remain diagnostics.
+V9 is complete within its stated reference convention. Transport output bounds,
+the EC robustness scope and the certification review remain open.
+
+::: {.entry-links}
+**Technical details →** [Verification › ec genray reference comparison](/Blog/tokamak-toolkit/technical/verification.qmd#ec-genray-reference-comparison)  
+**Decisions →** [OQ-21](/Blog/tokamak-toolkit/decisions.qmd#oq-21) · [OQ-33](/Blog/tokamak-toolkit/decisions.qmd#oq-33) · [OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42)
+:::

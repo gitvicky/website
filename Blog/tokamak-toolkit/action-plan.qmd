@@ -10,7 +10,7 @@ disclosure:
 
 ## Current position
 
-*Updated 25 Oct 2026.*
+*Updated 26 Oct 2026.*
 
 **M4, verification.** Model storage, tooling, the PyTorch export and the property contracts
 are done, and so is the closed-loop transport comparison: ITER passes
@@ -27,18 +27,19 @@ the EQDSK as given, is closed on the time-step check
 accepted equilibrium ([entry 71](log/71-case-b-equilibrium-from-the-torax-state.qmd)) and an
 n-scan in which n = 12, 16 and 20 grow at the pedestal
 ([entry 73](log/73-case-b-n-scan-three-pedestal-modes.qmd)), converged in time step
-([entry 75](log/75-time-step-check-of-the-case-b-pedestal-modes.qmd)). Three of its five approved
-jobs are used; the grid check awaits [OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43).
+([entry 75](log/75-time-step-check-of-the-case-b-pedestal-modes.qmd)). The grid check chosen
+under [OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43) is running as a chain of jobs on the doubled grid
+([entry 81](log/81-grid-check-of-the-case-b-pedestal-modes-set-up-and-cost.qmd)).
 
 ## M4 to the certification review {#m4}
 
 | step | work | done when | needs |
 |---|---|---|---|
 | proofs (done) | transport monotonicity in the normalised temperature gradients | both proof routes agree ([all 20 members of each ensemble pass both heat-flux monotonicity properties, with derivative lower bound zero over the full training box]{.claim}[C-247](/Blog/tokamak-toolkit/claims.qmd#c-247){.cid .st-measured}) | — |
-| output bounds | certified output bounds per ensemble member over each training box: transport, EC per launcher family, pedestal around the ITER states the loop visits | certificates; transport bounds wired into the guard | — |
+| output bounds (in progress) | EC and pedestal bounded ([all five EC members have finite CROWN bounds for both launcher families; current and width bounds remain very loose]{.claim}[C-262](/Blog/tokamak-toolkit/claims.qmd#c-262){.cid .st-measured}, [all nine pedestal pressure and half-width pairs have finite bounds over the recorded ITER trajectory box, with the widening and domain clipping stated]{.claim}[C-263](/Blog/tokamak-toolkit/claims.qmd#c-263){.cid .st-measured}); transport unresolved after optimized bounds and both direct-ELU pilots ([member 0 of each ensemble remains unknown; both processes complete in about 23 seconds, with physical inverse-transform overflow and looser intervals than the earlier optimized run]{.claim}[C-268](/Blog/tokamak-toolkit/claims.qmd#c-268){.cid .st-measured}, [both selected members remain unknown despite interval-width reductions of about 30–275 times against the same-graph fixed-tangent baseline; physical inverse-transform overflow persists]{.claim}[C-272](/Blog/tokamak-toolkit/claims.qmd#c-272){.cid .st-measured}; [all twenty members of each transport ensemble have finite training-space bounds that overflow the inverse signed-log transform; no finite physical guard domain is certified]{.claim}[C-264](/Blog/tokamak-toolkit/claims.qmd#c-264){.cid .st-measured}, [median width 0.164 of the earlier bound, range 0.082–0.605 across member outputs; all twenty physical member results remain unknown]{.claim}[C-265](/Blog/tokamak-toolkit/claims.qmd#c-265){.cid .st-measured}, [median width 0.114 of the earlier bound, range 0.060–0.220 across member outputs; all twenty physical member results remain unknown]{.claim}[C-266](/Blog/tokamak-toolkit/claims.qmd#c-266){.cid .st-measured}) | usable transport physical bounds; guard integration at V10 | tighter intermediate activation intervals before another subset pilot |
 | calibration (done) | split-conformal intervals for transport and EC; the pedestal model has no labelled data; a second transport calibration on loop states for M5 | coverage tables ([90% intervals calibrated on the v1 validation split cover 0.887–0.907 on the v1 test and v2-random splits (6 outputs, ITER and MAST-U); 9 of 12 lie in the 0.893–0.907 range expected for exchangeable data, the other three miss it by at most 0.006]{.claim}[C-256](/Blog/tokamak-toolkit/claims.qmd#c-256){.cid .st-measured}, [90% intervals calibrated on 190 guard-accepted validation states (4 runs) cover 0.876–0.978 of 548 served test states (8 runs); all six outputs lie within or above the 0.856–0.938 range expected for exchangeable data; per-run coverage 0.78–1.00]{.claim}[C-258](/Blog/tokamak-toolkit/claims.qmd#c-258){.cid .st-measured}); loop states: MAST-U usable ([calibrated on 16 held-out runs and tested on the other 16, coverage is 0.870–0.894; the reverse direction gives 0.905–0.924; single runs 0.75–0.97]{.claim}[C-260](/Blog/tokamak-toolkit/claims.qmd#c-260){.cid .st-measured}), ITER needs more held-out runs ([calibrated on 4 held-out runs, the intervals cover 0.936–0.966 of the other 4; calibrated the other way they cover 0.711–0.818; not reliable for a new ITER run]{.claim}[C-261](/Blog/tokamak-toolkit/claims.qmd#c-261){.cid .st-measured}) | — |
-| robustness | local robustness on small boxes around loop states | proved, falsified (with counterexample) or timed out, per surrogate | a CPU node if the proofs are heavy |
-| EC closed loop | about 20 states per launcher from coupled runs, compared with GENRAY on the same launches | comparison table, pass or fail | one small batch job |
+| robustness | EC assessment: all complete boxes out of domain ([all 57 complete EC local boxes are out of domain, including all 45 served states; zero robustness proofs or model counterexamples are claimed]{.claim}[C-276](/Blog/tokamak-toolkit/claims.qmd#c-276){.cid .st-measured}); transport needs V5 | domain-valid evidence or an explicit scope limitation | owner: [OQ-45](/Blog/tokamak-toolkit/decisions.qmd#oq-45); stronger transport bounds |
+| EC closed loop | forty model-bound states selected ([twenty output states per launcher are selected at evenly spaced indices for the later GENRAY comparison; no reference solver execution or accuracy result]{.claim}[C-278](/Blog/tokamak-toolkit/claims.qmd#c-278){.cid .st-measured}); GENRAY comparison pending | comparison table, pass or fail | freeze concrete solver input/executable/equilibrium and batch request |
 | guards | guards read the certified boxes and bounds; fallback rates checked against a threshold | rates reported against the threshold | owner: the threshold |
 | reports and CI | one verification report per surrogate, stating MAST-U's limitation; CI re-proves the cheap properties when a surrogate changes | reports cite their certificates; CI passes in both test modes | — |
 | review | the M4 report and the certification review | the owner's review recorded | owner (the gate) |
@@ -55,10 +56,9 @@ reported, and the boxes are not shrunk to make bounds tighter.
    Δt = 1 and Δt = 0.5; halving the step changes γ by about one part in ten thousand
    ([entry 75](log/75-time-step-check-of-the-case-b-pedestal-modes.qmd)). The doubled grid's
    axisymmetric state is ready.
-3. The grid check needs an owner decision ([OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43)). Repeating the slow emergence on the doubled grid
-   costs far more than the remaining jobs. The options are a grid check on case (a)'s two fast
-   pedestal modes instead, a long chain of case (b) jobs, a JOREK patch to carry an eigenmode
-   across grids, or the time-step check alone.
+3. Running: the grid check ([OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43), the owner chose the full check). n = 12, 16 and 20 rise
+   from round-off again on the doubled grid, in two chains of one-node jobs, about seven jobs
+   in all ([entry 81](log/81-grid-check-of-the-case-b-pedestal-modes-set-up-and-cost.qmd)).
 4. Report the case (b) growth rates per n with their convergence status, and add a ceiling if
    the grid check stays open.
 5. The owner then decides what JOREK becomes in the toolkit: a surrogate of a JOREK quantity,
@@ -69,7 +69,6 @@ reported, and the boxes are not shrunk to make bounds tighter.
 
 | when | decision |
 |---|---|
-| now ([OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43)) | how to run the JOREK grid check; recommendation: case (a)'s two fast pedestal modes, case (b) converged in Δt only |
 | at the guard step | the fallback-rate threshold, one value per machine |
 | end of J5 | JOREK's role: surrogate, reference runs, or neither |
 | end of M4 | the certification review |
@@ -109,7 +108,7 @@ profile deviations [final v3 surrogate: T_e 7.7%, T_i 9.2%, n_e 11.4%, psi 0.32%
 now rejects coarse-tolerance results, records effective CPU allocation, separates warm-up
 from execution and records final-state guard diagnostics after timing. Focused checks pass
 ([11 performance-tool checks pass in full and Tier-A-only modes]{.claim}[C-147](/Blog/tokamak-toolkit/claims.qmd#c-147){.cid .st-tested}). The offline saved-trace audit records unresolved component attribution
-([72059 complete HLO events with about 5.369 s of covered trace time]{.claim}[C-148](/Blog/tokamak-toolkit/claims.qmd#c-148){.cid .st-preliminary}); [K-022](/Blog/tokamak-toolkit/ceilings.qmd#k-022) remains open. Draft entry 28 is in the private review copy.
+([72059 complete HLO events with about 5.369 s of covered trace time]{.claim}[C-148](/Blog/tokamak-toolkit/claims.qmd#c-148){.cid .st-preliminary}); [K-022](/Blog/tokamak-toolkit/ceilings.qmd#k-022) remains open.
 
 ## Complete the EC and ITER pedestal contracts {#references}
 

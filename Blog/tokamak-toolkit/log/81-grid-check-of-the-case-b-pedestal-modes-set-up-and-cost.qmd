@@ -1,0 +1,65 @@
+---
+title: 'Grid check of the case (b) pedestal modes: set-up and cost'
+date: '2026-10-26'
+categories:
+- decision
+- measured
+entry: 81
+milestone: JOREK (alongside M4)
+---
+
+::: {.entry-meta}
+[decision]{.chip .decision} [measurement]{.chip .measured} Entry 81 · milestone JOREK (alongside M4)
+:::
+
+[Entry 75](75-time-step-check-of-the-case-b-pedestal-modes.qmd) showed that the growth rates of
+the three case (b) pedestal modes, n = 12, 16 and 20, do not change when the time step is
+halved. Decision 7 also asks for the grid to be doubled. Four ways of doing that were put to
+the owner ([OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43)). The owner chose the most expensive one: run all three modes again on the
+doubled grid, 160 × 256, starting from round-off as on the original grid. This entry
+describes how that check is set up and what it costs. The result will follow in a later entry.
+
+## Method
+
+The grid is the only change. Each mode starts from the doubled-grid axisymmetric state made
+in entry 75, and has to rise from round-off again. On the original grid that took several
+thousand time steps, far more than one six-hour job covers. The check is therefore a chain of
+jobs, each restarting every mode from its own latest saved state. Two rules were fixed before
+any step on the doubled grid ran, with every input recorded by checksum:
+- **Comparison.** The window rule of entry 73 is applied unchanged to both grids. A mode
+  passes if its growth rate changes by no more than the agreed tolerance and it stays at the
+  pedestal on both grids.
+- **When a mode stops.** A mode needs no further job once it has grown as far above its
+  minimum as its fit window reached on the original grid.
+
+## Memory and layout
+
+The first job showed that one run on the doubled grid needs about 235 GB at its peak
+([one linear run on the 160 × 256 grid peaks at 234–238 GB during its first step (270 GB with 4 processes × 32 threads), about four times the 80 × 128 run; two runs fit on one node]{.claim}[C-270](/Blog/tokamak-toolkit/claims.qmd#c-270){.cid .st-measured}), about four times the original grid's footprint. Only two runs fit on
+one node. The job script therefore started the runs one at a time and held back the third,
+as it was written to do. n = 20 now runs as a second chain on a node of its own.
+
+The same jobs compared ways of splitting a run over 128 cores. Four processes with 32
+threads each ran a step about twice as fast as two processes with 64 threads
+([a linear step on the 160 × 256 grid takes 6.1 s with 4 processes × 32 threads, 11.2 s with 2 × 64 and 16 s with 2 × 32 (two runs per node); on 80 × 128 it takes 4.2 s with 2 × 16]{.claim}[C-271](/Blog/tokamak-toolkit/claims.qmd#c-271){.cid .st-measured}). Every later job uses four processes. About seven jobs in all are
+expected, inside the number the owner approved.
+
+## What is still open
+
+The result. Until the chain ends, the case (b) growth rates are converged in time step
+only.
+
+Technical details → [JOREK](../technical/jorek.qmd#case-b-grid-check). Decision → [OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43).
+
+---
+
+*JOREK acknowledgement.* JOREK is developed by the JOREK team and is open source under
+the GNU LGPL v3. Results here use JOREK at commit `01a52be3`. Citations: M. Hoelzl et al.,
+Nuclear Fusion 61, 065001 (2021); M. Hoelzl et al., Nuclear Fusion 66, 116006 (2026). For a list
+of JOREK team members, refer to the author list of M. Hoelzl, G.T.A. Huijsmans, F.J. Artola,
+E. Nardon, M. Becoulet, N. Schwarz, A. Cathey, S.J.P. Pamela et al., Nuclear Fusion 64, 112016 (2024).
+
+::: {.entry-links}
+**Technical details →** [JOREK › case b grid check](/Blog/tokamak-toolkit/technical/jorek.qmd#case-b-grid-check)  
+**Decisions →** [OQ-39](/Blog/tokamak-toolkit/decisions.qmd#oq-39) · [OQ-43](/Blog/tokamak-toolkit/decisions.qmd#oq-43)
+:::

@@ -423,6 +423,22 @@ ul.task-list li input[type="checkbox"] {
 <td>Demonstrate an admissible MAST-U reference. OQ-38 adopted the standard-settings convention; it does not establish numerical convergence, and its projected trajectory stopped at the approved heat-flux limit. OQ-42 (25 Oct 2026) then limited the MAST-U certification scope, which states this ceiling as a limitation instead of lifting it.</td>
 <td><span class="badge st-open">open</span></td>
 </tr>
+<tr id="k-033" class="odd">
+<td class="cid-cell">K-033</td>
+<td>verification</td>
+<td>budgeted output relaxations do not yet give finite physical transport bounds</td>
+<td>Ordinary CROWN with four leaves and the alpha-CROWN follow-up with one leaf both retain finite signed-log training-space intervals that overflow the physical inverse transform for every transport member (C-264, C-265, C-266). A direct-ELU pilot on member 0 of each ensemble also overflows (C-268); its unoptimized intervals are looser, so the remaining members were not attempted. Optimizing that graph tightens the selected widths by about 30–275 times but still overflows (C-272); baseline intermediate widths reach about 1e10. Intermediate CROWN/interval intersections reduce the largest activation ranges but leave both selected members physically unknown (C-274). EC and pedestal have finite enclosures, with substantial looseness. Production guard domains are not derived from these results; V5 remains incomplete.</td>
+<td>Obtain usable physical output enclosures over the declared complete input domains, retain their evidence and integrate them at the certificate-bound guard step. Numerical proof failure alone does not establish a counterexample.</td>
+<td><span class="badge st-open">open</span></td>
+</tr>
+<tr id="k-034" class="even">
+<td class="cid-cell">K-034</td>
+<td>ec-verification</td>
+<td>all prescribed symmetric local robustness boxes leave the EC training domain</td>
+<td>All 57 EC loop states (30 UL, 27 EL), including the 45 served states, have complete symmetric perturbation boxes outside the stored domain at the approved one-percent input margin. Z_eff lies near the lower boundary and both launcher R/Z positions lie at box edges. The property forbids clipping. No EC robustness certificate or violating model counterexample follows (C-275, C-276). V6 needs the owner's scope disposition in OQ-45.</td>
+<td>Obtain domain-valid robustness evidence under an explicitly approved scope. If the owner retains the current property, carry this measured limitation into the certification review without relabelling out-of-domain boxes as passes.</td>
+<td><span class="badge st-open">open</span></td>
+</tr>
 </tbody>
 </table>
 

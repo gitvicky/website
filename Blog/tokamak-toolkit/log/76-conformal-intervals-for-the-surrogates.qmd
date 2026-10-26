@@ -1,0 +1,64 @@
+---
+title: Conformal intervals for the transport and EC surrogates
+date: '2026-10-25'
+categories:
+- built
+- measured
+entry: 76
+milestone: M4
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} [measurement]{.chip .measured} Entry 76 · milestone M4
+:::
+
+Each served output of the transport and EC surrogates now has an interval meant to contain
+nine labels in ten, with a coverage measurement behind it. The method is split conformal
+prediction. On a calibration split, the model's prediction errors are sorted. The interval
+half-width is the error that nine in ten of those points stay within, with a small
+correction for the finite sample. The intervals are then tested on held-out data that played
+no part in training or calibration. The library is MAPIE. Every half-width is also checked
+against the exact rank, and every stored record carries the hash of the model it belongs to.
+
+The transport models were calibrated on their validation split. That split was sampled
+uniformly over the kinetic input box, like most of the training data.
+
+| test split | how it was drawn | coverage (6 outputs, 2 machines) |
+|---|---|---|
+| v1 test, v2-random | like the calibration data | 0.887–0.907 |
+| v2 active-learning holdout | chosen by an earlier ensemble's disagreement | 0.909–0.955 |
+| v3 test | states on held-out TORAX trajectories | 0.996–1.000 |
+
+On the data drawn like the calibration split, coverage is close to nine in ten. For 10 000
+calibration and 10 000 test points, exchangeable data would land between 0.893 and 0.907
+nine times in ten. Nine of the twelve values fall in that range, and the other three miss
+it by at most 0.006 ([90% intervals calibrated on the v1 validation split cover 0.887–0.907 on the v1 test and v2-random splits (6 outputs, ITER and MAST-U); 9 of 12 lie in the 0.893–0.907 range expected for exchangeable data, the other three miss it by at most 0.006]{.claim}[C-256](/Blog/tokamak-toolkit/claims.qmd#c-256){.cid .st-measured}). On the trajectory states the coupled runs
+actually visit, the intervals over-cover ([the same intervals cover 0.996–1.000 of the v3 test states; there the half-width that would give 90% is 3.3–5.5 times smaller in signed-log units (ITER Q_e 0.48 against 2.21)]{.claim}[C-257](/Blog/tokamak-toolkit/claims.qmd#c-257){.cid .st-measured}). There, the error that nine in
+ten points stay within is 3.3–5.5 times smaller in the model's signed-log units than across
+the whole box. The intervals are wide for those states: for ITER's electron
+heat flux, the interval spans a factor of about 9 on 1 + |Q|.
+
+The EC surrogate was calibrated on 190 states from its four validation runs. These are the
+states its guard accepts; the guard sends the others to the Gaussian fallback. On 548
+served states from eight further runs, pooled coverage ranges from 0.876 for the heating
+centre to 0.978 for absorbed power. All six outputs lie within or above the range expected
+by chance ([90% intervals calibrated on 190 guard-accepted validation states (4 runs) cover 0.876–0.978 of 548 served test states (8 runs); all six outputs lie within or above the 0.856–0.938 range expected for exchangeable data; per-run coverage 0.78–1.00]{.claim}[C-258](/Blog/tokamak-toolkit/claims.qmd#c-258){.cid .st-measured}). States in one run are correlated, so coverage per run
+varies more, from 0.78 to 1.00.
+
+The pedestal model has no labelled data in this project, so it has no interval. Its record
+says why.
+
+None of this changes a deployed model, guard or tolerance. The intervals are evidence for
+the M4 certification review, and later the surrogate-error terms for M5's uncertainty
+propagation.
+
+## What's next
+
+We are awaiting a decision on adding a calibration on trajectory states for M5. The
+remaining M4 steps are output bounds, local robustness, the EC closed loop and guard
+integration, followed by the certification review.
+
+::: {.entry-links}
+**Technical details →** [Verification › conformal](/Blog/tokamak-toolkit/technical/verification.qmd#conformal)  
+**Decisions →** [OQ-22](/Blog/tokamak-toolkit/decisions.qmd#oq-22) · [OQ-44](/Blog/tokamak-toolkit/decisions.qmd#oq-44)
+:::
