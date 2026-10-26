@@ -155,7 +155,10 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#awaiting-a-decision" id="toc-awaiting-a-decision" class="nav-link active" data-scroll-target="#awaiting-a-decision">Awaiting a decision</a></li>
+  <li><a href="#awaiting-a-decision" id="toc-awaiting-a-decision" class="nav-link active" data-scroll-target="#awaiting-a-decision">Awaiting a decision</a>
+  <ul class="collapse">
+  <li><a href="#oq-43" id="toc-oq-43" class="nav-link" data-scroll-target="#oq-43">OQ-43 · Grid check for the JOREK case (b) growth rates</a></li>
+  </ul></li>
   <li><a href="#settled" id="toc-settled" class="nav-link" data-scroll-target="#settled">Settled</a>
   <ul class="collapse">
   <li><a href="#oq-42" id="toc-oq-42" class="nav-link" data-scroll-target="#oq-42">OQ-42 · MAST-U closed-loop check after the projected reference stopped</a></li>
@@ -231,7 +234,10 @@ window.Quarto = {
 <p>The brief lists the decisions that belong to a human: physics modelling choices, licence and data questions, which properties to prove, use of the compute cluster, and benchmark failures that aren’t explained by a bug. When the agent reaches one, it writes the question down with context and a recommended answer, carries on with whatever isn’t blocked, and waits. Numbers (OQ-<em>n</em>) match the project’s internal record. Newest first within each group.</p>
 <section id="awaiting-a-decision" class="level2">
 <h2 class="anchored" data-anchor-id="awaiting-a-decision">Awaiting a decision</h2>
-<p>No question is open. The next one expected is how to run the grid-resolution check of the JOREK case (b) growth rates, once the second case (b) job has been analysed.</p>
+<section id="oq-43" class="level3">
+<h3 class="anchored" data-anchor-id="oq-43">OQ-43 · Grid check for the JOREK case (b) growth rates</h3>
+<p>Awaiting a decision on how to check the case (b) growth rates against grid resolution. A from-scratch check on the doubled grid costs far more than the approved compute, because these modes rise slowly from round-off. The options are: the grid check on case (a)’s two faster pedestal modes, with case (b) reported as converged in time step only (recommended); a long chain of case (b) jobs; a JOREK patch to carry a mode across grids; or the time-step check alone.</p>
+</section>
 </section>
 <section id="settled" class="level2">
 <h2 class="anchored" data-anchor-id="settled">Settled</h2>

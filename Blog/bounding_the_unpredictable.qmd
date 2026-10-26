@@ -1,0 +1,709 @@
+---
+title: "Bounding the Unpredictable"
+subtitle: "Following uncertain inputs through a neural network"
+date: 2026-10-26
+description: "A research progression from loose intervals to attention bounds—and why a more elaborate method can give a worse enclosure."
+format:
+  html:
+    css: assets/bounding-the-unpredictable/styles.css
+    link-external-newwindow: true
+resources:
+  - assets/bounding-the-unpredictable/**
+---
+
+<div class="bound-intro">
+If a neural network's input can move anywhere within a known set, how far can its output move?
+</div>
+
+Neural surrogates now stand in for expensive simulations, including in fusion plasma modelling. There, a single prediction is not enough; we need to know where the output can go. Sampling inputs estimates that range but cannot prove it is complete. A **verified enclosure** can, provided it is tight enough to use.
+
+The cheapest enclosure is loose. Rather than survey every tighter method, we diagnose one source of looseness at a time and address it. Each section follows the same loop:
+
+1. **Diagnose:** identify the information the current bound discards.
+2. **Intervene:** choose a method that retains it.
+3. **Compare:** evaluate both on the same function and input set, reporting width alongside cost.
+
+| Section | Information lost | Intervention | Extra cost |
+|:--|:--|:--|:--|
+| [Intervals](#intervals) | repeated terms share a variable | rewrite the expression | none, when a rewrite exists |
+| [Shared variables](#dependencies) | linear dependence | affine arithmetic, zonotopes | one symbol per source of uncertainty |
+| [Curvature](#higher-order) | nonlinear terms, replaced by fresh noise | Taylor models | polynomial terms and a remainder |
+| [Polynomial ranges](#polynomial-ranges) | width when enclosing a known polynomial | Bernstein, Chebyshev | basis conversion, subdivision |
+| [Output-targeted bounds](#objective-bounds) | relationships between neurons | McCormick, DeepPoly, CROWN | a backward pass; optimisation for α-CROWN |
+| [Refinement](#refinement-strategy) | precision over a wide input region | subdivision, branch-and-bound, exact solvers | evaluations per region; branches can grow rapidly |
+
+The examples move up in complexity: a scalar function, then [a small ReLU network](#networks), then [an attention head](#attention).
+
+**A more elaborate method is not automatically a tighter one.** Three times below — the centred form, the degree-two Taylor model and fixed-slope CROWN — the more sophisticated choice gives a bound no tighter than the simpler one. Each failure sharpens the diagnosis.
+
+Derivations and supplementary experiments sit in the collapsible sections. [Code and reproduction instructions](assets/bounding-the-unpredictable/README.md) · [Verification and limitations](assets/bounding-the-unpredictable/VERIFICATION.md)
+
+## What counts as a good bound {#the-question}
+
+Consider a fixed network $f$ and a set of possible inputs $\mathcal X$. We seek two numbers such that
+
+$$
+\boxed{L\le f(x)\le U\qquad\text{for every }x\in\mathcal X.}
+$$
+
+A bound is **sound** if it contains every possible output and **tight** if it leaves little extra room. Soundness is non-negotiable; tightness costs computation.
+
+A fair comparison fixes the function, the input set and the output being bounded, and reports the width $U-L$ alongside the computational work. Widening the input set changes the problem, not the method. Samples can expose an unsound bound but cannot certify a sound one.
+
+<p class="bound-reading-note" id="arithmetic-note"><strong>About the experiments:</strong> the formulas assume real arithmetic. Browser rounding is not validated, so the numerical results are illustrative, not machine-verified certificates.</p>
+
+<details class="bound-extra">
+<summary>Mathematics: exact ranges and validated arithmetic</summary>
+
+For a scalar output, define
+
+$$
+y_{\min}=\inf_{x\in\mathcal X}f(x),\qquad
+y_{\max}=\sup_{x\in\mathcal X}f(x).
+$$
+
+We seek $L\le y_{\min}\le y_{\max}\le U$. A continuous function on a nonempty compact set attains both extrema. For vector outputs, these inequalities apply componentwise; an output box can still lose relationships between components.
+
+**Validated arithmetic** makes the mathematical inclusion survive computation: round lower endpoints down and upper endpoints up, including errors in coefficients, transcendental functions and optimisation results. This establishes soundness; it does not itself remove dependency overestimation. Adding an arbitrary small epsilon is not a proof. Here, binary64 arithmetic is unvalidated and every result has `certified: false`; finite tests diagnose errors but cannot prove a continuum claim.
+
+</details>
+
+## Intervals forget shared variables {#intervals}
+
+We start with the simplest case that exposes the main failure. Consider
+
+$$
+f(x)=x(1-x),\qquad x\in[0,1].
+$$
+
+The maximum lies at $x=1/2$, so the exact range is $[0,1/4]$.
+
+**Baseline.** Interval arithmetic bounds each operation independently: $x\in[0,1]$ and $1-x\in[0,1]$, so their product lies in $[0,1]$. The bound is sound but four times wider than the true range.
+
+**Diagnosis.** Both factors depend on the same $x$, so they cannot both equal one. Interval arithmetic discards this. The expression $x-x$ isolates the failure: interval subtraction returns $[-1,1]$ for a quantity that is always zero.
+
+**Intervention.** By rewriting the expression so that $x$ appears once, we restore the lost relationship. Completing the square gives
+
+$$
+x(1-x)=\frac14-(x-\tfrac12)^2,
+$$
+
+and interval arithmetic now returns the exact range $[0,1/4]$.
+
+**A plausible intervention that fails.** The centred (mean-value) form at $c=1/2$ adds derivative information but returns $1/4+[-1,1][-1/2,1/2]=[-1/4,3/4]$ — the same width as the baseline, with neither interval containing the other. **Extra information helps only when the calculation exploits it.**
+
+The experiment below compares equivalent expressions and subdivided intervals.
+
+```{=html}
+<section id="bound-demo-2"><p>Compare equivalent expressions and subdivided intervals. Enable JavaScript to use the controls.</p></section>
+```
+
+<details class="bound-extra">
+<summary>Derivation: interval arithmetic, centred / mean-value forms, and IBP</summary>
+
+**Classical interval arithmetic** bounds each operation over a rectangle. For $X=[\ell_x,u_x]$ and $Y=[\ell_y,u_y]$,
+
+$$
+\begin{aligned}
+X+Y&=[\ell_x+\ell_y,u_x+u_y],\\
+X-Y&=[\ell_x-u_y,u_x-\ell_y],\\
+XY&=[\min S,\max S],\\
+S&=\{\ell_x\ell_y,\ell_xu_y,u_x\ell_y,u_xu_y\}.
+\end{aligned}
+$$
+
+A bilinear function reaches its extrema over a rectangle at corners. The enclosure is exact for independent operands; repeated occurrences of the same variable may not be independent. If $0\notin Y$, $1/Y=[1/u_y,1/\ell_y]$; division across zero is rejected here. A dedicated square operation preserves repetition:
+
+$$
+X^2=\begin{cases}
+[0,\max(\ell_x^2,u_x^2)],&\ell_x\le0\le u_x,\\
+[\min(\ell_x^2,u_x^2),\max(\ell_x^2,u_x^2)],&\text{otherwise}.
+\end{cases}
+$$
+
+**Centred / mean-value forms** use derivative information to avoid repeatedly expanding the original expression. For $c\in X$ and a differentiable $f$, let $F'(X)$ enclose every derivative on $X$. The mean-value theorem gives
+
+$$
+f(X)\subseteq f(c)+F'(X)(X-c).
+$$
+
+For $f(x)=x(1-x)$, $F'(X)=1-2X$. This can tighten a natural interval expression, but is not always tighter: the derivative enclosure can itself be loose. Intersecting two sound enclosures retains their stronger information.
+
+**Interval bound propagation (IBP)** applies these rules layer by layer. For $z=Wx+b$, write $W^+=\max(W,0)$ and $W^-=\min(W,0)$ elementwise:
+
+$$
+\begin{aligned}
+\underline z&=W^+\underline x+W^-\overline x+b,\\
+\overline z&=W^+\overline x+W^-\underline x+b.
+\end{aligned}
+$$
+
+Each coefficient selects the endpoint that minimises or maximises its contribution. Increasing activations then use $[\sigma(\underline z),\sigma(\overline z)]$; nonmonotone activations require interior extrema too. IBP is inexpensive and supplies useful pre-activation bounds for stronger methods, but replacing each layer by a box loses dependence.
+
+</details>
+
+<details class="bound-extra">
+<summary>Explore the basic range plot</summary>
+
+```{=html}
+<section id="bound-demo-1"><p>Compare the analytic range of x(1 − x) with its interval enclosure.</p></section>
+```
+
+</details>
+
+## Affine arithmetic keeps shared variables {#dependencies}
+
+Inside a network, a convenient rewrite is rarely available, so we track shared variables explicitly. **Affine arithmetic** represents each uncertain quantity as
+
+$$
+x=x_0+\sum_i a_i\epsilon_i,\qquad \epsilon_i\in[-1,1].
+$$
+
+By reusing the same noise symbols $\epsilon_i$ in every quantity derived from $x$, affine arithmetic preserves linear dependence: $x-x$ cancels exactly. With several outputs, the represented set is a **zonotope**. Linear layers map zonotopes to zonotopes exactly. [Affine arithmetic](https://doi.org/10.1023/B:NUMA.0000049462.70970.b6)
+
+**Limitation.** Each nonlinear operation introduces a fresh error symbol, independent of all others. Across repeated nonlinear layers these accumulate and erode the benefit. Constrained zonotopes exclude infeasible combinations of symbols; polynomial zonotopes retain the nonlinear terms. Both trade computation for retained information.
+
+The interval-versus-affine experiment closes the derivation below.
+
+<details class="bound-extra">
+<summary>Derivation: affine arithmetic, zonotopes, constrained and polynomial zonotopes</summary>
+
+**Affine arithmetic** keeps shared noise symbols. For $\hat x=x_0+\sum_i a_i\epsilon_i$ and $\hat y=y_0+\sum_i b_i\epsilon_i$,
+
+$$
+\hat x+\hat y=x_0+y_0+\sum_i(a_i+b_i)\epsilon_i,
+\qquad \lambda\hat x=\lambda x_0+\sum_i\lambda a_i\epsilon_i.
+$$
+
+This preserves cancellation across linear operations. Let $\delta_x=\hat x-x_0$, $r_x=\sum_i|a_i|$, and similarly for $y$. Multiplication gives
+
+$$
+\hat x\hat y=x_0y_0+\sum_i(x_0b_i+y_0a_i)\epsilon_i+\delta_x\delta_y.
+$$
+
+Since $|\delta_x\delta_y|\le r_xr_y$, replace the last term by $r_xr_y\epsilon_{\rm new}$. For a square, the stronger $\delta_x^2\in[0,r_x^2]$ permits the residual $r_x^2/2+(r_x^2/2)\epsilon_{\rm new}$. Fresh residual symbols cost storage and lose nonlinear dependence; repeated nonlinear layers can accumulate this error.
+
+**Zonotopes** collect affine forms into a vector set:
+
+$$
+\mathcal Z=\{c+G\epsilon:\|\epsilon\|_\infty\le1\},\qquad
+W\mathcal Z+b=\{Wc+b+WG\epsilon:\|\epsilon\|_\infty\le1\}.
+$$
+
+Affine maps are exact in this representation. Rotating a rectangle therefore preserves its tilted shape, while an axis-aligned box includes extra space. Affine arithmetic and zonotope propagation share one implementation in the network comparison.
+
+**Constrained zonotopes** retain additional feasible relationships:
+
+$$
+\mathcal Z_c=\{c+G\epsilon:\|\epsilon\|_\infty\le1,\ A\epsilon=d\}.
+$$
+
+The constraints exclude combinations of factors that cannot occur, potentially tightening ranges at the cost of constrained optimisation. The demo's $\epsilon_2=\epsilon_1$ can be eliminated analytically; general coordinate bounds can require LP. [Constrained zonotopes](https://web.mit.edu/braatzgroup/Scott_Automatica_2016.pdf)
+
+**Polynomial zonotopes** retain shared higher-order factors:
+
+$$
+\mathcal P=\left\{c+\sum_i g_i\prod_j\epsilon_j^{E_{ji}}:
+\epsilon_j\in[-1,1]\right\},\qquad E_{ji}\in\mathbb N_0.
+$$
+
+For $u=a\epsilon_1+b\epsilon_2$ and $v=c\epsilon_1+d\epsilon_2$, the quadratic map is exactly
+
+$$
+v+0.4u^2=c\epsilon_1+d\epsilon_2+0.4a^2\epsilon_1^2
++0.8ab\epsilon_1\epsilon_2+0.4b^2\epsilon_2^2.
+$$
+
+Keeping these monomials avoids immediately replacing curvature by independent noise. More terms mean more work; reductions may need independent residual factors. A polynomial zonotope describes a set, whereas a Taylor model couples a polynomial approximation to a remainder on a specified domain. Neither is simply an affine form with a different name. The demo draws an analytically parametrised boundary; its finite drawing is not a containment proof. [Polynomial zonotopes](https://arxiv.org/abs/1901.01780)
+
+```{=html}
+<section id="bound-demo-3"><p>Compare interval and affine enclosures under a linear or quadratic map.</p></section>
+```
+
+</details>
+
+## Taylor models keep curvature — and can widen the bound {#higher-order}
+
+When fresh nonlinear symbols dominate, the next step is to retain the nonlinear terms themselves. A **Taylor model** pairs a polynomial with a bounded remainder:
+
+$$
+f(x)\in P_k(x-c)+R.
+$$
+
+The polynomial retains powers of the same variable; the remainder $R$ encloses everything truncated. Width now has two sources: the remainder, and the enclosure of the polynomial's range. [Taylor models](https://www.isa-afp.org/entries/Taylor_Models.html)
+
+**Reducing one source can expose the other.** Consider $x(1-x)$ on $[0,1]$ with centre $1/2$ and a single subdomain:
+
+- **Degree one** retains the constant $1/4$ and adds the exact range of the truncated term, $[-1/4,0]$, giving $[0,1/4]$.
+- **Degree two** retains the exact quadratic, but its Bernstein range enclosure is $[0,1/2]$.
+
+The approximation is exact, yet the bound doubles in width. The excess comes from the range enclosure, not the approximation. The Taylor experiment inside the derivation below reproduces this.
+
+<details class="bound-extra" id="taylor-models">
+<summary>Derivation: Taylor models, truncation, and nonlinear composition</summary>
+
+**Taylor models** improve bounds by retaining powers of the same uncertain variable and enclosing only the omitted part. Assume $f\in C^{k+1}$ on the interval joining the expansion centre $c$ to every $x\in\mathcal X$. Taylor's theorem gives
+
+$$
+f(x)=\underbrace{\sum_{j=0}^k\frac{f^{(j)}(c)}{j!}(x-c)^j}_{P_k(x-c)}
++\frac{f^{(k+1)}(\xi_x)}{(k+1)!}(x-c)^{k+1}.
+$$
+
+If $|f^{(k+1)}|\le M$ throughout that interval and $h=\max_{x\in\mathcal X}|x-c|$, then
+
+$$
+f(x)\in P_k(x-c)+R,\qquad
+R=\left[-\frac{Mh^{k+1}}{(k+1)!},\frac{Mh^{k+1}}{(k+1)!}\right].
+$$
+
+For $e^x$, take $M=e^{\max(\mathcal X\cup\{c\})}$; for $\sin x$, take $M=1$. A quadratic needs no truncation remainder at degree two. A sampled approximation error would not justify any of these bounds.
+
+For models $f\in P+R$ and $g\in Q+S$ on the same domain, addition gives $(P+Q)+(R+S)$. For multiplication, write $PQ=T_k(PQ)+D$, where $T_k$ retains degrees through $k$, and let $B(p)$ enclose the range of a polynomial. Then
+
+$$
+fg\in T_k(PQ)+B(D)+B(P)S+B(Q)R+RS.
+$$
+
+Every discarded term enters the remainder. A small coefficient alone does not imply a small term on a wide domain. Bounding the retained polynomial with natural intervals can also throw away some of the dependence we preserved; Bernstein bounds offer an alternative.
+
+For the composition $f(x)=\exp(x(1-x))$, set $t=x-c$, $q_c=c(1-c)$ and $v=(1-2c)t-t^2$. Thus
+
+$$
+f(x)=e^{q_c}\left(\sum_{j=0}^k\frac{v^j}{j!}+r(v)\right).
+$$
+
+If $v(\mathcal X)\subseteq[v_-,v_+]$, Taylor's theorem bounds the exponential remainder by
+
+$$
+|e^{q_c}r(v)|\le
+\frac{e^{q_c+\max(0,v_+)}\max(|v_-|,|v_+|)^{k+1}}{(k+1)!}.
+$$
+
+Constructing the powers of $v$ also produces degrees above $k$ in $t$; the model arithmetic must carry their discarded ranges. Higher degree reduces approximation error when the expansion converges adequately, but cannot remove the function's true variation. Subdivision reduces $h$ and can control remainder growth under repeated composition, at additional cost. [Taylor model background](https://www.bmtdynamics.org/index_TaylorModels.htm)
+
+```{=html}
+<section id="bound-demo-4"><p>Change the Taylor degree, expansion centre and number of subdomains.</p></section>
+```
+
+</details>
+
+## Tighter range enclosures for polynomials {#polynomial-ranges}
+
+The Taylor counterexample relocates the problem: the polynomial's range enclosure, not its degree. **Bernstein bounds** express a polynomial as a convex combination of its Bernstein coefficients, so its range lies within their convex hull. On $[0,1]$, $x(1-x)$ has coefficients $(0,1/2,0)$, giving $[0,1/2]$. Splitting the domain at $1/2$ tightens this to the exact $[0,1/4]$, at the cost of a second basis conversion.
+
+**Chebyshev approximation** targets the other source of width, giving a near-uniform approximation across the interval. It still requires a remainder and a range enclosure, so we judge it by the final enclosure, not by how closely it follows the curve.
+
+<details class="bound-extra" id="polynomials">
+<summary>Derivation: Bernstein polynomial bounds and validated Chebyshev approximations</summary>
+
+**Bernstein bounds** improve the range enclosure of an existing polynomial. Map $x=a+(b-a)t$ to $t\in[0,1]$ and write
+
+$$
+p(t)=\sum_{i=0}^n b_iB_{i,n}(t),\qquad
+B_{i,n}(t)=\binom ni t^i(1-t)^{n-i}.
+$$
+
+Since $B_{i,n}\ge0$ and $\sum_iB_{i,n}=1$, the polynomial is a convex combination of its coefficients:
+
+$$
+\min_i b_i\le p(t)\le\max_i b_i.
+$$
+
+After the domain substitution, power coefficients $p(t)=\sum_{k=0}^n q_kt^k$ convert by
+
+$$
+b_i=\sum_{k=0}^i q_k\frac{\binom ik}{\binom nk}.
+$$
+
+For $x(1-x)$ on $[0,1]$, the coefficients are $(0,1/2,0)$, giving $[0,1/2]$. Splitting at $1/2$ gives $(0,1/4,1/4)$ and $(1/4,1/4,0)$ on the two mapped subintervals: the combined bound is $[0,1/4]$. There is no approximation error here, only conservatism in enclosing a polynomial's range. Subdivision costs additional conversions and range evaluations.
+
+**Chebyshev approximations** seek a useful approximation over the whole interval. With $T_j(\cos\theta)=\cos(j\theta)$, interpolate at the roots of $T_{n+1}$:
+
+$$
+p_n(t)=\sum_{j=0}^n c_jT_j(t).
+$$
+
+An approximation becomes an enclosure only after adding a justified remainder and bounding the polynomial. For $f(x)=e^x$ on $[a,b]$, let $N=n+1$ and $h=(b-a)/2$. The interpolation remainder satisfies
+
+$$
+|f(x)-p_n(x)|\le\frac{e^b}{N!}\left|\prod_{j=1}^{N}(x-x_j)\right|
+\le\frac{e^b h^N}{2^{N-1}N!}.
+$$
+
+The final inequality follows because the nodal product is the mapped $T_N$ divided by its leading coefficient $2^{N-1}$, and $|T_N|\le1$. The experiment bounds $p_n$ using Bernstein coefficients, then adds this remainder. A fully **validated Chebyshev enclosure** must also bound numerical coefficient and evaluation errors; the browser demonstrates the real-arithmetic formula only.
+
+Taylor controls a local expansion remainder; Chebyshev controls an interval approximation; Bernstein bounds a polynomial's range. They can be combined. Higher degree may help approximation, while subdivision helps both approximation and range bounds. Basis conversion can become ill-conditioned at high degree, so the demo caps the degree at eight.
+
+```{=html}
+<section id="bound-demo-5"><p>Compare Taylor and Chebyshev approximations with different polynomial range bounds.</p></section>
+```
+
+</details>
+
+## Bounding only what the output needs {#objective-bounds}
+
+Carrying every polynomial term through a network is expensive. We therefore ask a narrower question: **which relationships matter for this output?**
+
+The baseline is **interval bound propagation (IBP)**, which passes a box through each layer. It is cheap but discards every relationship between neurons. The following methods retain linear constraints instead of full polynomials:
+
+- **McCormick envelopes** retain linear constraints between a product and its factors.
+- **DeepPoly** and **CROWN** replace each activation with upper and lower linear bounds and substitute them symbolically; CROWN works backwards from the output objective.
+- **CROWN-IBP** uses IBP's cheap intervals to select those bounds; **α-CROWN** optimises their slopes.
+
+[CROWN](https://proceedings.neurips.cc/paper/2018/hash/d04863f100d59b3eb688a11f95b0ae60-Abstract.html)
+
+**The choice of linear bound matters.** A valid bound can still be poor for the chosen output. With fixed slopes, CROWN can be looser than IBP, as the network experiment shows. Slope optimisation helps only as far as the optimiser finds better valid bounds.
+
+<details class="bound-extra" id="relaxations">
+<summary>Derivation: McCormick, DeepPoly, CROWN, CROWN-IBP, and α-CROWN</summary>
+
+**McCormick envelopes** preserve a relation between a product and its factors instead of immediately replacing the product by a scalar interval. For $z=xy$, $x\in[\ell_x,u_x]$, $y\in[\ell_y,u_y]$,
+
+$$
+\begin{aligned}
+z&\ge\ell_xy+\ell_yx-\ell_x\ell_y,\\
+z&\ge u_xy+u_yx-u_xu_y,\\
+z&\le u_xy+\ell_yx-u_x\ell_y,\\
+z&\le\ell_xy+u_yx-\ell_xu_y.
+\end{aligned}
+$$
+
+For example, $(x-\ell_x)(y-\ell_y)\ge0$ gives the first inequality; the other endpoint-distance products give the remaining three. Together they describe the convex hull of the bilinear graph over the rectangle. Adding $y=1-x$ keeps the bounds valid and exploits dependence, although the restricted relaxation need not equal the convex hull of the restricted graph. Smaller factor intervals tighten the planes.
+
+**ReLU relaxations** replace a nonlinear graph by affine inequalities. For $\ell<0<u$, convexity gives the secant upper bound
+
+$$
+\alpha x\le\operatorname{ReLU}(x)\le\frac{u}{u-\ell}(x-\ell),
+\qquad 0\le\alpha\le1.
+$$
+
+The lower line works because it is nonpositive when $x\le0$ and at most $x$ when $x\ge0$. A triangle relaxation keeps both $z\ge0$ and $z\ge x$; one chosen lower line may be weaker. Intervals entirely on one side of zero have an exact linear activation.
+
+**DeepPoly** stores symbolic affine upper/lower constraints together with interval bounds and substitutes earlier constraints to recover relationships lost by independent boxes. Its extra symbolic work can reduce layer-by-layer overestimation. [DeepPoly](https://www.research-collection.ethz.ch/entities/publication/6b6f9023-354d-445b-bc58-8fcf6e70d721)
+
+**CROWN** propagates an output objective backwards through affine relaxations. For an upper objective bound, a positive coefficient selects an activation's upper line and a negative coefficient selects its lower line; a lower objective bound reverses those choices. Once the objective becomes $a^Tx+b$ on $|x-c|\le r$,
+
+$$
+\max(a^Tx+b)=a^Tc+b+|a|^Tr,\qquad
+\min(a^Tx+b)=a^Tc+b-|a|^Tr.
+$$
+
+Keeping the output objective symbolic can preserve cancellations that independent intermediate bounds lose. DeepPoly and CROWN are related relaxation approaches with different propagation organisations, rather than unrelated representations.
+
+**CROWN-IBP** combines inexpensive forward interval bounds with backward linear bounds, including in robust training. Better pre-activation intervals tighten the available relaxation lines. **α-CROWN** optimises lower slopes for the final objective, spending optimisation work to improve the certificate. Neither guarantees a strict improvement on every instance; fixed slopes can even give a looser result than IBP. [CROWN-IBP](https://arxiv.org/abs/1906.06316)
+
+The demo uses fixed chosen slopes with IBP pre-bounds. It illustrates CROWN-style substitution, not a full DeepPoly verifier, CROWN-IBP training procedure, or α-CROWN optimiser.
+
+```{=html}
+<section id="bound-demo-6"><p>Explore ReLU supporting lines and a McCormick relaxation of a product.</p></section>
+```
+
+</details>
+
+
+
+## Refinement spends more work where the bound is loose {#refinement-strategy}
+
+When a single pass remains too loose, we keep the bounding method and change where we apply it. **Subdivision** bounds smaller regions separately and combines the results:
+
+$$
+f(\mathcal X_j)\subseteq[L_j,U_j]
+\quad\Longrightarrow\quad
+f\!\left(\bigcup_j\mathcal X_j\right)
+\subseteq[\min_j L_j,\max_j U_j].
+$$
+
+Smaller regions typically lose less, provided they still cover the whole input set. For natural interval arithmetic on a fixed expression, splitting a region cannot widen its bound in real arithmetic. Another engine, a new expansion centre or a non-nested partition each needs its own check.
+
+**Branch-and-bound** splits only the unresolved regions. Beyond propagation, **LP and SDP** retain coupled constraints jointly, and **MILP, SMT and star sets** resolve each activation case exactly. These settle what propagation leaves open, but their cost can grow rapidly or end without a proof.
+
+<details class="bound-extra" id="refinement">
+<summary>Reasoning: interval subdivision and branch-and-bound</summary>
+
+**Interval subdivision** replaces one difficult domain by a complete cover $\mathcal X=\bigcup_j\mathcal X_j$. Every admissible input belongs to a retained region, so taking the smallest lower bound and largest upper bound encloses every output. Narrower regions reduce dependency loss and tighten local polynomial remainders or relaxation slopes, at the cost of more evaluations.
+
+**Branch-and-bound** adds a choice of which region to split and, where justified, pruning. For maximisation, a feasible evaluated value is a lower bound on the maximum; a region's sound upper bound can rule it out if it cannot improve the current feasible value. Minimisation reverses the roles. A region may be discarded only with a valid argument for the objective or verification property.
+
+The current cover gives a sound intermediate enclosure in real arithmetic even if the target gap or robustness proof remains unresolved. Refinement is a strategy that can use IBP, CROWN, or another bounding engine; it is not a new uncertainty representation. The demo splits the region with the widest local enclosure and retains every leaf, using natural intervals or an analytic McCormick relaxation. It does not implement optimised pruning.
+
+```{=html}
+<section id="bound-demo-7"><p>Refine the domain using interval bounds or a small linear relaxation.</p></section>
+```
+
+</details>
+
+<details class="bound-extra">
+<summary>Reasoning and formulations: LP, SDP, MILP, SMT, and star sets</summary>
+
+These methods spend additional optimisation or search effort to enforce relationships that a propagation pass may discard. They are verification frameworks, not interchangeable uncertainty representations.
+
+**Linear programming (LP)** optimises an output over affine layer equations and relaxed activation inequalities simultaneously. Keeping the constraints together can eliminate combinations allowed by separately propagated bounds. It remains an outer relaxation when nonlinear graphs were replaced by inequalities. The browser's small McCormick example optimises a one-dimensional slice analytically at endpoints and line crossings; it has no general LP backend.
+
+**Semidefinite programming (SDP)** can retain quadratic relationships. For $q=x-x^2$ on $[0,1]$, replace $x^2$ by a variable $v$ and impose
+
+$$
+\begin{pmatrix}1&x\\x&v\end{pmatrix}\succeq0,\qquad
+0\le x\le1,\qquad v\le x.
+$$
+
+Positive semidefiniteness implies $v\ge x^2$; the upper constraint comes from $x^2\le x$ on the domain. Consequently,
+
+$$
+0\le x-v\le x-x^2\le\tfrac14.
+$$
+
+The endpoints are achievable, so this relaxation recovers the exact range here. In larger lifted problems, dropping a rank-one condition generally leaves an outer approximation. SDP captures quadratic coupling at a higher matrix-optimisation cost.
+
+**Mixed-integer linear programming (MILP)** explicitly resolves activation branches. For $z=\operatorname{ReLU}(x)$ with valid finite bounds $\ell<0<u$,
+
+$$
+z\ge0,\quad z\ge x,\quad z\le u\delta,\quad
+z\le x-\ell(1-\delta),\qquad\delta\in\{0,1\}.
+$$
+
+Setting $\delta=0$ forces the inactive branch; $\delta=1$ forces $z=x$. This is exact in real arithmetic. Tighter pre-activation bounds strengthen the continuous relaxation and may reduce search, but the branch count can grow rapidly. The small browser network instead enumerates its one-dimensional linear regions. [MILP verification](https://arxiv.org/abs/1711.07356)
+
+**Satisfiability modulo theories (SMT)** asks whether an input satisfying the model equations and a violating output condition exists. For a proposed upper bound $U$, the condition is $x\in\mathcal X\land f(x)>U$. A proved UNSAT result excludes such inputs; SAT supplies a counterexample, and a timeout leaves the claim unresolved. ReLU-aware procedures combine linear reasoning with activation case splits. This can resolve ambiguity left by relaxations, at a potentially large search cost. Solver tolerances and proof validation still matter. [Reluplex](https://arxiv.org/abs/1702.01135)
+
+**Star-set methods** retain a constrained parameterisation
+
+$$
+\mathcal S=\{c+V\eta:C\eta\le d\}.
+$$
+
+Affine layers transform $c,V$ while preserving the predicates. A ReLU split adds an active or inactive inequality in $\eta$; the inactive coordinate becomes zero. The union of feasible branches preserves the exact piecewise-linear reachable set in real arithmetic. Keeping branches and shared constraints improves precision, while the number of stars can grow rapidly; relaxed or merged stars trade precision for cost.
+
+SDP, MILP, SMT, and general star-set solvers are explained here rather than implemented in the browser.
+
+</details>
+
+## Moving up in complexity: a small network {#networks}
+
+We now compare the methods on one small network with fixed weights and a single uncertain input, holding everything else fixed. For the ReLU variant, enumerating its linear pieces gives the exact range, so every enclosure can be scored against it. **Lipschitz and local Jacobian bounds** provide sensitivity-based baselines.
+
+Start from the defaults, then widen the input interval to see where each method loses precision.
+
+**Fixed-slope CROWN is looser than IBP here.** Select **one layer**, **ReLU**, **centre 0** and **half-width 0.2**. IBP gives approximately $[-0.09,0.25]$ (width $0.34$); fixed-slope CROWN gives $[-0.09,0.29]$ (width $0.38$), about 12% wider on the same problem.
+
+```{=html}
+<section id="bound-demo-8"><p>Compare bounding methods on the same small network.</p></section>
+```
+
+These results compare particular implementations and settings, not method families. Both endpoints matter as well as the width: one method can raise the lower bound while loosening the upper. A tighter enclosure may also cost more than the application can afford, so the experiment reports timings alongside widths.
+
+<details class="bound-extra" id="monotonic-improvement">
+<summary>When is an improvement guaranteed—and when is it only a hypothesis?</summary>
+
+**Nested enclosures guarantee no worsening.** If two sound intervals $[L_1,U_1]$ and $[L_2,U_2]$ enclose the same nonempty output set, their intersection
+
+$$
+[\max(L_1,L_2),\min(U_1,U_2)]
+$$
+
+is sound and no wider than either. Keeping a baseline and intersecting new validated results makes the retained bound improve monotonically, even if candidate methods do not. Empty intersections indicate incompatible assumptions or an error; they cannot certify a nonempty reachable set. The browser's floating-point fallback is described in the verification report.
+
+**Subdivision needs a monotone engine or retained parent bounds.** For an inclusion-isotone enclosure $B$, $X'\subseteq X$ implies $B(X')\subseteq B(X)$. Natural interval evaluation of a fixed supported expression has this property in real arithmetic. Splitting existing cells therefore cannot widen their combined enclosure. For a more general engine, intersect each child bound with its retained sound parent bound to enforce this property. Merely increasing the number of equal subdomains does not necessarily create a nested partition.
+
+**Added valid constraints help when the optimisation problem stays comparable.** If feasible relaxations satisfy $F_{\rm new}\subseteq F_{\rm old}$ and both contain the true graph, exact minimisation can only raise the lower bound and exact maximisation can only lower the upper bound. A finite-time solver may return weaker certified bounds if it has made less progress; keeping the previous valid result avoids losing that progress.
+
+**Higher degree, more generators, and new slopes need testing.** Rebuilding a representation can change the remainder, range estimator, generator reduction or relaxation choices. The resulting enclosures need not be nested. A more accurate approximation is not automatically a tighter range enclosure, as the quadratic Taylor example shows. Numerical conditioning and validated rounding can add further width.
+
+**A research comparison changes one ingredient at a time.** Fix the model, domain and objective; record lower and upper bounds, width and cost; use an analytic reference where available; and examine the cases where the proposed improvement loses. For a robustness claim, measure the relevant margin too. Stop when the required property is established or the remaining uncertainty is not worth the available computation.
+
+</details>
+
+<details class="bound-extra">
+<summary>Derivation: Lipschitz and local Jacobian bounds, fixed weights, and comparison metrics</summary>
+
+**Lipschitz bounds** turn a domain-wide sensitivity bound into an output enclosure. For $x\in[c-r,c+r]$ and $|f(x)-f(y)|\le L|x-y|$ on this interval,
+
+$$
+f(x)\in[f(c)-Lr,f(c)+Lr].
+$$
+
+A product of layer norms and activation Lipschitz constants gives a simple bound. Using the selected domain can tighten it: the demo propagates absolute weights with per-neuron derivative magnitudes from IBP pre-activation intervals $[\ell,u]$. ReLU uses zero if $u\le0$, otherwise at most one; square uses $2\max(|\ell|,|u|)$. These local constants can be much smaller than global ones, though absolute values lose cancellations.
+
+**Jacobian-based local enclosures** preserve derivative signs. On a convex domain,
+
+$$
+f(x)-f(c)=\int_0^1J_f(c+t(x-c))(x-c)\,dt.
+$$
+
+An interval enclosure of the Jacobian throughout the domain bounds the integral. For ReLU networks, use absolute continuity along paths and the almost-everywhere derivatives. Sign-aware propagation can improve an absolute sensitivity bound, but derivative intervals may still lose dependencies. A derivative evaluated only at the centre is insufficient.
+
+**Piecewise enumeration** visits every reachable linear region of this scalar-input ReLU network; checking all region endpoints finds its extrema in real arithmetic. **Polynomial / Bernstein propagation** retains the full polynomial for square activations (degree two or four here) before bounding its range. The former pays for branches; the latter pays for polynomial terms and a potentially conservative range enclosure.
+
+The fixed network has one or two width-three hidden layers:
+
+$$
+h_1=\sigma(W_1x+b_1),\qquad
+h_2=\sigma(W_hh_1+b_h),\qquad
+f=W_oh_j+b_o,
+$$
+
+where $j=1$ or $2$, with
+
+$$
+W_1=\begin{pmatrix}1\\-1\\0.5\end{pmatrix},\quad
+b_1=\begin{pmatrix}-0.2\\0.1\\0.3\end{pmatrix},\quad
+W_h=\begin{pmatrix}0.7&-0.4&0.3\\-0.2&0.8&0.5\\0.4&0.2&-0.6\end{pmatrix},
+$$
+
+$$
+b_h=\begin{pmatrix}0.1\\-0.1\\0.05\end{pmatrix},\quad
+W_o=\begin{pmatrix}1&-0.8&0.5\end{pmatrix},\quad b_o=0.05.
+$$
+
+No training or random weights are involved. See the [network module](assets/bounding-the-unpredictable/math/neural.js).
+
+The shared metrics are enclosure width $W=U-L$, excess width $E=W-(y_{\max}-y_{\min})$, and ratio $\rho=W/(y_{\max}-y_{\min})$ only when the true width is positive. Excess and ratio require an exact reference range; they are not claimed for the square-network polynomial enclosure. Vector widths are componentwise. Browser timings indicate computational work in this implementation, not general complexity or a rigorous performance ranking.
+
+</details>
+
+## Does the diagnosis transfer to attention? {#attention}
+
+The final test is whether the same reasoning holds for a different computation. Consider an attention head that forms queries, keys and values, then computes
+
+$$
+S=\frac{QK^T}{\sqrt d\,\tau},\qquad
+A=\operatorname{softmax}(S),\qquad H=AV,
+$$
+
+where $d$ is the key dimension and $\tau>0$ is the temperature. Each stage discards dependence differently: the scores share input embeddings, the probabilities share one normalisation, and the values depend on the same inputs as the scores.
+
+With two tokens, one relationship is particularly useful. The attention weights are $p$ and $1-p$, so
+
+$$
+h=pv_1+(1-p)v_2.
+$$
+
+By enforcing that the weights sum to one, we obtain an aggregation bound no wider than treating them independently, for the same probability and value intervals. The dependency-aware method also retains shared factors when bounding score differences. [Softmax bounds](https://proceedings.mlr.press/v206/wei23c.html)
+
+**Can the predicted token change?** After projecting the attention output to logits, the token is unchanged if
+
+$$
+\boxed{\text{winner's lower logit}>\text{every competitor's upper logit}.}
+$$
+
+The experiment changes one ingredient at a time:
+
+1. At fixed radius and temperature, switch **Interval** to **Dependencies + row sum**. This isolates the effect of retaining dependence.
+2. Enable subdivision. This spends more computation on the same problem.
+3. Increase the radius. This makes the problem harder; it does not improve the method.
+
+```{=html}
+<section id="bound-demo-9"><p>Bound a two-token attention head and inspect the greedy-token margin.</p></section>
+```
+
+A narrower logit interval is not sufficient: the winner's lower endpoint must clear every competitor's upper endpoint. When it does not, the result is **Inconclusive** — either the bound remains too loose, or the winner genuinely changes within the input set, and bounds alone may not distinguish the two. When the inequality holds numerically, validated arithmetic is still required before it constitutes a certificate.
+
+**Scope.** The head is small and fixed, with four artificial output tokens. Its perturbations are continuous shifts of embeddings, not paraphrases or whole generated responses.
+
+<details class="bound-extra">
+<summary>Derivation: attention projections, score differences, softmax, aggregation, and logits</summary>
+
+For two embeddings $X\in\mathbb R^{2\times2}$, linear projections $Q=XW_Q$, $K=XW_K$, $V=XW_V$ use the affine interval rule above. Each score is
+
+$$
+s_{ij}=\frac{\sum_{k=1}^2Q_{ik}K_{jk}}{\sqrt2\,\tau},\qquad\tau>0.
+$$
+
+Natural interval products are cheap but forget shared embedding factors. Affine products and McCormick planes retain some of those relationships and can tighten the score bounds. The demo intersects these valid real-arithmetic enclosures; it does not solve a coupled global LP.
+
+**Softmax bounds** follow from monotonicity. Rewrite a row probability as
+
+$$
+a_i=\frac1{1+\sum_{j\ne i}\exp(s_j-s_i)}.
+$$
+
+If $s_j\in[\ell_j,u_j]$, increasing $s_i$ increases $a_i$ and increasing another score decreases it, so
+
+$$
+\frac1{1+\sum_{j\ne i}\exp(u_j-\ell_i)}\le a_i
+\le\frac1{1+\sum_{j\ne i}\exp(\ell_j-u_i)}.
+$$
+
+These bounds are tight over an independent score box, which may include impossible score combinations. With two keys,
+
+$$
+a_1=\operatorname{sigmoid}(s_1-s_2),\qquad a_2=1-a_1.
+$$
+
+Bounding the difference before converting it to an interval retains cancellation in the shared query and keys. A sign-dependent sigmoid implementation avoids unnecessary exponential overflow. Increasing temperature scales down score differences, but does not guarantee a better final classification margin because the nominal output changes too.
+
+**Row-sum-aware aggregation** exploits $a_1+a_2=1$. Given $p\in[p_-,p_+]$ and $v_i\in[\ell_i,u_i]$, nonnegative weights make $h=pv_1+(1-p)v_2$ increasing in each value. Its relaxed bounds are
+
+$$
+\underline h=\min_{p\in\{p_-,p_+\}}\{p\ell_1+(1-p)\ell_2\},\qquad
+\overline h=\max_{p\in\{p_-,p_+\}}\{pu_1+(1-p)u_2\}.
+$$
+
+Only endpoint probabilities are needed because each expression is linear in $p$. This is exact for the relaxed box in $(p,v_1,v_2)$ and avoids independent attention weights; remaining probability/value correlations can still make it loose.
+
+Finally $z=H_{2,:}W_O+b$ uses the affine interval rule. For nominal winner $k$, define
+
+$$
+m=\underline z_k-\max_{j\ne k}\overline z_j.
+$$
+
+A validated $m>0$ establishes an unchanged unique winner on the input set. Bounding each difference $z_k-z_j$ directly can be tighter because shared terms may cancel; that extension is not implemented. A failed sufficient condition is inconclusive.
+
+The artificial tokens sun, rain, wind and still have embeddings $(0.8,0.2)$, $(-0.5,0.7)$, $(0.1,-0.8)$ and $(-0.3,-0.2)$. Fixed projections are
+
+$$
+W_Q=\begin{pmatrix}0.8&-0.3\\0.2&0.7\end{pmatrix},\quad
+W_K=\begin{pmatrix}0.6&0.4\\-0.5&0.9\end{pmatrix},\quad
+W_V=\begin{pmatrix}1&0.2\\-0.3&0.8\end{pmatrix},
+$$
+
+$$
+W_O=\begin{pmatrix}1&-0.4&-0.7&0.2\\0.3&1&-0.2&-0.8\end{pmatrix},\quad
+b=(0.12,-0.02,0.02,-0.08).
+$$
+
+One token's coordinates vary independently by $\pm\varepsilon$. The refinement option covers that two-dimensional box with $4\times4=16$ subboxes, tightening local bounds at sixteen evaluations; such covers scale poorly with dimension. There are no residuals, normalisation, positional encodings, masks or feed-forward blocks. See the [attention module](assets/bounding-the-unpredictable/math/transformer.js).
+
+</details>
+
+## What a bound does and does not establish {#guarantees}
+
+A deterministic enclosure bounds where a **fixed model's output** can go on a **specified input set**. A validated positive margin additionally establishes that the chosen class or token is unchanged. **The enclosure bounds the model, not its error:** neither statement says the prediction is correct.
+
+Statistical coverage answers a different question: how often a prediction set contains the true outcome under stated sampling assumptions. [Conformal prediction](https://arxiv.org/abs/2107.07511) provides this, and we have applied it to [spatio-temporal surrogates](paper_conformal_surrogates.qmd) and, through the physics residual, [without labelled data](paper_calibrated_pi_uq.qmd).
+
+<details class="bound-extra">
+<summary>Different guarantees: randomised smoothing, conformal prediction, and discrete tokens</summary>
+
+**Randomised smoothing** defines a new classifier by the most probable label of a base classifier under Gaussian noise. If $p_A$ lower-bounds the winning label probability and $p_B$ upper-bounds every competing label probability, then a standard Gaussian smoothing result gives an $L_2$ robustness radius
+
+$$
+R=\frac{\sigma}{2}\left(\Phi^{-1}(p_A)-\Phi^{-1}(p_B)\right),\qquad p_A>p_B,
+$$
+
+where $\sigma$ is the noise standard deviation and $\Phi$ is the standard normal CDF. Tighter probability bounds can improve the radius; Monte Carlo estimation introduces a stated failure probability and sampling cost. This certifies the smoothed classifier, not the base model's deterministic output range. [Randomised smoothing](https://proceedings.mlr.press/v97/cohen19c.html)
+
+**Conformal prediction** calibrates a prediction set against held-out scores. Under exchangeability of calibration and test data, a score rule fixed independently of the calibration labels, and the appropriate finite-sample quantile, it gives marginal coverage
+
+$$
+\mathbb P\{Y\in C(X)\}\ge1-\alpha.
+$$
+
+With $n$ calibration scores, the split-conformal threshold is their $\lceil(n+1)(1-\alpha)\rceil$-th order statistic, using $+\infty$ if that index exceeds $n$. Better predictive scores can produce smaller sets at the same coverage target. This improves statistical efficiency, not a deterministic enclosure on each input; marginal coverage is not conditional coverage at every $X$. [Conformal prediction](https://arxiv.org/abs/2107.07511)
+
+**Discrete-token verification** specifies allowed substitutions and then enumerates them or encloses their embedding images. A tighter representation of the allowed discrete set can exclude impossible continuous combinations and improve a robustness bound. The combinatorial cost can be large, and the chosen substitution set still requires a semantic justification. Neither a norm ball nor an unchanged token proves factual correctness or robustness to every paraphrase.
+
+</details>
+
+## Discussion {#discussion}
+
+**Key takeaway.** The useful next method addresses the observed source of looseness. Retain shared variables when dependence is lost, retain curvature when nonlinear residuals dominate, tighten the range enclosure when the polynomial bound is loose, and refine or optimise when a proof remains unresolved.
+
+**Limitations.** Every result here uses unvalidated binary64 arithmetic, so the bounds are illustrative rather than certified. The models are deliberately small: one uncertain input for the network, one perturbed token for attention. Subdivision covers scale poorly with input dimension.
+
+**Future directions.** The open question is which of these interventions earns its cost on a larger model, and which fails. Combining deterministic enclosures with conformal prediction is one route: the enclosure covers every input in the set, while conformal prediction covers the model's error.
+
+[Code and reproduction instructions](assets/bounding-the-unpredictable/README.md) · [Verification and limitations](assets/bounding-the-unpredictable/VERIFICATION.md)
+
+```{=html}
+<script type="module" src="assets/bounding-the-unpredictable/main.js"></script>
+```

@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-10-26">
+<meta name="description" content="A research progression from loose intervals to attention bounds—and why a more elaborate method can give a worse enclosure.">
+
+<title>Bounding the Unpredictable – Vignesh Gopakumar</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Images/dy_dx.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="assets/bounding-the-unpredictable/styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Vignesh Gopakumar</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../research.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../talks.html"> 
+<span class="menu-text">Talks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../Blog/blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../Blog/tokamak-toolkit/index.html"> 
+<span class="menu-text">Tokamak Toolkit</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content column-page" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Bounding the Unpredictable</h1>
+<p class="subtitle lead">Following uncertain inputs through a neural network</p>
+</div>
+
+<div>
+  <div class="description">
+    A research progression from loose intervals to attention bounds—and why a more elaborate method can give a worse enclosure.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta column-page">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 26, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="bound-intro">
+<p>If a neural network’s input can move anywhere within a known set, how far can its output move?</p>
+</div>
+<p>Neural surrogates now stand in for expensive simulations, including in fusion plasma modelling. There, a single prediction is not enough; we need to know where the output can go. Sampling inputs estimates that range but cannot prove it is complete. A <strong>verified enclosure</strong> can, provided it is tight enough to use.</p>
+<p>The cheapest enclosure is loose. Rather than survey every tighter method, we diagnose one source of looseness at a time and address it. Each section follows the same loop:</p>
+<ol type="1">
+<li><strong>Diagnose:</strong> identify the information the current bound discards.</li>
+<li><strong>Intervene:</strong> choose a method that retains it.</li>
+<li><strong>Compare:</strong> evaluate both on the same function and input set, reporting width alongside cost.</li>
+</ol>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Section</th>
+<th style="text-align: left;">Information lost</th>
+<th style="text-align: left;">Intervention</th>
+<th style="text-align: left;">Extra cost</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><a href="#intervals">Intervals</a></td>
+<td style="text-align: left;">repeated terms share a variable</td>
+<td style="text-align: left;">rewrite the expression</td>
+<td style="text-align: left;">none, when a rewrite exists</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="#dependencies">Shared variables</a></td>
+<td style="text-align: left;">linear dependence</td>
+<td style="text-align: left;">affine arithmetic, zonotopes</td>
+<td style="text-align: left;">one symbol per source of uncertainty</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="#higher-order">Curvature</a></td>
+<td style="text-align: left;">nonlinear terms, replaced by fresh noise</td>
+<td style="text-align: left;">Taylor models</td>
+<td style="text-align: left;">polynomial terms and a remainder</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="#polynomial-ranges">Polynomial ranges</a></td>
+<td style="text-align: left;">width when enclosing a known polynomial</td>
+<td style="text-align: left;">Bernstein, Chebyshev</td>
+<td style="text-align: left;">basis conversion, subdivision</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="#objective-bounds">Output-targeted bounds</a></td>
+<td style="text-align: left;">relationships between neurons</td>
+<td style="text-align: left;">McCormick, DeepPoly, CROWN</td>
+<td style="text-align: left;">a backward pass; optimisation for α-CROWN</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="#refinement-strategy">Refinement</a></td>
+<td style="text-align: left;">precision over a wide input region</td>
+<td style="text-align: left;">subdivision, branch-and-bound, exact solvers</td>
+<td style="text-align: left;">evaluations per region; branches can grow rapidly</td>
+</tr>
+</tbody>
+</table>
+<p>The examples move up in complexity: a scalar function, then <a href="#networks">a small ReLU network</a>, then <a href="#attention">an attention head</a>.</p>
+<p><strong>A more elaborate method is not automatically a tighter one.</strong> Three times below — the centred form, the degree-two Taylor model and fixed-slope CROWN — the more sophisticated choice gives a bound no tighter than the simpler one. Each failure sharpens the diagnosis.</p>
+<p>Derivations and supplementary experiments sit in the collapsible sections. <a href="assets/bounding-the-unpredictable/README.md">Code and reproduction instructions</a> · <a href="../Blog/assets/bounding-the-unpredictable/VERIFICATION.html">Verification and limitations</a></p>
+<section id="the-question" class="level2">
+<h2 class="anchored" data-anchor-id="the-question">What counts as a good bound</h2>
+<p>Consider a fixed network <span class="math inline">\(f\)</span> and a set of possible inputs <span class="math inline">\(\mathcal X\)</span>. We seek two numbers such that</p>
+<p><span class="math display">\[
+\boxed{L\le f(x)\le U\qquad\text{for every }x\in\mathcal X.}
+\]</span></p>
+<p>A bound is <strong>sound</strong> if it contains every possible output and <strong>tight</strong> if it leaves little extra room. Soundness is non-negotiable; tightness costs computation.</p>
+<p>A fair comparison fixes the function, the input set and the output being bounded, and reports the width <span class="math inline">\(U-L\)</span> alongside the computational work. Widening the input set changes the problem, not the method. Samples can expose an unsound bound but cannot certify a sound one.</p>
+<p class="bound-reading-note" id="arithmetic-note">
+<strong>About the experiments:</strong> the formulas assume real arithmetic. Browser rounding is not validated, so the numerical results are illustrative, not machine-verified certificates.
+</p>
+<details class="bound-extra">
+<summary>
+Mathematics: exact ranges and validated arithmetic
+</summary>
+<p>For a scalar output, define</p>
+<p><span class="math display">\[
+y_{\min}=\inf_{x\in\mathcal X}f(x),\qquad
+y_{\max}=\sup_{x\in\mathcal X}f(x).
+\]</span></p>
+<p>We seek <span class="math inline">\(L\le y_{\min}\le y_{\max}\le U\)</span>. A continuous function on a nonempty compact set attains both extrema. For vector outputs, these inequalities apply componentwise; an output box can still lose relationships between components.</p>
+<p><strong>Validated arithmetic</strong> makes the mathematical inclusion survive computation: round lower endpoints down and upper endpoints up, including errors in coefficients, transcendental functions and optimisation results. This establishes soundness; it does not itself remove dependency overestimation. Adding an arbitrary small epsilon is not a proof. Here, binary64 arithmetic is unvalidated and every result has <code>certified: false</code>; finite tests diagnose errors but cannot prove a continuum claim.</p>
+</details>
+</section>
+<section id="intervals" class="level2">
+<h2 class="anchored" data-anchor-id="intervals">Intervals forget shared variables</h2>
+<p>We start with the simplest case that exposes the main failure. Consider</p>
+<p><span class="math display">\[
+f(x)=x(1-x),\qquad x\in[0,1].
+\]</span></p>
+<p>The maximum lies at <span class="math inline">\(x=1/2\)</span>, so the exact range is <span class="math inline">\([0,1/4]\)</span>.</p>
+<p><strong>Baseline.</strong> Interval arithmetic bounds each operation independently: <span class="math inline">\(x\in[0,1]\)</span> and <span class="math inline">\(1-x\in[0,1]\)</span>, so their product lies in <span class="math inline">\([0,1]\)</span>. The bound is sound but four times wider than the true range.</p>
+<p><strong>Diagnosis.</strong> Both factors depend on the same <span class="math inline">\(x\)</span>, so they cannot both equal one. Interval arithmetic discards this. The expression <span class="math inline">\(x-x\)</span> isolates the failure: interval subtraction returns <span class="math inline">\([-1,1]\)</span> for a quantity that is always zero.</p>
+<p><strong>Intervention.</strong> By rewriting the expression so that <span class="math inline">\(x\)</span> appears once, we restore the lost relationship. Completing the square gives</p>
+<p><span class="math display">\[
+x(1-x)=\frac14-(x-\tfrac12)^2,
+\]</span></p>
+<p>and interval arithmetic now returns the exact range <span class="math inline">\([0,1/4]\)</span>.</p>
+<p><strong>A plausible intervention that fails.</strong> The centred (mean-value) form at <span class="math inline">\(c=1/2\)</span> adds derivative information but returns <span class="math inline">\(1/4+[-1,1][-1/2,1/2]=[-1/4,3/4]\)</span> — the same width as the baseline, with neither interval containing the other. <strong>Extra information helps only when the calculation exploits it.</strong></p>
+<p>The experiment below compares equivalent expressions and subdivided intervals.</p>
+<section id="bound-demo-2"><p>Compare equivalent expressions and subdivided intervals. Enable JavaScript to use the controls.</p></section>
+<details class="bound-extra">
+<summary>
+Derivation: interval arithmetic, centred / mean-value forms, and IBP
+</summary>
+<p><strong>Classical interval arithmetic</strong> bounds each operation over a rectangle. For <span class="math inline">\(X=[\ell_x,u_x]\)</span> and <span class="math inline">\(Y=[\ell_y,u_y]\)</span>,</p>
+<p><span class="math display">\[
+\begin{aligned}
+X+Y&amp;=[\ell_x+\ell_y,u_x+u_y],\\
+X-Y&amp;=[\ell_x-u_y,u_x-\ell_y],\\
+XY&amp;=[\min S,\max S],\\
+S&amp;=\{\ell_x\ell_y,\ell_xu_y,u_x\ell_y,u_xu_y\}.
+\end{aligned}
+\]</span></p>
+<p>A bilinear function reaches its extrema over a rectangle at corners. The enclosure is exact for independent operands; repeated occurrences of the same variable may not be independent. If <span class="math inline">\(0\notin Y\)</span>, <span class="math inline">\(1/Y=[1/u_y,1/\ell_y]\)</span>; division across zero is rejected here. A dedicated square operation preserves repetition:</p>
+<p><span class="math display">\[
+X^2=\begin{cases}
+[0,\max(\ell_x^2,u_x^2)],&amp;\ell_x\le0\le u_x,\\
+[\min(\ell_x^2,u_x^2),\max(\ell_x^2,u_x^2)],&amp;\text{otherwise}.
+\end{cases}
+\]</span></p>
+<p><strong>Centred / mean-value forms</strong> use derivative information to avoid repeatedly expanding the original expression. For <span class="math inline">\(c\in X\)</span> and a differentiable <span class="math inline">\(f\)</span>, let <span class="math inline">\(F'(X)\)</span> enclose every derivative on <span class="math inline">\(X\)</span>. The mean-value theorem gives</p>
+<p><span class="math display">\[
+f(X)\subseteq f(c)+F'(X)(X-c).
+\]</span></p>
+<p>For <span class="math inline">\(f(x)=x(1-x)\)</span>, <span class="math inline">\(F'(X)=1-2X\)</span>. This can tighten a natural interval expression, but is not always tighter: the derivative enclosure can itself be loose. Intersecting two sound enclosures retains their stronger information.</p>
+<p><strong>Interval bound propagation (IBP)</strong> applies these rules layer by layer. For <span class="math inline">\(z=Wx+b\)</span>, write <span class="math inline">\(W^+=\max(W,0)\)</span> and <span class="math inline">\(W^-=\min(W,0)\)</span> elementwise:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\underline z&amp;=W^+\underline x+W^-\overline x+b,\\
+\overline z&amp;=W^+\overline x+W^-\underline x+b.
+\end{aligned}
+\]</span></p>
+<p>Each coefficient selects the endpoint that minimises or maximises its contribution. Increasing activations then use <span class="math inline">\([\sigma(\underline z),\sigma(\overline z)]\)</span>; nonmonotone activations require interior extrema too. IBP is inexpensive and supplies useful pre-activation bounds for stronger methods, but replacing each layer by a box loses dependence.</p>
+</details>
+<details class="bound-extra">
+<summary>
+Explore the basic range plot
+</summary>
+<section id="bound-demo-1"><p>Compare the analytic range of x(1 − x) with its interval enclosure.</p></section>
+</details>
+</section>
+<section id="dependencies" class="level2">
+<h2 class="anchored" data-anchor-id="dependencies">Affine arithmetic keeps shared variables</h2>
+<p>Inside a network, a convenient rewrite is rarely available, so we track shared variables explicitly. <strong>Affine arithmetic</strong> represents each uncertain quantity as</p>
+<p><span class="math display">\[
+x=x_0+\sum_i a_i\epsilon_i,\qquad \epsilon_i\in[-1,1].
+\]</span></p>
+<p>By reusing the same noise symbols <span class="math inline">\(\epsilon_i\)</span> in every quantity derived from <span class="math inline">\(x\)</span>, affine arithmetic preserves linear dependence: <span class="math inline">\(x-x\)</span> cancels exactly. With several outputs, the represented set is a <strong>zonotope</strong>. Linear layers map zonotopes to zonotopes exactly. <a href="https://doi.org/10.1023/B:NUMA.0000049462.70970.b6">Affine arithmetic</a></p>
+<p><strong>Limitation.</strong> Each nonlinear operation introduces a fresh error symbol, independent of all others. Across repeated nonlinear layers these accumulate and erode the benefit. Constrained zonotopes exclude infeasible combinations of symbols; polynomial zonotopes retain the nonlinear terms. Both trade computation for retained information.</p>
+<p>The interval-versus-affine experiment closes the derivation below.</p>
+<details class="bound-extra">
+<summary>
+Derivation: affine arithmetic, zonotopes, constrained and polynomial zonotopes
+</summary>
+<p><strong>Affine arithmetic</strong> keeps shared noise symbols. For <span class="math inline">\(\hat x=x_0+\sum_i a_i\epsilon_i\)</span> and <span class="math inline">\(\hat y=y_0+\sum_i b_i\epsilon_i\)</span>,</p>
+<p><span class="math display">\[
+\hat x+\hat y=x_0+y_0+\sum_i(a_i+b_i)\epsilon_i,
+\qquad \lambda\hat x=\lambda x_0+\sum_i\lambda a_i\epsilon_i.
+\]</span></p>
+<p>This preserves cancellation across linear operations. Let <span class="math inline">\(\delta_x=\hat x-x_0\)</span>, <span class="math inline">\(r_x=\sum_i|a_i|\)</span>, and similarly for <span class="math inline">\(y\)</span>. Multiplication gives</p>
+<p><span class="math display">\[
+\hat x\hat y=x_0y_0+\sum_i(x_0b_i+y_0a_i)\epsilon_i+\delta_x\delta_y.
+\]</span></p>
+<p>Since <span class="math inline">\(|\delta_x\delta_y|\le r_xr_y\)</span>, replace the last term by <span class="math inline">\(r_xr_y\epsilon_{\rm new}\)</span>. For a square, the stronger <span class="math inline">\(\delta_x^2\in[0,r_x^2]\)</span> permits the residual <span class="math inline">\(r_x^2/2+(r_x^2/2)\epsilon_{\rm new}\)</span>. Fresh residual symbols cost storage and lose nonlinear dependence; repeated nonlinear layers can accumulate this error.</p>
+<p><strong>Zonotopes</strong> collect affine forms into a vector set:</p>
+<p><span class="math display">\[
+\mathcal Z=\{c+G\epsilon:\|\epsilon\|_\infty\le1\},\qquad
+W\mathcal Z+b=\{Wc+b+WG\epsilon:\|\epsilon\|_\infty\le1\}.
+\]</span></p>
+<p>Affine maps are exact in this representation. Rotating a rectangle therefore preserves its tilted shape, while an axis-aligned box includes extra space. Affine arithmetic and zonotope propagation share one implementation in the network comparison.</p>
+<p><strong>Constrained zonotopes</strong> retain additional feasible relationships:</p>
+<p><span class="math display">\[
+\mathcal Z_c=\{c+G\epsilon:\|\epsilon\|_\infty\le1,\ A\epsilon=d\}.
+\]</span></p>
+<p>The constraints exclude combinations of factors that cannot occur, potentially tightening ranges at the cost of constrained optimisation. The demo’s <span class="math inline">\(\epsilon_2=\epsilon_1\)</span> can be eliminated analytically; general coordinate bounds can require LP. <a href="https://web.mit.edu/braatzgroup/Scott_Automatica_2016.pdf">Constrained zonotopes</a></p>
+<p><strong>Polynomial zonotopes</strong> retain shared higher-order factors:</p>
+<p><span class="math display">\[
+\mathcal P=\left\{c+\sum_i g_i\prod_j\epsilon_j^{E_{ji}}:
+\epsilon_j\in[-1,1]\right\},\qquad E_{ji}\in\mathbb N_0.
+\]</span></p>
+<p>For <span class="math inline">\(u=a\epsilon_1+b\epsilon_2\)</span> and <span class="math inline">\(v=c\epsilon_1+d\epsilon_2\)</span>, the quadratic map is exactly</p>
+<p><span class="math display">\[
+v+0.4u^2=c\epsilon_1+d\epsilon_2+0.4a^2\epsilon_1^2
++0.8ab\epsilon_1\epsilon_2+0.4b^2\epsilon_2^2.
+\]</span></p>
+<p>Keeping these monomials avoids immediately replacing curvature by independent noise. More terms mean more work; reductions may need independent residual factors. A polynomial zonotope describes a set, whereas a Taylor model couples a polynomial approximation to a remainder on a specified domain. Neither is simply an affine form with a different name. The demo draws an analytically parametrised boundary; its finite drawing is not a containment proof. <a href="https://arxiv.org/abs/1901.01780">Polynomial zonotopes</a></p>
+<section id="bound-demo-3"><p>Compare interval and affine enclosures under a linear or quadratic map.</p></section>
+</details>
+</section>
+<section id="higher-order" class="level2">
+<h2 class="anchored" data-anchor-id="higher-order">Taylor models keep curvature — and can widen the bound</h2>
+<p>When fresh nonlinear symbols dominate, the next step is to retain the nonlinear terms themselves. A <strong>Taylor model</strong> pairs a polynomial with a bounded remainder:</p>
+<p><span class="math display">\[
+f(x)\in P_k(x-c)+R.
+\]</span></p>
+<p>The polynomial retains powers of the same variable; the remainder <span class="math inline">\(R\)</span> encloses everything truncated. Width now has two sources: the remainder, and the enclosure of the polynomial’s range. <a href="https://www.isa-afp.org/entries/Taylor_Models.html">Taylor models</a></p>
+<p><strong>Reducing one source can expose the other.</strong> Consider <span class="math inline">\(x(1-x)\)</span> on <span class="math inline">\([0,1]\)</span> with centre <span class="math inline">\(1/2\)</span> and a single subdomain:</p>
+<ul>
+<li><strong>Degree one</strong> retains the constant <span class="math inline">\(1/4\)</span> and adds the exact range of the truncated term, <span class="math inline">\([-1/4,0]\)</span>, giving <span class="math inline">\([0,1/4]\)</span>.</li>
+<li><strong>Degree two</strong> retains the exact quadratic, but its Bernstein range enclosure is <span class="math inline">\([0,1/2]\)</span>.</li>
+</ul>
+<p>The approximation is exact, yet the bound doubles in width. The excess comes from the range enclosure, not the approximation. The Taylor experiment inside the derivation below reproduces this.</p>
+<details class="bound-extra" id="taylor-models">
+<summary>
+Derivation: Taylor models, truncation, and nonlinear composition
+</summary>
+<p><strong>Taylor models</strong> improve bounds by retaining powers of the same uncertain variable and enclosing only the omitted part. Assume <span class="math inline">\(f\in C^{k+1}\)</span> on the interval joining the expansion centre <span class="math inline">\(c\)</span> to every <span class="math inline">\(x\in\mathcal X\)</span>. Taylor’s theorem gives</p>
+<p><span class="math display">\[
+f(x)=\underbrace{\sum_{j=0}^k\frac{f^{(j)}(c)}{j!}(x-c)^j}_{P_k(x-c)}
++\frac{f^{(k+1)}(\xi_x)}{(k+1)!}(x-c)^{k+1}.
+\]</span></p>
+<p>If <span class="math inline">\(|f^{(k+1)}|\le M\)</span> throughout that interval and <span class="math inline">\(h=\max_{x\in\mathcal X}|x-c|\)</span>, then</p>
+<p><span class="math display">\[
+f(x)\in P_k(x-c)+R,\qquad
+R=\left[-\frac{Mh^{k+1}}{(k+1)!},\frac{Mh^{k+1}}{(k+1)!}\right].
+\]</span></p>
+<p>For <span class="math inline">\(e^x\)</span>, take <span class="math inline">\(M=e^{\max(\mathcal X\cup\{c\})}\)</span>; for <span class="math inline">\(\sin x\)</span>, take <span class="math inline">\(M=1\)</span>. A quadratic needs no truncation remainder at degree two. A sampled approximation error would not justify any of these bounds.</p>
+<p>For models <span class="math inline">\(f\in P+R\)</span> and <span class="math inline">\(g\in Q+S\)</span> on the same domain, addition gives <span class="math inline">\((P+Q)+(R+S)\)</span>. For multiplication, write <span class="math inline">\(PQ=T_k(PQ)+D\)</span>, where <span class="math inline">\(T_k\)</span> retains degrees through <span class="math inline">\(k\)</span>, and let <span class="math inline">\(B(p)\)</span> enclose the range of a polynomial. Then</p>
+<p><span class="math display">\[
+fg\in T_k(PQ)+B(D)+B(P)S+B(Q)R+RS.
+\]</span></p>
+<p>Every discarded term enters the remainder. A small coefficient alone does not imply a small term on a wide domain. Bounding the retained polynomial with natural intervals can also throw away some of the dependence we preserved; Bernstein bounds offer an alternative.</p>
+<p>For the composition <span class="math inline">\(f(x)=\exp(x(1-x))\)</span>, set <span class="math inline">\(t=x-c\)</span>, <span class="math inline">\(q_c=c(1-c)\)</span> and <span class="math inline">\(v=(1-2c)t-t^2\)</span>. Thus</p>
+<p><span class="math display">\[
+f(x)=e^{q_c}\left(\sum_{j=0}^k\frac{v^j}{j!}+r(v)\right).
+\]</span></p>
+<p>If <span class="math inline">\(v(\mathcal X)\subseteq[v_-,v_+]\)</span>, Taylor’s theorem bounds the exponential remainder by</p>
+<p><span class="math display">\[
+|e^{q_c}r(v)|\le
+\frac{e^{q_c+\max(0,v_+)}\max(|v_-|,|v_+|)^{k+1}}{(k+1)!}.
+\]</span></p>
+<p>Constructing the powers of <span class="math inline">\(v\)</span> also produces degrees above <span class="math inline">\(k\)</span> in <span class="math inline">\(t\)</span>; the model arithmetic must carry their discarded ranges. Higher degree reduces approximation error when the expansion converges adequately, but cannot remove the function’s true variation. Subdivision reduces <span class="math inline">\(h\)</span> and can control remainder growth under repeated composition, at additional cost. <a href="https://www.bmtdynamics.org/index_TaylorModels.htm">Taylor model background</a></p>
+<section id="bound-demo-4"><p>Change the Taylor degree, expansion centre and number of subdomains.</p></section>
+</details>
+</section>
+<section id="polynomial-ranges" class="level2">
+<h2 class="anchored" data-anchor-id="polynomial-ranges">Tighter range enclosures for polynomials</h2>
+<p>The Taylor counterexample relocates the problem: the polynomial’s range enclosure, not its degree. <strong>Bernstein bounds</strong> express a polynomial as a convex combination of its Bernstein coefficients, so its range lies within their convex hull. On <span class="math inline">\([0,1]\)</span>, <span class="math inline">\(x(1-x)\)</span> has coefficients <span class="math inline">\((0,1/2,0)\)</span>, giving <span class="math inline">\([0,1/2]\)</span>. Splitting the domain at <span class="math inline">\(1/2\)</span> tightens this to the exact <span class="math inline">\([0,1/4]\)</span>, at the cost of a second basis conversion.</p>
+<p><strong>Chebyshev approximation</strong> targets the other source of width, giving a near-uniform approximation across the interval. It still requires a remainder and a range enclosure, so we judge it by the final enclosure, not by how closely it follows the curve.</p>
+<details class="bound-extra" id="polynomials">
+<summary>
+Derivation: Bernstein polynomial bounds and validated Chebyshev approximations
+</summary>
+<p><strong>Bernstein bounds</strong> improve the range enclosure of an existing polynomial. Map <span class="math inline">\(x=a+(b-a)t\)</span> to <span class="math inline">\(t\in[0,1]\)</span> and write</p>
+<p><span class="math display">\[
+p(t)=\sum_{i=0}^n b_iB_{i,n}(t),\qquad
+B_{i,n}(t)=\binom ni t^i(1-t)^{n-i}.
+\]</span></p>
+<p>Since <span class="math inline">\(B_{i,n}\ge0\)</span> and <span class="math inline">\(\sum_iB_{i,n}=1\)</span>, the polynomial is a convex combination of its coefficients:</p>
+<p><span class="math display">\[
+\min_i b_i\le p(t)\le\max_i b_i.
+\]</span></p>
+<p>After the domain substitution, power coefficients <span class="math inline">\(p(t)=\sum_{k=0}^n q_kt^k\)</span> convert by</p>
+<p><span class="math display">\[
+b_i=\sum_{k=0}^i q_k\frac{\binom ik}{\binom nk}.
+\]</span></p>
+<p>For <span class="math inline">\(x(1-x)\)</span> on <span class="math inline">\([0,1]\)</span>, the coefficients are <span class="math inline">\((0,1/2,0)\)</span>, giving <span class="math inline">\([0,1/2]\)</span>. Splitting at <span class="math inline">\(1/2\)</span> gives <span class="math inline">\((0,1/4,1/4)\)</span> and <span class="math inline">\((1/4,1/4,0)\)</span> on the two mapped subintervals: the combined bound is <span class="math inline">\([0,1/4]\)</span>. There is no approximation error here, only conservatism in enclosing a polynomial’s range. Subdivision costs additional conversions and range evaluations.</p>
+<p><strong>Chebyshev approximations</strong> seek a useful approximation over the whole interval. With <span class="math inline">\(T_j(\cos\theta)=\cos(j\theta)\)</span>, interpolate at the roots of <span class="math inline">\(T_{n+1}\)</span>:</p>
+<p><span class="math display">\[
+p_n(t)=\sum_{j=0}^n c_jT_j(t).
+\]</span></p>
+<p>An approximation becomes an enclosure only after adding a justified remainder and bounding the polynomial. For <span class="math inline">\(f(x)=e^x\)</span> on <span class="math inline">\([a,b]\)</span>, let <span class="math inline">\(N=n+1\)</span> and <span class="math inline">\(h=(b-a)/2\)</span>. The interpolation remainder satisfies</p>
+<p><span class="math display">\[
+|f(x)-p_n(x)|\le\frac{e^b}{N!}\left|\prod_{j=1}^{N}(x-x_j)\right|
+\le\frac{e^b h^N}{2^{N-1}N!}.
+\]</span></p>
+<p>The final inequality follows because the nodal product is the mapped <span class="math inline">\(T_N\)</span> divided by its leading coefficient <span class="math inline">\(2^{N-1}\)</span>, and <span class="math inline">\(|T_N|\le1\)</span>. The experiment bounds <span class="math inline">\(p_n\)</span> using Bernstein coefficients, then adds this remainder. A fully <strong>validated Chebyshev enclosure</strong> must also bound numerical coefficient and evaluation errors; the browser demonstrates the real-arithmetic formula only.</p>
+<p>Taylor controls a local expansion remainder; Chebyshev controls an interval approximation; Bernstein bounds a polynomial’s range. They can be combined. Higher degree may help approximation, while subdivision helps both approximation and range bounds. Basis conversion can become ill-conditioned at high degree, so the demo caps the degree at eight.</p>
+<section id="bound-demo-5"><p>Compare Taylor and Chebyshev approximations with different polynomial range bounds.</p></section>
+</details>
+</section>
+<section id="objective-bounds" class="level2">
+<h2 class="anchored" data-anchor-id="objective-bounds">Bounding only what the output needs</h2>
+<p>Carrying every polynomial term through a network is expensive. We therefore ask a narrower question: <strong>which relationships matter for this output?</strong></p>
+<p>The baseline is <strong>interval bound propagation (IBP)</strong>, which passes a box through each layer. It is cheap but discards every relationship between neurons. The following methods retain linear constraints instead of full polynomials:</p>
+<ul>
+<li><strong>McCormick envelopes</strong> retain linear constraints between a product and its factors.</li>
+<li><strong>DeepPoly</strong> and <strong>CROWN</strong> replace each activation with upper and lower linear bounds and substitute them symbolically; CROWN works backwards from the output objective.</li>
+<li><strong>CROWN-IBP</strong> uses IBP’s cheap intervals to select those bounds; <strong>α-CROWN</strong> optimises their slopes.</li>
+</ul>
+<p><a href="https://proceedings.neurips.cc/paper/2018/hash/d04863f100d59b3eb688a11f95b0ae60-Abstract.html">CROWN</a></p>
+<p><strong>The choice of linear bound matters.</strong> A valid bound can still be poor for the chosen output. With fixed slopes, CROWN can be looser than IBP, as the network experiment shows. Slope optimisation helps only as far as the optimiser finds better valid bounds.</p>
+<details class="bound-extra" id="relaxations">
+<summary>
+Derivation: McCormick, DeepPoly, CROWN, CROWN-IBP, and α-CROWN
+</summary>
+<p><strong>McCormick envelopes</strong> preserve a relation between a product and its factors instead of immediately replacing the product by a scalar interval. For <span class="math inline">\(z=xy\)</span>, <span class="math inline">\(x\in[\ell_x,u_x]\)</span>, <span class="math inline">\(y\in[\ell_y,u_y]\)</span>,</p>
+<p><span class="math display">\[
+\begin{aligned}
+z&amp;\ge\ell_xy+\ell_yx-\ell_x\ell_y,\\
+z&amp;\ge u_xy+u_yx-u_xu_y,\\
+z&amp;\le u_xy+\ell_yx-u_x\ell_y,\\
+z&amp;\le\ell_xy+u_yx-\ell_xu_y.
+\end{aligned}
+\]</span></p>
+<p>For example, <span class="math inline">\((x-\ell_x)(y-\ell_y)\ge0\)</span> gives the first inequality; the other endpoint-distance products give the remaining three. Together they describe the convex hull of the bilinear graph over the rectangle. Adding <span class="math inline">\(y=1-x\)</span> keeps the bounds valid and exploits dependence, although the restricted relaxation need not equal the convex hull of the restricted graph. Smaller factor intervals tighten the planes.</p>
+<p><strong>ReLU relaxations</strong> replace a nonlinear graph by affine inequalities. For <span class="math inline">\(\ell&lt;0&lt;u\)</span>, convexity gives the secant upper bound</p>
+<p><span class="math display">\[
+\alpha x\le\operatorname{ReLU}(x)\le\frac{u}{u-\ell}(x-\ell),
+\qquad 0\le\alpha\le1.
+\]</span></p>
+<p>The lower line works because it is nonpositive when <span class="math inline">\(x\le0\)</span> and at most <span class="math inline">\(x\)</span> when <span class="math inline">\(x\ge0\)</span>. A triangle relaxation keeps both <span class="math inline">\(z\ge0\)</span> and <span class="math inline">\(z\ge x\)</span>; one chosen lower line may be weaker. Intervals entirely on one side of zero have an exact linear activation.</p>
+<p><strong>DeepPoly</strong> stores symbolic affine upper/lower constraints together with interval bounds and substitutes earlier constraints to recover relationships lost by independent boxes. Its extra symbolic work can reduce layer-by-layer overestimation. <a href="https://www.research-collection.ethz.ch/entities/publication/6b6f9023-354d-445b-bc58-8fcf6e70d721">DeepPoly</a></p>
+<p><strong>CROWN</strong> propagates an output objective backwards through affine relaxations. For an upper objective bound, a positive coefficient selects an activation’s upper line and a negative coefficient selects its lower line; a lower objective bound reverses those choices. Once the objective becomes <span class="math inline">\(a^Tx+b\)</span> on <span class="math inline">\(|x-c|\le r\)</span>,</p>
+<p><span class="math display">\[
+\max(a^Tx+b)=a^Tc+b+|a|^Tr,\qquad
+\min(a^Tx+b)=a^Tc+b-|a|^Tr.
+\]</span></p>
+<p>Keeping the output objective symbolic can preserve cancellations that independent intermediate bounds lose. DeepPoly and CROWN are related relaxation approaches with different propagation organisations, rather than unrelated representations.</p>
+<p><strong>CROWN-IBP</strong> combines inexpensive forward interval bounds with backward linear bounds, including in robust training. Better pre-activation intervals tighten the available relaxation lines. <strong>α-CROWN</strong> optimises lower slopes for the final objective, spending optimisation work to improve the certificate. Neither guarantees a strict improvement on every instance; fixed slopes can even give a looser result than IBP. <a href="https://arxiv.org/abs/1906.06316">CROWN-IBP</a></p>
+<p>The demo uses fixed chosen slopes with IBP pre-bounds. It illustrates CROWN-style substitution, not a full DeepPoly verifier, CROWN-IBP training procedure, or α-CROWN optimiser.</p>
+<section id="bound-demo-6"><p>Explore ReLU supporting lines and a McCormick relaxation of a product.</p></section>
+</details>
+</section>
+<section id="refinement-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="refinement-strategy">Refinement spends more work where the bound is loose</h2>
+<p>When a single pass remains too loose, we keep the bounding method and change where we apply it. <strong>Subdivision</strong> bounds smaller regions separately and combines the results:</p>
+<p><span class="math display">\[
+f(\mathcal X_j)\subseteq[L_j,U_j]
+\quad\Longrightarrow\quad
+f\!\left(\bigcup_j\mathcal X_j\right)
+\subseteq[\min_j L_j,\max_j U_j].
+\]</span></p>
+<p>Smaller regions typically lose less, provided they still cover the whole input set. For natural interval arithmetic on a fixed expression, splitting a region cannot widen its bound in real arithmetic. Another engine, a new expansion centre or a non-nested partition each needs its own check.</p>
+<p><strong>Branch-and-bound</strong> splits only the unresolved regions. Beyond propagation, <strong>LP and SDP</strong> retain coupled constraints jointly, and <strong>MILP, SMT and star sets</strong> resolve each activation case exactly. These settle what propagation leaves open, but their cost can grow rapidly or end without a proof.</p>
+<details class="bound-extra" id="refinement">
+<summary>
+Reasoning: interval subdivision and branch-and-bound
+</summary>
+<p><strong>Interval subdivision</strong> replaces one difficult domain by a complete cover <span class="math inline">\(\mathcal X=\bigcup_j\mathcal X_j\)</span>. Every admissible input belongs to a retained region, so taking the smallest lower bound and largest upper bound encloses every output. Narrower regions reduce dependency loss and tighten local polynomial remainders or relaxation slopes, at the cost of more evaluations.</p>
+<p><strong>Branch-and-bound</strong> adds a choice of which region to split and, where justified, pruning. For maximisation, a feasible evaluated value is a lower bound on the maximum; a region’s sound upper bound can rule it out if it cannot improve the current feasible value. Minimisation reverses the roles. A region may be discarded only with a valid argument for the objective or verification property.</p>
+<p>The current cover gives a sound intermediate enclosure in real arithmetic even if the target gap or robustness proof remains unresolved. Refinement is a strategy that can use IBP, CROWN, or another bounding engine; it is not a new uncertainty representation. The demo splits the region with the widest local enclosure and retains every leaf, using natural intervals or an analytic McCormick relaxation. It does not implement optimised pruning.</p>
+<section id="bound-demo-7"><p>Refine the domain using interval bounds or a small linear relaxation.</p></section>
+</details>
+<details class="bound-extra">
+<summary>
+Reasoning and formulations: LP, SDP, MILP, SMT, and star sets
+</summary>
+<p>These methods spend additional optimisation or search effort to enforce relationships that a propagation pass may discard. They are verification frameworks, not interchangeable uncertainty representations.</p>
+<p><strong>Linear programming (LP)</strong> optimises an output over affine layer equations and relaxed activation inequalities simultaneously. Keeping the constraints together can eliminate combinations allowed by separately propagated bounds. It remains an outer relaxation when nonlinear graphs were replaced by inequalities. The browser’s small McCormick example optimises a one-dimensional slice analytically at endpoints and line crossings; it has no general LP backend.</p>
+<p><strong>Semidefinite programming (SDP)</strong> can retain quadratic relationships. For <span class="math inline">\(q=x-x^2\)</span> on <span class="math inline">\([0,1]\)</span>, replace <span class="math inline">\(x^2\)</span> by a variable <span class="math inline">\(v\)</span> and impose</p>
+<p><span class="math display">\[
+\begin{pmatrix}1&amp;x\\x&amp;v\end{pmatrix}\succeq0,\qquad
+0\le x\le1,\qquad v\le x.
+\]</span></p>
+<p>Positive semidefiniteness implies <span class="math inline">\(v\ge x^2\)</span>; the upper constraint comes from <span class="math inline">\(x^2\le x\)</span> on the domain. Consequently,</p>
+<p><span class="math display">\[
+0\le x-v\le x-x^2\le\tfrac14.
+\]</span></p>
+<p>The endpoints are achievable, so this relaxation recovers the exact range here. In larger lifted problems, dropping a rank-one condition generally leaves an outer approximation. SDP captures quadratic coupling at a higher matrix-optimisation cost.</p>
+<p><strong>Mixed-integer linear programming (MILP)</strong> explicitly resolves activation branches. For <span class="math inline">\(z=\operatorname{ReLU}(x)\)</span> with valid finite bounds <span class="math inline">\(\ell&lt;0&lt;u\)</span>,</p>
+<p><span class="math display">\[
+z\ge0,\quad z\ge x,\quad z\le u\delta,\quad
+z\le x-\ell(1-\delta),\qquad\delta\in\{0,1\}.
+\]</span></p>
+<p>Setting <span class="math inline">\(\delta=0\)</span> forces the inactive branch; <span class="math inline">\(\delta=1\)</span> forces <span class="math inline">\(z=x\)</span>. This is exact in real arithmetic. Tighter pre-activation bounds strengthen the continuous relaxation and may reduce search, but the branch count can grow rapidly. The small browser network instead enumerates its one-dimensional linear regions. <a href="https://arxiv.org/abs/1711.07356">MILP verification</a></p>
+<p><strong>Satisfiability modulo theories (SMT)</strong> asks whether an input satisfying the model equations and a violating output condition exists. For a proposed upper bound <span class="math inline">\(U\)</span>, the condition is <span class="math inline">\(x\in\mathcal X\land f(x)&gt;U\)</span>. A proved UNSAT result excludes such inputs; SAT supplies a counterexample, and a timeout leaves the claim unresolved. ReLU-aware procedures combine linear reasoning with activation case splits. This can resolve ambiguity left by relaxations, at a potentially large search cost. Solver tolerances and proof validation still matter. <a href="https://arxiv.org/abs/1702.01135">Reluplex</a></p>
+<p><strong>Star-set methods</strong> retain a constrained parameterisation</p>
+<p><span class="math display">\[
+\mathcal S=\{c+V\eta:C\eta\le d\}.
+\]</span></p>
+<p>Affine layers transform <span class="math inline">\(c,V\)</span> while preserving the predicates. A ReLU split adds an active or inactive inequality in <span class="math inline">\(\eta\)</span>; the inactive coordinate becomes zero. The union of feasible branches preserves the exact piecewise-linear reachable set in real arithmetic. Keeping branches and shared constraints improves precision, while the number of stars can grow rapidly; relaxed or merged stars trade precision for cost.</p>
+<p>SDP, MILP, SMT, and general star-set solvers are explained here rather than implemented in the browser.</p>
+</details>
+</section>
+<section id="networks" class="level2">
+<h2 class="anchored" data-anchor-id="networks">Moving up in complexity: a small network</h2>
+<p>We now compare the methods on one small network with fixed weights and a single uncertain input, holding everything else fixed. For the ReLU variant, enumerating its linear pieces gives the exact range, so every enclosure can be scored against it. <strong>Lipschitz and local Jacobian bounds</strong> provide sensitivity-based baselines.</p>
+<p>Start from the defaults, then widen the input interval to see where each method loses precision.</p>
+<p><strong>Fixed-slope CROWN is looser than IBP here.</strong> Select <strong>one layer</strong>, <strong>ReLU</strong>, <strong>centre 0</strong> and <strong>half-width 0.2</strong>. IBP gives approximately <span class="math inline">\([-0.09,0.25]\)</span> (width <span class="math inline">\(0.34\)</span>); fixed-slope CROWN gives <span class="math inline">\([-0.09,0.29]\)</span> (width <span class="math inline">\(0.38\)</span>), about 12% wider on the same problem.</p>
+<section id="bound-demo-8"><p>Compare bounding methods on the same small network.</p></section>
+<p>These results compare particular implementations and settings, not method families. Both endpoints matter as well as the width: one method can raise the lower bound while loosening the upper. A tighter enclosure may also cost more than the application can afford, so the experiment reports timings alongside widths.</p>
+<details class="bound-extra" id="monotonic-improvement">
+<summary>
+When is an improvement guaranteed—and when is it only a hypothesis?
+</summary>
+<p><strong>Nested enclosures guarantee no worsening.</strong> If two sound intervals <span class="math inline">\([L_1,U_1]\)</span> and <span class="math inline">\([L_2,U_2]\)</span> enclose the same nonempty output set, their intersection</p>
+<p><span class="math display">\[
+[\max(L_1,L_2),\min(U_1,U_2)]
+\]</span></p>
+<p>is sound and no wider than either. Keeping a baseline and intersecting new validated results makes the retained bound improve monotonically, even if candidate methods do not. Empty intersections indicate incompatible assumptions or an error; they cannot certify a nonempty reachable set. The browser’s floating-point fallback is described in the verification report.</p>
+<p><strong>Subdivision needs a monotone engine or retained parent bounds.</strong> For an inclusion-isotone enclosure <span class="math inline">\(B\)</span>, <span class="math inline">\(X'\subseteq X\)</span> implies <span class="math inline">\(B(X')\subseteq B(X)\)</span>. Natural interval evaluation of a fixed supported expression has this property in real arithmetic. Splitting existing cells therefore cannot widen their combined enclosure. For a more general engine, intersect each child bound with its retained sound parent bound to enforce this property. Merely increasing the number of equal subdomains does not necessarily create a nested partition.</p>
+<p><strong>Added valid constraints help when the optimisation problem stays comparable.</strong> If feasible relaxations satisfy <span class="math inline">\(F_{\rm new}\subseteq F_{\rm old}\)</span> and both contain the true graph, exact minimisation can only raise the lower bound and exact maximisation can only lower the upper bound. A finite-time solver may return weaker certified bounds if it has made less progress; keeping the previous valid result avoids losing that progress.</p>
+<p><strong>Higher degree, more generators, and new slopes need testing.</strong> Rebuilding a representation can change the remainder, range estimator, generator reduction or relaxation choices. The resulting enclosures need not be nested. A more accurate approximation is not automatically a tighter range enclosure, as the quadratic Taylor example shows. Numerical conditioning and validated rounding can add further width.</p>
+<p><strong>A research comparison changes one ingredient at a time.</strong> Fix the model, domain and objective; record lower and upper bounds, width and cost; use an analytic reference where available; and examine the cases where the proposed improvement loses. For a robustness claim, measure the relevant margin too. Stop when the required property is established or the remaining uncertainty is not worth the available computation.</p>
+</details>
+<details class="bound-extra">
+<summary>
+Derivation: Lipschitz and local Jacobian bounds, fixed weights, and comparison metrics
+</summary>
+<p><strong>Lipschitz bounds</strong> turn a domain-wide sensitivity bound into an output enclosure. For <span class="math inline">\(x\in[c-r,c+r]\)</span> and <span class="math inline">\(|f(x)-f(y)|\le L|x-y|\)</span> on this interval,</p>
+<p><span class="math display">\[
+f(x)\in[f(c)-Lr,f(c)+Lr].
+\]</span></p>
+<p>A product of layer norms and activation Lipschitz constants gives a simple bound. Using the selected domain can tighten it: the demo propagates absolute weights with per-neuron derivative magnitudes from IBP pre-activation intervals <span class="math inline">\([\ell,u]\)</span>. ReLU uses zero if <span class="math inline">\(u\le0\)</span>, otherwise at most one; square uses <span class="math inline">\(2\max(|\ell|,|u|)\)</span>. These local constants can be much smaller than global ones, though absolute values lose cancellations.</p>
+<p><strong>Jacobian-based local enclosures</strong> preserve derivative signs. On a convex domain,</p>
+<p><span class="math display">\[
+f(x)-f(c)=\int_0^1J_f(c+t(x-c))(x-c)\,dt.
+\]</span></p>
+<p>An interval enclosure of the Jacobian throughout the domain bounds the integral. For ReLU networks, use absolute continuity along paths and the almost-everywhere derivatives. Sign-aware propagation can improve an absolute sensitivity bound, but derivative intervals may still lose dependencies. A derivative evaluated only at the centre is insufficient.</p>
+<p><strong>Piecewise enumeration</strong> visits every reachable linear region of this scalar-input ReLU network; checking all region endpoints finds its extrema in real arithmetic. <strong>Polynomial / Bernstein propagation</strong> retains the full polynomial for square activations (degree two or four here) before bounding its range. The former pays for branches; the latter pays for polynomial terms and a potentially conservative range enclosure.</p>
+<p>The fixed network has one or two width-three hidden layers:</p>
+<p><span class="math display">\[
+h_1=\sigma(W_1x+b_1),\qquad
+h_2=\sigma(W_hh_1+b_h),\qquad
+f=W_oh_j+b_o,
+\]</span></p>
+<p>where <span class="math inline">\(j=1\)</span> or <span class="math inline">\(2\)</span>, with</p>
+<p><span class="math display">\[
+W_1=\begin{pmatrix}1\\-1\\0.5\end{pmatrix},\quad
+b_1=\begin{pmatrix}-0.2\\0.1\\0.3\end{pmatrix},\quad
+W_h=\begin{pmatrix}0.7&amp;-0.4&amp;0.3\\-0.2&amp;0.8&amp;0.5\\0.4&amp;0.2&amp;-0.6\end{pmatrix},
+\]</span></p>
+<p><span class="math display">\[
+b_h=\begin{pmatrix}0.1\\-0.1\\0.05\end{pmatrix},\quad
+W_o=\begin{pmatrix}1&amp;-0.8&amp;0.5\end{pmatrix},\quad b_o=0.05.
+\]</span></p>
+<p>No training or random weights are involved. See the <a href="assets/bounding-the-unpredictable/math/neural.js">network module</a>.</p>
+<p>The shared metrics are enclosure width <span class="math inline">\(W=U-L\)</span>, excess width <span class="math inline">\(E=W-(y_{\max}-y_{\min})\)</span>, and ratio <span class="math inline">\(\rho=W/(y_{\max}-y_{\min})\)</span> only when the true width is positive. Excess and ratio require an exact reference range; they are not claimed for the square-network polynomial enclosure. Vector widths are componentwise. Browser timings indicate computational work in this implementation, not general complexity or a rigorous performance ranking.</p>
+</details>
+</section>
+<section id="attention" class="level2">
+<h2 class="anchored" data-anchor-id="attention">Does the diagnosis transfer to attention?</h2>
+<p>The final test is whether the same reasoning holds for a different computation. Consider an attention head that forms queries, keys and values, then computes</p>
+<p><span class="math display">\[
+S=\frac{QK^T}{\sqrt d\,\tau},\qquad
+A=\operatorname{softmax}(S),\qquad H=AV,
+\]</span></p>
+<p>where <span class="math inline">\(d\)</span> is the key dimension and <span class="math inline">\(\tau&gt;0\)</span> is the temperature. Each stage discards dependence differently: the scores share input embeddings, the probabilities share one normalisation, and the values depend on the same inputs as the scores.</p>
+<p>With two tokens, one relationship is particularly useful. The attention weights are <span class="math inline">\(p\)</span> and <span class="math inline">\(1-p\)</span>, so</p>
+<p><span class="math display">\[
+h=pv_1+(1-p)v_2.
+\]</span></p>
+<p>By enforcing that the weights sum to one, we obtain an aggregation bound no wider than treating them independently, for the same probability and value intervals. The dependency-aware method also retains shared factors when bounding score differences. <a href="https://proceedings.mlr.press/v206/wei23c.html">Softmax bounds</a></p>
+<p><strong>Can the predicted token change?</strong> After projecting the attention output to logits, the token is unchanged if</p>
+<p><span class="math display">\[
+\boxed{\text{winner's lower logit}&gt;\text{every competitor's upper logit}.}
+\]</span></p>
+<p>The experiment changes one ingredient at a time:</p>
+<ol type="1">
+<li>At fixed radius and temperature, switch <strong>Interval</strong> to <strong>Dependencies + row sum</strong>. This isolates the effect of retaining dependence.</li>
+<li>Enable subdivision. This spends more computation on the same problem.</li>
+<li>Increase the radius. This makes the problem harder; it does not improve the method.</li>
+</ol>
+<section id="bound-demo-9"><p>Bound a two-token attention head and inspect the greedy-token margin.</p></section>
+<p>A narrower logit interval is not sufficient: the winner’s lower endpoint must clear every competitor’s upper endpoint. When it does not, the result is <strong>Inconclusive</strong> — either the bound remains too loose, or the winner genuinely changes within the input set, and bounds alone may not distinguish the two. When the inequality holds numerically, validated arithmetic is still required before it constitutes a certificate.</p>
+<p><strong>Scope.</strong> The head is small and fixed, with four artificial output tokens. Its perturbations are continuous shifts of embeddings, not paraphrases or whole generated responses.</p>
+<details class="bound-extra">
+<summary>
+Derivation: attention projections, score differences, softmax, aggregation, and logits
+</summary>
+<p>For two embeddings <span class="math inline">\(X\in\mathbb R^{2\times2}\)</span>, linear projections <span class="math inline">\(Q=XW_Q\)</span>, <span class="math inline">\(K=XW_K\)</span>, <span class="math inline">\(V=XW_V\)</span> use the affine interval rule above. Each score is</p>
+<p><span class="math display">\[
+s_{ij}=\frac{\sum_{k=1}^2Q_{ik}K_{jk}}{\sqrt2\,\tau},\qquad\tau&gt;0.
+\]</span></p>
+<p>Natural interval products are cheap but forget shared embedding factors. Affine products and McCormick planes retain some of those relationships and can tighten the score bounds. The demo intersects these valid real-arithmetic enclosures; it does not solve a coupled global LP.</p>
+<p><strong>Softmax bounds</strong> follow from monotonicity. Rewrite a row probability as</p>
+<p><span class="math display">\[
+a_i=\frac1{1+\sum_{j\ne i}\exp(s_j-s_i)}.
+\]</span></p>
+<p>If <span class="math inline">\(s_j\in[\ell_j,u_j]\)</span>, increasing <span class="math inline">\(s_i\)</span> increases <span class="math inline">\(a_i\)</span> and increasing another score decreases it, so</p>
+<p><span class="math display">\[
+\frac1{1+\sum_{j\ne i}\exp(u_j-\ell_i)}\le a_i
+\le\frac1{1+\sum_{j\ne i}\exp(\ell_j-u_i)}.
+\]</span></p>
+<p>These bounds are tight over an independent score box, which may include impossible score combinations. With two keys,</p>
+<p><span class="math display">\[
+a_1=\operatorname{sigmoid}(s_1-s_2),\qquad a_2=1-a_1.
+\]</span></p>
+<p>Bounding the difference before converting it to an interval retains cancellation in the shared query and keys. A sign-dependent sigmoid implementation avoids unnecessary exponential overflow. Increasing temperature scales down score differences, but does not guarantee a better final classification margin because the nominal output changes too.</p>
+<p><strong>Row-sum-aware aggregation</strong> exploits <span class="math inline">\(a_1+a_2=1\)</span>. Given <span class="math inline">\(p\in[p_-,p_+]\)</span> and <span class="math inline">\(v_i\in[\ell_i,u_i]\)</span>, nonnegative weights make <span class="math inline">\(h=pv_1+(1-p)v_2\)</span> increasing in each value. Its relaxed bounds are</p>
+<p><span class="math display">\[
+\underline h=\min_{p\in\{p_-,p_+\}}\{p\ell_1+(1-p)\ell_2\},\qquad
+\overline h=\max_{p\in\{p_-,p_+\}}\{pu_1+(1-p)u_2\}.
+\]</span></p>
+<p>Only endpoint probabilities are needed because each expression is linear in <span class="math inline">\(p\)</span>. This is exact for the relaxed box in <span class="math inline">\((p,v_1,v_2)\)</span> and avoids independent attention weights; remaining probability/value correlations can still make it loose.</p>
+<p>Finally <span class="math inline">\(z=H_{2,:}W_O+b\)</span> uses the affine interval rule. For nominal winner <span class="math inline">\(k\)</span>, define</p>
+<p><span class="math display">\[
+m=\underline z_k-\max_{j\ne k}\overline z_j.
+\]</span></p>
+<p>A validated <span class="math inline">\(m&gt;0\)</span> establishes an unchanged unique winner on the input set. Bounding each difference <span class="math inline">\(z_k-z_j\)</span> directly can be tighter because shared terms may cancel; that extension is not implemented. A failed sufficient condition is inconclusive.</p>
+<p>The artificial tokens sun, rain, wind and still have embeddings <span class="math inline">\((0.8,0.2)\)</span>, <span class="math inline">\((-0.5,0.7)\)</span>, <span class="math inline">\((0.1,-0.8)\)</span> and <span class="math inline">\((-0.3,-0.2)\)</span>. Fixed projections are</p>
+<p><span class="math display">\[
+W_Q=\begin{pmatrix}0.8&amp;-0.3\\0.2&amp;0.7\end{pmatrix},\quad
+W_K=\begin{pmatrix}0.6&amp;0.4\\-0.5&amp;0.9\end{pmatrix},\quad
+W_V=\begin{pmatrix}1&amp;0.2\\-0.3&amp;0.8\end{pmatrix},
+\]</span></p>
+<p><span class="math display">\[
+W_O=\begin{pmatrix}1&amp;-0.4&amp;-0.7&amp;0.2\\0.3&amp;1&amp;-0.2&amp;-0.8\end{pmatrix},\quad
+b=(0.12,-0.02,0.02,-0.08).
+\]</span></p>
+<p>One token’s coordinates vary independently by <span class="math inline">\(\pm\varepsilon\)</span>. The refinement option covers that two-dimensional box with <span class="math inline">\(4\times4=16\)</span> subboxes, tightening local bounds at sixteen evaluations; such covers scale poorly with dimension. There are no residuals, normalisation, positional encodings, masks or feed-forward blocks. See the <a href="assets/bounding-the-unpredictable/math/transformer.js">attention module</a>.</p>
+</details>
+</section>
+<section id="guarantees" class="level2">
+<h2 class="anchored" data-anchor-id="guarantees">What a bound does and does not establish</h2>
+<p>A deterministic enclosure bounds where a <strong>fixed model’s output</strong> can go on a <strong>specified input set</strong>. A validated positive margin additionally establishes that the chosen class or token is unchanged. <strong>The enclosure bounds the model, not its error:</strong> neither statement says the prediction is correct.</p>
+<p>Statistical coverage answers a different question: how often a prediction set contains the true outcome under stated sampling assumptions. <a href="https://arxiv.org/abs/2107.07511">Conformal prediction</a> provides this, and we have applied it to <a href="../Blog/paper_conformal_surrogates.html">spatio-temporal surrogates</a> and, through the physics residual, <a href="../Blog/paper_calibrated_pi_uq.html">without labelled data</a>.</p>
+<details class="bound-extra">
+<summary>
+Different guarantees: randomised smoothing, conformal prediction, and discrete tokens
+</summary>
+<p><strong>Randomised smoothing</strong> defines a new classifier by the most probable label of a base classifier under Gaussian noise. If <span class="math inline">\(p_A\)</span> lower-bounds the winning label probability and <span class="math inline">\(p_B\)</span> upper-bounds every competing label probability, then a standard Gaussian smoothing result gives an <span class="math inline">\(L_2\)</span> robustness radius</p>
+<p><span class="math display">\[
+R=\frac{\sigma}{2}\left(\Phi^{-1}(p_A)-\Phi^{-1}(p_B)\right),\qquad p_A&gt;p_B,
+\]</span></p>
+<p>where <span class="math inline">\(\sigma\)</span> is the noise standard deviation and <span class="math inline">\(\Phi\)</span> is the standard normal CDF. Tighter probability bounds can improve the radius; Monte Carlo estimation introduces a stated failure probability and sampling cost. This certifies the smoothed classifier, not the base model’s deterministic output range. <a href="https://proceedings.mlr.press/v97/cohen19c.html">Randomised smoothing</a></p>
+<p><strong>Conformal prediction</strong> calibrates a prediction set against held-out scores. Under exchangeability of calibration and test data, a score rule fixed independently of the calibration labels, and the appropriate finite-sample quantile, it gives marginal coverage</p>
+<p><span class="math display">\[
+\mathbb P\{Y\in C(X)\}\ge1-\alpha.
+\]</span></p>
+<p>With <span class="math inline">\(n\)</span> calibration scores, the split-conformal threshold is their <span class="math inline">\(\lceil(n+1)(1-\alpha)\rceil\)</span>-th order statistic, using <span class="math inline">\(+\infty\)</span> if that index exceeds <span class="math inline">\(n\)</span>. Better predictive scores can produce smaller sets at the same coverage target. This improves statistical efficiency, not a deterministic enclosure on each input; marginal coverage is not conditional coverage at every <span class="math inline">\(X\)</span>. <a href="https://arxiv.org/abs/2107.07511">Conformal prediction</a></p>
+<p><strong>Discrete-token verification</strong> specifies allowed substitutions and then enumerates them or encloses their embedding images. A tighter representation of the allowed discrete set can exclude impossible continuous combinations and improve a robustness bound. The combinatorial cost can be large, and the chosen substitution set still requires a semantic justification. Neither a norm ball nor an unchanged token proves factual correctness or robustness to every paraphrase.</p>
+</details>
+</section>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
+<p><strong>Key takeaway.</strong> The useful next method addresses the observed source of looseness. Retain shared variables when dependence is lost, retain curvature when nonlinear residuals dominate, tighten the range enclosure when the polynomial bound is loose, and refine or optimise when a proof remains unresolved.</p>
+<p><strong>Limitations.</strong> Every result here uses unvalidated binary64 arithmetic, so the bounds are illustrative rather than certified. The models are deliberately small: one uncertain input for the network, one perturbed token for attention. Subdivision covers scale poorly with input dimension.</p>
+<p><strong>Future directions.</strong> The open question is which of these interventions earns its cost on a larger model, and which fails. Combining deterministic enclosures with conformal prediction is one route: the enclosure covers every input in the set, while conformal prediction covers the model’s error.</p>
+<p><a href="assets/bounding-the-unpredictable/README.md">Code and reproduction instructions</a> · <a href="../Blog/assets/bounding-the-unpredictable/VERIFICATION.html">Verification and limitations</a></p>
+<script type="module" src="assets/bounding-the-unpredictable/main.js"></script>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2026 Vignesh Gopakumar</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

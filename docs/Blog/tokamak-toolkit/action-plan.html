@@ -166,18 +166,12 @@ ul.task-list li input[type="checkbox"] {
 <section id="current-position" class="level2">
 <h2 class="anchored" data-anchor-id="current-position">Current position</h2>
 <p><em>Updated 25 Oct 2026.</em></p>
-<p><strong>M4, verification.</strong> Model storage, tooling, the PyTorch export and the property contracts are done, and so is the closed-loop transport comparison: ITER passes (<span class="claim">served-face T_e 7.42%, T_i 8.18%, both passing the 15% limit; whole profile 7.72/9.23%; 34 of 51 final-state faces served</span><a href="../../Blog/tokamak-toolkit/claims.html#c-178" class="cid st-measured">C-178</a>) and MAST-U fails (<span class="claim">served-face T_e 35.33%, T_i 49.15%, both failing 15%; whole profile 41.51/62.39%; cells with both adjacent faces served give 11.86/23.24%, still failing T_i; 13 of 26 final-state faces served</span><a href="../../Blog/tokamak-toolkit/claims.html#c-179" class="cid st-measured">C-179</a>). The MAST-U remediation stopped at its reference step, because no admissible TGLF reference trajectory exists for this scenario. The owner limited the MAST-U scope (<a href="../../Blog/tokamak-toolkit/decisions.html#oq-42">OQ-42</a>, <a href="../../Blog/tokamak-toolkit/log/70-owner-limits-the-mastu-certification-scope.html">entry 70</a>). MAST-U is certified with that limitation stated, and ITER’s pass stands.</p>
-<p><strong>JOREK, alongside M4.</strong> Linear pedestal-stability scans of the ITER hybrid case. Case (a), the EQDSK as given, is closed on the time-step check (<a href="../../Blog/tokamak-toolkit/log/69-time-step-check-of-the-growth-rates.html">entry 69</a>). Case (b), the TORAX state, has an accepted equilibrium (<a href="../../Blog/tokamak-toolkit/log/71-case-b-equilibrium-from-the-torax-state.html">entry 71</a>) and a first n-scan (<a href="../../Blog/tokamak-toolkit/log/72-case-b-n-scan-first-job.html">entry 72</a>). Two of its five approved jobs are used.</p>
+<p><strong>M4, verification.</strong> Model storage, tooling, the PyTorch export and the property contracts are done, and so is the closed-loop transport comparison: ITER passes (<span class="claim">served-face T_e 7.42%, T_i 8.18%, both passing the 15% limit; whole profile 7.72/9.23%; 34 of 51 final-state faces served</span><a href="../../Blog/tokamak-toolkit/claims.html#c-178" class="cid st-measured">C-178</a>) and MAST-U fails (<span class="claim">served-face T_e 35.33%, T_i 49.15%, both failing 15%; whole profile 41.51/62.39%; cells with both adjacent faces served give 11.86/23.24%, still failing T_i; 13 of 26 final-state faces served</span><a href="../../Blog/tokamak-toolkit/claims.html#c-179" class="cid st-measured">C-179</a>). The MAST-U remediation stopped at its reference step, because no admissible TGLF reference trajectory exists for this scenario. The owner limited the MAST-U scope (<a href="../../Blog/tokamak-toolkit/decisions.html#oq-42">OQ-42</a>, <a href="../../Blog/tokamak-toolkit/log/70-owner-limits-the-mastu-certification-scope.html">entry 70</a>). MAST-U will be presented for certification with that limitation stated. ITER’s recorded pass predates full-scenario metadata; it remains historical evidence. The M4 human review has not occurred.</p>
+<p><strong>JOREK, alongside M4.</strong> Linear pedestal-stability scans of the ITER hybrid case. Case (a), the EQDSK as given, is closed on the time-step check (<a href="../../Blog/tokamak-toolkit/log/69-time-step-check-of-the-growth-rates.html">entry 69</a>). Case (b), the TORAX state, has an accepted equilibrium (<a href="../../Blog/tokamak-toolkit/log/71-case-b-equilibrium-from-the-torax-state.html">entry 71</a>) and an n-scan in which n = 12, 16 and 20 grow at the pedestal (<a href="../../Blog/tokamak-toolkit/log/73-case-b-n-scan-three-pedestal-modes.html">entry 73</a>), converged in time step (<a href="../../Blog/tokamak-toolkit/log/75-time-step-check-of-the-case-b-pedestal-modes.html">entry 75</a>). Three of its five approved jobs are used; the grid check awaits <a href="../../Blog/tokamak-toolkit/decisions.html#oq-43">OQ-43</a>.</p>
 </section>
 <section id="m4" class="level2">
 <h2 class="anchored" data-anchor-id="m4">M4 to the certification review</h2>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>step</th>
@@ -188,9 +182,9 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td>proofs</td>
-<td>transport monotonicity in the normalised temperature gradients, by a structural certificate and by derivative bounds with input splitting</td>
-<td>a certificate per model, both routes agreeing</td>
+<td>proofs (done)</td>
+<td>transport monotonicity in the normalised temperature gradients</td>
+<td>both proof routes agree (<span class="claim">all 20 members of each ensemble pass both heat-flux monotonicity properties, with derivative lower bound zero over the full training box</span><a href="../../Blog/tokamak-toolkit/claims.html#c-247" class="cid st-measured">C-247</a>)</td>
 <td>—</td>
 </tr>
 <tr class="even">
@@ -200,9 +194,9 @@ ul.task-list li input[type="checkbox"] {
 <td>—</td>
 </tr>
 <tr class="odd">
-<td>calibration</td>
-<td>split-conformal intervals at the agreed coverage, fitted on validation splits and reported on test splits; not applicable to the pedestal model, which has no labelled data</td>
-<td>coverage table, intervals stored with the model hash</td>
+<td>calibration (done)</td>
+<td>split-conformal intervals for transport and EC; the pedestal model has no labelled data; a second transport calibration on loop states for M5</td>
+<td>coverage tables (<span class="claim">90% intervals calibrated on the v1 validation split cover 0.887–0.907 on the v1 test and v2-random splits (6 outputs, ITER and MAST-U); 9 of 12 lie in the 0.893–0.907 range expected for exchangeable data, the other three miss it by at most 0.006</span><a href="../../Blog/tokamak-toolkit/claims.html#c-256" class="cid st-measured">C-256</a>, <span class="claim">90% intervals calibrated on 190 guard-accepted validation states (4 runs) cover 0.876–0.978 of 548 served test states (8 runs); all six outputs lie within or above the 0.856–0.938 range expected for exchangeable data; per-run coverage 0.78–1.00</span><a href="../../Blog/tokamak-toolkit/claims.html#c-258" class="cid st-measured">C-258</a>); loop states: MAST-U usable (<span class="claim">calibrated on 16 held-out runs and tested on the other 16, coverage is 0.870–0.894; the reverse direction gives 0.905–0.924; single runs 0.75–0.97</span><a href="../../Blog/tokamak-toolkit/claims.html#c-260" class="cid st-measured">C-260</a>), ITER needs more held-out runs (<span class="claim">calibrated on 4 held-out runs, the intervals cover 0.936–0.966 of the other 4; calibrated the other way they cover 0.711–0.818; not reliable for a new ITER run</span><a href="../../Blog/tokamak-toolkit/claims.html#c-261" class="cid st-measured">C-261</a>)</td>
 <td>—</td>
 </tr>
 <tr class="even">
@@ -242,9 +236,9 @@ ul.task-list li input[type="checkbox"] {
 <section id="jorek" class="level2">
 <h2 class="anchored" data-anchor-id="jorek">JOREK: finish J5, then decide its role</h2>
 <ol type="1">
-<li>Analyse the second case (b) job. The fit window for case (b) is fixed before looking at that job: 4 to 10 decades above each run’s minimum energy, with the same agreement checks, and location from the flow perturbation. An n that has not grown 6 decades by the end is reported as “no measurable growth”, not as stable.</li>
-<li>The time-step check: restart each growing pedestal mode from the same snapshot at Δt = 1 and Δt = 0.5, and compare over matching windows.</li>
-<li>The grid check needs an owner decision. Repeating the slow emergence on the doubled grid costs far more than the remaining jobs. The options are a grid check on case (a)’s two fast pedestal modes instead, a long chain of case (b) jobs, a JOREK patch to carry an eigenmode across grids, or the time-step check alone.</li>
+<li>Done: the second case (b) job is analysed with the pre-registered window rule. n = 12, 16 and 20 grow at the pedestal, weakly; n = 1–8 show no measurable growth by the end (<a href="../../Blog/tokamak-toolkit/log/73-case-b-n-scan-three-pedestal-modes.html">entry 73</a>).</li>
+<li>Done: the time-step check. Each of n = 12, 16 and 20 restarted from the same snapshot at Δt = 1 and Δt = 0.5; halving the step changes γ by about one part in ten thousand (<a href="../../Blog/tokamak-toolkit/log/75-time-step-check-of-the-case-b-pedestal-modes.html">entry 75</a>). The doubled grid’s axisymmetric state is ready.</li>
+<li>The grid check needs an owner decision (<a href="../../Blog/tokamak-toolkit/decisions.html#oq-43">OQ-43</a>). Repeating the slow emergence on the doubled grid costs far more than the remaining jobs. The options are a grid check on case (a)’s two fast pedestal modes instead, a long chain of case (b) jobs, a JOREK patch to carry an eigenmode across grids, or the time-step check alone.</li>
 <li>Report the case (b) growth rates per n with their convergence status, and add a ceiling if the grid check stays open.</li>
 <li>The owner then decides what JOREK becomes in the toolkit: a surrogate of a JOREK quantity, reference runs only, or neither. One case (b) n-scan costs about two six-hour node-jobs before any convergence check, which bears on that choice.</li>
 </ol>
@@ -252,10 +246,6 @@ ul.task-list li input[type="checkbox"] {
 <section id="decisions-ahead" class="level2">
 <h2 class="anchored" data-anchor-id="decisions-ahead">Decisions ahead</h2>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>when</th>
@@ -264,8 +254,8 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td>after the second case (b) job</td>
-<td>how to run the JOREK grid check</td>
+<td>now (<a href="../../Blog/tokamak-toolkit/decisions.html#oq-43">OQ-43</a>)</td>
+<td>how to run the JOREK grid check; recommendation: case (a)’s two fast pedestal modes, case (b) converged in Δt only</td>
 </tr>
 <tr class="even">
 <td>at the guard step</td>

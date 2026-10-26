@@ -168,6 +168,8 @@ window.Quarto = {
   <li><a href="#convergence-check" id="toc-convergence-check" class="nav-link" data-scroll-target="#convergence-check">Convergence check</a></li>
   <li><a href="#case-b-equilibrium" id="toc-case-b-equilibrium" class="nav-link" data-scroll-target="#case-b-equilibrium">Case (b) equilibrium</a></li>
   <li><a href="#case-b-n-scan" id="toc-case-b-n-scan" class="nav-link" data-scroll-target="#case-b-n-scan">Case (b) n-scan</a></li>
+  <li><a href="#case-b-job2" id="toc-case-b-job2" class="nav-link" data-scroll-target="#case-b-job2">Case (b) second job</a></li>
+  <li><a href="#case-b-dt-check" id="toc-case-b-dt-check" class="nav-link" data-scroll-target="#case-b-dt-check">Case (b) time-step check</a></li>
   </ul></li>
   <li><a href="#ceilings" id="toc-ceilings" class="nav-link" data-scroll-target="#ceilings">Ceilings</a></li>
   <li><a href="#changelog" id="toc-changelog" class="nav-link" data-scroll-target="#changelog">Changelog</a></li>
@@ -741,11 +743,115 @@ Post-mortem: the edge mismatch came from the converter’s boundary (2026-10-16)
 <p><strong>Job 2</strong> continues every n from its own latest time slice, with unchanged inputs. JOREK’s time slices are full restart files, written by the same routine as <code>jorek_restart.h5</code>; a login-node restart of n = 20 resumed at t = 4771.11, step 4801.</p>
 <p><strong>The grid check does not fit as planned.</strong> Case (b)’s modes emerge from round-off only after t ≈ 3000–4500. A 160 × 256 run repeating that from scratch, at the estimated 30–75 s per step, needs about 40–100 h per mode, far beyond the remaining jobs. JOREK’s <code>jorek2_import_perturbation</code> needs identical grids, and the initial perturbation is hard-coded, so seeding the doubled grid with the 80 × 128 eigenmode would need a source patch. The options go to the owner after job 2.</p>
 </section>
+<section id="case-b-job2" class="level3">
+<h3 class="anchored" data-anchor-id="case-b-job2">Case (b) second job</h3>
+<p>Job 2 continued every n from its own last time slice of job 1, with Δt = 1 on the 80 × 128 grid, and ran to the time limit (t ≈ 9470–9670) with no solver abort (<span class="claim">the continuation job ran all eight n to its time limit (t ≈ 9470–9670) with no solver abort; n = 1, 2, 3, 5 and 8 show no measurable growth by t ≈ 9671 (under 6 decades above their minimum energy)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-243" class="cid st-measured">C-243</a>). The window rule (“rule b”, <code>j5_growth.py --rule b</code>) was fixed in the plan before this job’s data were read: - fit ½ ln E of the total energy from 4 to 10 decades above the run’s minimum, or to the end of the record; - half-window and magnetic/kinetic fits must agree within 2%; - location comes from the flow perturbation (<code>class_u</code>); - an n that hasn’t grown 6 decades is reported as “no measurable growth by t”.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>n</th>
+<th>result</th>
+<th>γ√(μ₀ρ₀)</th>
+<th>u peak ψ_N</th>
+<th>γ/ω*ᵢ</th>
+<th>fit points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1, 2, 3, 5, 8</td>
+<td>no measurable growth by t ≈ 9671</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>12</td>
+<td>linear, edge</td>
+<td>0.00218</td>
+<td>0.925</td>
+<td>0.054</td>
+<td>2669</td>
+</tr>
+<tr class="odd">
+<td>16</td>
+<td>linear, edge</td>
+<td>0.00192</td>
+<td>0.975</td>
+<td>0.036</td>
+<td>3425</td>
+</tr>
+<tr class="even">
+<td>20</td>
+<td>linear, edge</td>
+<td>0.00288</td>
+<td>0.975</td>
+<td>0.043</td>
+<td>2403</td>
+</tr>
+</tbody>
+</table>
+<p>(<span class="claim">γ√(μ₀ρ₀) = 0.00218 (n = 12), 0.00192 (n = 16) and 0.00288 (n = 20), all with the flow perturbation peaked at ψ_N 0.925–0.975; fits over 2400–3400 points, half-window and magnetic/kinetic fits agreeing within 0.6%, and shifting the fit band by a decade changes γ by under 1e-4</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-244" class="cid st-preliminary">C-244</a>, <span class="claim">γ/ω<em>ᵢ = 0.054 (n = 12), 0.036 (n = 16), 0.043 (n = 20), against the EPED-like threshold 0.25; ω</em>ᵢ is an estimate from the profiles, not a JOREK output</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-245" class="cid st-preliminary">C-245</a>.) - <strong>Robustness.</strong> The largest disagreement between half-windows, or between the magnetic and kinetic fits, is 0.6% (n = 16). Shifting the band by a decade either way changes γ by less than 1e-4. - <strong>Order of events.</strong> The rule was fixed in the plan first. One look at interim output with the old case (a) band followed while the job ran. The rule’s code was then written by a session that had not seen the data.</p>
+<p><strong>Time-step check (job 3).</strong> n = 12, 16 and 20 each restart twice from the same job-2 slice, at Δt = 1 and Δt = 0.5. The slice is the first one at or after the mode’s rule-b window start (time-slice indices 7000, 6200 and 4900). The inputs are frozen with checksums, and the comparison window and the 5% test are fixed in <code>j5_dt_check.py</code> before the run. The same job runs the 160 × 256 axisymmetric start on the spare cores.</p>
+<p><strong>Grid check.</strong> A from-scratch doubled-grid check costs about 10–32 chained jobs (<span class="claim">repeating the slow emergence (4 decades only by t ≈ 4700–6900) plus a fit window on 160 × 256 means about 7000–9000 steps per mode, about 60–190 h at an estimated 30–75 s per step, so 10–32 chained jobs for the three modes run together</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-246" class="cid st-preliminary">C-246</a>). JOREK can’t start the fine grid from the coarse mode in this version: <code>jorek2_import_perturbation</code> needs identical grids, and <code>regrid</code> and <code>refinement</code> are marked as not working. <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-43">OQ-43</a> asks the owner how to proceed. The recommendation is the grid check on case (a)’s two faster pedestal modes, with case (b) reported as converged in Δt only.</p>
+</section>
+<section id="case-b-dt-check" class="level3">
+<h3 class="anchored" data-anchor-id="case-b-dt-check">Case (b) time-step check</h3>
+<p>Job 3 restarted n = 12, 16 and 20 twice from the same job-2 time slice (the first slice at or after each mode’s fit-window start), at Δt = 1 and Δt = 0.5. The inputs were frozen with checksums. <code>j5_dt_check.py</code>, fixed before the run, fits both runs over the same window: from 100 time units after the slice to the earlier of either run’s end and 10 decades above the minimum energy.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>n</th>
+<th>window (t)</th>
+<th>γ√(μ₀ρ₀), Δt = 1</th>
+<th>γ√(μ₀ρ₀), Δt = 0.5</th>
+<th>relative change</th>
+<th>rerun vs job 2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>12</td>
+<td>7071–9421</td>
+<td>0.0021768</td>
+<td>0.0021768</td>
+<td>1.3e-5</td>
+<td>5e-9</td>
+</tr>
+<tr class="even">
+<td>16</td>
+<td>6271–8621</td>
+<td>0.0019219</td>
+<td>0.0019221</td>
+<td>9.6e-5</td>
+<td>3e-8</td>
+</tr>
+<tr class="odd">
+<td>20</td>
+<td>4971–7066</td>
+<td>0.0028752</td>
+<td>0.0028754</td>
+<td>7.9e-5</td>
+<td>9e-10</td>
+</tr>
+</tbody>
+</table>
+<p>(<span class="claim">restarting n = 12, 16 and 20 from the same saved state at Δt = 1 and Δt = 0.5 changes γ by 1.3e-5, 9.6e-5 and 7.9e-5, against the 5% tolerance of decision 7; the location stays at the pedestal in both runs</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-248" class="cid st-measured">C-248</a>, <span class="claim">the Δt = 1 restarts reproduce the original job’s growth rate over the shared window to 9e-10–3e-8</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-249" class="cid st-measured">C-249</a>, <span class="claim">γ√(μ₀ρ₀) = 0.00218 (n = 12), 0.00192 (n = 16) and 0.00288 (n = 20), flow perturbation peaked at ψ_N 0.925–0.975; converged in time step (<a href="../../../Blog/tokamak-toolkit/claims.html#c-248">C-248</a>)</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-251" class="cid st-preliminary">C-251</a>.) - <strong>Result.</strong> All three pass the decision-7 time-step test by more than two orders of magnitude, with the flow perturbation at the edge in every run. Changing the start-up skip from 100 to 50 or 200 changes the relative changes by under 4%. - <strong>Doubled grid.</strong> The same job ran the 160 × 256 axisymmetric start on 64 spare cores: about 48 s per step, healthy at the end (<span class="claim">50 axisymmetric steps on the 160 × 256 grid in 40 min on 64 cores; the state passed its health check and is kept as the start for a grid check</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-250" class="cid st-measured">C-250</a>). It is kept as the starting state for whichever grid check <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-43">OQ-43</a> selects.</p>
+</section>
 </section>
 <section id="ceilings" class="level2">
 <h2 class="anchored" data-anchor-id="ceilings">Ceilings</h2>
 <ul>
-<li>No growth rate passes decision 7 yet. Case (a)’s pedestal modes are converged in Δt only; case (b) has no fitted γ.</li>
+<li>No growth rate passes decision 7 yet. Case (a)’s pedestal modes are converged in Δt only; case (b)’s three pedestal modes are converged in Δt at 80 × 128, with the grid check open (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-43">OQ-43</a>).</li>
 <li>The fixed boundary at the separatrix stabilises peeling modes artificially (no vacuum region).</li>
 <li>The case (b) equilibrium is not TORAX’s: q differs by up to about 14% in the core (<span class="claim">median q difference +10.7% (psi_N 0.1–0.5), +3.2% (0.5–0.9), −4.9% (0.9–0.95); q95 4.64 against 4.89, q_min 1.84 against 1.64</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-235" class="cid st-measured">C-235</a>), by construction of <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-40">OQ-40</a> (a).</li>
 <li>A doubled-grid check of slowly emerging modes costs far more than the approved compute.</li>
@@ -755,6 +861,8 @@ Post-mortem: the edge mismatch came from the converter’s boundary (2026-10-16)
 <section id="changelog" class="level2">
 <h2 class="anchored" data-anchor-id="changelog">Changelog</h2>
 <ul>
+<li>2026-10-25: case (b) time-step check passes for n = 12, 16, 20 (<a href="../../../Blog/tokamak-toolkit/log/75-time-step-check-of-the-case-b-pedestal-modes.html">entry 75</a>).</li>
+<li>2026-10-25: case (b) n-scan, second job: three pedestal modes grow (<a href="../../../Blog/tokamak-toolkit/log/73-case-b-n-scan-three-pedestal-modes.html">entry 73</a>).</li>
 <li>2026-10-25: case (b) n-scan, first job (<a href="../../../Blog/tokamak-toolkit/log/72-case-b-n-scan-first-job.html">entry 72</a>); case (b) equilibrium (<a href="../../../Blog/tokamak-toolkit/log/71-case-b-equilibrium-from-the-torax-state.html">entry 71</a>); time-step check (<a href="../../../Blog/tokamak-toolkit/log/69-time-step-check-of-the-growth-rates.html">entry 69</a>).</li>
 <li>2026-10-24: case (a) n-scan and the solver-abort classification (<a href="../../../Blog/tokamak-toolkit/log/68-linear-n-scan-of-the-eqdsk-case.html">entry 68</a>).</li>
 <li>2026-10-16: equilibrium on the EQDSK separatrix (<a href="../../../Blog/tokamak-toolkit/log/67-iter-equilibrium-on-the-eqdsk-separatrix.html">entry 67</a>).</li>
