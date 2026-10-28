@@ -61,7 +61,7 @@ throughout the trajectory.
 ### MAST-U scope (OQ-42) {#mastu-scope}
 
 *Decided 25 Oct 2026.* The MAST-U comparison against a TGLF reference trajectory (remediation
-step R6) is recorded as not evaluable, and MAST-U is certified at the M4 review with that
+step R6) is recorded as not evaluable, and MAST-U is presented for certification review with that
 limitation stated, alongside [K-030](/Blog/tokamak-toolkit/ceilings.qmd#k-030) and [K-032](/Blog/tokamak-toolkit/ceilings.qmd#k-032). ITER's pass stands. The model, guard,
 acceptance limits and frozen splits are unchanged, and no further MAST-U reference compute is
 planned ([entry 70](../log/70-owner-limits-the-mastu-certification-scope.qmd)).
@@ -845,9 +845,9 @@ state. Some late equatorial temperature profiles are outside the trained range
 as well. The state guard can serve a point at an edge without certifying a
 neighbourhood. No CROWN state-bound calculation is needed for these exclusions.
 
-[K-034](/Blog/tokamak-toolkit/ceilings.qmd#k-034) records this limitation. [OQ-45](/Blog/tokamak-toolkit/decisions.qmd#oq-45) asks whether to retain the strict result
-or approve a separately stated perturbation scope. No property or tolerance
-has changed. The deterministic later reference selection is [twenty output states per launcher are selected at evenly spaced indices for the later GENRAY comparison; no reference solver execution or accuracy result]{.claim}[C-278](/Blog/tokamak-toolkit/claims.qmd#c-278){.cid .st-measured}:
+[K-034](/Blog/tokamak-toolkit/ceilings.qmd#k-034) records this limitation. Under [OQ-45](/Blog/tokamak-toolkit/decisions.qmd#oq-45) the owner selected retaining the strict
+result as a limitation, with no clipped box or changed perturbation scope. No
+property or tolerance has changed. The deterministic later reference selection is [twenty output states per launcher are selected at evenly spaced indices for the later GENRAY comparison; no reference solver execution or accuracy result]{.claim}[C-278](/Blog/tokamak-toolkit/claims.qmd#c-278){.cid .st-measured}:
 equally spaced state indices including both endpoints, independent of guard
 outcome or surrogate error. Equilibrium, profile conversion, launch settings,
 executable and resource bounds still need a concrete GENRAY package.
@@ -914,3 +914,37 @@ before comparing native-total algebra against the report. Rejected predictions
 remain separately identified. This completes the sampled V9 comparison under
 the existing reference convention; it does not lift [K-028](/Blog/tokamak-toolkit/ceilings.qmd#k-028) or the EC local-box
 limitation, and the M4 certification review remains pending.
+
+
+## Verified artifacts in the guards {#guard-artifacts}
+
+V10 loads each verified model through its digest-checked manifest. The explicit box must match the loader's feature order and previous domain. File IO occurs on the host before tracing; only arrays enter the compiled guard. Available output certificates hold a separate input box and output interval per family. The predicate applies only when an input lies inside an exact certified input box, with inclusive endpoints. Outside every proof box, it adds no certificate-based rejection; the ordinary input and physical-output checks still apply.
+
+The ordinary EC numerical guard margin cannot enlarge a proof box. Removing that expansion from the inherited draft leaves none of the retained EC states inside its exact proof boxes; the pedestal trajectory is covered ([all four verified input boxes match the previous loaders; 48 of 48 retained pedestal states keep identical predictions and decisions; none of the 57 EC states is inside the exact proof boxes, so no EC certificate-based output check applies there]{.claim}[C-284](/Blog/tokamak-toolkit/claims.qmd#c-284){.cid .st-measured}). Transport has no finite output certificate under [OQ-46](/Blog/tokamak-toolkit/decisions.qmd#oq-46). [OQ-50](/Blog/tokamak-toolkit/decisions.qmd#oq-50) adopts the fallback-rate thresholds as report-only alerts. Accepted-state rejection is not internal solver usage.
+
+## Hybrid-only calibration for M5 {#hybrid-calibration}
+
+[OQ-48](/Blog/tokamak-toolkit/decisions.qmd#oq-48) keeps the model, splits, V7 and the failed pooled record fixed. It restricts calibration to served states of the new hybrid runs and reporting to the older hybrid test runs. A shared state belongs to the family only when every owner run belongs to it. Absolute residuals in signed-log space use the same finite-sample split-conformal rank. A separate frozen reverse audit calibrates on the older hybrid test states and reports on the new ones. Every output must reach the existing pooled reading bar in both directions ([hybrid calibration covers 0.914/0.915/0.904 of the older hybrid test states; the reverse audit covers 0.887/0.869/0.900; all exceed the fixed 0.85 pooled bar]{.claim}[C-285](/Blog/tokamak-toolkit/claims.qmd#c-285){.cid .st-measured}).
+
+Leaving each new run out reports the run-to-run coverage spread; pooled success does not imply a run-level or simultaneous guarantee. M5 uses one coherent uniform discrepancy factor multiplying these marginal half-widths, an explicit prior assumption rather than a distribution inferred from conformal coverage. Its separate Bayesian audit uses one mean residual vector per run, the full empirical channel covariance and a uniform scalar prior. Conditional Metropolis moments are compared with the exact truncated-normal posterior ([four Metropolis chains give transport-error factor mean -0.01978, standard deviation 0.01992 and split R-hat 1.00266; exact conditional moments are -0.02033 and 0.01984]{.claim}[C-288](/Blog/tokamak-toolkit/claims.qmd#c-288){.cid .st-measured}). The other physical priors are not calibrated.
+
+
+## Portable pipeline boundaries {#pipeline-closeout}
+
+V5 reports and provenance sidecars are packaged byte-for-byte. Model/manifest/box binding remains checked at load time, including when a wheel loads an external verified model directory ([installed-wheel EC and pedestal loaders retain their output certificates with externally copied verified directories; unresolved transport bounds remain explicitly K-033]{.claim}[C-289](/Blog/tokamak-toolkit/claims.qmd#c-289){.cid .st-measured}). An existing malformed manifest fails closed rather than dropping certificate checks. The fallback monitor applies identical validation to explicit API thresholds and YAML configuration, so nonfinite values cannot be reported as within threshold.
+
+The M5 selector derives its decision from primary and reverse coverage, checks the unchanged reading bar for every channel and binds all evidence to the exact model and manifest. Scientific failure selects the unchanged V7 fallback; missing or altered evidence raises an error. The completed study's widths remain identical ([all three selected hybrid half-widths are unchanged; both-direction coverage and exact model/manifest/evidence bindings are rechecked before a future run]{.claim}[C-290](/Blog/tokamak-toolkit/claims.qmd#c-290){.cid .st-measured}). These are execution-integrity checks, not additional physics certificates.
+
+## Complete-box partition pilot {#partition-pilot}
+
+The follow-up partitions each original transport box into a complete binary cover. Each leaf uses the existing analytic LP support bands, independently finite variable boxes and stationarity-corrected inequality duals. Unknown or timed-out optimization retains the independently valid inherited enclosure; a primal objective is never accepted as a bound. The union must cover every original input, and aggregation must retain every leaf.
+
+The independent audit reconstructs the cover, source and model bindings, fresh exported predictions, original held-out physical predictions and JAX predictions at sampled extrema. Both physical enclosures remain unresolved ([both member-zero pilots retain overflowing physical enclosures despite complete input-box coverage; no sampled overflow witness was found, and all forty transport V5 results remain unresolved]{.claim}[C-293](/Blog/tokamak-toolkit/claims.qmd#c-293){.cid .st-preliminary}). No sampled overflow witness was found. This does not establish a domain-wide finite enclosure or show the real-valued network is infinite. The calculation uses float64 without directed IEEE rounding guarantees.
+
+Retained solver counters motivate a separate scheduling diagnosis: final output objectives can be skipped after intermediate work consumes a shared clock. A new method must reserve final-objective time, retain corrected duals for independent replay and undergo review before execution. The unchanged all-member gate still requires both pilot members to pass before expansion. [K-033](/Blog/tokamak-toolkit/ceilings.qmd#k-033), dependent transport V6, EC local-domain exclusions and the human certification gate remain open.
+
+### Reserved final-objective result {#reserved-final-objectives}
+
+The bounded follow-up gives each intermediate activation a separate clock and reserves a final clock after every output head contributes constraints. Deterministic activation ordering permits cross-process replay. Incremental artifacts retain sparse constraints, finite variable boxes, affine forms, signed objectives, usable inequality duals and explicit interval fallback for every skipped or unusable objective. The independent auditor reconstructs the original graph and activation constraints, then replays stationarity corrections rather than trusting solver objectives or producer summaries.
+
+All final objectives run, but the independently audited physical enclosures remain nonfinite ([both full-box pilots retain nonfinite physical enclosures after all final objectives run; independent graph, constraint and corrected-dual replay passes, with no finite physical candidate]{.claim}[C-297](/Blog/tokamak-toolkit/claims.qmd#c-297){.cid .st-preliminary}). Intersecting with the inherited enclosure preserves its endpoints exactly. Large relaxation terms dominate the small residual corrections; final-objective starvation alone does not explain the remaining looseness. Neither an identical retry nor an ensemble sweep follows from this result. The full-box property, stored models, guards and human acceptance gate remain unchanged.

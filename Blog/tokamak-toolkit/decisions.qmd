@@ -13,13 +13,22 @@ context and a recommended answer, carries on with whatever isn't blocked, and wa
 
 ## Awaiting a decision
 
-### V10 · Fallback-rate threshold {#v10-threshold}
+### OQ-50 · Fallback-rate alert thresholds {#v10-threshold}
 
 The guards will report when the share of states sent to the Tier A fallback rises above a
 configured threshold, which signals that the verified domain is too small. The owner sets
-one value per surrogate from the rates measured on the existing coupled runs.
+one value per surrogate from the rates measured on the existing coupled runs. The requested proposals are 40% for ITER transport, 50% for MAST-U transport, 45% for EC and 10% for the pedestal. They remain unadopted. The wider M5 prior study exceeds the proposed ITER threshold; it is reported without retuning the proposal.
 
 ## Settled
+
+### OQ-49 · Compute for the minimal uncertainty study {#oq-49}
+
+The owner approved frozen, announced batch propagation for the minimal ITER study and the built-in pure-JAX Bayesian sampler. The numerical work completes ([256 of 256 Monte Carlo trajectories are finite and fine-converged; 2048 sensitivity evaluations drop no rows; fusion-power mean 165.8 MW with standard deviation 102.4 MW, thermal-energy mean 189.5 MJ with standard deviation 44.3 MJ]{.claim}[C-286](/Blog/tokamak-toolkit/claims.qmd#c-286){.cid .st-superseded}); physicist sign-off remains separate.
+
+### OQ-48 · Hybrid transport error term {#oq-48}
+
+The owner selected a hybrid-only calibration fixed before evaluation, retaining the failed pooled record and the existing reading bar. The independent reverse audit also passes ([hybrid calibration covers 0.914/0.915/0.904 of the older hybrid test states; the reverse audit covers 0.887/0.869/0.900; all exceed the fixed 0.85 pooled bar]{.claim}[C-285](/Blog/tokamak-toolkit/claims.qmd#c-285){.cid .st-measured}). This supplies M5's marginal interval; individual run coverage still varies and no joint guarantee follows.
+
 
 ### OQ-47 · Scope of the uncertainty and validation milestone {#oq-47}
 
@@ -38,7 +47,7 @@ need data outside this project's scope.
 tighter bounding left them too wide to map back to physical units ([K-033](/Blog/tokamak-toolkit/ceilings.qmd#k-033)). The local
 robustness check for transport measures change against those bounds, so it can't be
 evaluated either. Both are stated as limitations at the certification review; monotonicity,
-conformal coverage and the coupled-run comparison carry the transport certification.
+conformal coverage and the coupled-run comparison form the transport evidence for certification review.
 
 ### OQ-45 · EC robustness at training-domain boundaries {#oq-45}
 

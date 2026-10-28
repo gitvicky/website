@@ -2,15 +2,15 @@
 title: Tests
 toc: true
 toc-depth: 3
-date-modified: '2026-10-01'
+date-modified: '2026-10-28'
 ---
 
 ## Purpose
 
 What each category of test is there to prove, and which claims rest on it. The suite is run in
 full and again with every gated code disabled (`TKIT_TIER_A_ONLY=1`); at the last publish,
-845 tests passed in the first mode and 846 in the
-second, at commit `c47a380`. Tests that need an optional code (TORAX, FreeGSNKE,
+1095 tests passed in the first mode and 1095 in the
+second, at commit `9c815cc`. Tests that need an optional code (TORAX, FreeGSNKE,
 ASCOT5, Aurora) or a downloaded file skip cleanly when it is absent.
 
 The code now has a private hosted repository and the continuous-integration workflow runs on
@@ -49,3 +49,17 @@ pins (timings, study results) are `measured`, and say which run produced them.
 - 2026-09-30: first published version.
 - 2026-09-30: TORAX balance tests in the conservation category (entry 8).
 - 2026-10-01: run-tracking tests (entry 9).
+
+## Autonomous integration validation {#autonomous-integration}
+
+The retained full normal and Tier-A-only suites cover every test file, with native per-file JUnit output ([1095 tests pass with two intentional heavy-proof skips in each full normal and Tier-A-only suite; lint, typing and quick verification also pass]{.claim}[C-294](/Blog/tokamak-toolkit/claims.qmd#c-294){.cid .st-measured}). An independent audit checks that every source-manifest entry still matches the current checkout and that every expected test file has a corresponding record. Lint, formatting, typing and quick verification also complete successfully. These executions supersede the incomplete first validation attempt; they are separate from earlier incremental aggregates.
+
+Quick verification deliberately omits expensive transport output-bound and local-robustness proofs. Passing suites do not close those scientific properties or award a human acceptance gate. Later source changes require affected checks and a new source binding; the recorded counts must not be silently applied to different code.
+
+
+The later domain/balance and internal-branch diagnostic packages retain focused observer,
+analysis and corruption tests separately from those full-suite counts. Their independent
+auditors check canonical parent parity, retained rows, domain predicates and residual
+identities. They establish the reported diagnostic behavior ([C-299](/Blog/tokamak-toolkit/claims.qmd#c-299), [C-300](/Blog/tokamak-toolkit/claims.qmd#c-300), [C-301](/Blog/tokamak-toolkit/claims.qmd#c-301)), not
+nonlinear convergence or a causal endpoint error budget. No new full-suite execution is
+claimed for these diagnostic-only additions.

@@ -1,0 +1,124 @@
+---
+title: Uncertainty propagation and validation
+toc: true
+toc-depth: 3
+date-modified: '2026-10-28'
+---
+
+## Numerical methods
+
+An ordered typed input specification states independent marginal distributions and their units. A seeded scrambled Sobol sequence maps through inverse CDFs on the host. One transport member stays fixed throughout each trajectory. Sample order is shuffled before assigning members, avoiding aliasing between member indices and Sobol leading bits. Chunked vmap keeps memory bounded. Samples with nonfinite outputs or failed/coarse solver steps are retained in the raw record and explicitly excluded from valid statistics.
+
+Forward Jacobians at the nominal point form the first-order covariance J S Jᵀ. With ensemble members the input term is averaged across members and the covariance of their nominal outputs is added by total variance. The reported standard-deviation cross-check flags disagreement above the fixed criterion, as well as nonfinite derivatives; it never silently accepts a failed derivative.
+
+First-order Saltelli and total Jansen indices use independent factor columns from a doubled-dimensional scrambled Sobol design. Each column substitution changes one factor, including the categorical member. Centering the output in the first-order estimator removes large-offset sensitivity. Total indices include interactions and need not sum to one. Row bootstrap intervals are retained as heuristic diagnostics; their coverage is not established for the quasi-random design.
+
+## ITER study {#iter-study}
+
+The minimal [OQ-47](/Blog/tokamak-toolkit/decisions.qmd#oq-47) study evolves the shipped ITER hybrid scenario with transport, upper-launcher EC heating and EPEDNN. Each sample rebuilds consistent initial profiles, composition, source profiles and post-processing before the fixed-step scan. Density changes the line-average target, edge boundary and prescribed pedestal density; power scales generic and EC heating; pedestal height multiplies only accepted EPEDNN temperatures. Existing guards reject out-of-domain or physically inadmissible evaluations without clipping inputs. Diagnostics are re-evaluated on accepted states, not internal solver evaluations.
+
+The declared ranges are independent sensitivity priors, not measured experimental distributions. The transport term combines a sampled member with a coherent signed-log shift from the hybrid marginal conformal half-widths. This is a specified discrepancy law, not a joint conformal guarantee. All Monte Carlo and sensitivity calculations finish ([all 256 retained Monte Carlo outputs are finite with zero native linear-step error codes, and 2048 sensitivity evaluations drop no rows; those codes do not establish nonlinear-residual or temporal convergence]{.claim}[C-292](/Blog/tokamak-toolkit/claims.qmd#c-292){.cid .st-measured}); every linearisation cross-check flags nonlinear response ([all four outputs fail the fixed 10% standard-deviation cross-check; disagreements are 46.2%, 43.4%, 43.1% and 59.7% for fusion power, thermal energy, central electron temperature and central ion temperature]{.claim}[C-287](/Blog/tokamak-toolkit/claims.qmd#c-287){.cid .st-measured}).
+
+The report attributes available validation evidence to solver, transport, EC, pedestal and equilibrium. They are measured in different native quantities and cannot be added into a final-power error bar. Pedestal model-form discrepancy and equilibrium uncertainty remain unquantified ([K-035](/Blog/tokamak-toolkit/ceilings.qmd#k-035)). Conditional calibration against Tier A reference labels does not supply experimental validation. The full numerical record, prior definitions and scientific figures are retained in the private M5 report for physicist review.
+
+
+## Reusable execution and independent replay {#pipeline-replay}
+
+The fitted Tier A EC fallback ships with its original artifact digest. An isolated source checkout without ignored datasets exercises the actual three-module driver. Each distinct future study supplies a new request path, and its preflight binds the two-direction interval selection, source, models, fallback and proof resources. The historical completed request remains consumed.
+
+Future sensitivity records retain the sampled unit design, physical inputs, categorical members, model outputs and common finite-row mask. The first-order and total estimators can be reconstructed from these arrays without another trajectory run. This retention does not retroactively add raw sensitivity outputs to the earlier study; its original source-bound result and stated audit limits remain intact.
+
+
+## Native solver diagnostics {#solver-diagnostic-scope}
+
+The selected linear predictor-corrector advances a fixed number of corrections. Its native error code is assigned zero unconditionally, and its reported iteration count records that fixed work. Finite retained outputs and zero native error codes therefore do not establish a fine nonlinear residual ([all 256 retained Monte Carlo outputs are finite with zero native linear-step error codes, and 2048 sensitivity evaluations drop no rows; those codes do not establish nonlinear-residual or temporal convergence]{.claim}[C-292](/Blog/tokamak-toolkit/claims.qmd#c-292){.cid .st-measured}). Earlier draft wording was stronger than the recorded diagnostic. The native arrays remain unchanged; a source-bound audit identifies the actual scenario and installed solver implementation.
+
+Time-step refinement supplies a separate numerical check on the final quantities. It cannot retrospectively establish nonlinear-residual convergence, experimental validation, or an exact-solution error bound. Accepted-state guard decisions also remain distinct from decisions made inside the solver ([K-014](/Blog/tokamak-toolkit/ceilings.qmd#k-014)).
+
+## Paired temporal refinement {#paired-refinement}
+
+The refined diagnostic retains the nominal ensemble-mean case and every frozen prior-design case, including every discrete member. Raw final quantities, physical times, accepted-state rejection masks and reasons, and native solver fields are retained at each step size. A separate audit reconstructs final quantities from traces, rejection summaries from masks, solver summaries from native fields and both adjacent endpoint comparisons. Historical overlap prevents instrumentation changes from silently altering the earlier control.
+
+Both comparisons fail the fixed temporal criterion ([maximum paired changes remain 19.2654% and 1.9773% across the two refinements, exceeding the fixed 1% limit; all 99 retained rows are finite with zero native linear-step error codes and no exclusions]{.claim}[C-295](/Blog/tokamak-toolkit/claims.qmd#c-295){.cid .st-preliminary}). No tested replacement step is established and the final propagation remains dependent on that gate. The largest first-pair difference coincides with changes in EC input-domain rejection and some transport decisions. The recorded pedestal decisions agree. Correlation at shared physical times does not establish cause, and these post-step observations do not expose internal predictor-corrector branches.
+
+Further refinement uses a distinct frozen request, independently audited parent arrays and only missing finer evaluations. Both adjacent comparisons must pass for every quantity and every case, retaining invalid or fallback-heavy rows. Finer sampling alone cannot resolve a failed temporal diagnostic. No physics, guard threshold, prior or acceptance tolerance changes to force a pass.
+
+The additional finer ladder also fails both comparisons after independent raw and ancestry reconstruction ([the additional finer ladder has maximum paired changes of 1.7092% and 1.8560%, above the unchanged 1% criterion; all 99 assessed rows remain valid and no supported replacement step is established]{.claim}[C-296](/Blog/tokamak-toolkit/claims.qmd#c-296){.cid .st-preliminary}). No supported step follows. Before committing a final propagation, its complete sampling and sensitivity design must fit the remaining submission and wall-time limits. Any useful throughput measurement must be part of retained final-design work, with immutable raw checkpoints and all invalid rows preserved. A resource limit cannot be repaired by dropping seeds, cases or sensitivity blocks.
+
+The next full independent ladder audit passes source, design, ancestry, raw/trace and historical-overlap checks, but temporal acceptance still fails ([the first pair stays below 1%, but the finer pair changes fusion power by up to 4.1372% and fails three quantities; all 99 assessed rows remain valid, so no replacement step is supported]{.claim}[C-298](/Blog/tokamak-toolkit/claims.qmd#c-298){.cid .st-preliminary}). The first pair passes; only case20/member19 exceeds 1% in the second, failing fusion power, thermal energy and electron temperature. Its EC and pedestal decisions match at shared times while transport decisions differ. No causal attribution, supported step or final refined uncertainty result follows. The conditional parallel UQ prototype remains unexecuted.
+
+The bounded investigation closes scientifically unresolved after independent stopping review. Further refinement and a sixteen-worker scheduling path remain technically credible, but their complete cost is unmeasured. The stop preserves unused authority and every failed case; it does not claim exhausted compute or impossible convergence.
+
+
+## Domain and discrete-balance diagnosis {#domain-balance-diagnostic}
+
+The follow-up retains the nominal trajectory, the worst endpoint case and a subthreshold
+control at the same two finest steps. For every old/new accepted pair, an observer
+reconstructs channel storage, edge transport, sources and pedestal pinning. Its signed
+residual is the remainder of that discrete balance. Each channel's global diagnostic
+normalizes the residual magnitude by the sum of absolute storage, edge, source and
+pinning contributions; it is not a local nonlinear residual norm. No observer value
+feeds back into the trajectory.
+
+Independent domain reconstruction identifies the ion-to-electron temperature ratio as
+the rejecting feature at the selected face. Finer stepping reduces the failing case's
+switch count while increasing sustained fallback occupancy and late balance residuals
+([the failing case rejects face seven on 24.766% of coarse and 82.539% of fine accepted states over (3,5] seconds; its median normalized global electron balance residual rises from 0.031813% to 0.962581%]{.claim}[C-299](/Blog/tokamak-toolkit/claims.qmd#c-299){.cid .st-measured}). Integer-step windows and native fine-step observations exclude
+an artifact of subsampling shared times. The control case meets the endpoint criterion
+despite encountering the same boundary. The discrete thermal-term ledger is an algebraic
+balance, not a causal physical-error budget. The observer does not clip features or
+expand the stored domain.
+
+Narrative companion: entry 94 (private draft pending publication).
+
+## Internal branches and local residual decomposition {#internal-branch-diagnostic}
+
+A separate frozen observer replays the canonical predictor and corrector calls with
+their original old state and context. Denote the last coefficient guess by x1 and the
+accepted vector by x2. Their transport guard decisions often disagree at the selected
+face ([the failing case has different last-guess and accepted-state branches on 39.453% of coarse and 73.145% of fine steps over (3,5] seconds; during (3.5,4.5] seconds all fine accepted states fall back while 84.961% of last guesses select the surrogate]{.claim}[C-300](/Blog/tokamak-toolkit/claims.qmd#c-300){.cid .st-measured}). All specified parent fields match at frozen tolerances, and
+every replayed evolving cell equals canonical x2 exactly. Raw out-of-domain candidates
+retain intentional NaNs; selected transport and evaluated local terms remain finite.
+Native zero flags retain the limitation in [K-036](/Blog/tokamak-toolkit/ceilings.qmd#k-036).
+
+At a fixed accepted vector, evaluate residual operators using last-guess coefficients
+L, accepted-state coefficients A, and their face-specific fallback shadows LF and AF.
+These four evaluations retain stabilization. Let P use accepted physical coefficients
+with stabilization disabled. The independently checked identity is
+
+```text
+R(P) = [(R(A) - R(AF)) - (R(L) - R(LF))]
+     + [R(AF) - R(LF)] + [R(P) - R(A)] + R(L).
+```
+
+The terms are the change in the face's candidate contribution, remaining coefficient
+lag under a common fallback at that face, accepted-state stabilization delta, and the
+last frozen linear-equation residual. Remaining lag includes other-face transport,
+transients, sources/pinning and frozen stabilization effects. The stabilization delta
+does not include every effect of stabilization. Shadow evaluations never force an
+invalid candidate and never advance an altered trajectory.
+
+Absolute cell/time integrals relative to the physical residual norm show a substantial
+local branch term ([the fine failing case has branch-term norm ratios of 0.723 for electron temperature and 0.982 for ion temperature; the signed global branch term cancels and the remaining coefficient lag carries the net defect]{.claim}[C-301](/Blog/tokamak-toolkit/claims.qmd#c-301){.cid .st-measured}). These ratios need not sum to one: signed terms
+cancel. The branch contribution cancels in the signed width-weighted global integral,
+leaving the common-fallback coefficient lag to carry the net defect in this identity.
+That does not isolate indirect branch effects through the evolving state. Local L1
+normalizations and the earlier global balance ratio have different denominators and
+must not be compared as the same percentage. The passing endpoint control also has
+substantial branch terms, preventing attribution of the worst case's power difference
+from mismatch counts alone.
+
+The next prepared protocol continues the same undamped Picard map at shared checkpoints,
+anchors the original iterates and retains x2 as canonical carry. One- and two-step
+iterate differences, branch histories and physical local residuals would distinguish
+observed decay from sustained alternation. A finite probe cannot prove a fixed point
+or rule one out. This protocol is not implemented, frozen or submitted; extra correctors
+are not an established remedy. Full paired convergence, complete affordable uncertainty
+propagation and human sign-off remain separate prerequisites.
+
+Narrative companion: entry 95 (private draft pending publication).
+
+## Changelog
+
+- 2026-10-28: retained native-solver diagnostic limits and unresolved paired refinement (entries 92–93, private drafts).
+- 2026-10-28: added domain/balance diagnosis and internal branch decomposition (entries 94–95, private drafts).

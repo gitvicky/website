@@ -2,7 +2,7 @@
 title: JOREK
 toc: true
 toc-depth: 3
-date-modified: '2026-10-25'
+date-modified: '2026-10-28'
 ---
 
 ## Purpose {#purpose}
@@ -539,3 +539,14 @@ the GNU LGPL v3. Results here use JOREK at commit `01a52be3`. Citations: M. Hoel
 Nuclear Fusion 61, 065001 (2021); M. Hoelzl et al., Nuclear Fusion 66, 116006 (2026). For a list
 of JOREK team members, refer to the author list of M. Hoelzl, G.T.A. Huijsmans, F.J. Artola,
 E. Nardon, M. Becoulet, N. Schwarz, A. Cathey, S.J.P. Pamela et al., Nuclear Fusion 64, 112016 (2024).
+
+
+## Fine-grid resource disposition {#grid-budget-disposition}
+
+An independent native-output replay preserves the unchanged comparison rule and reproduces the retained incomplete result for each selected mode ([all three selected fine-grid checks remain incomplete; the measured-cost projection exceeds the existing compute envelope and further submissions stop]{.claim}[C-291](/Blog/tokamak-toolkit/claims.qmd#c-291){.cid .st-preliminary}). The mode-specific restart states satisfy the existing health checks. Scheduler records and the complete chain reconcile consumed allocations; no recorded link remains active.
+
+The resource diagnostic fits the logarithm of magnetic-plus-kinetic mode energy over several recent windows. It takes the largest positive slope, extrapolates to the original decade target, and divides the remaining simulated time by the latest link's achieved advance. Modes sharing a node are counted together; the separate mode chain adds its cost. A mode with no positive recent slope has no finite forecast. These calculations estimate cost and do not replace the frozen linear-phase fit or yield a physical growth-rate claim.
+
+Even the optimistic finite part of the current projection exceeds the existing envelope, before assigning any cost to the mode without a forecast. Future slopes could change. This is a scenario based on retained progress, not a rigorous lower bound. The existing owner condition stops additional submissions at this point. Unused nominal allocations cannot be consumed after that gate has fired.
+
+The fine-grid outcomes remain incomplete. The private decision package retains the exact projection, raw energy parents, healthy restart hashes, accounting and an unchanged next-link plan. A partial continuation would require an explicit owner resource and stopping-rule disposition; no physics, seeding, target or comparison tolerance is changed.

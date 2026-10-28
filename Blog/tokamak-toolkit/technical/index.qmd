@@ -37,12 +37,9 @@ In roughly the order you would build the system:
     scaling, learning curves, active learning round 1, and the heat-flux sign (M3, in progress).
 
 13. [Verification](verification.qmd): checked exports, property contracts and saved-run
-    closed-loop comparison. Proof certificates and calibrated intervals remain pending.
+    closed-loop comparison. Proof certificates and calibrated intervals are recorded with their limits; certification review remains pending.
 
-Not yet built (one line each until their milestone arrives):
-
-- **Uncertainty propagation** (M5): Monte Carlo over ensemble members and sampled inputs,
-  linearised propagation cross-checked against it, sensitivity ranking, Bayesian calibration.
+14. [Uncertainty propagation](uncertainty.qmd): actual ITER prior propagation, linearisation cross-check, sensitivity and conditional reference-label calibration; physical validation limits.
 
 ## Notation
 
