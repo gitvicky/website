@@ -2584,7 +2584,7 @@ Superseded by <a href="#c-251">C-251</a></td>
 <td class="cid-cell">C-259</td>
 <td>OQ-44 (b) loop-state transport half-widths against the V7 box-wide ones<br>
 <span class="tol">signed-log training space; split rule fixed in 57f82c7 before any loop-state residual was computed</span></td>
-<td class="val">calibrated on half of the held-out v3 trajectory runs, the 90% half-widths are 0.21–0.32 of the V7 values; the intervals span a factor 1.8–3.3 on 1 + |flux| instead of 9–60</td>
+<td class="val">calibrated on half of the held-out v3 trajectory runs, the 90% half-widths are 0.21–0.32 of the V7 values; the intervals span a factor 1.8–3.3 on 1 + abs(flux) instead of 9–60</td>
 <td><span class="badge st-measured">measured</span></td>
 <td>reviews/m4-conformal-loop-v1/transport-iter.json; reviews/m4-conformal-loop-v1/transport-mastu.json<br>
 <code>PYTHONPATH=src python scripts/m4_conformal.py --out-dir NEW_DIRECTORY --loop-from reviews/m4-conformal-v1</code></td>

@@ -778,5 +778,38 @@
   },
   "Blog/tokamak-toolkit/log/81-grid-check-of-the-case-b-pedestal-modes-set-up-and-cost.qmd": {
     "81-grid-check-of-the-case-b-pedestal-modes-set-up-and-cost.html": "9e8a9ce9"
+  },
+  "Blog/tokamak-toolkit/log/77-conformal-intervals-on-loop-states.qmd": {
+    "77-conformal-intervals-on-loop-states.html": "373e2f30"
+  },
+  "Blog/tokamak-toolkit/log/82-optimized-elu-bounds-still-overflow.qmd": {
+    "82-optimized-elu-bounds-still-overflow.html": "4f28d25b"
+  },
+  "Blog/tokamak-toolkit/log/80-direct-elu-proof-pilot-remains-unresolved.qmd": {
+    "80-direct-elu-proof-pilot-remains-unresolved.html": "d1e09309"
+  },
+  "Blog/tokamak-toolkit/log/84-ec-genray-reference-package.qmd": {
+    "84-ec-genray-reference-package.html": "06428d51"
+  },
+  "Blog/tokamak-toolkit/log/78-output-bounds-and-unresolved-transport-limits.qmd": {
+    "78-output-bounds-and-unresolved-transport-limits.html": "1d87ea72"
+  },
+  "Blog/tokamak-toolkit/log/79-optimized-transport-bounds-remain-unresolved.qmd": {
+    "79-optimized-transport-bounds-remain-unresolved.html": "91e34e1b"
+  },
+  "Blog/tokamak-toolkit/log/83-ec-local-robustness-boxes-leave-the-domain.qmd": {
+    "83-ec-local-robustness-boxes-leave-the-domain.html": "72294e60"
+  },
+  "Blog/tokamak-toolkit/log/74-transport-monotonicity-proofs.qmd": {
+    "74-transport-monotonicity-proofs.html": "e7bef772"
+  },
+  "Blog/tokamak-toolkit/log/76-conformal-intervals-for-the-surrogates.qmd": {
+    "76-conformal-intervals-for-the-surrogates.html": "23dcd03e"
+  },
+  "Blog/tokamak-toolkit/log/66-projected-reference-stop-evidence.qmd": {
+    "66-projected-reference-stop-evidence.html": "c810399e"
+  },
+  "Blog/paper_learnable_splines.qmd": {
+    "paper_learnable_splines.html": "fc69f7b1"
   }
 }

@@ -1,0 +1,46 @@
+---
+title: "Learnable Splines for Unstructured Neural Operators"
+subtitle: "arXiv, 2026"
+format: html
+---
+
+***
+
+**Paper:** [Learnable Splines for Unstructured Neural Operators](https://arxiv.org/abs/2610.22446) — *V. Gopakumar, A. Gray, J. Williams, N. Nobre, W. M. E. Ellis, M. Field, J. Panayis, A. I. Blair, A. Davis, S. Pamela, R. Akers, Z. Wang, V. Duruisseaux, A. Anandkumar, M. P. Deisenroth. arXiv, 2026.*
+
+![](/Images/lsplinefno_mastu.png){.lightbox}
+
+### The problem
+
+The Fourier neural operator is fast because of the FFT, and the FFT wants a uniform rectangular grid. Engineering simulations never come on one. They come on large, irregular, locally refined finite-element meshes, which differ from one design to the next. That leaves two options. Work on the mesh directly, as attention and graph models do, and memory grows with node count until the GPU runs out. Or transfer the field onto a latent grid and keep the FFT, at which point the transfer becomes part of the approximation. Existing transfers use global coordinate deformations or kernel integrals over a radius-limited neighbourhood graph, and neither preserves structure by construction.
+
+### The idea
+
+Build the mesh-to-grid transfer out of tensor-product B-splines, and make it learnable.
+
+B-splines carry three properties that matter here. **Compact support**: each mesh node touches a fixed local stencil whose size is set by the spline degree, not by a search radius. **Partition of unity**: constants are preserved. **Smoothness**: the field can be evaluated and differentiated in closed form at any point, not only at the mesh nodes.
+
+The analytic version, SplineFNO, needs a geometry-dependent linear solve to get from mesh to grid, and its inverse is generally dense. **L-SplineFNO** replaces that solve with a local, normalised scatter whose kernel shapes are learned: the analytic spline plus narrower B-spline corrections, constrained so that compact support, partition of unity and smoothness all survive training. A standard FNO runs on the latent grid, and an analytic spline decoder reconstructs the output wherever it is queried.
+
+Engineering problems are also parametric. With no initial condition in a steady-state problem, the geometry and a vector of design and operating parameters carry all of the sample-specific information. These parameters enter through FiLM modulation of the encoded geometry, so the model has to use them, including in cases where the mesh is fixed and the parameters are the only thing that changes.
+
+### What it showed
+
+- **Accuracy at low cost.** Across six 3D thermal, structural and aerodynamic benchmarks, compared against six mesh-native, latent-attention and gridded operators at matched parameter counts, L-SplineFNO is the most accurate on four, close to the best on Aircraft, and trains in a fraction of the time the attention models need. The exception is the bracket, where sharp stress concentrations favour attention that acts directly on the mesh nodes. Learning the transfer beats the analytic SplineFNO on all six benchmarks.
+- **Scale.** On a single A100 it trains on 26.6 million nodes and runs inference on 46 million, well beyond what the baselines can fit.
+- **Analytic derivatives.** Spatial gradients come in closed form from the spline decoder, exact and at a fraction of the cost of autograd.
+- **A whole tokamak.** The full MAST-U structural model has 29.2 million nodes and 134.6 million tetrahedra, built from 3,938 CAD parts, with steel, copper and graphite meeting at over a million interface nodes. A single static solve costs more than 500 CPU-hours on 800 cores. L-SplineFNO, with a separate spline transfer per material and one shared FNO, learns the thermal-expansion displacement field from the expansion coefficient and wall temperature, and reaches 1.8% relative error trained on a single H100.
+
+### The bit I like most
+
+The spline decoder gives you rigorous bounds almost for free. On each cell, the prediction can be written in Bernstein form, and because the Bernstein basis is non-negative, the field is a convex combination of its coefficients. Their minimum and maximum enclose every point in the cell, including the points between mesh nodes. Subdivision tightens the enclosure. Propagate a second-order Taylor model of the operating parameters through the trained network and the same argument holds over a whole box of uncertain parameters. In FP64 with outward rounding, the enclosure is certified end to end.
+
+Mesh-native and attention-based operators have no continuous reconstruction, so they cannot offer a comparable guarantee.
+
+To be clear about the limitation: these bounds enclose the *surrogate*, not its error against the solver.
+
+### Where this sits
+
+The [FNO plasma surrogate](/Blog/paper_plasma_fno.qmd) worked because JOREK outputs and camera frames already sit on regular grids. Engineering meshes do not, and this paper is how the operator gets onto them at the scale of a full device. The bounds also connect back to the uncertainty work. The enclosures cover the surrogate over continuous space and parameters, and [conformal prediction](/Blog/paper_conformal_surrogates.qmd) can supply a calibrated bound on the gap between surrogate and solver. Combining the two would give intervals that contain the simulated field across a whole parameter box. That is the next step.
+
+[Back to the arc](/Blog/research_arc.qmd)

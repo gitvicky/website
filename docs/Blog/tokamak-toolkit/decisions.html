@@ -157,10 +157,14 @@ window.Quarto = {
   <ul>
   <li><a href="#awaiting-a-decision" id="toc-awaiting-a-decision" class="nav-link active" data-scroll-target="#awaiting-a-decision">Awaiting a decision</a>
   <ul class="collapse">
-  <li><a href="#oq-45" id="toc-oq-45" class="nav-link" data-scroll-target="#oq-45">OQ-45 · EC robustness at training-domain boundaries</a></li>
+  <li><a href="#v10-threshold" id="toc-v10-threshold" class="nav-link" data-scroll-target="#v10-threshold">V10 · Fallback-rate threshold</a></li>
   </ul></li>
   <li><a href="#settled" id="toc-settled" class="nav-link" data-scroll-target="#settled">Settled</a>
   <ul class="collapse">
+  <li><a href="#oq-47" id="toc-oq-47" class="nav-link" data-scroll-target="#oq-47">OQ-47 · Scope of the uncertainty and validation milestone</a></li>
+  <li><a href="#oq-46" id="toc-oq-46" class="nav-link" data-scroll-target="#oq-46">OQ-46 · Transport output bounds</a></li>
+  <li><a href="#oq-45" id="toc-oq-45" class="nav-link" data-scroll-target="#oq-45">OQ-45 · EC robustness at training-domain boundaries</a></li>
+  <li><a href="#oq-44" id="toc-oq-44" class="nav-link" data-scroll-target="#oq-44">OQ-44 · Transport intervals for the states the coupled runs visit</a></li>
   <li><a href="#oq-43" id="toc-oq-43" class="nav-link" data-scroll-target="#oq-43">OQ-43 · Grid check for the JOREK case (b) growth rates</a></li>
   <li><a href="#oq-42" id="toc-oq-42" class="nav-link" data-scroll-target="#oq-42">OQ-42 · MAST-U closed-loop check after the projected reference stopped</a></li>
   <li><a href="#oq-41" id="toc-oq-41" class="nav-link" data-scroll-target="#oq-41">OQ-41 · Core and axis modes hide the pedestal in the JOREK n-scan</a></li>
@@ -235,13 +239,29 @@ window.Quarto = {
 <p>The brief lists the decisions that belong to a human: physics modelling choices, licence and data questions, which properties to prove, use of the compute cluster, and benchmark failures that aren’t explained by a bug. When the agent reaches one, it writes the question down with context and a recommended answer, carries on with whatever isn’t blocked, and waits. Numbers (OQ-<em>n</em>) match the project’s internal record. Newest first within each group.</p>
 <section id="awaiting-a-decision" class="level2">
 <h2 class="anchored" data-anchor-id="awaiting-a-decision">Awaiting a decision</h2>
-<section id="oq-45" class="level3">
-<h3 class="anchored" data-anchor-id="oq-45">OQ-45 · EC robustness at training-domain boundaries</h3>
-<p>The assessment gives <span class="claim">all 57 complete EC local boxes are out of domain, including all 45 served states; zero robustness proofs or model counterexamples are claimed</span><a href="../../Blog/tokamak-toolkit/claims.html#c-276" class="cid st-measured">C-276</a>: all prescribed complete local boxes leave the training domain, including every state served by the surrogate. Effective charge and launcher positions sit at domain boundaries. The owner can retain this as a stated certification limitation, or approve a distinct one-sided or reduced perturbation scope. The recommendation for this phase is to retain the strict result and carry the limitation. No scope change is made; the selected reference-comparison states (<span class="claim">twenty output states per launcher are selected at evenly spaced indices for the later GENRAY comparison; no reference solver execution or accuracy result</span><a href="../../Blog/tokamak-toolkit/claims.html#c-278" class="cid st-measured">C-278</a>) can proceed to their concrete solver package independently.</p>
+<section id="v10-threshold" class="level3">
+<h3 class="anchored" data-anchor-id="v10-threshold">V10 · Fallback-rate threshold</h3>
+<p>The guards will report when the share of states sent to the Tier A fallback rises above a configured threshold, which signals that the verified domain is too small. The owner sets one value per surrogate from the rates measured on the existing coupled runs.</p>
 </section>
 </section>
 <section id="settled" class="level2">
 <h2 class="anchored" data-anchor-id="settled">Settled</h2>
+<section id="oq-47" class="level3">
+<h3 class="anchored" data-anchor-id="oq-47">OQ-47 · Scope of the uncertainty and validation milestone</h3>
+<p><em>Decided 26 Oct 2026.</em> A reduced M5 on one ITER scenario. About five uncertain inputs: effective charge, auxiliary heating power, density level, pedestal height and the transport surrogate error. The quantities propagated are fusion power and thermal stored energy. Validation uses only openly available references: the published cross-code benchmark from M1 for the solver, the TGLF comparison for transport and the GENRAY comparison for EC heating. The pedestal has no reference here and is reported as unquantified. Options not taken: validation against experimental shots and integrated-modelling reference runs, which need data outside this project’s scope.</p>
+</section>
+<section id="oq-46" class="level3">
+<h3 class="anchored" data-anchor-id="oq-46">OQ-46 · Transport output bounds</h3>
+<p><em>Decided 26 Oct 2026.</em> No further compute on transport output bounds in M4. Two rounds of tighter bounding left them too wide to map back to physical units (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-033">K-033</a>). The local robustness check for transport measures change against those bounds, so it can’t be evaluated either. Both are stated as limitations at the certification review; monotonicity, conformal coverage and the coupled-run comparison carry the transport certification.</p>
+</section>
+<section id="oq-45" class="level3">
+<h3 class="anchored" data-anchor-id="oq-45">OQ-45 · EC robustness at training-domain boundaries</h3>
+<p><em>Decided 26 Oct 2026.</em> The property is kept as written and the result is reported as a limitation: <span class="claim">all 57 complete EC local boxes are out of domain, including all 45 served states; zero robustness proofs or model counterexamples are claimed</span><a href="../../Blog/tokamak-toolkit/claims.html#c-276" class="cid st-measured">C-276</a>. Effective charge and the launcher positions sit at domain boundaries, so every symmetric box crosses the domain. There is no EC robustness certificate (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-034">K-034</a>). Options not taken: a one-sided box clipped to the domain, or a reduced perturbation subspace, each of which would certify a different property.</p>
+</section>
+<section id="oq-44" class="level3">
+<h3 class="anchored" data-anchor-id="oq-44">OQ-44 · Transport intervals for the states the coupled runs visit</h3>
+<p><em>Decided 25 Oct 2026, extended 26 Oct 2026.</em> A second calibration per transport model on the held-out trajectory states, split by run (entry 77). MAST-U’s intervals are usable for M5; ITER’s depend on which runs calibrate them. On 26 Oct the owner also approved new held-out ITER trajectories, labelled with TGLF, to calibrate ITER’s interval for M5. The calibration on the original validation split remains the M4 deliverable.</p>
+</section>
 <section id="oq-43" class="level3">
 <h3 class="anchored" data-anchor-id="oq-43">OQ-43 · Grid check for the JOREK case (b) growth rates</h3>
 <p><em>Decided 26 Oct 2026.</em> The full grid check for case (b): the three pedestal modes run again on the doubled grid, from round-off, as a chain of one-node jobs. Up to 32 jobs, each announced before submission. The comparison rule and the point at which each mode stops were fixed before any doubled-grid step ran. If the measured cost would take the chain past 32 jobs, the owner is asked again. Options not taken: a grid check on case (a)’s two faster pedestal modes as a stand-in, with case (b) reported as converged in time step only (the recommendation); a JOREK patch to carry a mode from one grid to the other; and the time-step check alone. Set-up and cost: <a href="../../Blog/tokamak-toolkit/log/81-grid-check-of-the-case-b-pedestal-modes-set-up-and-cost.html">entry 81</a>.</p>
