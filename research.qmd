@@ -18,6 +18,7 @@ Few selected publications are given below. You can find the latest list of publi
 <div class="pub-links">
 <a href="https://arxiv.org/abs/2610.22446" class="btn-paper" target="_blank">Paper</a>
 <a href="/Blog/paper_learnable_splines.qmd" class="btn-blog">Blog</a>
+<a href="Blog/assets/mastu/index.html" class="btn-blog" target="_blank" rel="noopener">Interactive</a>
 </div>
 </div>
 <div class="pub-image">

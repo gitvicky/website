@@ -4,6 +4,7 @@ project:
   resources:
     - CNAME
     - Blog/Upgrade_viva_Review.pdf
+    - Blog/assets/mastu/**
 
 website:
   title: "Vignesh Gopakumar"
