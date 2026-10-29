@@ -6,6 +6,7 @@
     layout(location=0) in vec3 position;
     layout(location=1) in vec3 normal;
     layout(location=2) in vec3 displacement;
+    layout(location=3) in float scalar;
     uniform mat4 viewProjection;
     uniform float colourMaximum;
     uniform int quantity;
@@ -14,8 +15,11 @@
     void main() {
       gl_Position = viewProjection * vec4(position, 1.0);
       vNormal = normal;
-      float value = quantity == 0 ? length(displacement) : displacement[quantity - 1];
-      vScalar = quantity == 0 ? value * 1000.0 / colourMaximum : 0.5 + 0.5 * value * 1000.0 / colourMaximum;
+      if(quantity == 4) vScalar = scalar / colourMaximum;
+      else {
+        float value = quantity == 0 ? length(displacement) : displacement[quantity - 1];
+        vScalar = quantity == 0 ? value * 1000.0 / colourMaximum : 0.5 + 0.5 * value * 1000.0 / colourMaximum;
+      }
     }`;
   const FRAGMENT = `#version 300 es
     precision highp float;
@@ -54,9 +58,10 @@
       gl.useProgram(program);this.program=program;
       this.uniforms=Object.fromEntries(['viewProjection','colourMaximum','quantity'].map(k=>[k,gl.getUniformLocation(program,k)]));
       this.vao=gl.createVertexArray();gl.bindVertexArray(this.vao);
-      const attribute=(index,values,usage)=>{const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,values,usage);gl.enableVertexAttribArray(index);gl.vertexAttribPointer(index,3,gl.FLOAT,false,0,0);return b;};
+      const attribute=(index,values,usage,components=3)=>{const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,values,usage);gl.enableVertexAttribArray(index);gl.vertexAttribPointer(index,components,gl.FLOAT,false,0,0);return b;};
       attribute(0,positions,gl.STATIC_DRAW);attribute(1,normals,gl.STATIC_DRAW);
       this.fieldBuffer=attribute(2,new Float32Array(positions.length),gl.DYNAMIC_DRAW);
+      this.scalarBuffer=attribute(3,new Float32Array(positions.length/3),gl.DYNAMIC_DRAW,1);
       const indices=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indices);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,triangles,gl.STATIC_DRAW);
       this.count=triangles.length;this.colourMaximum=colourMaximum;this.quantity=0;
       const lo=[Infinity,Infinity,Infinity],hi=[-Infinity,-Infinity,-Infinity];
@@ -77,7 +82,8 @@
       this.canvas.addEventListener('wheel',e=>{e.preventDefault();this.distance=Math.max(this.radius*.7,Math.min(this.radius*7,this.distance*Math.exp(e.deltaY*.001)));this.draw();},{passive:false});
       this.canvas.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','-','Home'].includes(e.key)){e.preventDefault();if(e.key==='Home')this.reset();if(e.key==='ArrowLeft')this.azimuth-=.1;if(e.key==='ArrowRight')this.azimuth+=.1;if(e.key==='ArrowUp')this.elevation=Math.min(1.35,this.elevation+.1);if(e.key==='ArrowDown')this.elevation=Math.max(-1.35,this.elevation-.1);if(e.key==='+')this.distance=Math.max(this.radius*.7,this.distance*.9);if(e.key==='-')this.distance=Math.min(this.radius*7,this.distance*1.1);this.draw();}});
     }
-    update(field){const gl=this.gl;gl.bindBuffer(gl.ARRAY_BUFFER,this.fieldBuffer);gl.bufferSubData(gl.ARRAY_BUFFER,0,field);this.draw();}
+    update(field,redraw=true){const gl=this.gl;gl.bindBuffer(gl.ARRAY_BUFFER,this.fieldBuffer);gl.bufferSubData(gl.ARRAY_BUFFER,0,field);if(redraw)this.draw();}
+    updateScalars(values,maximum){const gl=this.gl;this.quantity=4;this.colourMaximum=maximum;gl.bindBuffer(gl.ARRAY_BUFFER,this.scalarBuffer);gl.bufferSubData(gl.ARRAY_BUFFER,0,values);this.draw();}
     draw(){
       if(!this.gl||!this.radius)return;
       const gl=this.gl,c=this.canvas,dpr=Math.min(devicePixelRatio||1,2),width=Math.max(1,Math.round(c.clientWidth*dpr)),height=Math.max(1,Math.round(c.clientHeight*dpr));

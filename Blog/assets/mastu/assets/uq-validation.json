@@ -1,0 +1,264 @@
+{
+  "passed": true,
+  "target": "Original stored-weight mathematical neural operator; not the phase-one browser approximation.",
+  "scope": "Fixed display vertices with original FP32 coordinate casts; parameter boxes within the exported parent rectangle. No continuous-space or MOOSE-error claim.",
+  "source_report_sha256": "154cd71c4278024a496a46cf29f1f0d441cb961092f282f37ff9da29659bf5f4",
+  "source_report": {
+    "created_utc": "2026-10-12T21:40:09.159853+00:00",
+    "identity": {
+      "baseline_report_sha256": "5b2c8d401e43c6f6826f9f4b84e7ca70daf5ae40ef30b8d361e392de3bc5d5a7",
+      "implementation_sha256": {
+        "Expts/plot_mastu_validated_native_parameter.py": "1b200362214cb775b59d9ded7c4465d5ec4defc6cfcd9270d503e6ed260b3fd8",
+        "Models/validated_native_encoder.py": "627bbd86b6f4730086d7176a23b9a8f53c5e669c40f1aaaa917f6b0945b4ae6a",
+        "Models/validated_native_decoder.py": "8befcd301c56146afb98b8a048e49d2cd42824d94312462222b2a781476fd524",
+        "Models/validated_tensor_fourier.py": "c477a3bcb459c32f188a65f11a97b61f58e95b839e3f8c0e38c88e6286ae414b",
+        "Models/validated_tensor_functions.py": "3538b1931824f67d47f370318f9f3914bcc204aeb09691bd4e3b2ce3b0db3c36",
+        "Utils/validated_tensor.py": "1420d0262b0f7c9a84c1599c5bd4655dcdb4e8c29bd3d10a4b87d240b2ce44af",
+        "Utils/validated_tensor_cuda.py": "14fd7c35728d2daf1cf86fa8eb017e22886e3551602eab3fc008715b6742d045",
+        "Models/validated_spline_film.py": "5fd0fe84e6caa8762de46a2de72332a54258817b61e1548f0f6798f10256474b",
+        "Models/validated_spline_gelu.py": "254a3b6081d93949fb70def5aa7f7c7a5b598b2a06c4bffe6f09837c37f5330e",
+        "Models/validated_spline_fourier.py": "931195187a104b95cdb7dbb6a240ebbc4d7c401ae78ff66b338f1a48f012f79a",
+        "Models/spline_parameter_quadratic.py": "b36d7088fe990b63f2c34028baefa61c3d0caa5799ceadfd39cf80aef7ab2ad7",
+        "Models/learnable_spline_bounds.py": "c900f33578ef4bc029dc668fe28901bd22a0e59ae01fd0843365193414859dea",
+        "Utils/validated_interval.py": "9617053286ebc4de8eaaef42c4acc6e2cc574cf1a5ce2cae27f2c36822510ce7",
+        "Utils/parameter_partitions.py": "ee17ec265165f330214a7550a2ad2b80be5fa93c032e0e5dfc21a815498fc898",
+        "Models/learnable_spline_fno.py": "3824c48c19f37d91497cfbb220122d59a0073fa66b9c65791b0f959b997a3efb",
+        "Models/spline_fno.py": "1086f2c4354627df188779c27941ffeec12b7c2fd98eed6a48aedd553cc1e7eb",
+        "Models/factory.py": "582ef77bb5dcf130b3f68c9589fbedb375bec4280acf14554a9b6cd43c05b064",
+        "Models/model_builder.py": "835a18a5e6169575192f458c4e1aa85a4e1ff049d6e584829cb4acd516f501d1",
+        "Data/coordinate_processor.py": "37205a8c0a5b6dcbca1e3c1634e243860521a811d10f6a1ed50356db2060c368",
+        "Utils/normalisation.py": "383e75fa243f78d36c9e1cb764e1e6d5c6f7a4c0f170ba184953b2cad817a550",
+        "Expts/certify_mastu_spline.py": "dca55cac441d53793a5e2b7840315aa4651901f41eeb367d49c82c1a4b6cde39",
+        "Utils/config_resolver.py": "c87f6f53b9074ad1682bdc563769f27f2027fc33d0c842b17a3cf32806e76062"
+      },
+      "parameter_half_width": [
+        1e-07,
+        5.0
+      ],
+      "chunk_size": 32768,
+      "query_chunk_size": 8192,
+      "gelu_chunk_size": 32768,
+      "source_nodes": 29183754,
+      "probe_source_nodes": null
+    },
+    "run": "mild-python",
+    "sample_index": 0,
+    "case_id": "gravity_thermal_20/eval_02/parameter_study_out_study_app02",
+    "source_nodes": 29183754,
+    "display_face_centres": 4077312,
+    "covered_triangles": 4077312,
+    "surface": "/rds/project/rds-aSo1XX0UOlw/ir-gopa2/Code/Conditional_Fusion_Operator/Expts/figures/cache/mastu_surfaces/mastu_82d015dba5dcffd5eb68/surface.vtp",
+    "surface_sha256": "4f92d2e66cbed13c97a37b6c11552bd67f376d772cf7a908489dcb6cc1a79a5d",
+    "parameters": {
+      "names": [
+        "thermal_expansion",
+        "wall_temp"
+      ],
+      "physical_center": [
+        1.4328253200801555e-05,
+        863.978759765625
+      ],
+      "encoded_center": [
+        0.43170276284217834,
+        0.7288728356361389
+      ],
+      "offset": [
+        1.0148197361559141e-05,
+        508.5845947265625
+      ],
+      "scale": [
+        9.682717063697055e-06,
+        487.59417724609375
+      ],
+      "corpus_min": [
+        1.0148197361559141e-05,
+        508.5845947265625
+      ],
+      "corpus_max": [
+        1.9820914531010203e-05,
+        996.1787719726562
+      ],
+      "corpus_sha256": "f7724f171ade8b7ed9288b3f1eb9a0469e2b6b3990071e93e43bdfcc1705b086",
+      "physical_lower": [
+        1.4228253200801554e-05,
+        858.978759765625
+      ],
+      "physical_upper": [
+        1.4428253200801556e-05,
+        868.978759765625
+      ],
+      "encoded_lower": [
+        0.42137500643730164,
+        0.7186184359519715
+      ],
+      "encoded_upper": [
+        0.44203054904937744,
+        0.7391272944942653
+      ]
+    },
+    "derived_kernel_sha256_before_promotion": "e9ae70d79dd953cfbe6a04161d40cdf5c43bef46057e652328bfce2538646612",
+    "floating_point_validation": true,
+    "physical_solution_error_bound": false,
+    "full_native_evaluation": true,
+    "validated_stages": [
+      "physical_parameter_box",
+      "coordinate_normalization",
+      "sinusoidal_features",
+      "film_heads",
+      "film_application",
+      "material_lifts",
+      "spline_kernel_tables",
+      "stencil_and_branch_covers",
+      "scatter",
+      "density_floor_and_sign",
+      "multiscale_interpolation",
+      "scatter_fusion",
+      "analytic_density",
+      "log1p_density",
+      "density_projection",
+      "retained_mode_dft",
+      "fourier_and_skip_contractions",
+      "fno_gelu",
+      "query_preprocessing",
+      "analytic_gather",
+      "local_bypass",
+      "nonlinear_readout",
+      "output_normalization",
+      "quadratic_parameter_extrema",
+      "magnitude"
+    ],
+    "unvalidated_model_stages": [],
+    "scope": "Outward-rounded enclosure of the complete mathematical surrogate with exact stored binary weights, captured geometry-derived tables and FP32 input-coordinate casts, over the full physical parameter box at every displayed fixed face centre.",
+    "execution_scope": "Validates the enclosure computation and the real stored-weight surrogate. It does not certify every execution of the original vendor FP32/TF32/libm kernels.",
+    "preprocessing_scope": "Exact real coordinate normalization and sine/cosine at the stored binary frequencies, after the original explicit input-coordinate FP32 cast; all computations enclosed.",
+    "geometry_input_scope": "Stored binary native coordinates and face-centre coordinates are fixed inputs; geometry-table generation/training and MOOSE errors are outside the surrogate target.",
+    "arithmetic": "Binary64 directed PTX primitives/reductions on CUDA; per-primitive outward binary64 CPU reference; rational twiddles and transcendental series remainders.",
+    "blocks": [
+      {
+        "validated_fourier_linear_stage": true,
+        "linear_rounding_radius_max": 1.0095915118937395e-11,
+        "linear_rounding_radius_l2_upper": 3.849215963642894e-08,
+        "linear_global_remainder_l2_upper": 3.522746191112891,
+        "global_remainder_l2_upper": 3.8397706719454736,
+        "validated_gelu_stage": true,
+        "activation_rounding_radius_max": 2.096532649556027e-11,
+        "activation_local_defect_l2_upper": 0.6012191121651246,
+        "max_remainder": 0.07699979277391529
+      },
+      {
+        "validated_fourier_linear_stage": true,
+        "linear_rounding_radius_max": 7.004223944946402e-11,
+        "linear_rounding_radius_l2_upper": 2.637628619705614e-07,
+        "linear_global_remainder_l2_upper": 8.085087842493515,
+        "global_remainder_l2_upper": 10.870026296596695,
+        "validated_gelu_stage": true,
+        "activation_rounding_radius_max": 7.107936967863631e-11,
+        "activation_local_defect_l2_upper": 3.0579763585153947,
+        "max_remainder": 0.479001086067608
+      },
+      {
+        "validated_fourier_linear_stage": true,
+        "linear_rounding_radius_max": 1.0635910155156963e-10,
+        "linear_rounding_radius_l2_upper": 5.657682452765562e-07,
+        "linear_global_remainder_l2_upper": 21.90525613330795,
+        "global_remainder_l2_upper": 24.809669599968974,
+        "validated_gelu_stage": true,
+        "activation_rounding_radius_max": 3.898767315476905e-12,
+        "activation_local_defect_l2_upper": 0.08073514973341539,
+        "max_remainder": 0.10578423618185344
+      },
+      {
+        "validated_fourier_linear_stage": true,
+        "linear_rounding_radius_max": 1.2338355480827154e-11,
+        "linear_rounding_radius_l2_upper": 7.88122799453763e-08,
+        "linear_global_remainder_l2_upper": 77.11749412142503,
+        "global_remainder_l2_upper": 77.11749412142503,
+        "max_remainder": 0.11523916151729494
+      }
+    ],
+    "ambiguous_stencil_axes": 0,
+    "width_mm": {
+      "minimum": 0.8399599987600412,
+      "median": 2.474112360318281,
+      "maximum": 6.458844748771724
+    },
+    "archived_width_mm": {
+      "minimum": 0.8296908466933622,
+      "median": 2.4369067025736415,
+      "maximum": 6.349346489556252
+    },
+    "comparison_to_archived": {
+      "validated_minus_archived_width_mm": {
+        "minimum": 0.009973646140217646,
+        "median": 0.03739580118899792,
+        "maximum": 0.10949825921547154
+      },
+      "relative_width_change": {
+        "minimum": 0.00933194913465174,
+        "median": 0.015182423086337882,
+        "maximum": 0.020157066046360583
+      },
+      "archived_zero_width_faces": 0,
+      "archived_nominal_component_escapes": 0,
+      "archived_nominal_maximum_escape_m": 0.0
+    },
+    "runtime": {
+      "torch": "2.10.0+cu128",
+      "device": "NVIDIA A100-SXM4-80GB",
+      "encoder_seconds": 283.4978286620026,
+      "fno_seconds": 424.30318081300356,
+      "query_seconds": 146.7191450850005,
+      "total_seconds": 870.180998814998,
+      "maximum_gpu_memory_bytes": 40021353984
+    },
+    "artifact_sha256": {
+      "nominal.npy": "3450f5f0c82b024e99dc397e53d1904b1c317c4d1b0e5f0f0b5ad2a17b24ec21",
+      "directions.npy": "9c21419427b352137a6a7259308a24cd742d0e19c2057fd5d25f44fb12a5e126",
+      "remainder.npy": "5c33e626ed0ff9836b86a054203033af07f5e774c2c9925169c8b220de39067f",
+      "surface_bounds.npz": "91393dce131b4f45bdd32dbf1d07ccfd57203b923524547ef4025351eeb80e2b",
+      "component_lower.npy": "22bb02dc806da95a45258c5d65c3209b3d532bfbc28f2978b4e96e6c3e885144",
+      "component_upper.npy": "881af5ee850262028041612c79880bad25a0cb5188ab5e26c2445e3174238056"
+    }
+  },
+  "native_source_nodes": 29183754,
+  "query_vertices": 64018,
+  "queries_checked_against_native_decoder": 64018,
+  "query_geometry_sha256": "e0ee4eb202230bd1574b11cb50ef6b34aedb0d04bb1e8df3a74f4d91b0c09c3c",
+  "browser_method": "Outward binary64 interval evaluation of exported quadratic coefficient intervals plus parent-box Taylor remainder.",
+  "source_code_sha256": "8be1fc5753f7987a5cf3b2aefd5bc73126a2133885ccf3b06ce543ccb5b41315",
+  "full_box_maximum_component_width_mm": 4.463486015287649,
+  "full_box_maximum_magnitude_width_mm": 6.400412314190276,
+  "fixed_parent_remainder": true,
+  "browser_qa_passed": true,
+  "browser_qa": {
+    "passed": true,
+    "vertices": 64018,
+    "reference_sampled_vertices": 193,
+    "all_estimate_magnitudes_contained": true,
+    "desktop": true,
+    "mobile_layout": true,
+    "domain_boundary_and_zero_width": true,
+    "headless_bound_milliseconds": 183.40000000596046,
+    "full_box_width_mm": 6.4,
+    "zero_box_width_mm": 5.883
+  },
+  "numerical_tests": {
+    "passed": true,
+    "count": 12,
+    "includes_exact_rational_interval_and_normalization_checks": true
+  },
+  "browser_arithmetic_assumptions": "IEEE-754 correctly rounded binary64 basic operations and binary32 Math.fround conversion with gradual underflow; square roots independently enclosed by verified products.",
+  "browser_source_sha256": {
+    "uncertainty.html": "35118e1e24deaa0a215a161583aa6dd5a540921e0af7b69864acb9528438f38f",
+    "uq-app.js": "a136efa5ca4fb84c8c3825f63f2530e17cd65d6b261da3e049e5b48c00c7f9d5",
+    "uq-worker.js": "279573c0115d50c47236cbc1a0826bb38d66076a8273c2f72ef0204ef8df3cb4",
+    "uq-interval.js": "ac00b857ad58ea04179aba77fd6666c96d76ff6566fd73c4b877f79b41a27c80",
+    "viewer.js": "8c09da598ff9c1b59269f50a1052e3e0711ed16f86b38606376bfc0505994cf8",
+    "style.css": "5d2b77b6cb3b914815b92ca155037852bb20b630584262c84acb3cfb6106a9a3"
+  },
+  "weights_sha256": {
+    "model.pth": "12873c8292ecb0d11db50110fee48fb2e3f2f54b198d4dd2435546d704a94a02",
+    "coord_processor.pt": "b4868d6c3c1cb4b91882643baed6089d299a90511993679b373aed7d6c28356e",
+    "normalizer.pt": "e60edd5d91e5df17f3ae0df23ed925419a4dca94148dc1c50254288f263b2467"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "kind": "validated-parameter-taylor",
+  "vertices": 64018,
+  "triangles": 119997,
+  "parameters": [
+    {
+      "name": "thermal_expansion",
+      "initial": 1.4328253200801555e-05,
+      "min": 1.4228253200801556e-05,
+      "max": 1.4428253200801554e-05,
+      "maximum_half_width": 1e-07,
+      "offset": 1.0148197361559141e-05,
+      "scale": 9.682717063697055e-06,
+      "real_scale": [
+        9.682717169451062e-06,
+        9.682717169451063e-06
+      ],
+      "encoded_center": 0.43170276284217834,
+      "encoded_min": 0.42137500643730164,
+      "encoded_max": 0.44203054904937744
+    },
+    {
+      "name": "wall_temp",
+      "initial": 863.978759765625,
+      "min": 858.978759765625,
+      "max": 868.978759765625,
+      "maximum_half_width": 5.0,
+      "offset": 508.5845947265625,
+      "scale": 487.59417724609375,
+      "real_scale": [
+        487.5941772560937,
+        487.59417725609376
+      ],
+      "encoded_center": 0.7288728356361389,
+      "encoded_min": 0.7186184359519715,
+      "encoded_max": 0.7391272944942653
+    }
+  ],
+  "files": {
+    "positions": {
+      "file": "positions.bin",
+      "sha256": "e0ee4eb202230bd1574b11cb50ef6b34aedb0d04bb1e8df3a74f4d91b0c09c3c",
+      "bytes": 768216
+    },
+    "normals": {
+      "file": "normals.bin",
+      "sha256": "f7831eef98d6f963959b3f0aa1ddfa6416112a2eeaedf225ae775626e2220869",
+      "bytes": 768216
+    },
+    "triangles": {
+      "file": "triangles.bin",
+      "sha256": "eca45b289c73117b49a52820574844106fb25973a50cee280e9002028e55ecfa",
+      "bytes": 1439964
+    },
+    "coefficient_lower": {
+      "file": "uq-coefficient_lower.bin",
+      "sha256": "b9833ed4ed54c0068410a814d17952acc633313a6602150cc391004c51272c3f",
+      "bytes": 9218592
+    },
+    "coefficient_upper": {
+      "file": "uq-coefficient_upper.bin",
+      "sha256": "ae586e4687803e194a6f7ce258e7742b60fb05deaecefee9d231b25eede92784",
+      "bytes": 9218592
+    },
+    "remainder": {
+      "file": "uq-remainder.bin",
+      "sha256": "ddd53e479ed34c7166427ab785f38727c0afb4c5673ae14486b44bf918ebe129",
+      "bytes": 1536432
+    }
+  },
+  "validation": {
+    "passed": true
+  },
+  "native_source_nodes": 29183754,
+  "colour_max_mm": 45.0,
+  "width_max_mm": 7.0,
+  "report": "uq-validation.json",
+  "terms": [
+    "1",
+    "d0",
+    "d1",
+    "d0^2",
+    "d0*d1",
+    "d1^2"
+  ]
+}
