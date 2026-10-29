@@ -127,10 +127,10 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#current-position" id="toc-current-position" class="nav-link active" data-scroll-target="#current-position">Current position</a></li>
-  <li><a href="#m4" id="toc-m4" class="nav-link" data-scroll-target="#m4">M4 to the certification review</a></li>
+  <li><a href="#m4" id="toc-m4" class="nav-link" data-scroll-target="#m4">Review package and remaining decisions</a></li>
   <li><a href="#jorek" id="toc-jorek" class="nav-link" data-scroll-target="#jorek">JOREK: finish J5, then decide its role</a></li>
   <li><a href="#decisions-ahead" id="toc-decisions-ahead" class="nav-link" data-scroll-target="#decisions-ahead">Decisions ahead</a></li>
-  <li><a href="#m5" id="toc-m5" class="nav-link" data-scroll-target="#m5">After M4: M5 inputs</a></li>
+  <li><a href="#m5" id="toc-m5" class="nav-link" data-scroll-target="#m5">M5 inputs and remaining gates</a></li>
   <li><a href="#m3-record" id="toc-m3-record" class="nav-link" data-scroll-target="#m3-record">M3 work record</a></li>
   <li><a href="#performance" id="toc-performance" class="nav-link" data-scroll-target="#performance">Complete the performance comparison</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">Complete the EC and ITER pedestal contracts</a></li>
@@ -146,7 +146,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Action plan</h1>
-<p class="subtitle lead">M4 verification to the certification review; JOREK stability alongside</p>
+<p class="subtitle lead">Unresolved bounds, temporal refinement and bounded review dispositions</p>
 </div>
 
 
@@ -165,91 +165,77 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="current-position" class="level2">
 <h2 class="anchored" data-anchor-id="current-position">Current position</h2>
-<p><em>Updated 26 Oct 2026.</em></p>
-<p><strong>M4, verification.</strong> Model storage, tooling, the PyTorch export and the property contracts are done, and so is the closed-loop transport comparison: ITER passes (<span class="claim">served-face T_e 7.42%, T_i 8.18%, both passing the 15% limit; whole profile 7.72/9.23%; 34 of 51 final-state faces served</span><a href="../../Blog/tokamak-toolkit/claims.html#c-178" class="cid st-measured">C-178</a>) and MAST-U fails (<span class="claim">served-face T_e 35.33%, T_i 49.15%, both failing 15%; whole profile 41.51/62.39%; cells with both adjacent faces served give 11.86/23.24%, still failing T_i; 13 of 26 final-state faces served</span><a href="../../Blog/tokamak-toolkit/claims.html#c-179" class="cid st-measured">C-179</a>). The MAST-U remediation stopped at its reference step, because no admissible TGLF reference trajectory exists for this scenario. The owner limited the MAST-U scope (<a href="../../Blog/tokamak-toolkit/decisions.html#oq-42">OQ-42</a>, <a href="../../Blog/tokamak-toolkit/log/70-owner-limits-the-mastu-certification-scope.html">entry 70</a>). MAST-U will be presented for certification with that limitation stated. ITER’s recorded pass predates full-scenario metadata; it remains historical evidence. The M4 human review has not occurred.</p>
-<p><strong>JOREK, alongside M4.</strong> Linear pedestal-stability scans of the ITER hybrid case. Case (a), the EQDSK as given, is closed on the time-step check (<a href="../../Blog/tokamak-toolkit/log/69-time-step-check-of-the-growth-rates.html">entry 69</a>). Case (b), the TORAX state, has an accepted equilibrium (<a href="../../Blog/tokamak-toolkit/log/71-case-b-equilibrium-from-the-torax-state.html">entry 71</a>) and an n-scan in which n = 12, 16 and 20 grow at the pedestal (<a href="../../Blog/tokamak-toolkit/log/73-case-b-n-scan-three-pedestal-modes.html">entry 73</a>), converged in time step (<a href="../../Blog/tokamak-toolkit/log/75-time-step-check-of-the-case-b-pedestal-modes.html">entry 75</a>). The grid check chosen under <a href="../../Blog/tokamak-toolkit/decisions.html#oq-43">OQ-43</a> is running as a chain of jobs on the doubled grid (<a href="../../Blog/tokamak-toolkit/log/81-grid-check-of-the-case-b-pedestal-modes-set-up-and-cost.html">entry 81</a>).</p>
+<p>M4 has its four verification records, guard integration and cheap CI re-proof. The bounded transport-bound investigation closes scientifically unresolved (<span class="claim">both full-box pilots retain nonfinite physical enclosures after all final objectives run; independent graph, constraint and corrected-dual replay passes, with no finite physical candidate</span><a href="../../Blog/tokamak-toolkit/claims.html#c-297" class="cid st-preliminary">C-297</a>); certification remains pending. <a href="../../Blog/tokamak-toolkit/decisions.html#oq-42">OQ-42</a>, <a href="../../Blog/tokamak-toolkit/decisions.html#oq-45">OQ-45</a> and <a href="../../Blog/tokamak-toolkit/decisions.html#oq-46">OQ-46</a> retain the stated limits. No failed proof or out-of-domain robustness box is relabelled as a pass. The guard artifact audit is <span class="claim">all four verified input boxes match the previous loaders; 48 of 48 retained pedestal states keep identical predictions and decisions; none of the 57 EC states is inside the exact proof boxes, so no EC certificate-based output check applies there</span><a href="../../Blog/tokamak-toolkit/claims.html#c-284" class="cid st-measured">C-284</a>.</p>
+<p>The historical Tier A M5 prior study is retained (<span class="claim">all 256 retained Monte Carlo outputs are finite with zero native linear-step error codes, and 2048 sensitivity evaluations drop no rows; those codes do not establish nonlinear-residual or temporal convergence</span><a href="../../Blog/tokamak-toolkit/claims.html#c-292" class="cid st-measured">C-292</a>), while both audited finer ladders fail temporal convergence (<span class="claim">maximum paired changes remain 19.2654% and 1.9773% across the two refinements, exceeding the fixed 1% limit; all 99 retained rows are finite with zero native linear-step error codes and no exclusions</span><a href="../../Blog/tokamak-toolkit/claims.html#c-295" class="cid st-preliminary">C-295</a>, <span class="claim">the additional finer ladder has maximum paired changes of 1.7092% and 1.8560%, above the unchanged 1% criterion; all 99 assessed rows remain valid and no supported replacement step is established</span><a href="../../Blog/tokamak-toolkit/claims.html#c-296" class="cid st-preliminary">C-296</a>). The next audited ladder passes its first pair but fails the second (<span class="claim">the first pair stays below 1%, but the finer pair changes fusion power by up to 4.1372% and fails three quantities; all 99 assessed rows remain valid, so no replacement step is supported</span><a href="../../Blog/tokamak-toolkit/claims.html#c-298" class="cid st-preliminary">C-298</a>); no replacement step follows. The hybrid calibration passes the fixed pooled bar in both directions (<span class="claim">hybrid calibration covers 0.914/0.915/0.904 of the older hybrid test states; the reverse audit covers 0.887/0.869/0.900; all exceed the fixed 0.85 pooled bar</span><a href="../../Blog/tokamak-toolkit/claims.html#c-285" class="cid st-measured">C-285</a>). Every linearised uncertainty check remains nonlinear (<span class="claim">all four outputs fail the fixed 10% standard-deviation cross-check; disagreements are 46.2%, 43.4%, 43.1% and 59.7% for fusion power, thermal energy, central electron temperature and central ion temperature</span><a href="../../Blog/tokamak-toolkit/claims.html#c-287" class="cid st-measured">C-287</a>). A final refined propagation needs a supported step and a complete affordable design. Physicist sign-off and the physical-discrepancy limits remain open (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-035">K-035</a>).</p>
+<p>The completed diagnostics identify sustained fallback and internal branch mismatch ([the failing case rejects face seven on 24.766% of coarse and 82.539% of fine accepted states over (3,5] seconds; its median normalized global electron balance residual rises from 0.031813% to 0.962581%]{.claim}<a href="../../Blog/tokamak-toolkit/claims.html#c-299" class="cid st-measured">C-299</a>, [the failing case has different last-guess and accepted-state branches on 39.453% of coarse and 73.145% of fine steps over (3,5] seconds; during (3.5,4.5] seconds all fine accepted states fall back while 84.961% of last guesses select the surrogate]{.claim}<a href="../../Blog/tokamak-toolkit/claims.html#c-300" class="cid st-measured">C-300</a>), with a locally substantial but globally cancelling branch term (<span class="claim">the fine failing case has branch-term norm ratios of 0.723 for electron temperature and 0.982 for ion temperature; the signed global branch term cancels and the remaining coefficient lag carries the net defect</span><a href="../../Blog/tokamak-toolkit/claims.html#c-301" class="cid st-measured">C-301</a>). The <a href="../../Blog/tokamak-toolkit/technical/uncertainty.html#internal-branch-diagnostic">technical account</a> states the limits and next checkpoint protocol. That protocol remains unimplemented and unsubmitted; no supported remedy follows.</p>
 </section>
 <section id="m4" class="level2">
-<h2 class="anchored" data-anchor-id="m4">M4 to the certification review</h2>
+<h2 class="anchored" data-anchor-id="m4">Review package and remaining decisions</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th>step</th>
 <th>work</th>
-<th>done when</th>
-<th>needs</th>
+<th>state</th>
+<th>next decision</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>proofs (done)</td>
-<td>transport monotonicity in the normalised temperature gradients</td>
-<td>both proof routes agree (<span class="claim">all 20 members of each ensemble pass both heat-flux monotonicity properties, with derivative lower bound zero over the full training box</span><a href="../../Blog/tokamak-toolkit/claims.html#c-247" class="cid st-measured">C-247</a>)</td>
-<td>—</td>
+<td>M4 model-bound evidence and four records</td>
+<td>bounded proof investigation unresolved; records assembled</td>
+<td>certification remains pending</td>
 </tr>
 <tr class="even">
-<td>output bounds (in progress)</td>
-<td>EC and pedestal bounded (<span class="claim">all five EC members have finite CROWN bounds for both launcher families; current and width bounds remain very loose</span><a href="../../Blog/tokamak-toolkit/claims.html#c-262" class="cid st-measured">C-262</a>, <span class="claim">all nine pedestal pressure and half-width pairs have finite bounds over the recorded ITER trajectory box, with the widening and domain clipping stated</span><a href="../../Blog/tokamak-toolkit/claims.html#c-263" class="cid st-measured">C-263</a>); transport unresolved after optimized bounds and both direct-ELU pilots (<span class="claim">member 0 of each ensemble remains unknown; both processes complete in about 23 seconds, with physical inverse-transform overflow and looser intervals than the earlier optimized run</span><a href="../../Blog/tokamak-toolkit/claims.html#c-268" class="cid st-measured">C-268</a>, <span class="claim">both selected members remain unknown despite interval-width reductions of about 30–275 times against the same-graph fixed-tangent baseline; physical inverse-transform overflow persists</span><a href="../../Blog/tokamak-toolkit/claims.html#c-272" class="cid st-measured">C-272</a>; <span class="claim">all twenty members of each transport ensemble have finite training-space bounds that overflow the inverse signed-log transform; no finite physical guard domain is certified</span><a href="../../Blog/tokamak-toolkit/claims.html#c-264" class="cid st-measured">C-264</a>, <span class="claim">median width 0.164 of the earlier bound, range 0.082–0.605 across member outputs; all twenty physical member results remain unknown</span><a href="../../Blog/tokamak-toolkit/claims.html#c-265" class="cid st-measured">C-265</a>, <span class="claim">median width 0.114 of the earlier bound, range 0.060–0.220 across member outputs; all twenty physical member results remain unknown</span><a href="../../Blog/tokamak-toolkit/claims.html#c-266" class="cid st-measured">C-266</a>)</td>
-<td>usable transport physical bounds; guard integration at V10</td>
-<td>tighter intermediate activation intervals before another subset pilot</td>
+<td>guard artifacts and fallback monitor</td>
+<td>implemented; no proof box expanded; revised <a href="../../Blog/tokamak-toolkit/decisions.html#oq-50">OQ-50</a> alert policy adopted</td>
+<td>no threshold decision is outstanding</td>
 </tr>
 <tr class="odd">
-<td>calibration (done)</td>
-<td>split-conformal intervals for transport and EC; the pedestal model has no labelled data; a second transport calibration on loop states for M5</td>
-<td>coverage tables (<span class="claim">90% intervals calibrated on the v1 validation split cover 0.887–0.907 on the v1 test and v2-random splits (6 outputs, ITER and MAST-U); 9 of 12 lie in the 0.893–0.907 range expected for exchangeable data, the other three miss it by at most 0.006</span><a href="../../Blog/tokamak-toolkit/claims.html#c-256" class="cid st-measured">C-256</a>, <span class="claim">90% intervals calibrated on 190 guard-accepted validation states (4 runs) cover 0.876–0.978 of 548 served test states (8 runs); all six outputs lie within or above the 0.856–0.938 range expected for exchangeable data; per-run coverage 0.78–1.00</span><a href="../../Blog/tokamak-toolkit/claims.html#c-258" class="cid st-measured">C-258</a>); loop states: MAST-U usable (<span class="claim">calibrated on 16 held-out runs and tested on the other 16, coverage is 0.870–0.894; the reverse direction gives 0.905–0.924; single runs 0.75–0.97</span><a href="../../Blog/tokamak-toolkit/claims.html#c-260" class="cid st-measured">C-260</a>), ITER needs more held-out runs (<span class="claim">calibrated on 4 held-out runs, the intervals cover 0.936–0.966 of the other 4; calibrated the other way they cover 0.711–0.818; not reliable for a new ITER run</span><a href="../../Blog/tokamak-toolkit/claims.html#c-261" class="cid st-measured">C-261</a>)</td>
-<td>—</td>
+<td>cheap CI re-proof</td>
+<td>implemented and checked</td>
+<td>no additional compute</td>
 </tr>
 <tr class="even">
-<td>robustness</td>
-<td>EC assessment: all complete boxes out of domain (<span class="claim">all 57 complete EC local boxes are out of domain, including all 45 served states; zero robustness proofs or model counterexamples are claimed</span><a href="../../Blog/tokamak-toolkit/claims.html#c-276" class="cid st-measured">C-276</a>); transport needs V5</td>
-<td>domain-valid evidence or an explicit scope limitation</td>
-<td>owner: <a href="../../Blog/tokamak-toolkit/decisions.html#oq-45">OQ-45</a>; stronger transport bounds</td>
+<td>hybrid calibration and Bayesian reference-label audit</td>
+<td>computed; conditional assumptions stated</td>
+<td>review those assumptions</td>
 </tr>
 <tr class="odd">
-<td>EC closed loop</td>
-<td>forty model-bound states selected (<span class="claim">twenty output states per launcher are selected at evenly spaced indices for the later GENRAY comparison; no reference solver execution or accuracy result</span><a href="../../Blog/tokamak-toolkit/claims.html#c-278" class="cid st-measured">C-278</a>); GENRAY comparison pending</td>
-<td>comparison table, pass or fail</td>
-<td>freeze concrete solver input/executable/equilibrium and batch request</td>
+<td>ITER Monte Carlo, linearisation and sensitivity</td>
+<td>historical study retained; temporal refinement still fails</td>
+<td>establish a supported step and complete budget fit before final propagation</td>
 </tr>
 <tr class="even">
-<td>guards</td>
-<td>guards read the certified boxes and bounds; fallback rates checked against a threshold</td>
-<td>rates reported against the threshold</td>
-<td>owner: the threshold</td>
+<td>internal predictor/corrector diagnosis</td>
+<td>completed with parent-trajectory parity; internal branch mismatch and a local residual contribution established</td>
+<td>checkpoint iteration protocol prepared; no remedy or submission yet</td>
 </tr>
 <tr class="odd">
-<td>reports and CI</td>
-<td>one verification report per surrogate, stating MAST-U’s limitation; CI re-proves the cheap properties when a surrogate changes</td>
-<td>reports cite their certificates; CI passes in both test modes</td>
-<td>—</td>
+<td>pedestal/equilibrium physical discrepancy</td>
+<td>unquantified</td>
+<td>further validation if required by the reviewer</td>
 </tr>
 <tr class="even">
-<td>review</td>
-<td>the M4 report and the certification review</td>
-<td>the owner’s review recorded</td>
-<td>owner (the gate)</td>
+<td>public draft entries</td>
+<td>prepared locally</td>
+<td>owner publication decision</td>
 </tr>
 </tbody>
 </table>
-<p>Bounds over 17- and 68-dimensional input boxes may be loose. The tightness reached is reported, and the boxes are not shrunk to make bounds tighter.</p>
 </section>
 <section id="jorek" class="level2">
 <h2 class="anchored" data-anchor-id="jorek">JOREK: finish J5, then decide its role</h2>
 <ol type="1">
 <li>Done: the second case (b) job is analysed with the pre-registered window rule. n = 12, 16 and 20 grow at the pedestal, weakly; n = 1–8 show no measurable growth by the end (<a href="../../Blog/tokamak-toolkit/log/73-case-b-n-scan-three-pedestal-modes.html">entry 73</a>).</li>
 <li>Done: the time-step check. Each of n = 12, 16 and 20 restarted from the same snapshot at Δt = 1 and Δt = 0.5; halving the step changes γ by about one part in ten thousand (<a href="../../Blog/tokamak-toolkit/log/75-time-step-check-of-the-case-b-pedestal-modes.html">entry 75</a>). The doubled grid’s axisymmetric state is ready.</li>
-<li>Running: the grid check (<a href="../../Blog/tokamak-toolkit/decisions.html#oq-43">OQ-43</a>, the owner chose the full check). n = 12, 16 and 20 rise from round-off again on the doubled grid, in two chains of one-node jobs, about seven jobs in all (<a href="../../Blog/tokamak-toolkit/log/81-grid-check-of-the-case-b-pedestal-modes-set-up-and-cost.html">entry 81</a>).</li>
-<li>Report the case (b) growth rates per n with their convergence status, and add a ceiling if the grid check stays open.</li>
+<li>Incomplete: the grid check (<a href="../../Blog/tokamak-toolkit/decisions.html#oq-43">OQ-43</a>, the owner chose the full check). All listed chains have ended. The measured-cost projection invokes the existing stop rule; unused job slots do not permit continued links (<span class="claim">all three selected fine-grid checks remain incomplete; the measured-cost projection exceeds the existing compute envelope and further submissions stop</span><a href="../../Blog/tokamak-toolkit/claims.html#c-291" class="cid st-preliminary">C-291</a>).</li>
+<li>Retain the unchanged-rule incomplete result and resource decision. Do not quote a fine-grid growth rate or infer stability from insufficient growth.</li>
 <li>The owner then decides what JOREK becomes in the toolkit: a surrogate of a JOREK quantity, reference runs only, or neither. One case (b) n-scan costs about two six-hour node-jobs before any convergence check, which bears on that choice.</li>
 </ol>
 </section>
 <section id="decisions-ahead" class="level2">
 <h2 class="anchored" data-anchor-id="decisions-ahead">Decisions ahead</h2>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>when</th>
@@ -258,8 +244,8 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td>at the guard step</td>
-<td>the fallback-rate threshold, one value per machine</td>
+<td>guard alert policy</td>
+<td>revised report-only thresholds already adopted under <a href="../../Blog/tokamak-toolkit/decisions.html#oq-50">OQ-50</a></td>
 </tr>
 <tr class="even">
 <td>end of J5</td>
@@ -273,8 +259,8 @@ ul.task-list li input[type="checkbox"] {
 </table>
 </section>
 <section id="m5" class="level2">
-<h2 class="anchored" data-anchor-id="m5">After M4: M5 inputs</h2>
-<p>M5 propagates uncertainty through the coupled simulation and validates it, ending in a physicist sign-off. Inputs to ask for at the M4 review: a Tier A validation set (experimental shot data are out of scope), the uncertain inputs and their priors, the quantity of interest, and how the discrepancy budget is split across transport, sources, pedestal and equilibrium. The certified boxes and conformal intervals from M4 become M5’s trust regions and surrogate-error terms.</p>
+<h2 class="anchored" data-anchor-id="m5">M5 inputs and remaining gates</h2>
+<p><a href="../../Blog/tokamak-toolkit/decisions.html#oq-47">OQ-47</a> fixes the minimal Tier A scenario, priors and quantities of interest; <a href="../../Blog/tokamak-toolkit/decisions.html#oq-48">OQ-48</a> fixes the selected transport-discrepancy calibration. Do not reopen those decisions to repair numerical failures. Retain the same cases and physics through temporal refinement. Only a supported step and a complete affordable design permit final uncertainty and sensitivity propagation. Pedestal and equilibrium discrepancy remain unquantified; marginal conformal intervals do not supply a validated final-power error bound. Physicist sign-off remains the human gate.</p>
 </section>
 <section id="m3-record" class="level2">
 <h2 class="anchored" data-anchor-id="m3-record">M3 work record</h2>

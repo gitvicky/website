@@ -1,0 +1,19 @@
+---
+title: "MAST-U: parameter uncertainty"
+format: html
+---
+
+Explore outward-rounded surrogate enclosures by varying the parameter centre and uncertainty half-widths within the paper’s validated rectangle.
+
+```{=html}
+<style>
+.mastu-uq-frame { width: 100%; height: 1180px; border: 0; }
+@media (max-width: 700px) { .mastu-uq-frame { height: 1420px; } }
+</style>
+<iframe class="mastu-uq-frame" src="/Blog/assets/mastu/index.html?embed=1#uncertainty"
+        title="Interactive MAST-U parameter uncertainty" loading="lazy"></iframe>
+```
+
+[Open the full uncertainty interactive](/Blog/assets/mastu/index.html#uncertainty){target="_blank"}
+
+These bounds cover the original mathematical neural operator at display vertices. They are not MOOSE error bars or probabilistic confidence intervals.

@@ -2810,6 +2810,207 @@ Superseded by <a href="#c-251">C-251</a></td>
 <code>audit the retained native outputs with reviews/m4-ec-reference-v1/audit.py using the frozen source; do not repeat consumed job 2717996</code></td>
 <td><code>exact request, executed source and model hashes plus independent audit and terminal accounting</code></td>
 </tr>
+<tr id="c-282" class="odd">
+<td class="cid-cell">C-282</td>
+<td>ITER loop-state transport coverage with 24 new held-out runs (OQ-44 (c))<br>
+<span class="tol">method and reading rule fixed in request.json before job 2719575 ran; pooled states are mostly L-mode (8554 of 9997)</span></td>
+<td class="val">calibrated on 24 new held-out ITER runs, the 90% intervals cover 0.850, 0.900 and 0.877 of the v3 test states (GAMMA_e, Q_e, Q_i); the reverse direction gives 0.932, 0.899 and 0.919; the frozen bar of 0.85 is missed by 0.00005 on GAMMA_e</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m5-iter-loop-calibration-v1/result/transport-iter.json<br>
+<code>python scripts/m5_iter_loop_calibration.py --out-dir NEW_DIRECTORY (after job 2719575's outputs in $WORK/vgopakum/m5_iter_loop_calibration_v1)</code></td>
+<td><code>32e6c44</code></td>
+</tr>
+<tr id="c-283" class="even">
+<td class="cid-cell">C-283</td>
+<td>ITER loop-state transport coverage on the hybrid flat-top family<br>
+<span class="tol">1266 hybrid test states from four v3 runs; run-level spread is large</span></td>
+<td class="val">on the hybrid flat-top states the pooled intervals cover 0.838, 0.799 and 0.788 (GAMMA_e, Q_e, Q_i); one v3 hybrid run reaches only 0.547 on Q_i; left out one at a time, the 11 new hybrid runs average 0.76–0.81, against 0.95–0.98 for L-mode</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m5-iter-loop-calibration-v1/result/transport-iter.json<br>
+<code>as C-282</code></td>
+<td><code>32e6c44</code></td>
+</tr>
+<tr id="c-284" class="odd">
+<td class="cid-cell">C-284</td>
+<td>Verified guard boxes and exact proof-domain audit<br>
+<span class="tol">no numerical guard margin extends a proof box; transport output bounds remain unresolved; unchanged ordinary EC decisions do not establish certification</span></td>
+<td class="val">all four verified input boxes match the previous loaders; 48 of 48 retained pedestal states keep identical predictions and decisions; none of the 57 EC states is inside the exact proof boxes, so no EC certificate-based output check applies there</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m4-fallback-rates-v2/final/fallback-rates.json<br>
+<code>python scripts/m4_fallback_rates.py --out-dir NEW_DIRECTORY</code></td>
+<td><code>retained source hashes in the audit provenance</code></td>
+</tr>
+<tr id="c-285" class="even">
+<td class="cid-cell">C-285</td>
+<td>Hybrid-only ITER conformal coverage in both directions<br>
+<span class="tol">3405 new calibration states, 1266 older report states; marginal state-weighted coverage only; some leave-one-run-out coverages remain below 0.85</span></td>
+<td class="val">hybrid calibration covers 0.914/0.915/0.904 of the older hybrid test states; the reverse audit covers 0.887/0.869/0.900; all exceed the fixed 0.85 pooled bar</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m5-hybrid-calibration-v1/transport-iter.json and audit/result.json<br>
+<code>frozen family request and separately frozen reverse audit; do not overwrite existing records</code></td>
+<td><code>source and input digests in the two frozen requests</code></td>
+</tr>
+<tr id="c-286" class="odd">
+<td class="cid-cell">C-286</td>
+<td>Actual ITER hybrid Monte Carlo and sensitivity propagation completes<br>
+<span class="tol">declared independent sensitivity priors and coherent transport-discrepancy law; fixed geometry; these are prior distributions, not validated prediction-error bounds</span><br>
+Superseded by <a href="#c-292">C-292</a></td>
+<td class="val">256 of 256 Monte Carlo trajectories are finite and fine-converged; 2048 sensitivity evaluations drop no rows; fusion-power mean 165.8 MW with standard deviation 102.4 MW, thermal-energy mean 189.5 MJ with standard deviation 44.3 MJ</td>
+<td><span class="badge st-superseded">superseded</span></td>
+<td>reviews/m5-iter-uq-v1/result/result.json and audit.json<br>
+<code>independently recompute moments from result/samples.npz; frozen request identifies the executed source; do not repeat consumed job 2719682</code></td>
+<td><code>frozen source snapshot and request digests</code></td>
+</tr>
+<tr id="c-287" class="even">
+<td class="cid-cell">C-287</td>
+<td>ITER linearised uncertainty disagrees with Monte Carlo under the declared priors<br>
+<span class="tol">256-sample Monte Carlo; member-averaged forward Jacobians with total variance; retain the nonlinear flags and use Monte Carlo</span></td>
+<td class="val">all four outputs fail the fixed 10% standard-deviation cross-check; disagreements are 46.2%, 43.4%, 43.1% and 59.7% for fusion power, thermal energy, central electron temperature and central ion temperature</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m5-iter-uq-v1/result/result.json<br>
+<code>crosscheck field in the frozen propagation result; driver derivative independently finite-difference checked</code></td>
+<td><code>frozen source snapshot and request digests</code></td>
+</tr>
+<tr id="c-288" class="odd">
+<td class="cid-cell">C-288</td>
+<td>Conditional reference-label Bayesian discrepancy calibration matches the exact posterior<br>
+<span class="tol">11 hybrid run-mean TGLF residual vectors; empirical covariance treated as fixed; independent-run Gaussian working likelihood; no experimental inference or feedback into the prior study</span></td>
+<td class="val">four Metropolis chains give transport-error factor mean -0.01978, standard deviation 0.01992 and split R-hat 1.00266; exact conditional moments are -0.02033 and 0.01984</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m5-hybrid-calibration-v1/audit/result.json<br>
+<code>scripts/m5_hybrid_calibration_audit.py and its frozen request</code></td>
+<td><code>script and input digests in the frozen audit request</code></td>
+</tr>
+<tr id="c-289" class="even">
+<td class="cid-cell">C-289</td>
+<td>Installed guards retain exact proof resources for external verified models<br>
+<span class="tol">exact existing certificate bytes and sidecars; no model, input box, tolerance or physical proof is changed; the integrated study still uses its tracked source-checkout model bundle</span></td>
+<td class="val">installed-wheel EC and pedestal loaders retain their output certificates with externally copied verified directories; unresolved transport bounds remain explicitly K-033</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/pipeline-closeout/integration/contracts-normal.xml and contracts-tier-a.xml<br>
+<code>pytest tests/unit/test_verified_guard_packaging.py</code></td>
+<td><code>pipeline close-out source and evidence bindings</code></td>
+</tr>
+<tr id="c-290" class="odd">
+<td class="cid-cell">C-290</td>
+<td>Two-direction interval gate preserves the completed ITER discrepancy widths<br>
+<span class="tol">missing or tampered evidence is an error; a scientific coverage failure selects unchanged V7 under OQ-48; no new trajectory result or calibration fit</span></td>
+<td class="val">all three selected hybrid half-widths are unchanged; both-direction coverage and exact model/manifest/evidence bindings are rechecked before a future run</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/pipeline-closeout/m5/interval-selection.json<br>
+<code>tkit.uq.interval_selection.load_selection and the retained selector tests</code></td>
+<td><code>selector source hash recorded in the immutable selection artifact</code></td>
+</tr>
+<tr id="c-291" class="even">
+<td class="cid-cell">C-291</td>
+<td>Independent replay retains incomplete fine-grid stability checks and invokes the existing resource projection stop<br>
+<span class="tol">unchanged rule b and frozen decade targets; recent energy slopes are cost diagnostics, not accepted growth rates or guaranteed completion bounds</span></td>
+<td class="val">all three selected fine-grid checks remain incomplete; the measured-cost projection exceeds the existing compute envelope and further submissions stop</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>reviews/autonomous-closeout/j5/audit-v2/audit.json and independent-review/j5-lead-review.json<br>
+<code>python reviews/autonomous-closeout/j5/audit.py FRESH_AUDIT_DIRECTORY</code></td>
+<td><code>inherited source baseline plus auditor and native-input hashes in the canonical audit</code></td>
+</tr>
+<tr id="c-292" class="odd">
+<td class="cid-cell">C-292</td>
+<td>Retained ITER prior propagation has finite outputs and zero native linear-step error codes<br>
+<span class="tol">historical dt = 0.1 s prior propagation; the selected linear predictor-corrector assigns zero error unconditionally; all physical uncertainty and discretization limitations remain</span></td>
+<td class="val">all 256 retained Monte Carlo outputs are finite with zero native linear-step error codes, and 2048 sensitivity evaluations drop no rows; those codes do not establish nonlinear-residual or temporal convergence</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m5-iter-uq-v1/result/result.json and reviews/autonomous-closeout/independent-review/solver-diagnostic-limitation.json<br>
+<code>independently read retained raw quality arrays and inspect the source-bound scenario/solver selection; no trajectory rerun</code></td>
+<td><code>historical frozen inputs plus independent upstream solver-source hashes</code></td>
+</tr>
+<tr id="c-293" class="even">
+<td class="cid-cell">C-293</td>
+<td>Complete input partitioning leaves both transport pilot physical enclosures unresolved<br>
+<span class="tol">unchanged full stored boxes, models and transforms; fresh export/JAX and held-out physical parity; sampling cannot prove finite bounds; no directed IEEE rounding guarantee</span></td>
+<td class="val">both member-zero pilots retain overflowing physical enclosures despite complete input-box coverage; no sampled overflow witness was found, and all forty transport V5 results remain unresolved</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>reviews/autonomous-closeout/independent-review/r1-result-v3/audit.json<br>
+<code>python reviews/autonomous-closeout/independent-review/transport_result_audit.py reviews/autonomous-closeout/transport/partition-v2/request.json FRESH_DIRECTORY</code></td>
+<td><code>frozen partition-v2 source snapshot and independent audit manifest</code></td>
+</tr>
+<tr id="c-294" class="odd">
+<td class="cid-cell">C-294</td>
+<td>Full integrated test suites pass with independently checked source and native JUnit bindings<br>
+<span class="tol">all 127 test files represented in each mode; all 251 manifest entries unchanged at independent review; expensive V5/V6 proofs are excluded from quick verification</span></td>
+<td class="val">1095 tests pass with two intentional heavy-proof skips in each full normal and Tier-A-only suite; lint, typing and quick verification also pass</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/autonomous-closeout/integration/validation-v2/summary.json and reviews/autonomous-closeout/independent-review/source-binding-audit-v1.json<br>
+<code>inspect native per-file JUnit and source-manifest hashes; rerun make test and make test-tier-a only when source changes require it</code></td>
+<td><code>integrated validation-v2 source-manifest SHA-256 835b90762f28e34ceb162e169eabbd8cfc82971e53296395158455b594d5a4da</code></td>
+</tr>
+<tr id="c-295" class="even">
+<td class="cid-cell">C-295</td>
+<td>Finer paired ITER time steps remain outside the unchanged temporal convergence criterion<br>
+<span class="tol">paired 0.025 to 0.0125 and 0.0125 to 0.00625 second steps; unchanged 33 cases, priors, members, physics and endpoint; native zero codes do not certify nonlinear residual convergence</span></td>
+<td class="val">maximum paired changes remain 19.2654% and 1.9773% across the two refinements, exceeding the fixed 1% limit; all 99 retained rows are finite with zero native linear-step error codes and no exclusions</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>reviews/autonomous-closeout/independent-review/r2-result-v1/audit.json<br>
+<code>python reviews/autonomous-closeout/independent-review/temporal_result_audit.py reviews/autonomous-closeout/temporal/pilot-v1/request.json FRESH_DIRECTORY</code></td>
+<td><code>frozen temporal pilot-v1 source snapshot and independent raw-result manifest</code></td>
+</tr>
+<tr id="c-296" class="odd">
+<td class="cid-cell">C-296</td>
+<td>The additional finer ITER ladder still fails both fixed temporal comparisons<br>
+<span class="tol">paired 0.00625 to 0.003125 and 0.003125 to 0.0015625 second steps; one exact audited parent array reused and two new arrays; no excluded cases or altered physics</span></td>
+<td class="val">the additional finer ladder has maximum paired changes of 1.7092% and 1.8560%, above the unchanged 1% criterion; all 99 assessed rows remain valid and no supported replacement step is established</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>reviews/autonomous-closeout/independent-review/r2-refinement-result-v1/audit.json<br>
+<code>python reviews/autonomous-closeout/independent-review/temporal_result_audit.py reviews/autonomous-closeout/temporal/refinement-v1/request.json FRESH_DIRECTORY</code></td>
+<td><code>frozen refinement-v1 request, ancestor bindings and independent raw-result manifest</code></td>
+</tr>
+<tr id="c-297" class="even">
+<td class="cid-cell">C-297</td>
+<td>Reserving final LP objectives does not establish finite transport physical bounds<br>
+<span class="tol">finite-box stationarity corrections, exact signed objective identity and fresh original/JAX/export parity; no primal objective accepted as a bound, no directed IEEE rounding guarantee or claim of infinite real network outputs</span></td>
+<td class="val">both full-box pilots retain nonfinite physical enclosures after all final objectives run; independent graph, constraint and corrected-dual replay passes, with no finite physical candidate</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>reviews/autonomous-closeout/independent-review/r1-reserved-result-v1/audit.json<br>
+<code>python reviews/autonomous-closeout/independent-review/reserved_lp_result_audit.py reviews/autonomous-closeout/transport/reserved-lp-v1/request.json FRESH_DIRECTORY</code></td>
+<td><code>frozen reserved-lp-v1 source snapshot and independent recursive raw-audit manifest</code></td>
+</tr>
+<tr id="c-298" class="odd">
+<td class="cid-cell">C-298</td>
+<td>A passing first pair does not support a replacement ITER step after the finer pair fails<br>
+<span class="tol">paired 0.0015625 to 0.00078125 and 0.00078125 to 0.000390625 second steps; both adjacent comparisons must pass for every retained case and quantity; no exclusions or changed physics</span></td>
+<td class="val">the first pair stays below 1%, but the finer pair changes fusion power by up to 4.1372% and fails three quantities; all 99 assessed rows remain valid, so no replacement step is supported</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>reviews/autonomous-closeout/independent-review/r2-refinement-result-v2/audit.json<br>
+<code>python reviews/autonomous-closeout/independent-review/temporal_result_audit.py reviews/autonomous-closeout/temporal/refinement-v2/request.json FRESH_DIRECTORY</code></td>
+<td><code>frozen refinement-v2 request, exact ancestor bindings and independent raw-result manifest</code></td>
+</tr>
+<tr id="c-299" class="even">
+<td class="cid-cell">C-299</td>
+<td>The three-case ITER diagnostic identifies sustained fallback occupancy and late global balance residuals<br>
+<span class="tol">unchanged three cases and two finest steps; all 57600 case-step observations retained; independent parent-parity and balance/domain reconstruction; global balance normalization is not a local nonlinear residual norm or causal error budget</span></td>
+<td class="val">the failing case rejects face seven on 24.766% of coarse and 82.539% of fine accepted states over (3,5] seconds; its median normalized global electron balance residual rises from 0.031813% to 0.962581%</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m5-finest-diagnosis-v1/execution-v1/RESULT.md and reviews/m5-finest-diagnosis-v1/result-audit-v1/researcher-crosscheck.json<br>
+<code>replay the independent raw audit and analyse_run.py using the RESULT.md commands and manifest-bound retained local arrays</code></td>
+<td><code>frozen diagnosis request-v1 and independently audited immutable executed sources</code></td>
+</tr>
+<tr id="c-300" class="odd">
+<td class="cid-cell">C-300</td>
+<td>Internal coefficient guesses and accepted ITER states select different transport branches despite trajectory parity<br>
+<span class="tol">unchanged cases 0, 20 and 29 at 0.00078125 and 0.000390625 seconds; exact cellwise canonical replay; all 57600 case-step observations retained; branch alternation does not prove persistent cycling or endpoint causation</span></td>
+<td class="val">the failing case has different last-guess and accepted-state branches on 39.453% of coarse and 73.145% of fine steps over (3,5] seconds; during (3.5,4.5] seconds all fine accepted states fall back while 84.961% of last guesses select the surrogate</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m5-internal-diagnostic-v1/independent-review/audit.json and reviews/m5-internal-diagnostic-v1/independent-review/researcher-crosscheck.json<br>
+<code>independently replay the retained-array audit and execution-v1/analyze.py; restore the manifest-bound local arrays first</code></td>
+<td><code>frozen internal diagnostic request-v1 plus immutable executed source copies and independent input hashes</code></td>
+</tr>
+<tr id="c-301" class="even">
+<td class="cid-cell">C-301</td>
+<td>The fixed-state face-seven branch term is substantial locally but cancels in the signed global residual<br>
+<span class="tol">fixed-state identity over (3,5] seconds using guarded fallback shadows; norm ratios are not additive causal percentages; no alternate trajectory, established remedy or supported time step</span></td>
+<td class="val">the fine failing case has branch-term norm ratios of 0.723 for electron temperature and 0.982 for ion temperature; the signed global branch term cancels and the remaining coefficient lag carries the net defect</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m5-internal-diagnostic-v1/execution-v1/attribution.json and independent-review/researcher-crosscheck.json<br>
+<code>python reviews/m5-internal-diagnostic-v1/execution-v1/analyze.py --result reviews/m5-internal-diagnostic-v1/request-v1/result --out FRESH_JSON</code></td>
+<td><code>frozen internal diagnostic request-v1 and independently recomputed attribution groups</code></td>
+</tr>
 </tbody>
 </table>
 

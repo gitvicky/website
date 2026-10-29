@@ -811,5 +811,17 @@
   },
   "Blog/paper_learnable_splines.qmd": {
     "paper_learnable_splines.html": "fc69f7b1"
+  },
+  "Blog/tokamak-toolkit/milestones/M5.qmd": {
+    "M5.html": "ce023d24"
+  },
+  "Blog/tokamak-toolkit/technical/uncertainty.qmd": {
+    "uncertainty.html": "b7ce31aa"
+  },
+  "mastu-browser/mastu.qmd": {
+    "mastu.html": "6c07f2d1"
+  },
+  "mastu-uncertainty-browser/uncertainty.qmd": {
+    "uncertainty.html": "07d724da"
   }
 }

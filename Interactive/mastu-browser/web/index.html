@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore MAST-U structural displacement with an independently checked browser approximation of a neural operator.">
+  <title>MAST-U · A tokamak, in response</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="response.js" defer></script>
+  <script src="viewer.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main>
+    <header><a class="wordmark" href="https://vignesh-gopakumar.com/" target="_top">Vignesh Gopakumar</a><span>INTERACTIVE RESEARCH / 01</span></header>
+    <section class="intro"><p class="eyebrow">NEURAL OPERATORS × FUSION ENGINEERING</p><h1>A tokamak,<br><em>in response.</em></h1><p class="lede">Change the material’s thermal expansion and the wall temperature. Explore how a neural operator predicts the structural displacement of MAST-U.</p></section>
+    <section class="explorer" aria-label="Interactive MAST-U structural response">
+      <div class="viewport" id="viewport">
+        <canvas id="scene" aria-label="Three-dimensional cutaway of MAST-U. Drag to rotate and scroll to zoom." tabindex="0"></canvas>
+        <div class="scene-top"><span class="tag">MAST-U / STRUCTURAL RESPONSE</span><button id="reset-camera" type="button" disabled>Reset view ↗</button></div>
+        <div class="loading" id="loading" role="status"><span class="loader"></span><p id="load-message">Loading the browser model…</p></div>
+        <div class="scene-bottom"><span>Drag to orbit · Scroll to zoom<br><span id="mesh-info">Fixed geometry · Steady state</span></span><span id="compute-status" role="status" aria-live="polite">Initialising</span></div>
+        <div class="legend"><span id="legend-title">Displacement magnitude · mm</span><div class="colour-ramp"></div><div class="legend-ticks"><span id="legend-min">0</span><span id="legend-max">—</span></div></div>
+      </div>
+      <aside>
+        <div class="panel-heading"><span class="eyebrow">EXPLORE THE RESPONSE</span><span class="local-badge">Browser-local</span></div>
+        <fieldset disabled id="controls">
+          <div class="parameter"><label for="alpha">Thermal expansion <span>α</span></label><div class="input-line"><input id="alpha-value" type="number" aria-label="Thermal expansion in micrometres per metre kelvin"><span>× 10⁻⁶ K⁻¹</span></div><input type="range" id="alpha" aria-label="Thermal expansion"><div class="range-labels"><span id="alpha-min">—</span><span id="alpha-max">—</span></div></div>
+          <div class="parameter"><label for="temperature">Wall temperature <span>T<sub>w</sub></span></label><div class="input-line"><input id="temperature-value" type="number" aria-label="Wall temperature in kelvin"><span>K</span></div><input type="range" id="temperature" aria-label="Wall temperature"><div class="range-labels"><span id="temperature-min">—</span><span id="temperature-max">—</span></div></div>
+          <div class="display-controls"><label for="quantity">Colour by</label><select id="quantity"><option value="magnitude">Displacement magnitude</option><option value="z">Vertical displacement, u_z</option><option value="x">Horizontal displacement, u_x</option><option value="y">Horizontal displacement, u_y</option></select><label for="amplification">Shape amplification <output id="amplification-value">0×</output></label><input type="range" id="amplification" min="0" max="100" step="1" value="0"><p>0× shows the undeformed geometry. Amplification is a visual aid; colours retain physical units.</p></div>
+          <button type="button" class="reset" id="reset-parameters">Restore reference parameters ↺</button>
+        </fieldset>
+        <div class="measurement"><span>Maximum at displayed vertices</span><strong><span id="maximum">—</span><small> mm</small></strong><p id="saturation" hidden>Values exceed the fixed colour range; the colours saturate.</p></div>
+      </aside>
+    </section>
+    <section class="context"><div><p class="eyebrow">WHAT YOU ARE SEEING</p><h2>One machine.<br>Two parameters.<br>A continuous response.</h2></div><div class="explanation"><p>This is a steady structural response, with displacement shown on a simplified cutaway of the tokamak. Changing a slider evaluates a compact approximation of the trained neural operator directly in your browser. The colours update as you explore; no simulation server is needed.</p><p>The offline export encodes all <span id="source-count">29.2 million</span> native source nodes before evaluating the neural operator on the display mesh. The browser approximates those display predictions. This is a surrogate prediction of structural displacement, rather than a transient plasma simulation.</p><details><summary>Approximation accuracy & provenance</summary><p id="validation-summary">The validated export report will appear when the model has loaded.</p><p>Reported errors compare the browser approximation with the trained network at separate test parameters and display vertices. They are empirical measurements, not a certified error bound over the entire parameter domain or an error bound against MOOSE.</p><a id="report-link" href="assets/validation.json" target="_blank" rel="noopener">Read the validation report ↗</a></details></div></section>
+    <section class="next"><span class="eyebrow">PHASE TWO</span><h2>From a prediction<br>to an enclosure.</h2><p>The next phase will explore parameter uncertainty and spatial bounds. An uncertainty box around α and T<sub>w</sub> will be paired with lower and upper displacement enclosures, their width, and the region of validity. Bounds are not active in this version.</p><p class="fine">A certified browser display will need to include approximation and floating-point error, in addition to the original model’s bound.</p></section>
+    <footer><span>MAST-U · Learnable splines for unstructured neural operators</span><a href="https://arxiv.org/abs/2610.22446" target="_blank" rel="noopener">Read the paper ↗</a></footer>
+  </main>
+</body>
+</html>

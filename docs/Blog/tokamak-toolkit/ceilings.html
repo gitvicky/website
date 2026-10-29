@@ -427,7 +427,7 @@ ul.task-list li input[type="checkbox"] {
 <td class="cid-cell">K-033</td>
 <td>verification</td>
 <td>budgeted output relaxations do not yet give finite physical transport bounds</td>
-<td>Ordinary CROWN with four leaves and the alpha-CROWN follow-up with one leaf both retain finite signed-log training-space intervals that overflow the physical inverse transform for every transport member (C-264, C-265, C-266). A direct-ELU pilot on member 0 of each ensemble also overflows (C-268); its unoptimized intervals are looser, so the remaining members were not attempted. Optimizing that graph tightens the selected widths by about 30–275 times but still overflows (C-272); baseline intermediate widths reach about 1e10. Intermediate CROWN/interval intersections reduce the largest activation ranges but leave both selected members physically unknown (C-274). EC and pedestal have finite enclosures, with substantial looseness. Production guard domains are not derived from these results; V5 remains incomplete.</td>
+<td>Ordinary CROWN with four leaves and the alpha-CROWN follow-up with one leaf both retain finite signed-log training-space intervals that overflow the physical inverse transform for every transport member (C-264, C-265, C-266). A direct-ELU pilot on member 0 of each ensemble also overflows (C-268); its unoptimized intervals are looser, so the remaining members were not attempted. Optimizing that graph tightens the selected widths by about 30–275 times but still overflows (C-272); baseline intermediate widths reach about 1e10. Intermediate CROWN/interval intersections reduce the largest activation ranges but leave both selected members physically unknown (C-274). EC and pedestal have finite enclosures, with substantial looseness. Transport guard domains are not derived from these results; V5 remains incomplete. EC and pedestal now check their available bounds only inside their exact certified boxes (C-284).</td>
 <td>Obtain usable physical output enclosures over the declared complete input domains, retain their evidence and integrate them at the certificate-bound guard step. Numerical proof failure alone does not establish a counterexample.</td>
 <td><span class="badge st-open">open</span></td>
 </tr>
@@ -437,6 +437,22 @@ ul.task-list li input[type="checkbox"] {
 <td>all prescribed symmetric local robustness boxes leave the EC training domain</td>
 <td>All 57 EC loop states (30 UL, 27 EL), including the 45 served states, have complete symmetric perturbation boxes outside the stored domain at the approved one-percent input margin. Z_eff lies near the lower boundary and both launcher R/Z positions lie at box edges. The property forbids clipping. No EC robustness certificate or violating model counterexample follows (C-275, C-276). V6 needs the owner's scope disposition in OQ-45.</td>
 <td>Obtain domain-valid robustness evidence under an explicitly approved scope. If the owner retains the current property, carry this measured limitation into the certification review without relabelling out-of-domain boxes as passes.</td>
+<td><span class="badge st-open">open</span></td>
+</tr>
+<tr id="k-035" class="odd">
+<td class="cid-cell">K-035</td>
+<td>uncertainty-and-validation</td>
+<td>minimal Tier A uncertainty study uses declared priors and incomplete physical discrepancy evidence</td>
+<td>The ITER study propagates independent sensitivity priors and a coherent signed-log transport-error factor. Marginal conformal intervals do not determine that joint law. The pedestal has no independent reference and equilibrium uncertainty is unquantified. The conditional Bayesian reference-label likelihood is not experimental validation. The resulting power distribution is not a validated reactor prediction-error bound.</td>
+<td>Obtain physicist-reviewed prior and discrepancy models, quantify pedestal and equilibrium contributions and validate against appropriate independent references or observations.</td>
+<td><span class="badge st-open">open</span></td>
+</tr>
+<tr id="k-036" class="even">
+<td class="cid-cell">K-036</td>
+<td>uncertainty-solver-diagnostics</td>
+<td>the selected linear predictor-corrector reports native zero error without a nonlinear-residual test</td>
+<td>Finite outputs and zero native flags in the historical and refined ITER studies do not establish fine nonlinear-residual convergence. The iteration counts measure fixed predictor-corrector work. Temporal convergence requires its separate unchanged paired check; accepted-state guard traces do not identify internal solver branch usage. Later independent observers establish internal branch mismatch and local residual contributions (C-299, C-300, C-301), but no supported remedy, persistent cycle or endpoint causal attribution.</td>
+<td>Retain the independently audited residual/internal-call diagnostics, then establish a supported numerical treatment under the unchanged full paired convergence criterion; retain physical acceptance and physicist sign-off as separate questions.</td>
 <td><span class="badge st-open">open</span></td>
 </tr>
 </tbody>

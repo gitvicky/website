@@ -157,10 +157,12 @@ window.Quarto = {
   <ul>
   <li><a href="#awaiting-a-decision" id="toc-awaiting-a-decision" class="nav-link active" data-scroll-target="#awaiting-a-decision">Awaiting a decision</a>
   <ul class="collapse">
-  <li><a href="#v10-threshold" id="toc-v10-threshold" class="nav-link" data-scroll-target="#v10-threshold">V10 · Fallback-rate threshold</a></li>
+  <li><a href="#v10-threshold" id="toc-v10-threshold" class="nav-link" data-scroll-target="#v10-threshold">OQ-50 · Fallback-rate alert thresholds</a></li>
   </ul></li>
   <li><a href="#settled" id="toc-settled" class="nav-link" data-scroll-target="#settled">Settled</a>
   <ul class="collapse">
+  <li><a href="#oq-49" id="toc-oq-49" class="nav-link" data-scroll-target="#oq-49">OQ-49 · Compute for the minimal uncertainty study</a></li>
+  <li><a href="#oq-48" id="toc-oq-48" class="nav-link" data-scroll-target="#oq-48">OQ-48 · Hybrid transport error term</a></li>
   <li><a href="#oq-47" id="toc-oq-47" class="nav-link" data-scroll-target="#oq-47">OQ-47 · Scope of the uncertainty and validation milestone</a></li>
   <li><a href="#oq-46" id="toc-oq-46" class="nav-link" data-scroll-target="#oq-46">OQ-46 · Transport output bounds</a></li>
   <li><a href="#oq-45" id="toc-oq-45" class="nav-link" data-scroll-target="#oq-45">OQ-45 · EC robustness at training-domain boundaries</a></li>
@@ -240,19 +242,27 @@ window.Quarto = {
 <section id="awaiting-a-decision" class="level2">
 <h2 class="anchored" data-anchor-id="awaiting-a-decision">Awaiting a decision</h2>
 <section id="v10-threshold" class="level3">
-<h3 class="anchored" data-anchor-id="v10-threshold">V10 · Fallback-rate threshold</h3>
-<p>The guards will report when the share of states sent to the Tier A fallback rises above a configured threshold, which signals that the verified domain is too small. The owner sets one value per surrogate from the rates measured on the existing coupled runs.</p>
+<h3 class="anchored" data-anchor-id="v10-threshold">OQ-50 · Fallback-rate alert thresholds</h3>
+<p>The guards will report when the share of states sent to the Tier A fallback rises above a configured threshold, which signals that the verified domain is too small. The owner sets one value per surrogate from the rates measured on the existing coupled runs. The requested proposals are 40% for ITER transport, 50% for MAST-U transport, 45% for EC and 10% for the pedestal. They remain unadopted. The wider M5 prior study exceeds the proposed ITER threshold; it is reported without retuning the proposal.</p>
 </section>
 </section>
 <section id="settled" class="level2">
 <h2 class="anchored" data-anchor-id="settled">Settled</h2>
+<section id="oq-49" class="level3">
+<h3 class="anchored" data-anchor-id="oq-49">OQ-49 · Compute for the minimal uncertainty study</h3>
+<p>The owner approved frozen, announced batch propagation for the minimal ITER study and the built-in pure-JAX Bayesian sampler. The numerical work completes (<span class="claim">256 of 256 Monte Carlo trajectories are finite and fine-converged; 2048 sensitivity evaluations drop no rows; fusion-power mean 165.8 MW with standard deviation 102.4 MW, thermal-energy mean 189.5 MJ with standard deviation 44.3 MJ</span><a href="../../Blog/tokamak-toolkit/claims.html#c-286" class="cid st-superseded">C-286</a>); physicist sign-off remains separate.</p>
+</section>
+<section id="oq-48" class="level3">
+<h3 class="anchored" data-anchor-id="oq-48">OQ-48 · Hybrid transport error term</h3>
+<p>The owner selected a hybrid-only calibration fixed before evaluation, retaining the failed pooled record and the existing reading bar. The independent reverse audit also passes (<span class="claim">hybrid calibration covers 0.914/0.915/0.904 of the older hybrid test states; the reverse audit covers 0.887/0.869/0.900; all exceed the fixed 0.85 pooled bar</span><a href="../../Blog/tokamak-toolkit/claims.html#c-285" class="cid st-measured">C-285</a>). This supplies M5’s marginal interval; individual run coverage still varies and no joint guarantee follows.</p>
+</section>
 <section id="oq-47" class="level3">
 <h3 class="anchored" data-anchor-id="oq-47">OQ-47 · Scope of the uncertainty and validation milestone</h3>
 <p><em>Decided 26 Oct 2026.</em> A reduced M5 on one ITER scenario. About five uncertain inputs: effective charge, auxiliary heating power, density level, pedestal height and the transport surrogate error. The quantities propagated are fusion power and thermal stored energy. Validation uses only openly available references: the published cross-code benchmark from M1 for the solver, the TGLF comparison for transport and the GENRAY comparison for EC heating. The pedestal has no reference here and is reported as unquantified. Options not taken: validation against experimental shots and integrated-modelling reference runs, which need data outside this project’s scope.</p>
 </section>
 <section id="oq-46" class="level3">
 <h3 class="anchored" data-anchor-id="oq-46">OQ-46 · Transport output bounds</h3>
-<p><em>Decided 26 Oct 2026.</em> No further compute on transport output bounds in M4. Two rounds of tighter bounding left them too wide to map back to physical units (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-033">K-033</a>). The local robustness check for transport measures change against those bounds, so it can’t be evaluated either. Both are stated as limitations at the certification review; monotonicity, conformal coverage and the coupled-run comparison carry the transport certification.</p>
+<p><em>Decided 26 Oct 2026.</em> No further compute on transport output bounds in M4. Two rounds of tighter bounding left them too wide to map back to physical units (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-033">K-033</a>). The local robustness check for transport measures change against those bounds, so it can’t be evaluated either. Both are stated as limitations at the certification review; monotonicity, conformal coverage and the coupled-run comparison form the transport evidence for certification review.</p>
 </section>
 <section id="oq-45" class="level3">
 <h3 class="anchored" data-anchor-id="oq-45">OQ-45 · EC robustness at training-domain boundaries</h3>
