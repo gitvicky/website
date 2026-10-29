@@ -3,19 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Explore MAST-U structural displacement with an independently checked browser approximation of a neural operator.">
+  <meta name="description" content="Explore MAST-U structural displacement predictions and parameter uncertainty with interactive browser-local neural operator models.">
   <title>MAST-U · A tokamak, in response</title>
   <link rel="icon" href="../../../Images/dy_dx.png">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Inria+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap">
   <link rel="stylesheet" href="style.css">
-  <script src="response.js" defer></script>
-  <script src="viewer.js" defer></script>
-  <script src="app.js" defer></script>
+  <script type="module" src="interactive.js"></script>
 </head>
 <body>
   <main>
     <header><a class="wordmark" href="https://vignesh-gopakumar.com/" target="_top">Vignesh Gopakumar</a><span>INTERACTIVE RESEARCH / 01</span></header>
-    <section class="intro"><p class="eyebrow">NEURAL OPERATORS × FUSION ENGINEERING</p><h1>A tokamak,<br><em>in response.</em></h1><p class="lede">Change the material’s thermal expansion and the wall temperature. Explore how a neural operator predicts the structural displacement of MAST-U.</p></section>
+    <section class="intro"><p class="eyebrow">NEURAL OPERATORS × FUSION ENGINEERING</p><h1>A tokamak,<br><em>in response.</em></h1><p class="lede">Explore MAST-U structural displacement. Choose a prediction or vary a parameter uncertainty box to see lower and upper displacement enclosures.</p></section>
+    <div class="view-tabs" role="tablist" aria-label="Interactive view">
+      <button type="button" id="tab-prediction" role="tab" aria-controls="prediction-panel" aria-selected="true">Prediction</button>
+      <button type="button" id="tab-uncertainty" role="tab" aria-controls="uncertainty-panel" aria-selected="false" tabindex="-1">Uncertainty</button>
+    </div>
+    <section id="prediction-panel" role="tabpanel" aria-labelledby="tab-prediction">
     <section class="explorer" aria-label="Interactive MAST-U structural response">
       <div class="viewport" id="viewport">
         <canvas id="scene" aria-label="Three-dimensional cutaway of MAST-U. Drag to rotate and scroll to zoom." tabindex="0"></canvas>
@@ -36,7 +39,30 @@
       </aside>
     </section>
     <section class="context"><div><p class="eyebrow">WHAT YOU ARE SEEING</p><h2>One machine.<br>Two parameters.<br>A continuous response.</h2></div><div class="explanation"><p>This is a steady structural response, with displacement shown on a simplified cutaway of the tokamak. Changing a slider evaluates a compact approximation of the trained neural operator directly in your browser. The colours update as you explore; no simulation server is needed.</p><p>The offline export encodes all <span id="source-count">29.2 million</span> native source nodes before evaluating the neural operator on the display mesh. The browser approximates those display predictions. This is a surrogate prediction of structural displacement, rather than a transient plasma simulation.</p><details><summary>Approximation accuracy & provenance</summary><p id="validation-summary">The validated export report will appear when the model has loaded.</p><p>Reported errors compare the browser approximation with the trained network at separate test parameters and display vertices. They are empirical measurements, not a certified error bound over the entire parameter domain or an error bound against MOOSE.</p><a id="report-link" href="assets/validation.json" target="_blank" rel="noopener">Read the validation report ↗</a></details></div></section>
-    <section class="next"><span class="eyebrow">PARAMETER UNCERTAINTY</span><h2>From a prediction<br>to an enclosure.</h2><p><a href="uncertainty.html">Explore the parameter uncertainty interactive ↗</a> to vary an uncertainty box around α and T<sub>w</sub> and view lower and upper displacement enclosures, their width, and the region of validity.</p><p class="fine">These enclosures target the original neural operator at fixed display vertices. They do not certify the compact approximation shown on this page or every point inside each rendered triangle.</p></section>
+    <section class="next"><span class="eyebrow">PARAMETER UNCERTAINTY</span><h2>From a prediction<br>to an enclosure.</h2><p><a href="#uncertainty">Explore the parameter uncertainty interactive ↗</a> to vary an uncertainty box around α and T<sub>w</sub> and view lower and upper displacement enclosures, their width, and the region of validity.</p><p class="fine">These enclosures target the original neural operator at fixed display vertices. They do not certify the compact approximation shown on this page or every point inside each rendered triangle.</p></section>
+    </section>
+    <section id="uncertainty-panel" class="uncertainty-page" role="tabpanel" aria-labelledby="tab-uncertainty" hidden>
+<section class="explorer" aria-label="MAST-U parameter uncertainty">
+<div class="viewport"><canvas id="uq-scene" aria-label="MAST-U uncertainty cutaway. Drag to rotate; scroll to zoom." tabindex="0"></canvas>
+<div class="scene-top"><span class="tag">MAST-U / PARAMETER ENCLOSURES</span><button id="uq-reset-camera" disabled>Reset view ↗</button></div>
+<div class="loading" id="uq-loading" role="status"><span class="loader"></span><p id="uq-load-message">Loading validated Taylor coefficients…</p></div>
+<div class="scene-bottom"><span>Drag to orbit · Scroll to zoom<br><span id="uq-mesh-info">Bounds at fixed display vertices</span></span><span id="uq-compute-status" role="status" aria-live="polite">Initialising</span></div>
+<div class="legend"><span id="uq-legend-title">Enclosure width · mm</span><div class="colour-ramp"></div><div class="legend-ticks"><span>0</span><span id="uq-legend-max">—</span></div></div>
+</div>
+<aside><div class="panel-heading"><span class="eyebrow">CHOOSE A PARAMETER BOX</span><span class="local-badge">Browser-local</span></div>
+<fieldset disabled id="uq-controls">
+<div class="parameter"><label for="uq-alpha">Thermal expansion centre <span>α</span></label><div class="input-line"><input id="uq-alpha-value" type="number" aria-label="Thermal expansion centre in multiples of 10 to the minus six per kelvin"><span>× 10⁻⁶ K⁻¹</span></div><input id="uq-alpha" type="range" aria-label="Thermal expansion centre"><div class="range-labels"><span id="uq-alpha-min">—</span><span id="uq-alpha-max">—</span></div></div>
+<div class="parameter"><label for="uq-alpha-half">Uncertainty in α <span>± Δα</span></label><div class="input-line"><input id="uq-alpha-half-value" type="number" aria-label="Thermal expansion uncertainty half width"><span>× 10⁻⁶ K⁻¹</span></div><input id="uq-alpha-half" type="range" aria-label="Thermal expansion uncertainty half width"><div class="range-labels"><span>0</span><span id="uq-alpha-half-max">—</span></div></div>
+<div class="parameter"><label for="uq-temperature">Wall-temperature centre <span>T<sub>w</sub></span></label><div class="input-line"><input id="uq-temperature-value" type="number" aria-label="Wall temperature centre in kelvin"><span>K</span></div><input id="uq-temperature" type="range" aria-label="Wall temperature centre"><div class="range-labels"><span id="uq-temperature-min">—</span><span id="uq-temperature-max">—</span></div></div>
+<div class="parameter"><label for="uq-temperature-half">Temperature uncertainty <span>± ΔT<sub>w</sub></span></label><div class="input-line"><input id="uq-temperature-half-value" type="number" aria-label="Wall temperature uncertainty half width in kelvin"><span>K</span></div><input id="uq-temperature-half" type="range" aria-label="Wall temperature uncertainty half width"><div class="range-labels"><span>0</span><span id="uq-temperature-half-max">—</span></div></div>
+<div class="display-controls"><label for="uq-quantity">Colour by</label><select id="uq-quantity"><option value="width">Enclosure width</option><option value="lower">Lower magnitude bound</option><option value="upper">Upper magnitude bound</option><option value="nominal">Nominal Taylor estimate</option></select><p>Moving a centre limits its half-width to keep the whole box inside the validated domain. Colours retain physical units.</p></div>
+<button class="reset" id="uq-reset-parameters" type="button">Restore the paper’s reference box ↺</button>
+</fieldset>
+<div class="measurement"><span>Largest magnitude upper bound at display vertices</span><strong><span id="uq-maximum">—</span><small> mm</small></strong><span>Largest enclosure width</span><strong><span id="uq-maximum-width">—</span><small> mm</small></strong></div>
+</aside></section>
+<div class="coverage"><strong>Validated parent box</strong><span id="uq-coverage">Loading coverage…</span><p id="uq-requested-box" role="status">—</p></div>
+<section class="context"><div><p class="eyebrow">WHAT THE BOUNDS COVER</p><h2>An enclosure<br>of the original<br>neural operator.</h2></div><div class="explanation"><p>Every displayed vertex has a quadratic Taylor model with interval coefficients and a rigorous remainder inherited from the full-native, outward-rounded calculation. Your browser encloses that model over the requested parameter rectangle.</p><p>The bounds target the mathematical neural operator with its stored weights, material routing and input-coordinate casts. They cover fixed display vertices, rather than every location inside each rendered triangle. Surface colours interpolate these vertex values.</p><p>The nominal view is a Taylor estimate. The retained remainder was computed for the parent box, so enclosure width can remain positive when input uncertainty is zero. It also includes approximation conservatism and arithmetic uncertainty.</p><details><summary>Arithmetic, coverage & provenance</summary><p>Browser arithmetic pads each binary64 primitive outward. Square-root endpoints are checked with enclosing products. Binary64 bounds are retained for numerical readouts; rendering uses conservative float32 endpoint conversions.</p><p>These are surrogate enclosures. They do not bound MOOSE prediction error, represent probabilistic confidence intervals, or certify every vendor FP32/TF32 execution of the network.</p><p id="uq-validation-summary">Loading provenance…</p><a href="assets/uq-validation.json" target="_blank" rel="noopener">Read the uncertainty export report ↗</a></details></div></section>
+    </section>
     <footer><span>MAST-U · Learnable splines for unstructured neural operators</span><a href="https://arxiv.org/abs/2610.22446" target="_blank" rel="noopener">Read the paper ↗</a></footer>
   </main>
 </body>

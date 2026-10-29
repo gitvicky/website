@@ -1,7 +1,6 @@
 'use strict';
-if(new URLSearchParams(location.search).get('embed')==='1')document.body.classList.add('embedded');
-const $=id=>document.getElementById(id);
-function fail(message){$('loading').hidden=false;$('load-message').textContent=message;document.querySelector('.loader').hidden=true;$('compute-status').textContent='Unavailable';$('controls').disabled=true;}
+const $=id=>document.getElementById('uq-'+id);
+function fail(message){$('loading').hidden=false;$('load-message').textContent=message;$('loading').querySelector('.loader').hidden=true;$('compute-status').textContent='Unavailable';$('controls').disabled=true;}
 async function binary(spec){const response=await fetch(`assets/${spec.file}`);if(!response.ok)throw Error(`Missing uncertainty asset: ${spec.file}`);const data=await response.arrayBuffer();if(data.byteLength!==spec.bytes)throw Error('Incomplete uncertainty packet');if(crypto.subtle){const actual=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',data)),x=>x.toString(16).padStart(2,'0')).join('');if(actual!==spec.sha256)throw Error(`Uncertainty checksum mismatch: ${spec.file}`);}return data;}
 async function start(){
   MastuIntervals.selfTest();
@@ -29,4 +28,4 @@ async function start(){
   worker.onmessage=({data})=>{if(data.type==='error'){fail(data.message);return;}if(data.type==='ready'){ready=true;$('controls').disabled=false;queue();return;}inFlight=false;if(wanted&&data.id===wanted.id){latest={field:new Float32Array(data.field),lower:new Float64Array(data.lower),upper:new Float64Array(data.upper),width:new Float64Array(data.width)};paint();$('maximum').textContent=data.maximumUpper.toFixed(3);$('maximum-width').textContent=data.maximumWidth.toFixed(3);$('requested-box').textContent=`Requested: α = ${(wanted.centers[0]*1e6).toFixed(6)} ± ${(wanted.halves[0]*1e6).toFixed(6)} × 10⁻⁶ K⁻¹; T_w = ${wanted.centers[1].toFixed(4)} ± ${wanted.halves[1].toFixed(4)} K`;$('compute-status').textContent=`${Math.round(data.milliseconds)} ms bounds · ${Math.round(performance.now()-wanted.started)} ms update`;$('loading').hidden=true;wanted=null;}send();};
   sync();worker.postMessage({type:'init',model,lower:data.coefficient_lower,upper:data.coefficient_upper,remainder:data.remainder},[data.coefficient_lower,data.coefficient_upper,data.remainder]);window.addEventListener('pagehide',()=>worker.terminate(),{once:true});
 }
-start().catch(error=>fail(error.message));
+export function startUncertainty(){return start().catch(error=>fail(error.message));}

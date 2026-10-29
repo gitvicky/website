@@ -1,5 +1,4 @@
 'use strict';
-if(new URLSearchParams(location.search).get('embed')==='1')document.body.classList.add('embedded');
 const $=id=>document.getElementById(id);
 function fail(message){$('loading').hidden=false;$('load-message').textContent=message;const spinner=document.querySelector('.loader');if(spinner)spinner.hidden=true;$('compute-status').textContent='Unavailable';$('controls').disabled=true;}
 async function loadJSON(url){const response=await fetch(url);if(!response.ok)throw Error(`Could not load ${url} (${response.status}). The validated model assets must be exported before hosting.`);return response.json();}
@@ -72,4 +71,4 @@ async function start(){
   worker.postMessage({type:'init',model,mean:assets.mean,basis:assets.basis},[assets.mean,assets.basis]);
   window.addEventListener('pagehide',()=>worker.terminate(),{once:true});
 }
-start().catch(error=>fail(error.message));
+export function startPrediction(){return start().catch(error=>fail(error.message));}

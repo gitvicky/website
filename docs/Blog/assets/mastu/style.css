@@ -6,3 +6,5 @@ body.embedded main{padding:0;max-width:none}body.embedded header,body.embedded .
 @media(min-width:701px){.uncertainty-page .input-line input{width:142px;font-size:25px}}
 
 .uncertainty-page .display-controls p{font-size:12px;color:var(--muted);line-height:1.6;margin:10px 0 16px}
+
+.view-tabs{display:flex;gap:8px;margin:0 0 20px;border-bottom:1px solid var(--line);padding-bottom:12px}.view-tabs button{padding:8px 18px;border:1px solid var(--line);border-radius:3px;background:var(--paper);color:var(--muted)}.view-tabs button:hover{background:var(--hover);color:var(--ink)}.view-tabs button[aria-selected=true]{background:var(--ink);border-color:var(--ink);color:var(--paper)}[role=tabpanel][hidden]{display:none}body.embedded .view-tabs{padding:12px;margin-bottom:0}@media(max-width:700px){.view-tabs button{flex:1;padding:8px 12px}}
