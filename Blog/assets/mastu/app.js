@@ -67,7 +67,6 @@ async function start(){
     }
     send();
   };
-  $('amplification').addEventListener('input',()=>{viewer.amplification=Number($('amplification').value);$('amplification-value').textContent=`${viewer.amplification}×`;viewer.draw();});
   $('quantity').addEventListener('change',()=>{const q=$('quantity').value;viewer.quantity={magnitude:0,x:1,y:2,z:3}[q];$('legend-title').textContent=q==='magnitude'?'Displacement magnitude · mm':`Displacement u_${q} · mm`;$('legend-min').textContent=q==='magnitude'?'0':String(-model.colour_max_mm);viewer.draw();});
   $('reset-parameters').onclick=()=>{model.parameters.forEach((p,i)=>{values[i]=p.initial;const [name,scale,decimals]=controls[i];$(name).value=p.initial*scale;$(`${name}-value`).value=(p.initial*scale).toFixed(decimals);});queue();};
   worker.postMessage({type:'init',model,mean:assets.mean,basis:assets.basis},[assets.mean,assets.basis]);

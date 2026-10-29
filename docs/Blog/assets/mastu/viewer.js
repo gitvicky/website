@@ -7,13 +7,12 @@
     layout(location=1) in vec3 normal;
     layout(location=2) in vec3 displacement;
     uniform mat4 viewProjection;
-    uniform float amplification;
     uniform float colourMaximum;
     uniform int quantity;
     out vec3 vNormal;
     out float vScalar;
     void main() {
-      gl_Position = viewProjection * vec4(position + amplification * displacement, 1.0);
+      gl_Position = viewProjection * vec4(position, 1.0);
       vNormal = normal;
       float value = quantity == 0 ? length(displacement) : displacement[quantity - 1];
       vScalar = quantity == 0 ? value * 1000.0 / colourMaximum : 0.5 + 0.5 * value * 1000.0 / colourMaximum;
@@ -53,13 +52,13 @@
       gl.attachShader(program,shader(gl.VERTEX_SHADER,VERTEX));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,FRAGMENT));gl.linkProgram(program);
       if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
       gl.useProgram(program);this.program=program;
-      this.uniforms=Object.fromEntries(['viewProjection','amplification','colourMaximum','quantity'].map(k=>[k,gl.getUniformLocation(program,k)]));
+      this.uniforms=Object.fromEntries(['viewProjection','colourMaximum','quantity'].map(k=>[k,gl.getUniformLocation(program,k)]));
       this.vao=gl.createVertexArray();gl.bindVertexArray(this.vao);
       const attribute=(index,values,usage)=>{const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,values,usage);gl.enableVertexAttribArray(index);gl.vertexAttribPointer(index,3,gl.FLOAT,false,0,0);return b;};
       attribute(0,positions,gl.STATIC_DRAW);attribute(1,normals,gl.STATIC_DRAW);
       this.fieldBuffer=attribute(2,new Float32Array(positions.length),gl.DYNAMIC_DRAW);
       const indices=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indices);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,triangles,gl.STATIC_DRAW);
-      this.count=triangles.length;this.colourMaximum=colourMaximum;this.amplification=0;this.quantity=0;
+      this.count=triangles.length;this.colourMaximum=colourMaximum;this.quantity=0;
       const lo=[Infinity,Infinity,Infinity],hi=[-Infinity,-Infinity,-Infinity];
       for(let i=0;i<positions.length;i++) {const j=i%3;lo[j]=Math.min(lo[j],positions[i]);hi[j]=Math.max(hi[j],positions[i]);}
       this.target=lo.map((v,i)=>(v+hi[i])/2);this.radius=Math.hypot(...sub(hi,lo))/2;
@@ -89,7 +88,7 @@
       const view=new Float32Array([x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dot(x,eye),-dot(y,eye),-dot(z,eye),1]);
       const f=1/Math.tan(Math.PI/8),near=this.radius*.01,far=this.radius*30;
       const proj=new Float32Array([f/(width/height),0,0,0,0,f,0,0,0,0,(far+near)/(near-far),-1,0,0,2*far*near/(near-far),0]);
-      gl.uniformMatrix4fv(this.uniforms.viewProjection,false,multiply(proj,view));gl.uniform1f(this.uniforms.amplification,this.amplification);gl.uniform1f(this.uniforms.colourMaximum,this.colourMaximum);gl.uniform1i(this.uniforms.quantity,this.quantity);
+      gl.uniformMatrix4fv(this.uniforms.viewProjection,false,multiply(proj,view));gl.uniform1f(this.uniforms.colourMaximum,this.colourMaximum);gl.uniform1i(this.uniforms.quantity,this.quantity);
       gl.drawElements(gl.TRIANGLES,this.count,gl.UNSIGNED_INT,0);
     }
   }
