@@ -14,6 +14,13 @@ were copied from. The Python package is called `tkit`. Every number links to its
 [claims register](../claims.qmd); deliberate shortcuts are listed under
 [known ceilings](../ceilings.qmd).
 
+::: {.callout-important}
+## New: full ensemble numerical convergence
+
+The [strict physical-residual and continuous-closure protocol](solver-learning.qmd#full-ensemble-convergence)
+now passes the complete ensemble ([all 33 original cases reach five seconds at all three maximum-step settings: 99 of 99 valid trajectories and 264 of 264 passing endpoint comparisons]{.claim}[C-305](/Blog/tokamak-toolkit/claims.qmd#c-305){.cid .st-measured}, [the largest changes are 0.219% for coarse-to-middle and 0.0423% for middle-to-fine, both below the 1% acceptance limit]{.claim}[C-306](/Blog/tokamak-toolkit/claims.qmd#c-306){.cid .st-measured}).
+:::
+
 ## Sections
 
 In roughly the order you would build the system:
@@ -40,6 +47,8 @@ In roughly the order you would build the system:
     closed-loop comparison. Proof certificates and calibrated intervals are recorded with their limits; certification review remains pending.
 
 14. [Uncertainty propagation](uncertainty.qmd): actual ITER prior propagation, linearisation cross-check, sensitivity and conditional reference-label calibration; physical validation limits.
+
+15. [Physical-residual solves and ensemble convergence](solver-learning.qmd): strict Newton trials, continuous closure, full rollback, acceptance gates and the complete ensemble result.
 
 ## Notation
 

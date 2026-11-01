@@ -1,0 +1,62 @@
+---
+title: Strict physical residuals and continuous transport
+date: '2026-11-01'
+categories:
+- fixed
+- built
+entry: 97
+milestone: M5
+---
+
+::: {.entry-meta}
+[bug fix]{.chip .fixed} [new component]{.chip .built} Entry 97 · milestone M5
+:::
+
+We needed the ITER transport trajectories to solve a consistent discrete equation
+before their time-step comparison could support uncertainty analysis. The
+[primer](../primer.qmd) explains why the neural transport model operates behind a
+guard and a physics fallback.
+
+Earlier trajectories could finish with finite outputs and a zero solver flag
+while retaining substantial physical residuals. Continuing the same iteration,
+adding damping and learning a damping choice did not establish a remedy. A
+discrete operator audit also found that stabilization changed the equation being
+iterated. A small linearized update was insufficient evidence of a physical root.
+
+We changed the experimental integration in three places. A strict Newton solve
+uses the unstabilized native residual and retains the previous iterate if its
+line search fails. A continuous transition blends the admissible surrogate with
+fallback near guard boundaries and smooths the particle diffusion/convection
+switch. An invalid proposed time step restores the complete previous state and
+auxiliary data before trying a smaller step ([the new research baseline uses a continuous guarded closure, Newton trials accepted only after residual decrease, and adaptive rollback of the complete state and auxiliary data]{.claim}[C-304](/Blog/tokamak-toolkit/claims.qmd#c-304){.cid .st-measured}).
+
+**The continuous transition changes the transport closure.** Its passing result
+belongs to this new baseline. It does not make the old hard-switch equations
+converged, and the historical failed runs stay failed. Existing production
+defaults are unchanged; the validated acceptance protocol is carried by frozen
+research adapters.
+
+The final adapters check channelwise physical residuals, the exact native
+residual, global balances, positivity and finiteness before accepting a step.
+An explicit crash stops this study. The residual gates pass across the complete
+ensemble ([maximum accepted physical-channel L1 is 1.76 × 10^−9^ against a 10^−8^ gate, and native mean L1 is 1.01 × 10^−14^ against 10^−10^; no crash occurs]{.claim}[C-307](/Blog/tokamak-toolkit/claims.qmd#c-307){.cid .st-measured}). Failed trials remain visible:
+[372,141 accepted proposals and 2,659 rejected proposals are retained in 23,100 raw chunks; rejected-step rollback and retry schedules pass reconstruction]{.claim}[C-308](/Blog/tokamak-toolkit/claims.qmd#c-308){.cid .st-measured}.
+
+An independent NumPy auditor reconstructs the physical defects from retained
+cell terms and checks the actual retry schedule, raw profile continuity and
+reporting endpoints. It shares the declared discrete equations with the solver;
+it is not a second independent plasma model. Complete auxiliary rollback is
+additionally checked in the source and synthetic controls.
+
+The accompanying [full-ensemble result](98-full-iter-ensemble-passes-convergence.qmd)
+reports both adjacent maximum-step comparisons. M5 now has a passing numerical
+baseline for this closure. Physical-model review and any later uncertainty study
+remain separate work.
+
+Technical details → [continuous closure](../technical/solver-learning.qmd#continuous-closure)
+and [rejected-step rollback](../technical/solver-learning.qmd#rejected-step-rollback).
+
+::: {.entry-links}
+**Technical details →** [Physical-residual solves and ensemble convergence › continuous closure](/Blog/tokamak-toolkit/technical/solver-learning.qmd#continuous-closure) · [Physical-residual solves and ensemble convergence › rejected step rollback](/Blog/tokamak-toolkit/technical/solver-learning.qmd#rejected-step-rollback)  
+**Decisions →** [OQ-49](/Blog/tokamak-toolkit/decisions.qmd#oq-49)
+:::

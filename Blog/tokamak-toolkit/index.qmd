@@ -16,6 +16,19 @@ listing:
   date-format: D MMM YYYY
 ---
 
+::: {.callout-important}
+## Full ITER ensemble convergence now passes
+
+**The numerical convergence blocker is resolved for the current continuous baseline.**
+[all 33 original cases reach five seconds at all three maximum-step settings: 99 of 99 valid trajectories and 264 of 264 passing endpoint comparisons]{.claim}[C-305](/Blog/tokamak-toolkit/claims.qmd#c-305){.cid .st-measured}. [the largest changes are 0.219% for coarse-to-middle and 0.0423% for middle-to-fine, both below the 1% acceptance limit]{.claim}[C-306](/Blog/tokamak-toolkit/claims.qmd#c-306){.cid .st-measured}.
+
+[Read the full result](log/98-full-iter-ensemble-passes-convergence.qmd) ·
+[What changed in the solver and closure](log/97-strict-physical-residuals-and-continuous-transport.qmd) ·
+[Reproduce the numerical argument](technical/solver-learning.qmd#full-ensemble-convergence).
+The new pass belongs to the continuous closure; physicist sign-off remains pending.
+:::
+
+
 
 :::: {.tk-cols}
 ::: {.tk-col}
@@ -29,8 +42,10 @@ swapped for a neural surrogate, but only behind a *guard*. At every radius and e
 the surrogate has to show that it is inside the conditions it was trained on, that its
 ensemble agrees with itself, and that its answer is physically possible. Where it can't, a
 trusted physics model takes over, and the handover is recorded. The whole simulation is
-written in JAX, so it compiles to one program and can be differentiated end to end, and it
-speaks IMAS, the fusion community's standard data format, at every boundary.
+written in JAX and speaks IMAS, the fusion community's standard data format, at every
+boundary. Fixed-step paths support differentiation; the new adaptive validation checks
+individual implicit-root derivatives but does not support reverse-mode differentiation
+through its retry decisions.
 
 The code is private for now. What is public is the argument: the method, the checks that
 define "correct", every number with where it came from, and the mistakes.
@@ -44,11 +59,11 @@ working to a brief by a human owner who makes every physics, licence and publica
 | | |
 |---|---|
 | milestone | M5 |
-| log entries | 84 |
-| tests passing | 1095 recorded full-mode results, 1095 with gated codes disabled |
-| source | 24187 lines + 14356 lines of tests |
-| baseline commit | `9c815cc`; continuation source retained with its evidence |
-| updated | 2026-10-28 |
+| log entries | 86 |
+| tests passing | 1108 recorded full-mode results, 1108 with gated codes disabled |
+| source | 24560 lines + 14487 lines of tests |
+| baseline commit | `54ded90`; continuation source retained with its evidence |
+| updated | 2026-11-01 |
 
 Counts aggregate retained execution reports for the displayed code revision, with
 affected files rerun after code changes. The full suite has
@@ -348,8 +363,9 @@ still open. Hover over a box for what it does.
 **Core transport: TORAX.** The open-source JAX transport code. On a radial grid in ρ it evolves
 the electron and ion temperatures, the electron density and the poloidal flux ψ (current
 diffusion), with an implicit solve every time step (Newton-Raphson, with Picard iteration as a
-fallback). The Tokamak Toolkit calls TORAX's own single-step function from a fixed-step compiled loop, so a
-whole run is one program that can be differentiated end to end. Entries 1 to 3.
+fallback). The original fixed-step compiled loop supports end-to-end differentiation.
+The new opt-in adaptive validation uses strict Newton and rejected-step rollback; reverse-mode
+differentiation through its retry decisions is not supported. Entries 1 to 3 and 97 to 98.
 :::
 ::: {.tk-note data-node="eqdsk"}
 **Prescribed equilibrium.** The CHEASE equilibrium of the ITER hybrid scenario, shipped with
@@ -885,14 +901,14 @@ human expert, not by the agent that built the code.
 | M2 | [Training data](milestones/M2.qmd) | sampled datasets from first-principles turbulence codes, with provenance | [done 3 Oct 2026]{.wf .done} | — |
 | M3 | [Surrogates](milestones/M3.qmd) | neural ensembles with physics built in, running inside the loop | [done 10 Oct 2026]{.wf .done} | — |
 | M4 | [Verification](milestones/M4.qmd) | evidence package and guarded model records | [transport bounds unresolved]{.wf .crit} | [certification pending]{.wf .todo} |
-| M5 | [Uncertainty and validation](milestones/M5.qmd) | ITER prior propagation, sensitivity and reference-label calibration | [temporal convergence unresolved]{.wf .crit} | [physicist sign-off pending]{.wf .todo} |
+| M5 | [Uncertainty and validation](milestones/M5.qmd) | ITER prior propagation, sensitivity and reference-label calibration | [full ensemble numerical convergence passed]{.wf .done} | [physicist sign-off pending]{.wf .todo} |
 
 :::: {.tk-cols}
 ::: {.tk-col}
 ## The log
 
 <details class="tk-log">
-<summary>Show all 84 entries, newest first</summary>
+<summary>Show all 86 entries, newest first</summary>
 
 ::: {#log}
 :::
@@ -908,7 +924,7 @@ The [action plan](action-plan.qmd) gives dependencies and completion criteria.
 
 - **M4: verification.** The bounded transport investigation closes scientifically unresolved ([both full-box pilots retain nonfinite physical enclosures after all final objectives run; independent graph, constraint and corrected-dual replay passes, with no finite physical candidate]{.claim}[C-297](/Blog/tokamak-toolkit/claims.qmd#c-297){.cid .st-preliminary}). The four records, guard integration and cheap CI re-proof retain the EC-robustness and MAST-U limitations. Exact proof boxes remain separate from ordinary guard margins ([all four verified input boxes match the previous loaders; 48 of 48 retained pedestal states keep identical predictions and decisions; none of the 57 EC states is inside the exact proof boxes, so no EC certificate-based output check applies there]{.claim}[C-284](/Blog/tokamak-toolkit/claims.qmd#c-284){.cid .st-measured}). The revised report-only fallback alert policy is adopted under [OQ-50](/Blog/tokamak-toolkit/decisions.qmd#oq-50); certification remains pending.
 - **JOREK stability (alongside M4).** The time-step checks pass, but the doubled-grid checks remain incomplete and the existing resource projection rule stops further links ([all three selected fine-grid checks remain incomplete; the measured-cost projection exceeds the existing compute envelope and further submissions stop]{.claim}[C-291](/Blog/tokamak-toolkit/claims.qmd#c-291){.cid .st-preliminary}). No fine-grid growth rate or stability verdict follows.
-- **M5: uncertainty and validation.** The historical prior study remains available ([all 256 retained Monte Carlo outputs are finite with zero native linear-step error codes, and 2048 sensitivity evaluations drop no rows; those codes do not establish nonlinear-residual or temporal convergence]{.claim}[C-292](/Blog/tokamak-toolkit/claims.qmd#c-292){.cid .st-measured}), with nonlinear flags ([all four outputs fail the fixed 10% standard-deviation cross-check; disagreements are 46.2%, 43.4%, 43.1% and 59.7% for fusion power, thermal energy, central electron temperature and central ion temperature]{.claim}[C-287](/Blog/tokamak-toolkit/claims.qmd#c-287){.cid .st-measured}). Finer ladders still fail temporal convergence ([maximum paired changes remain 19.2654% and 1.9773% across the two refinements, exceeding the fixed 1% limit; all 99 retained rows are finite with zero native linear-step error codes and no exclusions]{.claim}[C-295](/Blog/tokamak-toolkit/claims.qmd#c-295){.cid .st-preliminary}, [the additional finer ladder has maximum paired changes of 1.7092% and 1.8560%, above the unchanged 1% criterion; all 99 assessed rows remain valid and no supported replacement step is established]{.claim}[C-296](/Blog/tokamak-toolkit/claims.qmd#c-296){.cid .st-preliminary}); the next ladder passes one pair but fails the finer pair ([the first pair stays below 1%, but the finer pair changes fusion power by up to 4.1372% and fails three quantities; all 99 assessed rows remain valid, so no replacement step is supported]{.claim}[C-298](/Blog/tokamak-toolkit/claims.qmd#c-298){.cid .st-preliminary}). The completed internal diagnostic establishes branch mismatch and a local residual contribution ([the failing case has different last-guess and accepted-state branches on 39.453% of coarse and 73.145% of fine steps over (3,5] seconds; during (3.5,4.5] seconds all fine accepted states fall back while 84.961% of last guesses select the surrogate]{.claim}[C-300](/Blog/tokamak-toolkit/claims.qmd#c-300){.cid .st-measured}, [the fine failing case has branch-term norm ratios of 0.723 for electron temperature and 0.982 for ion temperature; the signed global branch term cancels and the remaining coefficient lag carries the net defect]{.claim}[C-301](/Blog/tokamak-toolkit/claims.qmd#c-301){.cid .st-measured}); a checkpoint probe remains prepared only. Final uncertainty requires a supported step and an affordable complete design. Physicist review still needs the stated priors and unquantified pedestal/equilibrium discrepancy ([K-035](/Blog/tokamak-toolkit/ceilings.qmd#k-035)).
+- **M5: the full ensemble numerical gate passes.** [all 33 original cases reach five seconds at all three maximum-step settings: 99 of 99 valid trajectories and 264 of 264 passing endpoint comparisons]{.claim}[C-305](/Blog/tokamak-toolkit/claims.qmd#c-305){.cid .st-measured}. The successful opt-in method combines the continuous closure, strict solve and rejected-step rollback ([the new research baseline uses a continuous guarded closure, Newton trials accepted only after residual decrease, and adaptive rollback of the complete state and auxiliary data]{.claim}[C-304](/Blog/tokamak-toolkit/claims.qmd#c-304){.cid .st-measured}), with explicit physical residual checks ([maximum accepted physical-channel L1 is 1.76 × 10^−9^ against a 10^−8^ gate, and native mean L1 is 1.01 × 10^−14^ against 10^−10^; no crash occurs]{.claim}[C-307](/Blog/tokamak-toolkit/claims.qmd#c-307){.cid .st-measured}). The [new result](log/98-full-iter-ensemble-passes-convergence.qmd) supersedes the unresolved numerical status for this baseline. Historical prior results retain their original scope. A new uncertainty design must adopt this baseline explicitly; physical-model review and the pedestal/equilibrium discrepancy limits remain open ([K-035](/Blog/tokamak-toolkit/ceilings.qmd#k-035)).
 - **Profile Newton separately** ([K-022](/Blog/tokamak-toolkit/ceilings.qmd#k-022)), distinguishing compilation, ensemble evaluation and
   Jacobian cost. Historical speed-up belongs to v1.
 - **ASCOT5 follow-ups, before neutral-beam ions**: the alphas' mean birth energy ([K-011](/Blog/tokamak-toolkit/ceilings.qmd#k-011)) and the

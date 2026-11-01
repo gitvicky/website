@@ -1,0 +1,74 @@
+---
+title: Full ITER ensemble passes five-second convergence
+date: '2026-11-01'
+categories:
+- measured
+entry: 98
+milestone: M5
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 98 · milestone M5
+:::
+
+**The complete ITER ensemble now passes the declared numerical convergence
+checks.** [all 33 original cases reach five seconds at all three maximum-step settings: 99 of 99 valid trajectories and 264 of 264 passing endpoint comparisons]{.claim}[C-305](/Blog/tokamak-toolkit/claims.qmd#c-305){.cid .st-measured}. This resolves the tested baseline's convergence
+blocker for the current model and settings. The [primer](../primer.qmd) explains
+the coupled simulation and its guarded surrogates.
+
+We reran the original design using the
+[strict physical-residual solve and continuous transport closure](97-strict-physical-residuals-and-continuous-transport.qmd).
+Every original case and member remains in the design. The transition widths and
+radial coefficient smoothing stay fixed across this comparison. The completed
+sentinels were re-audited alongside the remaining fresh trajectories.
+
+Each case has three adaptive maximum-step settings. Both adjacent comparisons
+must pass for fusion power, stored thermal energy, and axis electron and ion
+temperature. A finer-cap result supplies each relative-error denominator.
+[the largest changes are 0.219% for coarse-to-middle and 0.0423% for middle-to-fine, both below the 1% acceptance limit]{.claim}[C-306](/Blog/tokamak-toolkit/claims.qmd#c-306){.cid .st-measured}. No case is discarded to obtain the pass.
+
+![Every case lies below the dashed acceptance limit for both adjacent maximum-step comparisons. Each marker is the largest change across the four quantities of interest; the vertical axis is logarithmic. [the largest changes are 0.219% for coarse-to-middle and 0.0423% for middle-to-fine, both below the 1% acceptance limit]{.claim}[C-306](/Blog/tokamak-toolkit/claims.qmd#c-306){.cid .st-measured}.](../figures/m5_convergence.svg)
+
+<!-- m5-provenance:start -->
+<details class="provenance">
+<summary>Figure provenance</summary>
+
+- Tier: A; measured public ITER numerical scenario.
+- Producer: `blog.figures.make_m5_convergence`; source `2563ca4` (dirty at generation: True).
+- Configuration SHA-256: `e31a1147b1db7c07480ccc9231f77c9035097dd62236414a9e3a74897475ef92`.
+- Bound raw-audit SHA-256: `50b76a04bd897bbd7154a1a299623f7c6b499bfada9bf2827dba959a944c99b6`.
+- Python 3.11.7; JAX 0.10.2; CPU saved-array audit.
+- Recorded: 2026-11-01. No new simulation was run to plot this figure.
+
+[Underlying data](../figures/m5_convergence.csv).
+
+</details>
+<!-- m5-provenance:end -->
+
+The final audit reconstructs the equations from raw cell storage, transport and
+source terms, checks every accepted step, and binds all reporting endpoints to
+raw profiles and quantities. [maximum accepted physical-channel L1 is 1.76 × 10^−9^ against a 10^−8^ gate, and native mean L1 is 1.01 × 10^−14^ against 10^−10^; no crash occurs]{.claim}[C-307](/Blog/tokamak-toolkit/claims.qmd#c-307){.cid .st-measured}. It also retains the failed
+proposals rather than hiding them: [372,141 accepted proposals and 2,659 rejected proposals are retained in 23,100 raw chunks; rejected-step rollback and retry schedules pass reconstruction]{.claim}[C-308](/Blog/tokamak-toolkit/claims.qmd#c-308){.cid .st-measured}.
+
+The audit is separate from the integration's acceptance decision. Source and
+input hashes, scheduler completion and both adjacent comparisons are required
+for the combined pass. Successful process exit alone never supplies convergence.
+
+This is a substantial change from the earlier unresolved numerical baseline.
+It is also a precisely scoped result: the successful continuous closure differs
+from the earlier hard-switch closure. These adaptive-cap comparisons establish
+neither a fixed-step convergence order nor experimental physical validity.
+Smoothing-width robustness and a direct particle-flux formulation remain separate
+studies. The historical uncertainty results have not been silently recomputed.
+
+M5's numerical baseline passes; physicist sign-off remains pending. The next
+uncertainty study must explicitly use this baseline and its complete declared
+design.
+
+Technical details → [full ensemble protocol](../technical/solver-learning.qmd#full-ensemble-convergence).
+Milestone → [M5](../milestones/M5.qmd).
+
+::: {.entry-links}
+**Technical details →** [Physical-residual solves and ensemble convergence › full ensemble convergence](/Blog/tokamak-toolkit/technical/solver-learning.qmd#full-ensemble-convergence) · [Uncertainty propagation and validation › continuous baseline](/Blog/tokamak-toolkit/technical/uncertainty.qmd#continuous-baseline)  
+**Decisions →** [OQ-49](/Blog/tokamak-toolkit/decisions.qmd#oq-49)
+:::

@@ -2,8 +2,22 @@
 title: Uncertainty propagation and validation
 toc: true
 toc-depth: 3
-date-modified: '2026-10-28'
+date-modified: '2026-11-01'
 ---
+
+## Current continuous baseline: numerical convergence passed {#continuous-baseline}
+
+[all 33 original cases reach five seconds at all three maximum-step settings: 99 of 99 valid trajectories and 264 of 264 passing endpoint comparisons]{.claim}[C-305](/Blog/tokamak-toolkit/claims.qmd#c-305){.cid .st-measured}. [the largest changes are 0.219% for coarse-to-middle and 0.0423% for middle-to-fine, both below the 1% acceptance limit]{.claim}[C-306](/Blog/tokamak-toolkit/claims.qmd#c-306){.cid .st-measured}. The successful research integration
+combines a changed continuous guarded closure, strict Newton acceptance and
+rejected-step rollback ([the new research baseline uses a continuous guarded closure, Newton trials accepted only after residual decrease, and adaptive rollback of the complete state and auxiliary data]{.claim}[C-304](/Blog/tokamak-toolkit/claims.qmd#c-304){.cid .st-measured}), with independently reconstructed
+physical residuals ([maximum accepted physical-channel L1 is 1.76 × 10^−9^ against a 10^−8^ gate, and native mean L1 is 1.01 × 10^−14^ against 10^−10^; no crash occurs]{.claim}[C-307](/Blog/tokamak-toolkit/claims.qmd#c-307){.cid .st-measured}).
+
+The [complete technical protocol](solver-learning.qmd#full-ensemble-convergence)
+explains the original case coverage, adaptive maximum-step comparisons and raw
+checks. The sections below retain the earlier uncertainty study and hard-switch
+ladder failures. Their arrays and conclusions are not rewritten. The new result
+supports the numerical baseline; a later uncertainty/sensitivity design must
+explicitly adopt it. Physical discrepancy and physicist sign-off remain open.
 
 ## Numerical methods
 
@@ -29,13 +43,13 @@ The fitted Tier A EC fallback ships with its original artifact digest. An isolat
 Future sensitivity records retain the sampled unit design, physical inputs, categorical members, model outputs and common finite-row mask. The first-order and total estimators can be reconstructed from these arrays without another trajectory run. This retention does not retroactively add raw sensitivity outputs to the earlier study; its original source-bound result and stated audit limits remain intact.
 
 
-## Native solver diagnostics {#solver-diagnostic-scope}
+## Historical native solver diagnostics {#solver-diagnostic-scope}
 
 The selected linear predictor-corrector advances a fixed number of corrections. Its native error code is assigned zero unconditionally, and its reported iteration count records that fixed work. Finite retained outputs and zero native error codes therefore do not establish a fine nonlinear residual ([all 256 retained Monte Carlo outputs are finite with zero native linear-step error codes, and 2048 sensitivity evaluations drop no rows; those codes do not establish nonlinear-residual or temporal convergence]{.claim}[C-292](/Blog/tokamak-toolkit/claims.qmd#c-292){.cid .st-measured}). Earlier draft wording was stronger than the recorded diagnostic. The native arrays remain unchanged; a source-bound audit identifies the actual scenario and installed solver implementation.
 
 Time-step refinement supplies a separate numerical check on the final quantities. It cannot retrospectively establish nonlinear-residual convergence, experimental validation, or an exact-solution error bound. Accepted-state guard decisions also remain distinct from decisions made inside the solver ([K-014](/Blog/tokamak-toolkit/ceilings.qmd#k-014)).
 
-## Paired temporal refinement {#paired-refinement}
+## Historical paired temporal refinement {#paired-refinement}
 
 The refined diagnostic retains the nominal ensemble-mean case and every frozen prior-design case, including every discrete member. Raw final quantities, physical times, accepted-state rejection masks and reasons, and native solver fields are retained at each step size. A separate audit reconstructs final quantities from traces, rejection summaries from masks, solver summaries from native fields and both adjacent endpoint comparisons. Historical overlap prevents instrumentation changes from silently altering the earlier control.
 

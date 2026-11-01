@@ -1,6 +1,6 @@
 ---
 title: M5 · Uncertainty and validation
-subtitle: Prior study retained; temporal convergence and physicist sign-off pending
+subtitle: Full ensemble numerical convergence passed; physicist sign-off pending
 toc: true
 disclosure:
   class: green
@@ -8,15 +8,26 @@ disclosure:
   approved_on: null
 ---
 
+::: {.callout-important}
+## Full ensemble numerical gate: passed
+
+[all 33 original cases reach five seconds at all three maximum-step settings: 99 of 99 valid trajectories and 264 of 264 passing endpoint comparisons]{.claim}[C-305](/Blog/tokamak-toolkit/claims.qmd#c-305){.cid .st-measured}. [the largest changes are 0.219% for coarse-to-middle and 0.0423% for middle-to-fine, both below the 1% acceptance limit]{.claim}[C-306](/Blog/tokamak-toolkit/claims.qmd#c-306){.cid .st-measured}. The result uses the new continuous
+closure and strict research acceptance protocol ([the new research baseline uses a continuous guarded closure, Newton trials accepted only after residual decrease, and adaptive rollback of the complete state and auxiliary data]{.claim}[C-304](/Blog/tokamak-toolkit/claims.qmd#c-304){.cid .st-measured}).
+
+[Result narrative](../log/98-full-iter-ensemble-passes-convergence.qmd) ·
+[Technical protocol](../technical/solver-learning.qmd#full-ensemble-convergence).
+Physical-model acceptance and physicist sign-off remain separate gates.
+:::
+
 ## Scope
 
 [OQ-47](/Blog/tokamak-toolkit/decisions.qmd#oq-47) selects one ITER hybrid scenario, independent declared input priors, the transport member and a coherent transport-discrepancy factor. The three surrogate modules stay behind their Tier A fallbacks. This is sensitivity analysis under stated priors, not experimentally validated prediction uncertainty.
 
-## Result and gate
+## Historical uncertainty result and gate
 
 The historical Monte Carlo and sensitivity trajectories complete ([all 256 retained Monte Carlo outputs are finite with zero native linear-step error codes, and 2048 sensitivity evaluations drop no rows; those codes do not establish nonlinear-residual or temporal convergence]{.claim}[C-292](/Blog/tokamak-toolkit/claims.qmd#c-292){.cid .st-measured}). Their zero native linear-step error codes do not establish nonlinear-residual or temporal convergence. Every linearised standard-deviation check is flagged nonlinear ([all four outputs fail the fixed 10% standard-deviation cross-check; disagreements are 46.2%, 43.4%, 43.1% and 59.7% for fusion power, thermal energy, central electron temperature and central ion temperature]{.claim}[C-287](/Blog/tokamak-toolkit/claims.qmd#c-287){.cid .st-measured}), so Monte Carlo carries the historical uncertainty report. Hybrid conformal coverage passes the fixed pooled rule in both directions ([hybrid calibration covers 0.914/0.915/0.904 of the older hybrid test states; the reverse audit covers 0.887/0.869/0.900; all exceed the fixed 0.85 pooled bar]{.claim}[C-285](/Blog/tokamak-toolkit/claims.qmd#c-285){.cid .st-measured}); per-run coverage still varies. A separate conditional Bayesian reference-label calculation agrees with its exact posterior ([four Metropolis chains give transport-error factor mean -0.01978, standard deviation 0.01992 and split R-hat 1.00266; exact conditional moments are -0.02033 and 0.01984]{.claim}[C-288](/Blog/tokamak-toolkit/claims.qmd#c-288){.cid .st-measured}).
 
-Both independently audited finer ladders fail the unchanged temporal criterion ([maximum paired changes remain 19.2654% and 1.9773% across the two refinements, exceeding the fixed 1% limit; all 99 retained rows are finite with zero native linear-step error codes and no exclusions]{.claim}[C-295](/Blog/tokamak-toolkit/claims.qmd#c-295){.cid .st-preliminary}, [the additional finer ladder has maximum paired changes of 1.7092% and 1.8560%, above the unchanged 1% criterion; all 99 assessed rows remain valid and no supported replacement step is established]{.claim}[C-296](/Blog/tokamak-toolkit/claims.qmd#c-296){.cid .st-preliminary}). The next full ladder also fails after its first pair passes ([the first pair stays below 1%, but the finer pair changes fusion power by up to 4.1372% and fails three quantities; all 99 assessed rows remain valid, so no replacement step is supported]{.claim}[C-298](/Blog/tokamak-toolkit/claims.qmd#c-298){.cid .st-preliminary}), retaining the same cases, priors, members, physics and endpoint. No supported replacement step or final refined uncertainty study is established. Final propagation also requires a complete design that fits the remaining compute authority.
+The earlier hard-switch baseline failed both independently audited finer ladders under the unchanged temporal criterion ([maximum paired changes remain 19.2654% and 1.9773% across the two refinements, exceeding the fixed 1% limit; all 99 retained rows are finite with zero native linear-step error codes and no exclusions]{.claim}[C-295](/Blog/tokamak-toolkit/claims.qmd#c-295){.cid .st-preliminary}, [the additional finer ladder has maximum paired changes of 1.7092% and 1.8560%, above the unchanged 1% criterion; all 99 assessed rows remain valid and no supported replacement step is established]{.claim}[C-296](/Blog/tokamak-toolkit/claims.qmd#c-296){.cid .st-preliminary}). The next full ladder also fails after its first pair passes ([the first pair stays below 1%, but the finer pair changes fusion power by up to 4.1372% and fails three quantities; all 99 assessed rows remain valid, so no replacement step is supported]{.claim}[C-298](/Blog/tokamak-toolkit/claims.qmd#c-298){.cid .st-preliminary}), retaining the same cases, priors, members, physics and endpoint. No supported replacement step or final refined uncertainty study is established. Final propagation also requires a complete design that fits the remaining compute authority.
 
 The report attributes the available solver, transport and EC evidence, and states the unquantified pedestal and equilibrium discrepancy ([K-035](/Blog/tokamak-toolkit/ceilings.qmd#k-035)). The physical discrepancy terms cannot be added into a validated fusion-power error bar. Physicist sign-off remains the gate.
 
@@ -25,7 +36,7 @@ The next full independent ladder audit passes source, design, ancestry, raw/trac
 The bounded investigation closes scientifically unresolved after independent stopping review. Further refinement and a sixteen-worker scheduling path remain technically credible, but their complete cost is unmeasured. The stop preserves unused authority and every failed case; it does not claim exhausted compute or impossible convergence.
 
 
-## Completed numerical diagnostics
+## Earlier numerical diagnostics
 
 The three-case domain/balance observer identifies sustained fallback occupancy and
 late coefficient-lag residuals in the failing case ([the failing case rejects face seven on 24.766% of coarse and 82.539% of fine accepted states over (3,5] seconds; its median normalized global electron balance residual rises from 0.031813% to 0.962581%]{.claim}[C-299](/Blog/tokamak-toolkit/claims.qmd#c-299){.cid .st-measured}). A separately
@@ -36,6 +47,21 @@ branch term is substantial locally but cancels in the signed global residual
 attribute the endpoint power difference or support a remedy. See the
 [technical explanation](../technical/uncertainty.qmd#internal-branch-diagnostic).
 
-The prepared extra-iterate checkpoint protocol remains unimplemented and unsubmitted.
-Any numerical treatment must still pass the complete unchanged temporal comparison
-before a measured affordable full uncertainty/sensitivity design and physicist review.
+At that historical stage, the extra-iterate checkpoint protocol was prepared but
+unimplemented and unsubmitted. The later continuous baseline now passes the complete
+comparison; a new full uncertainty/sensitivity design and physicist review remain open.
+
+
+## Current numerical baseline
+
+The complete original case design now passes its declared five-second numerical
+protocol ([all 33 original cases reach five seconds at all three maximum-step settings: 99 of 99 valid trajectories and 264 of 264 passing endpoint comparisons]{.claim}[C-305](/Blog/tokamak-toolkit/claims.qmd#c-305){.cid .st-measured}). Both adjacent adaptive-cap comparisons pass for
+every case and every quantity ([the largest changes are 0.219% for coarse-to-middle and 0.0423% for middle-to-fine, both below the 1% acceptance limit]{.claim}[C-306](/Blog/tokamak-toolkit/claims.qmd#c-306){.cid .st-measured}), and all accepted steps pass
+the physical/native residual gates ([maximum accepted physical-channel L1 is 1.76 × 10^−9^ against a 10^−8^ gate, and native mean L1 is 1.01 × 10^−14^ against 10^−10^; no crash occurs]{.claim}[C-307](/Blog/tokamak-toolkit/claims.qmd#c-307){.cid .st-measured}). Rejected proposals and
+rollback checks are retained ([372,141 accepted proposals and 2,659 rejected proposals are retained in 23,100 raw chunks; rejected-step rollback and retry schedules pass reconstruction]{.claim}[C-308](/Blog/tokamak-toolkit/claims.qmd#c-308){.cid .st-measured}).
+
+This is a changed continuous transport closure, not a retrospective pass for the
+historical hard-switch equations. The original case design is preserved while
+the method is explicitly versioned. A subsequent uncertainty/sensitivity study
+must use this baseline deliberately; the prior report has not been silently
+recomputed. Smoothing-width robustness and physicist acceptance remain open.
