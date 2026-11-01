@@ -126,11 +126,12 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#numerical-methods" id="toc-numerical-methods" class="nav-link active" data-scroll-target="#numerical-methods">Numerical methods</a></li>
+  <li><a href="#continuous-baseline" id="toc-continuous-baseline" class="nav-link active" data-scroll-target="#continuous-baseline">Current continuous baseline: numerical convergence passed</a></li>
+  <li><a href="#numerical-methods" id="toc-numerical-methods" class="nav-link" data-scroll-target="#numerical-methods">Numerical methods</a></li>
   <li><a href="#iter-study" id="toc-iter-study" class="nav-link" data-scroll-target="#iter-study">ITER study</a></li>
   <li><a href="#pipeline-replay" id="toc-pipeline-replay" class="nav-link" data-scroll-target="#pipeline-replay">Reusable execution and independent replay</a></li>
-  <li><a href="#solver-diagnostic-scope" id="toc-solver-diagnostic-scope" class="nav-link" data-scroll-target="#solver-diagnostic-scope">Native solver diagnostics</a></li>
-  <li><a href="#paired-refinement" id="toc-paired-refinement" class="nav-link" data-scroll-target="#paired-refinement">Paired temporal refinement</a></li>
+  <li><a href="#solver-diagnostic-scope" id="toc-solver-diagnostic-scope" class="nav-link" data-scroll-target="#solver-diagnostic-scope">Historical native solver diagnostics</a></li>
+  <li><a href="#paired-refinement" id="toc-paired-refinement" class="nav-link" data-scroll-target="#paired-refinement">Historical paired temporal refinement</a></li>
   <li><a href="#domain-balance-diagnostic" id="toc-domain-balance-diagnostic" class="nav-link" data-scroll-target="#domain-balance-diagnostic">Domain and discrete-balance diagnosis</a></li>
   <li><a href="#internal-branch-diagnostic" id="toc-internal-branch-diagnostic" class="nav-link" data-scroll-target="#internal-branch-diagnostic">Internal branches and local residual decomposition</a></li>
   <li><a href="#changelog" id="toc-changelog" class="nav-link" data-scroll-target="#changelog">Changelog</a></li>
@@ -154,7 +155,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">October 28, 2026</p>
+      <p class="date-modified">November 1, 2026</p>
     </div>
   </div>
     
@@ -165,6 +166,11 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="continuous-baseline" class="level2">
+<h2 class="anchored" data-anchor-id="continuous-baseline">Current continuous baseline: numerical convergence passed</h2>
+<p><span class="claim">all 33 original cases reach five seconds at all three maximum-step settings: 99 of 99 valid trajectories and 264 of 264 passing endpoint comparisons</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-305" class="cid st-measured">C-305</a>. <span class="claim">the largest changes are 0.219% for coarse-to-middle and 0.0423% for middle-to-fine, both below the 1% acceptance limit</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-306" class="cid st-measured">C-306</a>. The successful research integration combines a changed continuous guarded closure, strict Newton acceptance and rejected-step rollback (<span class="claim">the new research baseline uses a continuous guarded closure, Newton trials accepted only after residual decrease, and adaptive rollback of the complete state and auxiliary data</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-304" class="cid st-measured">C-304</a>), with independently reconstructed physical residuals (<span class="claim">maximum accepted physical-channel L1 is 1.76 × 10<sup>−9</sup> against a 10<sup>−8</sup> gate, and native mean L1 is 1.01 × 10<sup>−14</sup> against 10<sup>−10</sup>; no crash occurs</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-307" class="cid st-measured">C-307</a>).</p>
+<p>The <a href="../../../Blog/tokamak-toolkit/technical/solver-learning.html#full-ensemble-convergence">complete technical protocol</a> explains the original case coverage, adaptive maximum-step comparisons and raw checks. The sections below retain the earlier uncertainty study and hard-switch ladder failures. Their arrays and conclusions are not rewritten. The new result supports the numerical baseline; a later uncertainty/sensitivity design must explicitly adopt it. Physical discrepancy and physicist sign-off remain open.</p>
+</section>
 <section id="numerical-methods" class="level2">
 <h2 class="anchored" data-anchor-id="numerical-methods">Numerical methods</h2>
 <p>An ordered typed input specification states independent marginal distributions and their units. A seeded scrambled Sobol sequence maps through inverse CDFs on the host. One transport member stays fixed throughout each trajectory. Sample order is shuffled before assigning members, avoiding aliasing between member indices and Sobol leading bits. Chunked vmap keeps memory bounded. Samples with nonfinite outputs or failed/coarse solver steps are retained in the raw record and explicitly excluded from valid statistics.</p>
@@ -183,12 +189,12 @@ ul.task-list li input[type="checkbox"] {
 <p>Future sensitivity records retain the sampled unit design, physical inputs, categorical members, model outputs and common finite-row mask. The first-order and total estimators can be reconstructed from these arrays without another trajectory run. This retention does not retroactively add raw sensitivity outputs to the earlier study; its original source-bound result and stated audit limits remain intact.</p>
 </section>
 <section id="solver-diagnostic-scope" class="level2">
-<h2 class="anchored" data-anchor-id="solver-diagnostic-scope">Native solver diagnostics</h2>
+<h2 class="anchored" data-anchor-id="solver-diagnostic-scope">Historical native solver diagnostics</h2>
 <p>The selected linear predictor-corrector advances a fixed number of corrections. Its native error code is assigned zero unconditionally, and its reported iteration count records that fixed work. Finite retained outputs and zero native error codes therefore do not establish a fine nonlinear residual (<span class="claim">all 256 retained Monte Carlo outputs are finite with zero native linear-step error codes, and 2048 sensitivity evaluations drop no rows; those codes do not establish nonlinear-residual or temporal convergence</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-292" class="cid st-measured">C-292</a>). Earlier draft wording was stronger than the recorded diagnostic. The native arrays remain unchanged; a source-bound audit identifies the actual scenario and installed solver implementation.</p>
 <p>Time-step refinement supplies a separate numerical check on the final quantities. It cannot retrospectively establish nonlinear-residual convergence, experimental validation, or an exact-solution error bound. Accepted-state guard decisions also remain distinct from decisions made inside the solver (<a href="../../../Blog/tokamak-toolkit/ceilings.html#k-014">K-014</a>).</p>
 </section>
 <section id="paired-refinement" class="level2">
-<h2 class="anchored" data-anchor-id="paired-refinement">Paired temporal refinement</h2>
+<h2 class="anchored" data-anchor-id="paired-refinement">Historical paired temporal refinement</h2>
 <p>The refined diagnostic retains the nominal ensemble-mean case and every frozen prior-design case, including every discrete member. Raw final quantities, physical times, accepted-state rejection masks and reasons, and native solver fields are retained at each step size. A separate audit reconstructs final quantities from traces, rejection summaries from masks, solver summaries from native fields and both adjacent endpoint comparisons. Historical overlap prevents instrumentation changes from silently altering the earlier control.</p>
 <p>Both comparisons fail the fixed temporal criterion (<span class="claim">maximum paired changes remain 19.2654% and 1.9773% across the two refinements, exceeding the fixed 1% limit; all 99 retained rows are finite with zero native linear-step error codes and no exclusions</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-295" class="cid st-preliminary">C-295</a>). No tested replacement step is established and the final propagation remains dependent on that gate. The largest first-pair difference coincides with changes in EC input-domain rejection and some transport decisions. The recorded pedestal decisions agree. Correlation at shared physical times does not establish cause, and these post-step observations do not expose internal predictor-corrector branches.</p>
 <p>Further refinement uses a distinct frozen request, independently audited parent arrays and only missing finer evaluations. Both adjacent comparisons must pass for every quantity and every case, retaining invalid or fallback-heavy rows. Finer sampling alone cannot resolve a failed temporal diagnostic. No physics, guard threshold, prior or acceptance tolerance changes to force a pass.</p>

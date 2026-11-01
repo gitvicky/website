@@ -185,6 +185,19 @@ window.Quarto = {
 
 <p>The bar for these pages: a competent reader should be able to re-implement any component from its section and expect to reproduce the published numbers to the stated tolerance. Where a section falls short of that, it says what is missing.</p>
 <p>Code excerpts are real, at most 15 lines, and labelled with their file and the commit they were copied from. The Python package is called <code>tkit</code>. Every number links to its row in the <a href="../../../Blog/tokamak-toolkit/claims.html">claims register</a>; deliberate shortcuts are listed under <a href="../../../Blog/tokamak-toolkit/ceilings.html">known ceilings</a>.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+New: full ensemble numerical convergence
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <a href="../../../Blog/tokamak-toolkit/technical/solver-learning.html#full-ensemble-convergence">strict physical-residual and continuous-closure protocol</a> now passes the complete ensemble (<span class="claim">all 33 original cases reach five seconds at all three maximum-step settings: 99 of 99 valid trajectories and 264 of 264 passing endpoint comparisons</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-305" class="cid st-measured">C-305</a>, <span class="claim">the largest changes are 0.219% for coarse-to-middle and 0.0423% for middle-to-fine, both below the 1% acceptance limit</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-306" class="cid st-measured">C-306</a>).</p>
+</div>
+</div>
 <section id="sections" class="level2">
 <h2 class="anchored" data-anchor-id="sections">Sections</h2>
 <p>In roughly the order you would build the system:</p>
@@ -203,6 +216,7 @@ window.Quarto = {
 <li><p><a href="../../../Blog/tokamak-toolkit/technical/surrogates.html">Surrogates</a>: the baseline ensembles, the recreated TGLF-NN network, output scaling, learning curves, active learning round 1, and the heat-flux sign (M3, in progress).</p></li>
 <li><p><a href="../../../Blog/tokamak-toolkit/technical/verification.html">Verification</a>: checked exports, property contracts and saved-run closed-loop comparison. Proof certificates and calibrated intervals are recorded with their limits; certification review remains pending.</p></li>
 <li><p><a href="../../../Blog/tokamak-toolkit/technical/uncertainty.html">Uncertainty propagation</a>: actual ITER prior propagation, linearisation cross-check, sensitivity and conditional reference-label calibration; physical validation limits.</p></li>
+<li><p><a href="../../../Blog/tokamak-toolkit/technical/solver-learning.html">Physical-residual solves and ensemble convergence</a>: strict Newton trials, continuous closure, full rollback, acceptance gates and the complete ensemble result.</p></li>
 </ol>
 </section>
 <section id="notation" class="level2">

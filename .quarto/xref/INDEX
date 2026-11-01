@@ -823,5 +823,14 @@
   },
   "mastu-uncertainty-browser/uncertainty.qmd": {
     "uncertainty.html": "07d724da"
+  },
+  "Blog/tokamak-toolkit/log/98-full-iter-ensemble-passes-convergence.qmd": {
+    "98-full-iter-ensemble-passes-convergence.html": "746092eb"
+  },
+  "Blog/tokamak-toolkit/log/97-strict-physical-residuals-and-continuous-transport.qmd": {
+    "97-strict-physical-residuals-and-continuous-transport.html": "a23a3fd1"
+  },
+  "Blog/tokamak-toolkit/technical/solver-learning.qmd": {
+    "solver-learning.html": "bfd83377"
   }
 }

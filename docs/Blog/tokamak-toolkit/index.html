@@ -206,10 +206,24 @@ window.Quarto = {
 </header>
 
 
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Full ITER ensemble convergence now passes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>The numerical convergence blocker is resolved for the current continuous baseline.</strong> <span class="claim">all 33 original cases reach five seconds at all three maximum-step settings: 99 of 99 valid trajectories and 264 of 264 passing endpoint comparisons</span><a href="../../Blog/tokamak-toolkit/claims.html#c-305" class="cid st-measured">C-305</a>. <span class="claim">the largest changes are 0.219% for coarse-to-middle and 0.0423% for middle-to-fine, both below the 1% acceptance limit</span><a href="../../Blog/tokamak-toolkit/claims.html#c-306" class="cid st-measured">C-306</a>.</p>
+<p><a href="../../Blog/tokamak-toolkit/log/98-full-iter-ensemble-passes-convergence.html">Read the full result</a> · <a href="../../Blog/tokamak-toolkit/log/97-strict-physical-residuals-and-continuous-transport.html">What changed in the solver and closure</a> · <a href="../../Blog/tokamak-toolkit/technical/solver-learning.html#full-ensemble-convergence">Reproduce the numerical argument</a>. The new pass belongs to the continuous closure; physicist sign-off remains pending.</p>
+</div>
+</div>
 <div class="tk-cols">
 <div class="tk-col">
 <p>Designing, controlling and assessing a fusion reactor means running plasma simulations thousands of times. The physics codes that are accurate enough take hours per run. Neural networks trained on those codes run in milliseconds, but a network returns an answer for any input, including inputs far outside its training data.</p>
-<p><strong>The Tokamak Toolkit</strong> is an integrated tokamak simulation in which any expensive physics module can be swapped for a neural surrogate, but only behind a <em>guard</em>. At every radius and every time step the surrogate has to show that it is inside the conditions it was trained on, that its ensemble agrees with itself, and that its answer is physically possible. Where it can’t, a trusted physics model takes over, and the handover is recorded. The whole simulation is written in JAX, so it compiles to one program and can be differentiated end to end, and it speaks IMAS, the fusion community’s standard data format, at every boundary.</p>
+<p><strong>The Tokamak Toolkit</strong> is an integrated tokamak simulation in which any expensive physics module can be swapped for a neural surrogate, but only behind a <em>guard</em>. At every radius and every time step the surrogate has to show that it is inside the conditions it was trained on, that its ensemble agrees with itself, and that its answer is physically possible. Where it can’t, a trusted physics model takes over, and the handover is recorded. The whole simulation is written in JAX and speaks IMAS, the fusion community’s standard data format, at every boundary. Fixed-step paths support differentiation; the new adaptive validation checks individual implicit-root derivatives but does not support reverse-mode differentiation through its retry decisions.</p>
 <p>The code is private for now. What is public is the argument: the method, the checks that define “correct”, every number with where it came from, and the mistakes. <a href="../../Blog/tokamak-toolkit/about.html">How this is built</a>: the code is written by AI coding agents, Claude and Codex, working to a brief by a human owner who makes every physics, licence and publication decision.</p>
 </div>
 <div class="tk-panel">
@@ -227,23 +241,23 @@ window.Quarto = {
 </tr>
 <tr class="even">
 <td>log entries</td>
-<td>84</td>
+<td>86</td>
 </tr>
 <tr class="odd">
 <td>tests passing</td>
-<td>1095 recorded full-mode results, 1095 with gated codes disabled</td>
+<td>1108 recorded full-mode results, 1108 with gated codes disabled</td>
 </tr>
 <tr class="even">
 <td>source</td>
-<td>24187 lines + 14356 lines of tests</td>
+<td>24560 lines + 14487 lines of tests</td>
 </tr>
 <tr class="odd">
 <td>baseline commit</td>
-<td><code>9c815cc</code>; continuation source retained with its evidence</td>
+<td><code>54ded90</code>; continuation source retained with its evidence</td>
 </tr>
 <tr class="even">
 <td>updated</td>
-<td>2026-10-28</td>
+<td>2026-11-01</td>
 </tr>
 </tbody>
 </table>
@@ -535,7 +549,7 @@ still open. Hover over a box for what it does.
 </div>
 <div class="tk-notes">
 <div class="tk-note" data-node="core">
-<p><strong>Core transport: TORAX.</strong> The open-source JAX transport code. On a radial grid in ρ it evolves the electron and ion temperatures, the electron density and the poloidal flux ψ (current diffusion), with an implicit solve every time step (Newton-Raphson, with Picard iteration as a fallback). The Tokamak Toolkit calls TORAX’s own single-step function from a fixed-step compiled loop, so a whole run is one program that can be differentiated end to end. Entries 1 to 3.</p>
+<p><strong>Core transport: TORAX.</strong> The open-source JAX transport code. On a radial grid in ρ it evolves the electron and ion temperatures, the electron density and the poloidal flux ψ (current diffusion), with an implicit solve every time step (Newton-Raphson, with Picard iteration as a fallback). The original fixed-step compiled loop supports end-to-end differentiation. The new opt-in adaptive validation uses strict Newton and rejected-step rollback; reverse-mode differentiation through its retry decisions is not supported. Entries 1 to 3 and 97 to 98.</p>
 </div>
 <div class="tk-note" data-node="eqdsk">
 <p><strong>Prescribed equilibrium.</strong> The CHEASE equilibrium of the ITER hybrid scenario, shipped with TORAX as an EQDSK file. TORAX builds its flux-surface geometry (volumes, areas, metric coefficients) from it. ASCOT5 takes its magnetic field from the same file, with the poloidal flux scaled to TORAX’s plasma current. JOREK uses the same separatrix boundary for its ITER stability reference cases: the EQDSK profiles in case (a), and profiles derived from a saved TORAX state in case (b).</p>
@@ -682,7 +696,7 @@ still open. Hover over a box for what it does.
 <td>M5</td>
 <td><a href="../../Blog/tokamak-toolkit/milestones/M5.html">Uncertainty and validation</a></td>
 <td>ITER prior propagation, sensitivity and reference-label calibration</td>
-<td><span class="wf crit">temporal convergence unresolved</span></td>
+<td><span class="wf done">full ensemble numerical convergence passed</span></td>
 <td><span class="wf todo">physicist sign-off pending</span></td>
 </tr>
 </tbody>
@@ -693,7 +707,7 @@ still open. Hover over a box for what it does.
 <h2 class="anchored" data-anchor-id="the-log">The log</h2>
 <details class="tk-log">
 <summary>
-Show all 84 entries, newest first
+Show all 86 entries, newest first
 </summary>
 <div id="listing-log" class="quarto-listing quarto-listing-container-table">
 <table class="quarto-listing-table table">
@@ -711,7 +725,29 @@ Categories
 </tr>
 </thead>
 <tbody class="list">
-<tr data-index="0" data-categories="built,measured" data-listing-date-sort="1792972800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="362" data-listing-title-sort="EC loop-state power and current pass the fixed GENRAY reference criterion" data-listing-filename-sort="84-ec-genray-reference-package.qmd">
+<tr data-index="0" data-categories="measured" data-listing-date-sort="1793491200000" data-listing-file-modified-sort="1793565770000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="464" data-listing-title-sort="Full ITER ensemble passes five-second convergence" data-listing-filename-sort="98-full-iter-ensemble-passes-convergence.qmd">
+<td>
+<span class="listing-date">1 Nov 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/98-full-iter-ensemble-passes-convergence.html" class="title listing-title">Full ITER ensemble passes five-second convergence</a>
+</td>
+<td>
+<span class="listing-categories">measured</span>
+</td>
+</tr>
+<tr data-index="1" data-categories="fixed,built" data-listing-date-sort="1793491200000" data-listing-file-modified-sort="1793565770000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="405" data-listing-title-sort="Strict physical residuals and continuous transport" data-listing-filename-sort="97-strict-physical-residuals-and-continuous-transport.qmd">
+<td>
+<span class="listing-date">1 Nov 2026</span>
+</td>
+<td>
+<a href="../../Blog/tokamak-toolkit/log/97-strict-physical-residuals-and-continuous-transport.html" class="title listing-title">Strict physical residuals and continuous transport</a>
+</td>
+<td>
+<span class="listing-categories">fixed, built</span>
+</td>
+</tr>
+<tr data-index="2" data-categories="built,measured" data-listing-date-sort="1792972800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="362" data-listing-title-sort="EC loop-state power and current pass the fixed GENRAY reference criterion" data-listing-filename-sort="84-ec-genray-reference-package.qmd">
 <td>
 <span class="listing-date">26 Oct 2026</span>
 </td>
@@ -722,7 +758,7 @@ Categories
 <span class="listing-categories">built, measured</span>
 </td>
 </tr>
-<tr data-index="1" data-categories="built,measured" data-listing-date-sort="1792972800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="438" data-listing-title-sort="Every EC local robustness box crosses the training boundary" data-listing-filename-sort="83-ec-local-robustness-boxes-leave-the-domain.qmd">
+<tr data-index="3" data-categories="built,measured" data-listing-date-sort="1792972800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="438" data-listing-title-sort="Every EC local robustness box crosses the training boundary" data-listing-filename-sort="83-ec-local-robustness-boxes-leave-the-domain.qmd">
 <td>
 <span class="listing-date">26 Oct 2026</span>
 </td>
@@ -733,7 +769,7 @@ Categories
 <span class="listing-categories">built, measured</span>
 </td>
 </tr>
-<tr data-index="2" data-categories="built,measured" data-listing-date-sort="1792972800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="331" data-listing-title-sort="Optimized ELU bounds narrow the intervals; physical limits remain unresolved" data-listing-filename-sort="82-optimized-elu-bounds-still-overflow.qmd">
+<tr data-index="4" data-categories="built,measured" data-listing-date-sort="1792972800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="331" data-listing-title-sort="Optimized ELU bounds narrow the intervals; physical limits remain unresolved" data-listing-filename-sort="82-optimized-elu-bounds-still-overflow.qmd">
 <td>
 <span class="listing-date">26 Oct 2026</span>
 </td>
@@ -744,7 +780,7 @@ Categories
 <span class="listing-categories">built, measured</span>
 </td>
 </tr>
-<tr data-index="3" data-categories="decision,measured" data-listing-date-sort="1792972800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="562" data-listing-title-sort="Grid check of the case (b) pedestal modes: set-up and cost" data-listing-filename-sort="81-grid-check-of-the-case-b-pedestal-modes-set-up-and-cost.qmd">
+<tr data-index="5" data-categories="decision,measured" data-listing-date-sort="1792972800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="562" data-listing-title-sort="Grid check of the case (b) pedestal modes: set-up and cost" data-listing-filename-sort="81-grid-check-of-the-case-b-pedestal-modes-set-up-and-cost.qmd">
 <td>
 <span class="listing-date">26 Oct 2026</span>
 </td>
@@ -755,7 +791,7 @@ Categories
 <span class="listing-categories">decision, measured</span>
 </td>
 </tr>
-<tr data-index="4" data-categories="built,measured" data-listing-date-sort="1792972800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="328" data-listing-title-sort="Direct ELU bounds do not resolve the transport proof" data-listing-filename-sort="80-direct-elu-proof-pilot-remains-unresolved.qmd">
+<tr data-index="6" data-categories="built,measured" data-listing-date-sort="1792972800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="328" data-listing-title-sort="Direct ELU bounds do not resolve the transport proof" data-listing-filename-sort="80-direct-elu-proof-pilot-remains-unresolved.qmd">
 <td>
 <span class="listing-date">26 Oct 2026</span>
 </td>
@@ -766,7 +802,7 @@ Categories
 <span class="listing-categories">built, measured</span>
 </td>
 </tr>
-<tr data-index="5" data-categories="built,measured" data-listing-date-sort="1792972800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="396" data-listing-title-sort="Optimized transport bounds remain too wide for physical limits" data-listing-filename-sort="79-optimized-transport-bounds-remain-unresolved.qmd">
+<tr data-index="7" data-categories="built,measured" data-listing-date-sort="1792972800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="396" data-listing-title-sort="Optimized transport bounds remain too wide for physical limits" data-listing-filename-sort="79-optimized-transport-bounds-remain-unresolved.qmd">
 <td>
 <span class="listing-date">26 Oct 2026</span>
 </td>
@@ -777,7 +813,7 @@ Categories
 <span class="listing-categories">built, measured</span>
 </td>
 </tr>
-<tr data-index="6" data-categories="built,measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="376" data-listing-title-sort="EC and pedestal output bounds; transport limits remain unresolved" data-listing-filename-sort="78-output-bounds-and-unresolved-transport-limits.qmd">
+<tr data-index="8" data-categories="built,measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="376" data-listing-title-sort="EC and pedestal output bounds; transport limits remain unresolved" data-listing-filename-sort="78-output-bounds-and-unresolved-transport-limits.qmd">
 <td>
 <span class="listing-date">25 Oct 2026</span>
 </td>
@@ -788,7 +824,7 @@ Categories
 <span class="listing-categories">built, measured</span>
 </td>
 </tr>
-<tr data-index="7" data-categories="measured,decision" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="458" data-listing-title-sort="Transport intervals calibrated on the states the coupled runs visit" data-listing-filename-sort="77-conformal-intervals-on-loop-states.qmd">
+<tr data-index="9" data-categories="measured,decision" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="458" data-listing-title-sort="Transport intervals calibrated on the states the coupled runs visit" data-listing-filename-sort="77-conformal-intervals-on-loop-states.qmd">
 <td>
 <span class="listing-date">25 Oct 2026</span>
 </td>
@@ -799,7 +835,7 @@ Categories
 <span class="listing-categories">measured, decision</span>
 </td>
 </tr>
-<tr data-index="8" data-categories="built,measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="560" data-listing-title-sort="Conformal intervals for the transport and EC surrogates" data-listing-filename-sort="76-conformal-intervals-for-the-surrogates.qmd">
+<tr data-index="10" data-categories="built,measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="560" data-listing-title-sort="Conformal intervals for the transport and EC surrogates" data-listing-filename-sort="76-conformal-intervals-for-the-surrogates.qmd">
 <td>
 <span class="listing-date">25 Oct 2026</span>
 </td>
@@ -810,7 +846,7 @@ Categories
 <span class="listing-categories">built, measured</span>
 </td>
 </tr>
-<tr data-index="9" data-categories="measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="523" data-listing-title-sort="Time-step check of the case (b) pedestal growth rates" data-listing-filename-sort="75-time-step-check-of-the-case-b-pedestal-modes.qmd">
+<tr data-index="11" data-categories="measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="523" data-listing-title-sort="Time-step check of the case (b) pedestal growth rates" data-listing-filename-sort="75-time-step-check-of-the-case-b-pedestal-modes.qmd">
 <td>
 <span class="listing-date">25 Oct 2026</span>
 </td>
@@ -821,7 +857,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="10" data-categories="built,measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="254" data-listing-title-sort="Both transport ensembles pass the monotonicity proof" data-listing-filename-sort="74-transport-monotonicity-proofs.qmd">
+<tr data-index="12" data-categories="built,measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="254" data-listing-title-sort="Both transport ensembles pass the monotonicity proof" data-listing-filename-sort="74-transport-monotonicity-proofs.qmd">
 <td>
 <span class="listing-date">25 Oct 2026</span>
 </td>
@@ -832,7 +868,7 @@ Categories
 <span class="listing-categories">built, measured</span>
 </td>
 </tr>
-<tr data-index="11" data-categories="measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="644" data-listing-title-sort="Linear JOREK n-scan of the TORAX ITER hybrid state: three pedestal modes grow" data-listing-filename-sort="73-case-b-n-scan-three-pedestal-modes.qmd">
+<tr data-index="13" data-categories="measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="644" data-listing-title-sort="Linear JOREK n-scan of the TORAX ITER hybrid state: three pedestal modes grow" data-listing-filename-sort="73-case-b-n-scan-three-pedestal-modes.qmd">
 <td>
 <span class="listing-date">25 Oct 2026</span>
 </td>
@@ -843,7 +879,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="12" data-categories="measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="586" data-listing-title-sort="Linear JOREK n-scan of the TORAX ITER hybrid state: first job" data-listing-filename-sort="72-case-b-n-scan-first-job.qmd">
+<tr data-index="14" data-categories="measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="586" data-listing-title-sort="Linear JOREK n-scan of the TORAX ITER hybrid state: first job" data-listing-filename-sort="72-case-b-n-scan-first-job.qmd">
 <td>
 <span class="listing-date">25 Oct 2026</span>
 </td>
@@ -854,7 +890,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="13" data-categories="decision,measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="633" data-listing-title-sort="JOREK equilibrium for the TORAX ITER hybrid state" data-listing-filename-sort="71-case-b-equilibrium-from-the-torax-state.qmd">
+<tr data-index="15" data-categories="decision,measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="633" data-listing-title-sort="JOREK equilibrium for the TORAX ITER hybrid state" data-listing-filename-sort="71-case-b-equilibrium-from-the-torax-state.qmd">
 <td>
 <span class="listing-date">25 Oct 2026</span>
 </td>
@@ -865,7 +901,7 @@ Categories
 <span class="listing-categories">decision, measured</span>
 </td>
 </tr>
-<tr data-index="14" data-categories="decision,measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="568" data-listing-title-sort="Owner limits the MAST-U certification scope" data-listing-filename-sort="70-owner-limits-the-mastu-certification-scope.qmd">
+<tr data-index="16" data-categories="decision,measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="568" data-listing-title-sort="Owner limits the MAST-U certification scope" data-listing-filename-sort="70-owner-limits-the-mastu-certification-scope.qmd">
 <td>
 <span class="listing-date">25 Oct 2026</span>
 </td>
@@ -876,7 +912,7 @@ Categories
 <span class="listing-categories">decision, measured</span>
 </td>
 </tr>
-<tr data-index="15" data-categories="measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="661" data-listing-title-sort="Time-step check of the JOREK growth rates; the grid check did not run" data-listing-filename-sort="69-time-step-check-of-the-growth-rates.qmd">
+<tr data-index="17" data-categories="measured" data-listing-date-sort="1792882800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="661" data-listing-title-sort="Time-step check of the JOREK growth rates; the grid check did not run" data-listing-filename-sort="69-time-step-check-of-the-growth-rates.qmd">
 <td>
 <span class="listing-date">25 Oct 2026</span>
 </td>
@@ -887,7 +923,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="16" data-categories="measured,fixed" data-listing-date-sort="1792796400000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="716" data-listing-title-sort="Linear JOREK n-scan of the ITER hybrid EQDSK case" data-listing-filename-sort="68-linear-n-scan-of-the-eqdsk-case.qmd">
+<tr data-index="18" data-categories="measured,fixed" data-listing-date-sort="1792796400000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="716" data-listing-title-sort="Linear JOREK n-scan of the ITER hybrid EQDSK case" data-listing-filename-sort="68-linear-n-scan-of-the-eqdsk-case.qmd">
 <td>
 <span class="listing-date">24 Oct 2026</span>
 </td>
@@ -898,7 +934,7 @@ Categories
 <span class="listing-categories">measured, fixed</span>
 </td>
 </tr>
-<tr data-index="17" data-categories="fixed,measured" data-listing-date-sort="1792105200000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="608" data-listing-title-sort="ITER hybrid equilibrium in JOREK on the EQDSK separatrix" data-listing-filename-sort="67-iter-equilibrium-on-the-eqdsk-separatrix.qmd">
+<tr data-index="19" data-categories="fixed,measured" data-listing-date-sort="1792105200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="608" data-listing-title-sort="ITER hybrid equilibrium in JOREK on the EQDSK separatrix" data-listing-filename-sort="67-iter-equilibrium-on-the-eqdsk-separatrix.qmd">
 <td>
 <span class="listing-date">16 Oct 2026</span>
 </td>
@@ -909,7 +945,7 @@ Categories
 <span class="listing-categories">fixed, measured</span>
 </td>
 </tr>
-<tr data-index="18" data-categories="fixed,measured" data-listing-date-sort="1792796400000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="243" data-listing-title-sort="The projected reference stopped at its heat-flux limit" data-listing-filename-sort="66-projected-reference-stop-evidence.qmd">
+<tr data-index="20" data-categories="fixed,measured" data-listing-date-sort="1792796400000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="243" data-listing-title-sort="The projected reference stopped at its heat-flux limit" data-listing-filename-sort="66-projected-reference-stop-evidence.qmd">
 <td>
 <span class="listing-date">24 Oct 2026</span>
 </td>
@@ -920,7 +956,7 @@ Categories
 <span class="listing-categories">fixed, measured</span>
 </td>
 </tr>
-<tr data-index="19" data-categories="measured" data-listing-date-sort="1792105200000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="429" data-listing-title-sort="ITER hybrid equilibrium solved by JOREK from the TORAX EQDSK" data-listing-filename-sort="65-iter-hybrid-equilibrium-in-jorek.qmd">
+<tr data-index="21" data-categories="measured" data-listing-date-sort="1792105200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="429" data-listing-title-sort="ITER hybrid equilibrium solved by JOREK from the TORAX EQDSK" data-listing-filename-sort="65-iter-hybrid-equilibrium-in-jorek.qmd">
 <td>
 <span class="listing-date">16 Oct 2026</span>
 </td>
@@ -931,7 +967,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="20" data-categories="built" data-listing-date-sort="1792105200000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="509" data-listing-title-sort="JOREK input adapter, output reader and run wrapper" data-listing-filename-sort="64-jorek-adapter-and-runner.qmd">
+<tr data-index="22" data-categories="built" data-listing-date-sort="1792105200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="509" data-listing-title-sort="JOREK input adapter, output reader and run wrapper" data-listing-filename-sort="64-jorek-adapter-and-runner.qmd">
 <td>
 <span class="listing-date">16 Oct 2026</span>
 </td>
@@ -942,7 +978,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="21" data-categories="decision,built" data-listing-date-sort="1792105200000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="487" data-listing-title-sort="JOREK integration: scope, build and regression checks" data-listing-filename-sort="63-jorek-integration-scoped-and-built.qmd">
+<tr data-index="23" data-categories="decision,built" data-listing-date-sort="1792105200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="487" data-listing-title-sort="JOREK integration: scope, build and regression checks" data-listing-filename-sort="63-jorek-integration-scoped-and-built.qmd">
 <td>
 <span class="listing-date">16 Oct 2026</span>
 </td>
@@ -953,7 +989,7 @@ Categories
 <span class="listing-categories">decision, built</span>
 </td>
 </tr>
-<tr data-index="22" data-categories="measured" data-listing-date-sort="1792105200000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="256" data-listing-title-sort="The width-search range controls the reference flux" data-listing-filename-sort="62-width-search-range-controls-the-flux.qmd">
+<tr data-index="24" data-categories="measured" data-listing-date-sort="1792105200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="256" data-listing-title-sort="The width-search range controls the reference flux" data-listing-filename-sort="62-width-search-range-controls-the-flux.qmd">
 <td>
 <span class="listing-date">16 Oct 2026</span>
 </td>
@@ -964,7 +1000,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="23" data-categories="measured" data-listing-date-sort="1792105200000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="277" data-listing-title-sort="Both basis roles change the reference flux" data-listing-filename-sort="61-both-basis-roles-change-the-flux.qmd">
+<tr data-index="25" data-categories="measured" data-listing-date-sort="1792105200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="277" data-listing-title-sort="Both basis roles change the reference flux" data-listing-filename-sort="61-both-basis-roles-change-the-flux.qmd">
 <td>
 <span class="listing-date">16 Oct 2026</span>
 </td>
@@ -975,7 +1011,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="24" data-categories="built,hardened" data-listing-date-sort="1792018800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="189" data-listing-title-sort="Separating width-search and final-basis effects" data-listing-filename-sort="60-reference-basis-effects-separated.qmd">
+<tr data-index="26" data-categories="built,hardened" data-listing-date-sort="1792018800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="189" data-listing-title-sort="Separating width-search and final-basis effects" data-listing-filename-sort="60-reference-basis-effects-separated.qmd">
 <td>
 <span class="listing-date">15 Oct 2026</span>
 </td>
@@ -986,7 +1022,7 @@ Categories
 <span class="listing-categories">built, hardened</span>
 </td>
 </tr>
-<tr data-index="25" data-categories="measured,negative" data-listing-date-sort="1792018800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="273" data-listing-title-sort="Reference refinement changes the heat-flux sign" data-listing-filename-sort="59-reference-refinement-remains-unconverged.qmd">
+<tr data-index="27" data-categories="measured,negative" data-listing-date-sort="1792018800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="273" data-listing-title-sort="Reference refinement changes the heat-flux sign" data-listing-filename-sort="59-reference-refinement-remains-unconverged.qmd">
 <td>
 <span class="listing-date">15 Oct 2026</span>
 </td>
@@ -997,7 +1033,7 @@ Categories
 <span class="listing-categories">measured, negative</span>
 </td>
 </tr>
-<tr data-index="26" data-categories="built,fixed" data-listing-date-sort="1792018800000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="276" data-listing-title-sort="Preparing a bounded reference convergence study" data-listing-filename-sort="58-reference-convergence-preparation.qmd">
+<tr data-index="28" data-categories="built,fixed" data-listing-date-sort="1792018800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="276" data-listing-title-sort="Preparing a bounded reference convergence study" data-listing-filename-sort="58-reference-convergence-preparation.qmd">
 <td>
 <span class="listing-date">15 Oct 2026</span>
 </td>
@@ -1008,7 +1044,7 @@ Categories
 <span class="listing-categories">built, fixed</span>
 </td>
 </tr>
-<tr data-index="27" data-categories="measured" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="256" data-listing-title-sort="Both reference backends reproduce their own outputs" data-listing-filename-sort="57-reference-backends-repeat-exactly.qmd">
+<tr data-index="29" data-categories="measured" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="256" data-listing-title-sort="Both reference backends reproduce their own outputs" data-listing-filename-sort="57-reference-backends-repeat-exactly.qmd">
 <td>
 <span class="listing-date">11 Oct 2026</span>
 </td>
@@ -1019,7 +1055,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="28" data-categories="measured" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="342" data-listing-title-sort="The reference must preserve signed energy transport" data-listing-filename-sort="56-signed-reference-literature-review.qmd">
+<tr data-index="30" data-categories="measured" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="342" data-listing-title-sort="The reference must preserve signed energy transport" data-listing-filename-sort="56-signed-reference-literature-review.qmd">
 <td>
 <span class="listing-date">11 Oct 2026</span>
 </td>
@@ -1030,7 +1066,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="29" data-categories="fixed" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="275" data-listing-title-sort="The diagnostic reports only status fields the wrapper exposes" data-listing-filename-sort="55-mastu-diagnostic-wrapper-status-fix.qmd">
+<tr data-index="31" data-categories="fixed" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="275" data-listing-title-sort="The diagnostic reports only status fields the wrapper exposes" data-listing-filename-sort="55-mastu-diagnostic-wrapper-status-fix.qmd">
 <td>
 <span class="listing-date">11 Oct 2026</span>
 </td>
@@ -1041,7 +1077,7 @@ Categories
 <span class="listing-categories">fixed</span>
 </td>
 </tr>
-<tr data-index="30" data-categories="built" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="322" data-listing-title-sort="A full-precision signed-heat diagnostic route is prepared" data-listing-filename-sort="54-mastu-direct-heat-diagnostic-preparation.qmd">
+<tr data-index="32" data-categories="built" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="322" data-listing-title-sort="A full-precision signed-heat diagnostic route is prepared" data-listing-filename-sort="54-mastu-direct-heat-diagnostic-preparation.qmd">
 <td>
 <span class="listing-date">11 Oct 2026</span>
 </td>
@@ -1052,7 +1088,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="31" data-categories="decision" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="286" data-listing-title-sort="Owner retains the transport contract and selects MIT" data-listing-filename-sort="53-owner-retains-transport-contract-and-selects-mit.qmd">
+<tr data-index="33" data-categories="decision" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="286" data-listing-title-sort="Owner retains the transport contract and selects MIT" data-listing-filename-sort="53-owner-retains-transport-contract-and-selects-mit.qmd">
 <td>
 <span class="listing-date">11 Oct 2026</span>
 </td>
@@ -1063,7 +1099,7 @@ Categories
 <span class="listing-categories">decision</span>
 </td>
 </tr>
-<tr data-index="32" data-categories="measured,negative" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="339" data-listing-title-sort="Saved heat transport implies inward flux at the rejected MAST-U face" data-listing-filename-sort="52-mastu-signed-heat-conversion-review.qmd">
+<tr data-index="34" data-categories="measured,negative" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="339" data-listing-title-sort="Saved heat transport implies inward flux at the rejected MAST-U face" data-listing-filename-sort="52-mastu-signed-heat-conversion-review.qmd">
 <td>
 <span class="listing-date">11 Oct 2026</span>
 </td>
@@ -1074,7 +1110,7 @@ Categories
 <span class="listing-categories">measured, negative</span>
 </td>
 </tr>
-<tr data-index="33" data-categories="measured,negative" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="339" data-listing-title-sort="Negative heat diffusivity leaves the MAST-U reference inadmissible" data-listing-filename-sort="51-mastu-reference-negative-heat-diffusivity.qmd">
+<tr data-index="35" data-categories="measured,negative" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="339" data-listing-title-sort="Negative heat diffusivity leaves the MAST-U reference inadmissible" data-listing-filename-sort="51-mastu-reference-negative-heat-diffusivity.qmd">
 <td>
 <span class="listing-date">11 Oct 2026</span>
 </td>
@@ -1085,7 +1121,7 @@ Categories
 <span class="listing-categories">measured, negative</span>
 </td>
 </tr>
-<tr data-index="34" data-categories="built" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="287" data-listing-title-sort="The MAST-U reference diagnostic is prepared for review" data-listing-filename-sort="50-mastu-reference-diagnostic-preparation.qmd">
+<tr data-index="36" data-categories="built" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="287" data-listing-title-sort="The MAST-U reference diagnostic is prepared for review" data-listing-filename-sort="50-mastu-reference-diagnostic-preparation.qmd">
 <td>
 <span class="listing-date">11 Oct 2026</span>
 </td>
@@ -1096,7 +1132,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="35" data-categories="measured" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="354" data-listing-title-sort="The MAST-U candidate replay fails reference coverage" data-listing-filename-sort="49-mastu-replay-reference-coverage-fails.qmd">
+<tr data-index="37" data-categories="measured" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="354" data-listing-title-sort="The MAST-U candidate replay fails reference coverage" data-listing-filename-sort="49-mastu-replay-reference-coverage-fails.qmd">
 <td>
 <span class="listing-date">11 Oct 2026</span>
 </td>
@@ -1107,7 +1143,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="36" data-categories="built" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="339" data-listing-title-sort="The MAST-U candidate replay preserves masks and guard accounting" data-listing-filename-sort="48-mastu-candidate-replay-preparation.qmd">
+<tr data-index="38" data-categories="built" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="339" data-listing-title-sort="The MAST-U candidate replay preserves masks and guard accounting" data-listing-filename-sort="48-mastu-candidate-replay-preparation.qmd">
 <td>
 <span class="listing-date">11 Oct 2026</span>
 </td>
@@ -1118,7 +1154,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="37" data-categories="built,measured" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793227844000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="338" data-listing-title-sort="The approved MAST-U candidate is trained and checked offline" data-listing-filename-sort="47-mastu-candidate-trained-and-checked.qmd">
+<tr data-index="39" data-categories="built,measured" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="338" data-listing-title-sort="The approved MAST-U candidate is trained and checked offline" data-listing-filename-sort="47-mastu-candidate-trained-and-checked.qmd">
 <td>
 <span class="listing-date">11 Oct 2026</span>
 </td>
@@ -1129,7 +1165,7 @@ Categories
 <span class="listing-categories">built, measured</span>
 </td>
 </tr>
-<tr data-index="38" data-categories="built" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="246" data-listing-title-sort="MAST-U retraining preparation preserves the existing holdouts" data-listing-filename-sort="46-mastu-retraining-preparation.qmd">
+<tr data-index="40" data-categories="built" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="246" data-listing-title-sort="MAST-U retraining preparation preserves the existing holdouts" data-listing-filename-sort="46-mastu-retraining-preparation.qmd">
 <td>
 <span class="listing-date">11 Oct 2026</span>
 </td>
@@ -1140,7 +1176,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="39" data-categories="measured" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="255" data-listing-title-sort="The approved MAST-U artifact upload matches downloaded checksums" data-listing-filename-sort="45-mastu-artifact-upload-verified.qmd">
+<tr data-index="41" data-categories="measured" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="255" data-listing-title-sort="The approved MAST-U artifact upload matches downloaded checksums" data-listing-filename-sort="45-mastu-artifact-upload-verified.qmd">
 <td>
 <span class="listing-date">11 Oct 2026</span>
 </td>
@@ -1151,7 +1187,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="40" data-categories="measured,hardened" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="237" data-listing-title-sort="MAST-U feedback label collection passes local artifact checks" data-listing-filename-sort="44-mastu-refresh-artifact-checks.qmd">
+<tr data-index="42" data-categories="measured,hardened" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="237" data-listing-title-sort="MAST-U feedback label collection passes local artifact checks" data-listing-filename-sort="44-mastu-refresh-artifact-checks.qmd">
 <td>
 <span class="listing-date">11 Oct 2026</span>
 </td>
@@ -1162,7 +1198,7 @@ Categories
 <span class="listing-categories">measured, hardened</span>
 </td>
 </tr>
-<tr data-index="41" data-categories="measured,negative" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="385" data-listing-title-sort="MAST-U remediation starts with matched fluxes and guard history" data-listing-filename-sort="43-mastu-feedback-diagnosis.qmd">
+<tr data-index="43" data-categories="measured,negative" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="385" data-listing-title-sort="MAST-U remediation starts with matched fluxes and guard history" data-listing-filename-sort="43-mastu-feedback-diagnosis.qmd">
 <td>
 <span class="listing-date">11 Oct 2026</span>
 </td>
@@ -1173,7 +1209,7 @@ Categories
 <span class="listing-categories">measured, negative</span>
 </td>
 </tr>
-<tr data-index="42" data-categories="measured,decision,negative" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="466" data-listing-title-sort="Verification begins: ITER passes the transport check; MAST-U misses it" data-listing-filename-sort="42-m4-properties-and-transport-check.qmd">
+<tr data-index="44" data-categories="measured,decision,negative" data-listing-date-sort="1791673200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="466" data-listing-title-sort="Verification begins: ITER passes the transport check; MAST-U misses it" data-listing-filename-sort="42-m4-properties-and-transport-check.qmd">
 <td>
 <span class="listing-date">11 Oct 2026</span>
 </td>
@@ -1184,7 +1220,7 @@ Categories
 <span class="listing-categories">measured, decision, negative</span>
 </td>
 </tr>
-<tr data-index="43" data-categories="measured,decision" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="544" data-listing-title-sort="M3 closed: surrogates for transport, EC heating and the ITER pedestal" data-listing-filename-sort="41-m3-closed.qmd">
+<tr data-index="45" data-categories="measured,decision" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="544" data-listing-title-sort="M3 closed: surrogates for transport, EC heating and the ITER pedestal" data-listing-filename-sort="41-m3-closed.qmd">
 <td>
 <span class="listing-date">10 Oct 2026</span>
 </td>
@@ -1195,7 +1231,7 @@ Categories
 <span class="listing-categories">measured, decision</span>
 </td>
 </tr>
-<tr data-index="44" data-categories="measured,negative" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="454" data-listing-title-sort="The MAST-U transport surrogate in the loop, and the M3 acceptance audit" data-listing-filename-sort="40-mastu-loop-and-m3-audit.qmd">
+<tr data-index="46" data-categories="measured,negative" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="454" data-listing-title-sort="The MAST-U transport surrogate in the loop, and the M3 acceptance audit" data-listing-filename-sort="40-mastu-loop-and-m3-audit.qmd">
 <td>
 <span class="listing-date">10 Oct 2026</span>
 </td>
@@ -1206,7 +1242,7 @@ Categories
 <span class="listing-categories">measured, negative</span>
 </td>
 </tr>
-<tr data-index="45" data-categories="built" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="562" data-listing-title-sort="The EC and ITER pedestal surrogates inside TORAX" data-listing-filename-sort="39-ec-and-pedestal-surrogates-in-torax.qmd">
+<tr data-index="47" data-categories="built" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="562" data-listing-title-sort="The EC and ITER pedestal surrogates inside TORAX" data-listing-filename-sort="39-ec-and-pedestal-surrogates-in-torax.qmd">
 <td>
 <span class="listing-date">10 Oct 2026</span>
 </td>
@@ -1217,7 +1253,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="46" data-categories="decision,built" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="558" data-listing-title-sort="A structured EC surrogate meets the held-out accuracy targets" data-listing-filename-sort="38-structured-ec-surrogate.qmd">
+<tr data-index="48" data-categories="decision,built" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="558" data-listing-title-sort="A structured EC surrogate meets the held-out accuracy targets" data-listing-filename-sort="38-structured-ec-surrogate.qmd">
 <td>
 <span class="listing-date">10 Oct 2026</span>
 </td>
@@ -1228,7 +1264,7 @@ Categories
 <span class="listing-categories">decision, built</span>
 </td>
 </tr>
-<tr data-index="47" data-categories="measured" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="543" data-listing-title-sort="EC reference dataset v1 on ITER states, and a first held-out baseline" data-listing-filename-sort="37-ec-dataset-v1-and-baseline.qmd">
+<tr data-index="49" data-categories="measured" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="543" data-listing-title-sort="EC reference dataset v1 on ITER states, and a first held-out baseline" data-listing-filename-sort="37-ec-dataset-v1-and-baseline.qmd">
 <td>
 <span class="listing-date">10 Oct 2026</span>
 </td>
@@ -1239,7 +1275,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="48" data-categories="decision,built" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="518" data-listing-title-sort="Conventions for the EC reference labels and the ITER pedestal boundary" data-listing-filename-sort="36-ec-and-pedestal-contracts.qmd">
+<tr data-index="50" data-categories="decision,built" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="518" data-listing-title-sort="Conventions for the EC reference labels and the ITER pedestal boundary" data-listing-filename-sort="36-ec-and-pedestal-contracts.qmd">
 <td>
 <span class="listing-date">10 Oct 2026</span>
 </td>
@@ -1250,7 +1286,7 @@ Categories
 <span class="listing-categories">decision, built</span>
 </td>
 </tr>
-<tr data-index="49" data-categories="measured" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="506" data-listing-title-sort="Matched comparison of TGLF, the final v3 surrogate and QLKNN inside TORAX" data-listing-filename-sort="35-matched-comparison-tglf-v3-qlknn.qmd">
+<tr data-index="51" data-categories="measured" data-listing-date-sort="1791586800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="506" data-listing-title-sort="Matched comparison of TGLF, the final v3 surrogate and QLKNN inside TORAX" data-listing-filename-sort="35-matched-comparison-tglf-v3-qlknn.qmd">
 <td>
 <span class="listing-date">10 Oct 2026</span>
 </td>
@@ -1261,7 +1297,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="50" data-categories="measured" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="436" data-listing-title-sort="The corrected EC reference produces native heating and current profiles" data-listing-filename-sort="34-genray-corrected-numerical-pilot.qmd">
+<tr data-index="52" data-categories="measured" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="436" data-listing-title-sort="The corrected EC reference produces native heating and current profiles" data-listing-filename-sort="34-genray-corrected-numerical-pilot.qmd">
 <td>
 <span class="listing-date">8 Oct 2026</span>
 </td>
@@ -1272,7 +1308,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="51" data-categories="negative" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="287" data-listing-title-sort="The first EC reference run stops at its plotting device" data-listing-filename-sort="33-genray-first-run-plotting-failure.qmd">
+<tr data-index="53" data-categories="negative" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="287" data-listing-title-sort="The first EC reference run stops at its plotting device" data-listing-filename-sort="33-genray-first-run-plotting-failure.qmd">
 <td>
 <span class="listing-date">8 Oct 2026</span>
 </td>
@@ -1283,7 +1319,7 @@ Categories
 <span class="listing-categories">negative</span>
 </td>
 </tr>
-<tr data-index="52" data-categories="built" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="318" data-listing-title-sort="Building the EC reference and preparing its first pilot" data-listing-filename-sort="32-genray-build-and-pilot-request.qmd">
+<tr data-index="54" data-categories="built" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="318" data-listing-title-sort="Building the EC reference and preparing its first pilot" data-listing-filename-sort="32-genray-build-and-pilot-request.qmd">
 <td>
 <span class="listing-date">8 Oct 2026</span>
 </td>
@@ -1294,7 +1330,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="53" data-categories="built" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="341" data-listing-title-sort="Checking a saved EC reference and retaining pilot failures" data-listing-filename-sort="31-genray-saved-reference-pilot.qmd">
+<tr data-index="55" data-categories="built" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="341" data-listing-title-sort="Checking a saved EC reference and retaining pilot failures" data-listing-filename-sort="31-genray-saved-reference-pilot.qmd">
 <td>
 <span class="listing-date">8 Oct 2026</span>
 </td>
@@ -1305,7 +1341,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="54" data-categories="built" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="273" data-listing-title-sort="Reading EC heating and current without losing their conventions" data-listing-filename-sort="30-genray-output-reader.qmd">
+<tr data-index="56" data-categories="built" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="273" data-listing-title-sort="Reading EC heating and current without losing their conventions" data-listing-filename-sort="30-genray-output-reader.qmd">
 <td>
 <span class="listing-date">8 Oct 2026</span>
 </td>
@@ -1316,7 +1352,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="55" data-categories="built" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="318" data-listing-title-sort="Porting the selected ITER pedestal model to JAX" data-listing-filename-sort="29-iter-pedestal-jax-port.qmd">
+<tr data-index="57" data-categories="built" data-listing-date-sort="1791414000000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="318" data-listing-title-sort="Porting the selected ITER pedestal model to JAX" data-listing-filename-sort="29-iter-pedestal-jax-port.qmd">
 <td>
 <span class="listing-date">8 Oct 2026</span>
 </td>
@@ -1327,7 +1363,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="56" data-categories="fixed" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="260" data-listing-title-sort="Reviewing the comparison job and saved Newton trace" data-listing-filename-sort="28-m3-performance-review.qmd">
+<tr data-index="58" data-categories="fixed" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="260" data-listing-title-sort="Reviewing the comparison job and saved Newton trace" data-listing-filename-sort="28-m3-performance-review.qmd">
 <td>
 <span class="listing-date">7 Oct 2026</span>
 </td>
@@ -1338,7 +1374,7 @@ Categories
 <span class="listing-categories">fixed</span>
 </td>
 </tr>
-<tr data-index="57" data-categories="decision" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="247" data-listing-title-sort="A plan for completing M3 and starting verification" data-listing-filename-sort="27-m3-action-plan.qmd">
+<tr data-index="59" data-categories="decision" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="247" data-listing-title-sort="A plan for completing M3 and starting verification" data-listing-filename-sort="27-m3-action-plan.qmd">
 <td>
 <span class="listing-date">7 Oct 2026</span>
 </td>
@@ -1349,7 +1385,7 @@ Categories
 <span class="listing-categories">decision</span>
 </td>
 </tr>
-<tr data-index="58" data-categories="measured" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="297" data-listing-title-sort="Transport-surrogate validation on two scenarios" data-listing-filename-sort="26-transport-surrogate-two-scenarios.qmd">
+<tr data-index="60" data-categories="measured" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="297" data-listing-title-sort="Transport-surrogate validation on two scenarios" data-listing-filename-sort="26-transport-surrogate-two-scenarios.qmd">
 <td>
 <span class="listing-date">7 Oct 2026</span>
 </td>
@@ -1360,7 +1396,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="59" data-categories="built" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="315" data-listing-title-sort="A baseline trainer for RF and pedestal response data" data-listing-filename-sort="25-response-baseline-training.qmd">
+<tr data-index="61" data-categories="built" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="315" data-listing-title-sort="A baseline trainer for RF and pedestal response data" data-listing-filename-sort="25-response-baseline-training.qmd">
 <td>
 <span class="listing-date">7 Oct 2026</span>
 </td>
@@ -1371,7 +1407,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="60" data-categories="built,hardened" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="319" data-listing-title-sort="Guards and data interfaces for RF and pedestal surrogates" data-listing-filename-sort="24-rf-pedestal-contracts.qmd">
+<tr data-index="62" data-categories="built,hardened" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="319" data-listing-title-sort="Guards and data interfaces for RF and pedestal surrogates" data-listing-filename-sort="24-rf-pedestal-contracts.qmd">
 <td>
 <span class="listing-date">7 Oct 2026</span>
 </td>
@@ -1382,7 +1418,7 @@ Categories
 <span class="listing-categories">built, hardened</span>
 </td>
 </tr>
-<tr data-index="61" data-categories="measured,negative" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="570" data-listing-title-sort="The v3 surrogates meet the held-out target" data-listing-filename-sort="23-v3-surrogates-held-out-target.qmd">
+<tr data-index="63" data-categories="measured,negative" data-listing-date-sort="1791327600000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="570" data-listing-title-sort="The v3 surrogates meet the held-out target" data-listing-filename-sort="23-v3-surrogates-held-out-target.qmd">
 <td>
 <span class="listing-date">7 Oct 2026</span>
 </td>
@@ -1393,7 +1429,7 @@ Categories
 <span class="listing-categories">measured, negative</span>
 </td>
 </tr>
-<tr data-index="62" data-categories="built" data-listing-date-sort="1790982000000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="661" data-listing-title-sort="Dataset v3: TGLF inputs along TORAX trajectories" data-listing-filename-sort="22-dataset-v3-torax-trajectories.qmd">
+<tr data-index="64" data-categories="built" data-listing-date-sort="1790982000000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="661" data-listing-title-sort="Dataset v3: TGLF inputs along TORAX trajectories" data-listing-filename-sort="22-dataset-v3-torax-trajectories.qmd">
 <td>
 <span class="listing-date">3 Oct 2026</span>
 </td>
@@ -1404,7 +1440,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="63" data-categories="built,measured" data-listing-date-sort="1790982000000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="743" data-listing-title-sort="The TGLF surrogate inside the TORAX loop" data-listing-filename-sort="21-tglf-surrogate-in-torax-loop.qmd">
+<tr data-index="65" data-categories="built,measured" data-listing-date-sort="1790982000000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="743" data-listing-title-sort="The TGLF surrogate inside the TORAX loop" data-listing-filename-sort="21-tglf-surrogate-in-torax-loop.qmd">
 <td>
 <span class="listing-date">3 Oct 2026</span>
 </td>
@@ -1415,7 +1451,7 @@ Categories
 <span class="listing-categories">built, measured</span>
 </td>
 </tr>
-<tr data-index="64" data-categories="built,measured" data-listing-date-sort="1790982000000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="837" data-listing-title-sort="Heat-flux positivity and monotonicity of TGLF in the gradients" data-listing-filename-sort="20-heat-flux-positivity-monotonicity.qmd">
+<tr data-index="66" data-categories="built,measured" data-listing-date-sort="1790982000000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="837" data-listing-title-sort="Heat-flux positivity and monotonicity of TGLF in the gradients" data-listing-filename-sort="20-heat-flux-positivity-monotonicity.qmd">
 <td>
 <span class="listing-date">3 Oct 2026</span>
 </td>
@@ -1426,7 +1462,7 @@ Categories
 <span class="listing-categories">built, measured</span>
 </td>
 </tr>
-<tr data-index="65" data-categories="negative,decision" data-listing-date-sort="1790982000000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="828" data-listing-title-sort="Active learning round 1 against uniform sampling, and the plan for dataset v3" data-listing-filename-sort="19-active-learning-round-1.qmd">
+<tr data-index="67" data-categories="negative,decision" data-listing-date-sort="1790982000000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="828" data-listing-title-sort="Active learning round 1 against uniform sampling, and the plan for dataset v3" data-listing-filename-sort="19-active-learning-round-1.qmd">
 <td>
 <span class="listing-date">3 Oct 2026</span>
 </td>
@@ -1437,7 +1473,7 @@ Categories
 <span class="listing-categories">negative, decision</span>
 </td>
 </tr>
-<tr data-index="66" data-categories="built" data-listing-date-sort="1790982000000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="725" data-listing-title-sort="Baseline TGLF surrogates for MAST-U and ITER, including a recreated TGLF-NN" data-listing-filename-sort="18-tglf-surrogates-baseline.qmd">
+<tr data-index="68" data-categories="built" data-listing-date-sort="1790982000000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="725" data-listing-title-sort="Baseline TGLF surrogates for MAST-U and ITER, including a recreated TGLF-NN" data-listing-filename-sort="18-tglf-surrogates-baseline.qmd">
 <td>
 <span class="listing-date">3 Oct 2026</span>
 </td>
@@ -1448,7 +1484,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="67" data-categories="built" data-listing-date-sort="1790895600000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="617" data-listing-title-sort="TGLF datasets for MAST-U and ITER, version 1" data-listing-filename-sort="17-tglf-datasets-mastu-iter.qmd">
+<tr data-index="69" data-categories="built" data-listing-date-sort="1790895600000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="617" data-listing-title-sort="TGLF datasets for MAST-U and ITER, version 1" data-listing-filename-sort="17-tglf-datasets-mastu-iter.qmd">
 <td>
 <span class="listing-date">2 Oct 2026</span>
 </td>
@@ -1459,7 +1495,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="68" data-categories="measured" data-listing-date-sort="1790895600000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="527" data-listing-title-sort="TGLF built, checked and timed for the M2 datasets" data-listing-filename-sort="16-tglf-build-and-cost.qmd">
+<tr data-index="70" data-categories="measured" data-listing-date-sort="1790895600000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="527" data-listing-title-sort="TGLF built, checked and timed for the M2 datasets" data-listing-filename-sort="16-tglf-build-and-cost.qmd">
 <td>
 <span class="listing-date">2 Oct 2026</span>
 </td>
@@ -1470,7 +1506,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="69" data-categories="measured" data-listing-date-sort="1790895600000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="609" data-listing-title-sort="ASCOT5 production run: alpha heating from 6400 markers" data-listing-filename-sort="15-ascot5-production-run.qmd">
+<tr data-index="71" data-categories="measured" data-listing-date-sort="1790895600000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="609" data-listing-title-sort="ASCOT5 production run: alpha heating from 6400 markers" data-listing-filename-sort="15-ascot5-production-run.qmd">
 <td>
 <span class="listing-date">2 Oct 2026</span>
 </td>
@@ -1481,7 +1517,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="70" data-categories="fixed" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="443" data-listing-title-sort="Fix: NaN forward-mode gradients through TORAX's Newton solver" data-listing-filename-sort="14-forward-mode-nan.qmd">
+<tr data-index="72" data-categories="fixed" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="443" data-listing-title-sort="Fix: NaN forward-mode gradients through TORAX's Newton solver" data-listing-filename-sort="14-forward-mode-nan.qmd">
 <td>
 <span class="listing-date">1 Oct 2026</span>
 </td>
@@ -1492,7 +1528,7 @@ Categories
 <span class="listing-categories">fixed</span>
 </td>
 </tr>
-<tr data-index="71" data-categories="decision" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="441" data-listing-title-sort="M1 physicist review: benchmark tolerance, pedestal, time step, ASCOT5 and the fallback model" data-listing-filename-sort="13-m1-physicist-review.qmd">
+<tr data-index="73" data-categories="decision" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="441" data-listing-title-sort="M1 physicist review: benchmark tolerance, pedestal, time step, ASCOT5 and the fallback model" data-listing-filename-sort="13-m1-physicist-review.qmd">
 <td>
 <span class="listing-date">1 Oct 2026</span>
 </td>
@@ -1503,7 +1539,7 @@ Categories
 <span class="listing-categories">decision</span>
 </td>
 </tr>
-<tr data-index="72" data-categories="measured" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="482" data-listing-title-sort="ASCOT5 second cluster run: a tighter orbit tolerance, and a production run lost to a time limit" data-listing-filename-sort="12-ascot5-second-run.qmd">
+<tr data-index="74" data-categories="measured" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="482" data-listing-title-sort="ASCOT5 second cluster run: a tighter orbit tolerance, and a production run lost to a time limit" data-listing-filename-sort="12-ascot5-second-run.qmd">
 <td>
 <span class="listing-date">1 Oct 2026</span>
 </td>
@@ -1514,7 +1550,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="73" data-categories="measured" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="564" data-listing-title-sort="ITER L-mode benchmark against RAPTOR, from the TORAX paper" data-listing-filename-sort="11-raptor-lmode-benchmark.qmd">
+<tr data-index="75" data-categories="measured" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="564" data-listing-title-sort="ITER L-mode benchmark against RAPTOR, from the TORAX paper" data-listing-filename-sort="11-raptor-lmode-benchmark.qmd">
 <td>
 <span class="listing-date">1 Oct 2026</span>
 </td>
@@ -1525,7 +1561,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="74" data-categories="measured" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="506" data-listing-title-sort="ASCOT5 fusion-alpha heating for the ITER flat-top: first cluster run" data-listing-filename-sort="10-ascot5-alpha-heating.qmd">
+<tr data-index="76" data-categories="measured" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="506" data-listing-title-sort="ASCOT5 fusion-alpha heating for the ITER flat-top: first cluster run" data-listing-filename-sort="10-ascot5-alpha-heating.qmd">
 <td>
 <span class="listing-date">1 Oct 2026</span>
 </td>
@@ -1536,7 +1572,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="75" data-categories="built" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="444" data-listing-title-sort="Run tracking with Simvue" data-listing-filename-sort="09-run-tracking.qmd">
+<tr data-index="77" data-categories="built" data-listing-date-sort="1790809200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="444" data-listing-title-sort="Run tracking with Simvue" data-listing-filename-sort="09-run-tracking.qmd">
 <td>
 <span class="listing-date">1 Oct 2026</span>
 </td>
@@ -1547,7 +1583,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="76" data-categories="measured" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="463" data-listing-title-sort="Energy and particle balance on the ITER benchmark" data-listing-filename-sort="08-energy-particle-balance.qmd">
+<tr data-index="78" data-categories="measured" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="463" data-listing-title-sort="Energy and particle balance on the ITER benchmark" data-listing-filename-sort="08-energy-particle-balance.qmd">
 <td>
 <span class="listing-date">30 Sep 2026</span>
 </td>
@@ -1558,7 +1594,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="77" data-categories="fixed" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="382" data-listing-title-sort="Fix: wrong minor radius in the IMAS export" data-listing-filename-sort="07-imas-export-minor-radius.qmd">
+<tr data-index="79" data-categories="fixed" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="382" data-listing-title-sort="Fix: wrong minor radius in the IMAS export" data-listing-filename-sort="07-imas-export-minor-radius.qmd">
 <td>
 <span class="listing-date">30 Sep 2026</span>
 </td>
@@ -1569,7 +1605,7 @@ Categories
 <span class="listing-categories">fixed</span>
 </td>
 </tr>
-<tr data-index="78" data-categories="built" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="428" data-listing-title-sort="FreeGSNKE wrapper and a MAST-U free-boundary equilibrium" data-listing-filename-sort="06-freegsnke-mastu.qmd">
+<tr data-index="80" data-categories="built" data-listing-date-sort="1790722800000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="428" data-listing-title-sort="FreeGSNKE wrapper and a MAST-U free-boundary equilibrium" data-listing-filename-sort="06-freegsnke-mastu.qmd">
 <td>
 <span class="listing-date">30 Sep 2026</span>
 </td>
@@ -1580,7 +1616,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="79" data-categories="measured,built" data-listing-date-sort="1790031600000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="475" data-listing-title-sort="Solver stalls in the ITER ramp-up, analytic RF heating, Aurora and ASCOT5 builds" data-listing-filename-sort="05-stalls-rf-and-builds.qmd">
+<tr data-index="81" data-categories="measured,built" data-listing-date-sort="1790031600000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="475" data-listing-title-sort="Solver stalls in the ITER ramp-up, analytic RF heating, Aurora and ASCOT5 builds" data-listing-filename-sort="05-stalls-rf-and-builds.qmd">
 <td>
 <span class="listing-date">22 Sep 2026</span>
 </td>
@@ -1591,7 +1627,7 @@ Categories
 <span class="listing-categories">measured, built</span>
 </td>
 </tr>
-<tr data-index="80" data-categories="built,fixed" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="429" data-listing-title-sort="Guard inside TORAX, and a fix for an unset smoothing default" data-listing-filename-sort="04-guard-inside-torax.qmd">
+<tr data-index="82" data-categories="built,fixed" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="429" data-listing-title-sort="Guard inside TORAX, and a fix for an unset smoothing default" data-listing-filename-sort="04-guard-inside-torax.qmd">
 <td>
 <span class="listing-date">21 Sep 2026</span>
 </td>
@@ -1602,7 +1638,7 @@ Categories
 <span class="listing-categories">built, fixed</span>
 </td>
 </tr>
-<tr data-index="81" data-categories="measured" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="419" data-listing-title-sort="Fixed-step loop over TORAX and a time-step convergence study" data-listing-filename-sort="03-fixed-step-loop.qmd">
+<tr data-index="83" data-categories="measured" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="419" data-listing-title-sort="Fixed-step loop over TORAX and a time-step convergence study" data-listing-filename-sort="03-fixed-step-loop.qmd">
 <td>
 <span class="listing-date">21 Sep 2026</span>
 </td>
@@ -1613,7 +1649,7 @@ Categories
 <span class="listing-categories">measured</span>
 </td>
 </tr>
-<tr data-index="82" data-categories="built" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="343" data-listing-title-sort="TORAX backend and the ITER hybrid reference runs" data-listing-filename-sort="02-torax-backend.qmd">
+<tr data-index="84" data-categories="built" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="343" data-listing-title-sort="TORAX backend and the ITER hybrid reference runs" data-listing-filename-sort="02-torax-backend.qmd">
 <td>
 <span class="listing-date">21 Sep 2026</span>
 </td>
@@ -1624,7 +1660,7 @@ Categories
 <span class="listing-categories">built</span>
 </td>
 </tr>
-<tr data-index="83" data-categories="built" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1793227843000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="452" data-listing-title-sort="Newton-Raphson solver for the coupling loop" data-listing-filename-sort="01-newton-solver.qmd">
+<tr data-index="85" data-categories="built" data-listing-date-sort="1789945200000" data-listing-file-modified-sort="1793565769000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="452" data-listing-title-sort="Newton-Raphson solver for the coupling loop" data-listing-filename-sort="01-newton-solver.qmd">
 <td>
 <span class="listing-date">21 Sep 2026</span>
 </td>
@@ -1652,7 +1688,7 @@ No matching items
 <ul>
 <li><strong>M4: verification.</strong> The bounded transport investigation closes scientifically unresolved (<span class="claim">both full-box pilots retain nonfinite physical enclosures after all final objectives run; independent graph, constraint and corrected-dual replay passes, with no finite physical candidate</span><a href="../../Blog/tokamak-toolkit/claims.html#c-297" class="cid st-preliminary">C-297</a>). The four records, guard integration and cheap CI re-proof retain the EC-robustness and MAST-U limitations. Exact proof boxes remain separate from ordinary guard margins (<span class="claim">all four verified input boxes match the previous loaders; 48 of 48 retained pedestal states keep identical predictions and decisions; none of the 57 EC states is inside the exact proof boxes, so no EC certificate-based output check applies there</span><a href="../../Blog/tokamak-toolkit/claims.html#c-284" class="cid st-measured">C-284</a>). The revised report-only fallback alert policy is adopted under <a href="../../Blog/tokamak-toolkit/decisions.html#oq-50">OQ-50</a>; certification remains pending.</li>
 <li><strong>JOREK stability (alongside M4).</strong> The time-step checks pass, but the doubled-grid checks remain incomplete and the existing resource projection rule stops further links (<span class="claim">all three selected fine-grid checks remain incomplete; the measured-cost projection exceeds the existing compute envelope and further submissions stop</span><a href="../../Blog/tokamak-toolkit/claims.html#c-291" class="cid st-preliminary">C-291</a>). No fine-grid growth rate or stability verdict follows.</li>
-<li><strong>M5: uncertainty and validation.</strong> The historical prior study remains available (<span class="claim">all 256 retained Monte Carlo outputs are finite with zero native linear-step error codes, and 2048 sensitivity evaluations drop no rows; those codes do not establish nonlinear-residual or temporal convergence</span><a href="../../Blog/tokamak-toolkit/claims.html#c-292" class="cid st-measured">C-292</a>), with nonlinear flags (<span class="claim">all four outputs fail the fixed 10% standard-deviation cross-check; disagreements are 46.2%, 43.4%, 43.1% and 59.7% for fusion power, thermal energy, central electron temperature and central ion temperature</span><a href="../../Blog/tokamak-toolkit/claims.html#c-287" class="cid st-measured">C-287</a>). Finer ladders still fail temporal convergence (<span class="claim">maximum paired changes remain 19.2654% and 1.9773% across the two refinements, exceeding the fixed 1% limit; all 99 retained rows are finite with zero native linear-step error codes and no exclusions</span><a href="../../Blog/tokamak-toolkit/claims.html#c-295" class="cid st-preliminary">C-295</a>, <span class="claim">the additional finer ladder has maximum paired changes of 1.7092% and 1.8560%, above the unchanged 1% criterion; all 99 assessed rows remain valid and no supported replacement step is established</span><a href="../../Blog/tokamak-toolkit/claims.html#c-296" class="cid st-preliminary">C-296</a>); the next ladder passes one pair but fails the finer pair (<span class="claim">the first pair stays below 1%, but the finer pair changes fusion power by up to 4.1372% and fails three quantities; all 99 assessed rows remain valid, so no replacement step is supported</span><a href="../../Blog/tokamak-toolkit/claims.html#c-298" class="cid st-preliminary">C-298</a>). The completed internal diagnostic establishes branch mismatch and a local residual contribution ([the failing case has different last-guess and accepted-state branches on 39.453% of coarse and 73.145% of fine steps over (3,5] seconds; during (3.5,4.5] seconds all fine accepted states fall back while 84.961% of last guesses select the surrogate]{.claim}<a href="../../Blog/tokamak-toolkit/claims.html#c-300" class="cid st-measured">C-300</a>, <span class="claim">the fine failing case has branch-term norm ratios of 0.723 for electron temperature and 0.982 for ion temperature; the signed global branch term cancels and the remaining coefficient lag carries the net defect</span><a href="../../Blog/tokamak-toolkit/claims.html#c-301" class="cid st-measured">C-301</a>); a checkpoint probe remains prepared only. Final uncertainty requires a supported step and an affordable complete design. Physicist review still needs the stated priors and unquantified pedestal/equilibrium discrepancy (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-035">K-035</a>).</li>
+<li><strong>M5: the full ensemble numerical gate passes.</strong> <span class="claim">all 33 original cases reach five seconds at all three maximum-step settings: 99 of 99 valid trajectories and 264 of 264 passing endpoint comparisons</span><a href="../../Blog/tokamak-toolkit/claims.html#c-305" class="cid st-measured">C-305</a>. The successful opt-in method combines the continuous closure, strict solve and rejected-step rollback (<span class="claim">the new research baseline uses a continuous guarded closure, Newton trials accepted only after residual decrease, and adaptive rollback of the complete state and auxiliary data</span><a href="../../Blog/tokamak-toolkit/claims.html#c-304" class="cid st-measured">C-304</a>), with explicit physical residual checks (<span class="claim">maximum accepted physical-channel L1 is 1.76 × 10<sup>−9</sup> against a 10<sup>−8</sup> gate, and native mean L1 is 1.01 × 10<sup>−14</sup> against 10<sup>−10</sup>; no crash occurs</span><a href="../../Blog/tokamak-toolkit/claims.html#c-307" class="cid st-measured">C-307</a>). The <a href="../../Blog/tokamak-toolkit/log/98-full-iter-ensemble-passes-convergence.html">new result</a> supersedes the unresolved numerical status for this baseline. Historical prior results retain their original scope. A new uncertainty design must adopt this baseline explicitly; physical-model review and the pedestal/equilibrium discrepancy limits remain open (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-035">K-035</a>).</li>
 <li><strong>Profile Newton separately</strong> (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-022">K-022</a>), distinguishing compilation, ensemble evaluation and Jacobian cost. Historical speed-up belongs to v1.</li>
 <li><strong>ASCOT5 follow-ups, before neutral-beam ions</strong>: the alphas’ mean birth energy (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-011">K-011</a>) and the core heating profile (<a href="../../Blog/tokamak-toolkit/ceilings.html#k-012">K-012</a>).</li>
 <li><strong>Future extension:</strong> extending the benchmark to a STEP power-plant flat-top is planned as a future extension. For now the work stays with the ITER benchmark and MAST-U.</li>

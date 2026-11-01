@@ -44,6 +44,8 @@
   {
     "listing": "/Blog/tokamak-toolkit/index.html",
     "items": [
+      "/Blog/tokamak-toolkit/log/98-full-iter-ensemble-passes-convergence.html",
+      "/Blog/tokamak-toolkit/log/97-strict-physical-residuals-and-continuous-transport.html",
       "/Blog/tokamak-toolkit/log/84-ec-genray-reference-package.html",
       "/Blog/tokamak-toolkit/log/83-ec-local-robustness-boxes-leave-the-domain.html",
       "/Blog/tokamak-toolkit/log/82-optimized-elu-bounds-still-overflow.html",

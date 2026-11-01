@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Physical-residual solves and ensemble convergence – Vignesh Gopakumar</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../Images/dy_dx.png" rel="icon" type="image/png">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../styles.css">
+<link rel="stylesheet" href="../tokamak-toolkit.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">Vignesh Gopakumar</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../research.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../talks.html"> 
+<span class="menu-text">Talks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../Blog/blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../Blog/tokamak-toolkit/index.html"> 
+<span class="menu-text">Tokamak Toolkit</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#continuous-closure" id="toc-continuous-closure" class="nav-link active" data-scroll-target="#continuous-closure">Continuous closure and a strict solve</a></li>
+  <li><a href="#rejected-step-rollback" id="toc-rejected-step-rollback" class="nav-link" data-scroll-target="#rejected-step-rollback">Physical acceptance and rejected-step rollback</a></li>
+  <li><a href="#declared-numerical-parameters" id="toc-declared-numerical-parameters" class="nav-link" data-scroll-target="#declared-numerical-parameters">Declared numerical parameters</a></li>
+  <li><a href="#full-ensemble-convergence" id="toc-full-ensemble-convergence" class="nav-link" data-scroll-target="#full-ensemble-convergence">Full ensemble protocol and result</a></li>
+  <li><a href="#what-the-pass-changes" id="toc-what-the-pass-changes" class="nav-link" data-scroll-target="#what-the-pass-changes">What the pass changes</a></li>
+  <li><a href="#earlier-checkpoint-experiments" id="toc-earlier-checkpoint-experiments" class="nav-link" data-scroll-target="#earlier-checkpoint-experiments">Earlier checkpoint experiments</a></li>
+  <li><a href="#checkpoint-controller" id="toc-checkpoint-controller" class="nav-link" data-scroll-target="#checkpoint-controller">Checkpoint controller</a></li>
+  <li><a href="#checkpoint-results" id="toc-checkpoint-results" class="nav-link" data-scroll-target="#checkpoint-results">Retained compensation and damping results</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Physical-residual solves and ensemble convergence</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-left">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">November 1, 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Full ensemble: numerical convergence passed
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="claim">all 33 original cases reach five seconds at all three maximum-step settings: 99 of 99 valid trajectories and 264 of 264 passing endpoint comparisons</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-305" class="cid st-measured">C-305</a>. <span class="claim">the largest changes are 0.219% for coarse-to-middle and 0.0423% for middle-to-fine, both below the 1% acceptance limit</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-306" class="cid st-measured">C-306</a>. The successful result uses the continuous transport closure described below. The original hard-switch study and the historical uncertainty report retain their original outcomes. Production defaults have not been silently replaced.</p>
+</div>
+</div>
+<section id="continuous-closure" class="level2">
+<h2 class="anchored" data-anchor-id="continuous-closure">Continuous closure and a strict solve</h2>
+<p>The experimental integration addresses three distinct failure mechanisms: a discontinuous transport closure near admissibility boundaries, an iteration whose stabilization can change its nonlinear target, and unsuccessful proposals being allowed to advance a state. The completed method combines closure regularization with a strict native Newton solve and adaptive rollback (<span class="claim">the new research baseline uses a continuous guarded closure, Newton trials accepted only after residual decrease, and adaptive rollback of the complete state and auxiliary data</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-304" class="cid st-measured">C-304</a>). The final test does not isolate a single change as the cause of success.</p>
+<p>Let <span class="math inline">\(c_s\)</span> be an admissible surrogate coefficient and <span class="math inline">\(c_f\)</span> the existing fallback. For a normalized margin <span class="math inline">\(m\)</span> into an accepted domain, define</p>
+<p><span class="math display">\[
+S(z)=\begin{cases}0&amp;z\leq0,\\z^2(3-2z)&amp;0&lt;z&lt;1,\\1&amp;z\geq1.\end{cases}
+\qquad c=c_f+w(c_s-c_f).
+\]</span></p>
+<p>The weight is a product of smooth margin factors for the model input box, wrapper box, low heat coefficients and coefficient caps. It vanishes when the declared guard test on the actual candidate rejects it. Invalid surrogate values are masked to finite fallback <em>before</em> multiplication, so zero weight cannot carry an inadmissible NaN into the result. The original model weights and admissible domains stay fixed. This changes the closure near its boundaries; continuity is not permission to extrapolate outside the guard.</p>
+<p>Particle transport also needs a smooth handover between its diffusion and convection representations. The candidate uses complementary weights around the existing normalized density-gradient threshold. Both coefficient branches remain finite before blending. Native radial coefficient smoothing stays fixed in the ensemble test. A local conversion identity does not prove that later coefficient smoothing and finite-volume interpolation preserve particle flux. A direct particle-flux formulation has not been used for this pass.</p>
+<p>The implicit time step uses the native unstabilized finite-volume residual. Newton differentiates that residual and solves its linearized system. Its line search accepts a finite trial only when the actual residual decreases by the declared Armijo rule. Failure retains the previous accepted Newton iterate and returns failure metadata. An optimizer’s termination or a native status flag alone does not establish physical acceptance.</p>
+</section>
+<section id="rejected-step-rollback" class="level2">
+<h2 class="anchored" data-anchor-id="rejected-step-rollback">Physical acceptance and rejected-step rollback</h2>
+<p>For each evolving physical channel, retain cell terms <span class="math inline">\(s\)</span>, <span class="math inline">\(t\)</span> and <span class="math inline">\(q\)</span> for storage, transport and combined sources, with cell widths <span class="math inline">\(\Delta\rho_j\)</span>. The independent auditor reconstructs</p>
+<p><span class="math display">\[
+\eta_k=\frac{\sum_j|s_{jk}-(t_{jk}+q_{jk})|\,\Delta\rho_j}
+{\sum_j(|s_{jk}|+|t_{jk}|+|q_{jk}|)\,\Delta\rho_j}.
+\]</span></p>
+<p>The terms are grouped before normalization exactly as in the declared physical equation. Finite positive reference scales are required. Separate global balance ratios include storage, edge flux, sources and pinning. The exact native residual is retained independently of these physical channel ratios. Acceptance requires all channel gates, global balance, finite profiles, positive temperatures and density, finite quantities of interest and a successful solver flag. An explicit sawtooth reset stops this validation. <span class="claim">maximum accepted physical-channel L1 is 1.76 × 10<sup>−9</sup> against a 10<sup>−8</sup> gate, and native mean L1 is 1.01 × 10<sup>−14</sup> against 10<sup>−10</sup>; no crash occurs</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-307" class="cid st-measured">C-307</a>.</p>
+<p>Pseudocode for the research adapter:</p>
+<pre class="text"><code>save the complete old state and auxiliary post-processing data
+propose a native implicit step no larger than the current maximum
+record raw cell terms, native residual, profiles and acceptance fields
+if every scientific gate passes: commit state and auxiliary data
+otherwise: restore both, halve the proposal, retain the rejection
+stop if the minimum step or attempt budget is exhausted
+recover the step gradually, never beyond the declared maximum</code></pre>
+<p><span class="claim">372,141 accepted proposals and 2,659 rejected proposals are retained in 23,100 raw chunks; rejected-step rollback and retry schedules pass reconstruction</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-308" class="cid st-measured">C-308</a>. The raw auditor checks the retry schedule and cross-step profile continuity, including rejected old-state identity. Accepted density representations receive only the documented floating-point conversion allowance; rejected old-state drift remains a failure. Complete auxiliary-state rollback is enforced by the frozen retry source and synthetic controls. Per-trial profile records alone do not independently certify every auxiliary leaf.</p>
+<p>The reusable opt-in module has an older global-only acceptance helper. The successful ensemble instead uses the frozen research <code>runner.py</code> and <code>advance.py</code>, which add the channelwise and native residual gates and stop on an event. A caller of the reusable module does not automatically inherit this full validation protocol.</p>
+</section>
+<section id="declared-numerical-parameters" class="level2">
+<h2 class="anchored" data-anchor-id="declared-numerical-parameters">Declared numerical parameters</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Component</th>
+<th>Frozen setting</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Native solve</td>
+<td><span class="claim">backward Euler starts from the old state, disables Pereverzev stabilization, allows 40 Newton iterations and uses an internal native stop of 10<sup>−14</sup>; Armijo decrease uses 10<sup>−4</sup>, step halving and an outer-iteration continuation threshold of 2<sup>−40</sup></span><a href="../../../Blog/tokamak-toolkit/claims.html#c-309" class="cid st-measured">C-309</a></td>
+</tr>
+<tr class="even">
+<td>Continuous transition</td>
+<td><span class="claim">input and wrapper transitions span 10<sup>−4</sup> of their stored ranges, the low heat-coefficient fade spans 0.01 m²/s, upper-cap fades use 1% of the cap, and the particle switch spans 10% of its existing threshold</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-310" class="cid st-measured">C-310</a></td>
+</tr>
+<tr class="odd">
+<td>Retry and reporting</td>
+<td><span class="claim">each macro step allows 64 proposals down to one 4096th of its maximum step, rejects by halving and recovers by at most doubling; common reporting times are 0.1, 0.4, 1, 3, 4.25 and 5 seconds</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-311" class="cid st-measured">C-311</a></td>
+</tr>
+<tr class="even">
+<td>Scientific acceptance</td>
+<td><span class="claim">maximum accepted physical-channel L1 is 1.76 × 10<sup>−9</sup> against a 10<sup>−8</sup> gate, and native mean L1 is 1.01 × 10<sup>−14</sup> against 10<sup>−10</sup>; no crash occurs</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-307" class="cid st-measured">C-307</a></td>
+</tr>
+</tbody>
+</table>
+<p>The numerical solver stop is distinct from the scientific physical acceptance threshold. Neither is relaxed after seeing an endpoint comparison. Transition widths are declared model parameters; their fixed values in this experiment do not establish width robustness.</p>
+</section>
+<section id="full-ensemble-convergence" class="level2">
+<h2 class="anchored" data-anchor-id="full-ensemble-convergence">Full ensemble protocol and result</h2>
+<p><span class="claim">all 33 original cases reach five seconds at all three maximum-step settings: 99 of 99 valid trajectories and 264 of 264 passing endpoint comparisons</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-305" class="cid st-measured">C-305</a>. The declared maximum steps are halved successively while holding the continuous closure, its transition widths, radial smoothing, original case design and ensemble member assignment fixed. Every trajectory starts from its own prescribed initial state. Saved complete state/post checkpoints restart reporting stages without substituting profile-only states.</p>
+<p>At the common final time, compute for each quantity <span class="math inline">\(Q\)</span></p>
+<p><span class="math display">\[
+\delta_Q(h,h/2)=\frac{|Q_h-Q_{h/2}|}{\max(|Q_{h/2}|,\operatorname{tiny}_{64})}.
+\]</span></p>
+<p>Both adjacent pairs must pass for fusion power, stored thermal energy, and axis electron and ion temperature. This is sensitivity to an adaptive maximum step; actual accepted internal steps can be smaller. It is not an estimate of fixed-step order or an exact-solution bound. <span class="claim">the largest changes are 0.219% for coarse-to-middle and 0.0423% for middle-to-fine, both below the 1% acceptance limit</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-306" class="cid st-measured">C-306</a>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/m5_convergence.svg" class="img-fluid figure-img"></p>
+<figcaption>Largest final QoI change in each original case for both adjacent maximum-step comparisons. All markers lie below the declared limit. <span class="claim">the largest changes are 0.219% for coarse-to-middle and 0.0423% for middle-to-fine, both below the 1% acceptance limit</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-306" class="cid st-measured">C-306</a>.</figcaption>
+</figure>
+</div>
+<!-- m5-provenance:start -->
+<details class="provenance">
+<summary>
+Figure provenance
+</summary>
+<ul>
+<li>Tier: A; measured public ITER numerical scenario.</li>
+<li>Producer: <code>blog.figures.make_m5_convergence</code>; source <code>2563ca4</code> (dirty at generation: True).</li>
+<li>Configuration SHA-256: <code>e31a1147b1db7c07480ccc9231f77c9035097dd62236414a9e3a74897475ef92</code>.</li>
+<li>Bound raw-audit SHA-256: <code>50b76a04bd897bbd7154a1a299623f7c6b499bfada9bf2827dba959a944c99b6</code>.</li>
+<li>Python 3.11.7; JAX 0.10.2; CPU saved-array audit.</li>
+<li>Recorded: 2026-11-01. No new simulation was run to plot this figure.</li>
+</ul>
+<p><a href="../figures/m5_convergence.csv">Underlying data</a>.</p>
+</details>
+<!-- m5-provenance:end -->
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Evidence</th>
+<th>Earlier hard-switch study</th>
+<th>Current continuous baseline</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Temporal result</td>
+<td>One pair passes; finer pair fails (<a href="../../../Blog/tokamak-toolkit/claims.html#c-298">C-298</a>)</td>
+<td>Both adjacent pairs pass (<a href="../../../Blog/tokamak-toolkit/claims.html#c-306">C-306</a>)</td>
+</tr>
+<tr class="even">
+<td>Native status</td>
+<td>Zero fixed-work flags do not certify residual convergence (<a href="../../../Blog/tokamak-toolkit/claims.html#c-292">C-292</a>)</td>
+<td>Explicit native and physical acceptance (<a href="../../../Blog/tokamak-toolkit/claims.html#c-307">C-307</a>)</td>
+</tr>
+<tr class="odd">
+<td>Invalid trials</td>
+<td>Historical records retain their original scope</td>
+<td>Complete rollback and retained rejections (<a href="../../../Blog/tokamak-toolkit/claims.html#c-308">C-308</a>)</td>
+</tr>
+</tbody>
+</table>
+<p>These columns have different closures, solver policies and step ladders. They summarize the change in evidence; they are not a controlled time-step-only before/after attribution. Earlier failed claims remain historical facts.</p>
+<p>The combined audit separately verifies scheduler completion, source/input hashes, worker identities, complete case coverage, raw step integrity and endpoint data. Its equation reconstruction is independent of the solver’s accept/reject scalar, but it shares the declared discrete model. The native kernel is not a second independent physical model. Numerical corruption tests reject false residuals, missing cases, changed endpoints and incomplete comparisons.</p>
+</section>
+<section id="what-the-pass-changes" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-pass-changes">What the pass changes</h2>
+<p>The current baseline meets its full ensemble numerical gate. The earlier checkpoint-only statement that no complete convergence study exists is now superseded by this result. The checkpoint damping and learned-selector sections below remain the history that led to the classical method; no learned solver benefit is claimed.</p>
+<p>The next uncertainty/sensitivity propagation must explicitly adopt this baseline and retain its complete sampling design. The earlier uncertainty outputs were not silently rerun. Matched smoothing-width studies, derivative behavior and any direct particle-flux prototype are separate work. Physical-model acceptance and M5 physicist sign-off remain pending. Reverse-mode differentiation through the adaptive retry decisions is unsupported; this pass does not validate gradients.</p>
+<p>Narrative companions: <a href="../../../Blog/tokamak-toolkit/log/97-strict-physical-residuals-and-continuous-transport.html">strict solve and closure</a> and <a href="../../../Blog/tokamak-toolkit/log/98-full-iter-ensemble-passes-convergence.html">full ensemble result</a>.</p>
+</section>
+<section id="earlier-checkpoint-experiments" class="level2">
+<h2 class="anchored" data-anchor-id="earlier-checkpoint-experiments">Earlier checkpoint experiments</h2>
+<p>The following sections describe the earlier fixed-context experiments, not the current completed trajectory protocol.</p>
+</section>
+<section id="checkpoint-controller" class="level2">
+<h2 class="anchored" data-anchor-id="checkpoint-controller">Checkpoint controller</h2>
+<p>The independent same-state operator audit identifies a discrete stabilization contribution from convection interpolation. This is distinct from the observed surrogate/fallback alternation. Damping can change iteration behavior while preserving the stabilized map’s different nonlinear target.</p>
+<p>Let A denote the current stabilized implicit matrix. Let R be storage minus the physical transport/source equation, evaluated at the same state and complete pre-step context. Scale R by the same transient coefficients and time step used in its physical theta equation. A correction direction solves</p>
+<pre class="text"><code>A(x) delta = -s_physical(x) R_physical(x).
+x_trial = x + alpha delta.</code></pre>
+<p>For nonsingular A and nonzero transient scale, a zero direction requires a physical root. This target-preservation identity is not a convergence theorem. The original transport model, guard, boundary conditions and sources stay fixed.</p>
+<p>The prototype compares original Picard, fixed damping, residual backtracking, regularized Anderson and physical-defect backtracking. All trials start from the same checkpoint guess. Complete old/new canonical state leaves preserve context; profile-only records are never treated as restarts. No trial advances a canonical trajectory. Separate thermal, density and flux residuals retain their units.</p>
+<p>Each channel’s reference scale is its initial cell-width integral of absolute storage, combined transport RHS, and combined source/pinning RHS. Freeze that scale during the solve. Candidate merit is the largest normalized channel L1 residual. Reject invalid or insufficiently decreasing candidates. Undefined reference scales remain explicit failures. Algorithmic residual tolerances do not replace the unchanged endpoint temporal criterion.</p>
+<p>The learned component classifies a finite grid of damping factors. Inputs contain separate physical/stabilized residual norms, recent branch change, distance to the surrogate domain and time step. Complete classical search grids produce labels; a failed grid has no class label. Whole-case holdouts govern direction selection, feature normalization and fitting. An explicit training input box routes unfamiliar inputs to classical backtracking. Residual checks decide every accepted proposal and every convergence flag.</p>
+<p>Focused controls cover cycling, biased stabilized roots, absent physical roots, unit scaling, failed proposals and data separation (<span class="claim">focused numerical, data-separation and short TORAX checks pass; early-time full-step labels validate plumbing, not learned benefit or a numerical remedy</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-302" class="cid st-tested">C-302</a>). Short real-code checks retain canonical trace and predictor/corrector parity. These early-time examples have only full-step labels and establish no learned benefit. At that checkpoint, the full late experiment remained prepared for review. The later complete trajectory result is reported above; it uses the classical strict solve and a changed continuous closure, without a learned damping policy.</p>
+<p>Related work includes <a href="https://arxiv.org/abs/2107.10254">neural fixed-point acceleration</a> and <a href="https://arxiv.org/abs/2007.00016">solver-in-the-loop training</a>. This prototype uses classical rollout labels and held-out controller rollouts; it does not train end to end through the discontinuous guard. The cited demonstrations do not establish guarantees for this transport equation.</p>
+<p>Narrative companion: entry 96, private draft.</p>
+</section>
+<section id="checkpoint-results" class="level2">
+<h2 class="anchored" data-anchor-id="checkpoint-results">Retained compensation and damping results</h2>
+<p>The later fixed-context comparison retains original Picard, compensated updates and half-damped compensated updates. The finer-stage execution failed one historical storage comparison after saving all trial records. Small changes in pre-subtraction operands are consistent with cancellation amplifying the observed storage difference. The original failed gate is not waived or relabelled a pass. Separate dense/FV reconstruction checks the retained physical targets, unrelaxed linear solves, actual relaxation updates and guard selections.</p>
+<p>The passing coarse-stage cycling example has a lower physical residual under compensation and a further reduction with half damping (<span class="claim">at the matched passing coarse cycling checkpoint, the electron residual is 9.148% originally, 6.885% after compensation and 2.228% with half damping; nominal states can converge more slowly with damping</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-303" class="cid st-preliminary">C-303</a>). At nominal checkpoints the corrected undamped map reduces that residual faster. These are finite fixed-old-state comparisons, not new trajectories or endpoint error estimates. Fine-stage comparisons remain qualified diagnostic evidence.</p>
+<p>A separate small selector uses only the passing coarse stage and holds out each whole case. Initial physical/stabilized channel residuals and the domain-boundary margin are inputs; later residuals supply labels only. The output selects one fixed damping factor for the entire retained update budget. It is not an adaptive per-iteration controller. The held-out choices provide no reliable advantage over the full-step compensated baseline, and most unfamiliar inputs use that baseline.</p>
+<p>Do not construct per-iteration action labels by pairing equal iteration indices from the two fixed-alpha paths: those paths have different states. Actual paired action evaluations and branch histories are needed before learning an adaptive policy. Compensated residual backtracking is the next classical comparison.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2026 Vignesh Gopakumar</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<div class="tk-footer">
+Code and first draft by Claude (Anthropic) and Codex, working to a brief by Vignesh Gopakumar,
+who reviewed and approved this page.
+<a href="../../../Blog/tokamak-toolkit/about.html">How this is built</a> ·
+<a href="../../../Blog/tokamak-toolkit/index.html">Tokamak Toolkit home</a>
+</div>
+
+
+
+
+</body></html>

@@ -3011,6 +3011,103 @@ Superseded by <a href="#c-292">C-292</a></td>
 <code>python reviews/m5-internal-diagnostic-v1/execution-v1/analyze.py --result reviews/m5-internal-diagnostic-v1/request-v1/result --out FRESH_JSON</code></td>
 <td><code>frozen internal diagnostic request-v1 and independently recomputed attribution groups</code></td>
 </tr>
+<tr id="c-302" class="odd">
+<td class="cid-cell">C-302</td>
+<td>A checkpoint-only physical-residual damping prototype passes focused numerical and short real-code integration controls<br>
+<span class="tol">three exact cases, two canonical steps at one finest step size, unchanged 1e-10 canonical trace and x0/x1/x2 parity; no full late-checkpoint or time-convergence claim</span></td>
+<td class="val">focused numerical, data-separation and short TORAX checks pass; early-time full-step labels validate plumbing, not learned benefit or a numerical remedy</td>
+<td><span class="badge st-tested">tested</span></td>
+<td>reviews/m5-damping-controller-v1/validation/summary.json<br>
+<code>run the focused baseline/controller/TORAX tests with TKIT_RUN_DAMPING_SMOKE=1 in normal and Tier-A-only modes</code></td>
+<td><code>implementation source snapshot bound by the focused validation manifest</code></td>
+</tr>
+<tr id="c-303" class="even">
+<td class="cid-cell">C-303</td>
+<td>Half damping further reduces a compensated physical residual at a passing coarse cycling checkpoint<br>
+<span class="tol">case 20 at 3.75 seconds, dt 0.00078125 seconds, eight fixed-context updates; local physical three-term normalization; no trajectory or temporal-convergence claim; finer-stage original parity failure remains failed</span></td>
+<td class="val">at the matched passing coarse cycling checkpoint, the electron residual is 9.148% originally, 6.885% after compensation and 2.228% with half damping; nominal states can converge more slowly with damping</td>
+<td><span class="badge st-preliminary">preliminary</span></td>
+<td>reviews/m5-rhs-defect-compensation-v1/result-evaluation-v1/FINDINGS.md<br>
+<code>run result-evaluation-v1/evaluate.py against retained request-v1 split arrays, then inspect the matched coarse case-20 checkpoint</code></td>
+<td><code>consumed request-v1 bytes plus artifact-bound offline evaluation and focused controls; formal report review pending</code></td>
+</tr>
+<tr id="c-304" class="odd">
+<td class="cid-cell">C-304</td>
+<td>The opt-in ITER research integration combines a continuous guarded transport closure, strict Newton acceptance and complete rejected-step rollback<br>
+<span class="tol">guard domain and model weights retained; coefficient blending and particle diffusion/convection switching change the old hard-switch closure; final cellwise acceptance is enforced by the frozen research adapters, not by unchanged production defaults</span></td>
+<td class="val">the new research baseline uses a continuous guarded closure, Newton trials accepted only after residual decrease, and adaptive rollback of the complete state and auxiliary data</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m5-full-ensemble-v1/blog-review-v1.json and reviews/m5-full-ensemble-v1/request-v1/request.json<br>
+<code>inspect the bound native executed sources, request-v1/runner.py and request-v1/advance.py; compare the complete frozen configuration with the historical hard-switch requests</code></td>
+<td><code>full-ensemble frozen request and immutable executed-source hashes</code></td>
+</tr>
+<tr id="c-305" class="even">
+<td class="cid-cell">C-305</td>
+<td>The complete original ITER ensemble passes its five-second numerical convergence protocol under the continuous closure<br>
+<span class="tol">nominal case and every original ensemble member retained; maximum steps 0.003125, 0.0015625 and 0.00078125 seconds; both adjacent pairs for fusion power, thermal energy and axis electron/ion temperature; 90 new trajectories plus 9 re-audited sentinels; no case exclusions</span></td>
+<td class="val">all 33 original cases reach five seconds at all three maximum-step settings: 99 of 99 valid trajectories and 264 of 264 passing endpoint comparisons</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m5-full-ensemble-v1/execution-v2/terminal-audit.json and execution-v2/result-summary.json<br>
+<code>python reviews/m5-full-ensemble-v1/execution-v2/audit.py FROZEN_REQUEST FRESH_AUDIT --runs SHARD_0 SHARD_1 --scheduler SCHEDULER_0 SCHEDULER_1</code></td>
+<td><code>source-bound full-ensemble request, raw audit and final result hashes</code></td>
+</tr>
+<tr id="c-306" class="odd">
+<td class="cid-cell">C-306</td>
+<td>Both adjacent adaptive maximum-step comparisons stay below the declared one-percent threshold for every ensemble case and quantity<br>
+<span class="tol">abs(coarse-finer)/max(abs(finer), float64 tiny); maximum over every retained case and all four quantities; global worst is case 32 fusion power; adaptive maximum-step sensitivity, not fixed-step convergence order or an exact-solution error bound</span></td>
+<td class="val">the largest changes are 0.219% for coarse-to-middle and 0.0423% for middle-to-fine, both below the 1% acceptance limit</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m5-full-ensemble-v1/execution-v2/terminal-audit.json<br>
+<code>reconstruct both adjacent comparison arrays from the raw-bound endpoint QoIs; regenerate blog/figures/make_m5_convergence.py</code></td>
+<td><code>hash-bound final full-ensemble audit and figure inputs</code></td>
+</tr>
+<tr id="c-307" class="even">
+<td class="cid-cell">C-307</td>
+<td>Every accepted ensemble step passes the declared physical and native residual gates with finite profiles, positive temperatures and density and no crash event<br>
+<span class="tol">independent reconstruction of raw cell storage, transport and source terms, global balance gate 1e-6, exact native residual, finite profiles and positive temperatures and density and solver flags; a reset event ends this validation rather than receiving a PDE-balance exemption</span></td>
+<td class="val">maximum accepted physical-channel L1 is 1.76 × 10<sup>−9</sup> against a 10<sup>−8</sup> gate, and native mean L1 is 1.01 × 10<sup>−14</sup> against 10<sup>−10</sup>; no crash occurs</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m5-full-ensemble-v1/execution-v2/terminal-audit.json<br>
+<code>replay the raw trajectory auditor and all reporting endpoints using the bound frozen kernels</code></td>
+<td><code>full-ensemble raw reconstruction and immutable kernel hashes</code></td>
+</tr>
+<tr id="c-308" class="odd">
+<td class="cid-cell">C-308</td>
+<td>The final ensemble audit retains accepted and rejected proposals and independently checks adaptive schedules and profile rollback<br>
+<span class="tol">complete auxiliary-state rollback is enforced by the source-bound retry kernel and synthetic controls; raw profiles independently verify cross-step continuity, with only the documented floating-point density representation allowance after accepted steps</span></td>
+<td class="val">372,141 accepted proposals and 2,659 rejected proposals are retained in 23,100 raw chunks; rejected-step rollback and retry schedules pass reconstruction</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m5-full-ensemble-v1/execution-v2/terminal-audit.json and execution-v2/terminal-raw-manifest.json<br>
+<code>replay per-trajectory raw audits; inspect the complete retained state/post checkpoints and retry-kernel controls</code></td>
+<td><code>full-ensemble raw audit, retained-file manifest and executed retry source</code></td>
+</tr>
+<tr id="c-309" class="even">
+<td class="cid-cell">C-309</td>
+<td>The successful research baseline freezes strict native Newton parameters separately from scientific acceptance tolerances<br>
+<span class="tol">opt-in native TORAX integration; ghost boundary convection; the line search allows 100 steps and uses a minimum step norm of 1e-14, while 2^-40 limits continuation after an accepted step rather than imposing a line-search factor floor; scientific acceptance remains independently checked by the final frozen research adapters</span></td>
+<td class="val">backward Euler starts from the old state, disables Pereverzev stabilization, allows 40 Newton iterations and uses an internal native stop of 10<sup>−14</sup>; Armijo decrease uses 10<sup>−4</sup>, step halving and an outer-iteration continuation threshold of 2<sup>−40</sup></td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m5-full-ensemble-v1/request-v1/request.json and reviews/m5-native-repair-v1/request-v2/executed-sources/torax_strict_newton.py</td>
+<td><code>full-ensemble bound solver configuration and exact executed native solver source</code></td>
+</tr>
+<tr id="c-310" class="odd">
+<td class="cid-cell">C-310</td>
+<td>The full ensemble holds the continuous transport transition parameters fixed across every maximum-step comparison<br>
+<span class="tol">identical declared transition family for all cases and caps; native radial coefficient smoothing remains fixed; no width sweep or direct particle-flux formulation is included in this result</span></td>
+<td class="val">input and wrapper transitions span 10<sup>−4</sup> of their stored ranges, the low heat-coefficient fade spans 0.01 m²/s, upper-cap fades use 1% of the cap, and the particle switch spans 10% of its existing threshold</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m5-full-ensemble-v1/request-v1/request.json and reviews/m5-native-repair-v1/request-v2/executed-sources/torax_repair.py</td>
+<td><code>frozen full-ensemble transition configuration and continuous-closure source</code></td>
+</tr>
+<tr id="c-311" class="even">
+<td class="cid-cell">C-311</td>
+<td>The successful full ensemble uses bounded adaptive retries and shared raw-bound reporting endpoints<br>
+<span class="tol">strict complete state/post rollback; stop on floor, attempt exhaustion or explicit crash; reporting summaries must exactly match retained raw endpoint quantities</span></td>
+<td class="val">each macro step allows 64 proposals down to one 4096th of its maximum step, rejects by halving and recovers by at most doubling; common reporting times are 0.1, 0.4, 1, 3, 4.25 and 5 seconds</td>
+<td><span class="badge st-measured">measured</span></td>
+<td>reviews/m5-full-ensemble-v1/request-v1/request.json and request-v1/advance.py</td>
+<td><code>frozen full-ensemble retry source and reporting contract</code></td>
+</tr>
 </tbody>
 </table>
 
