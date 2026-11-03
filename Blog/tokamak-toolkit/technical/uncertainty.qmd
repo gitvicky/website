@@ -2,7 +2,7 @@
 title: Uncertainty propagation and validation
 toc: true
 toc-depth: 3
-date-modified: '2026-11-01'
+date-modified: '2026-11-02'
 ---
 
 ## Current continuous baseline: numerical convergence passed {#continuous-baseline}
@@ -18,6 +18,88 @@ checks. The sections below retain the earlier uncertainty study and hard-switch
 ladder failures. Their arrays and conclusions are not rewritten. The new result
 supports the numerical baseline; a later uncertainty/sensitivity design must
 explicitly adopt it. Physical discrepancy and physicist sign-off remain open.
+
+## Constrained flux representation through full processing {#constrained-flux-shadow}
+
+The first shadow preserves the admitted served finite-volume rate after native
+masking, clipping/floors and patches, before radial smoothing. At admitted
+unpatched faces it seeds diffusion with the baseline smoothed value and solves
+bounded velocity for the same rate. The bracketed facewise root uses implicit
+derivatives. Rejected/protected faces retain their coefficients, and the
+alternative receives the unchanged native particle preprocessing, smoothing,
+power-law face stencil and additional total-coefficient terms.
+
+The construction is feasible on the tested states, but the full operator
+comparison does not support expansion ([the selected particle-face difference falls from 5.76626% to 4.92144%, but complete-grid total rate L1 difference rises from 15.86765% to 16.23066% and divergence difference from 47.64620% to 49.04301%]{.claim}[C-316](/Blog/tokamak-toolkit/claims.qmd#c-316){.cid .st-measured}). Across the six
+particle side states, complete-grid rate and divergence differences worsen
+despite the selected-face gain. The cap context has global gains but a worse
+selected-face difference, and its paired rate differences plateau across the
+three tested boundary offsets ([the shadow paired total-rate difference stays near 5.10177% across a hundredfold reduction in cap offset, while the baseline difference shrinks by approximately the same hundredfold factor]{.claim}[C-317](/Blog/tokamak-toolkit/claims.qmd#c-317){.cid .st-measured}).
+
+The remap's binary eligibility switch explains that new issue. Near the cap,
+the original continuous served pair tends to fallback. The trial switches to
+a different diffusion representation on the admitted side and compensates
+velocity to preserve only its local pre-smoothing rate. Radial mixing exposes
+the representation difference at neighboring faces. This is a limitation of
+the shadow; the original continuous closure remains the numerical baseline.
+
+The unchanged strict AD/FD checks corroborate all new shadow components, while
+retaining inherited unresolved controls ([174 observations pass bounds, algebra and baseline parity; all 48 new shadow derivative components pass strict corroboration; 368 of 372 combined components pass, with four inherited cap controls unresolved]{.claim}[C-318](/Blog/tokamak-toolkit/claims.qmd#c-318){.cid .st-measured}). Branch-local
+derivatives and pre-smoothing algebra do not establish cross-branch continuity
+or a useful postprocessed operator. No physical accuracy tolerance is inferred.
+
+A successor needs continuous remapping under the same admission and coefficient
+limits and an objective defined after the full native processing. Its feasibility
+must be tested before matched trajectory windows. The current negative result
+is specific to this construction and does not rule out other formulations.
+
+Narrative companion: entry 100, local draft pending publication approval.
+
+## Identical-state radial-smoothing controls {#radial-smoothing-controls}
+
+Native radial coefficient smoothing and continuous guard/split transitions are
+separate operations. This control changes only the radial Gaussian HWHM while
+holding the continuous transition widths and each complete local context fixed.
+The mask excludes the inner patch and pedestal region; normalized weights below
+the native cutoff are removed and rows are normalized again. Zero width gives
+the identity on the retained grid, not a demonstrated continuum limit.
+
+The native producer evaluates six side states in each of the particle-split and
+coefficient-cap contexts at HWHM 0, 0.025, 0.05 and 0.1. It retains raw, served,
+native turbulent and total particle transport, face rates, matrix divergence,
+branch masks and directional AD. Geometry, clipping, floors, patches, admission,
+fallback and auxiliary history remain fixed. These are historical local contexts,
+not checkpoints on a newly integrated baseline trajectory.
+
+The selected particle response is nonmonotone across the nonzero widths
+([the selected particle rate is 0%, 6.76754%, 9.05578% and 5.76626% less inward than the raw target at radial HWHM 0, 0.025, 0.05 and 0.1 respectively]{.claim}[C-312](/Blog/tokamak-toolkit/claims.qmd#c-312){.cid .st-measured}). Its left density-cell derivative reverses sign at two
+widths, while the narrow nonzero control remains insufficiently corroborated
+([the target derivative is +39.9009; native values are +39.9009, +0.4076, −43.8378 and −38.8539 across the same widths; the +0.4076 value lacks strict finite-difference corroboration]{.claim}[C-313](/Blog/tokamak-toolkit/claims.qmd#c-313){.cid .st-measured}). The cap comparison separates radial mixing from the
+served closure's existing departure from the raw target ([the selected cap rate is already 96.87350% less inward than the raw target without radial smoothing, compared with 81.44208%, 63.19414% and 65.09036% at the three nonzero widths]{.claim}[C-314](/Blog/tokamak-toolkit/claims.qmd#c-314){.cid .st-measured}).
+
+A separate NumPy reconstruction checks the native kernel, masked regions,
+clipping/patch order, full face/matrix algebra and invariance of non-radial
+terms. The baseline-width observations and AD arrays reproduce the original
+evidence, including identical nonfinite masks outside the selected target face.
+Those inherited entries do not supply a full-face derivative certificate.
+
+The unchanged derivative rule requires two adjacent branch-preserving centered
+stencils to agree with AD within `1e-8 * max(abs(target_rate), 1) + 1e-4 * abs(JVP)`.
+Coverage and unresolved components are retained explicitly ([696 observations pass algebra/invariant reconstruction and 174 baseline observations reproduce the parent evidence; 996 of 1008 derivative components and 45 of 48 complete direction sets meet the strict rule]{.claim}[C-315](/Blog/tokamak-toolkit/claims.qmd#c-315){.cid .st-measured}).
+The original cap attempt crashed while an inherited periodic stack dump was
+printing during staging. A separate request cancels that diagnostic timer with
+identical numerical function ASTs and unchanged hard limits. Causality remains
+suspected rather than proven. A separate checker correction handles inherited
+nonfinite masks without changing the target-face derivative rule.
+
+No physical radius or density/flux bias tolerance is selected. The next bounded
+diagnostic should compare a constrained particle-flux shadow through the full
+native postprocessing operator, preserving admissibility and deliberate
+regularization. Any trajectory comparison must start from valid baseline
+state/post checkpoints and separate temporal, radial and transition-width effects.
+The existing endpoint QoI criterion is not a density/flux bias tolerance.
+
+Narrative companion: entry 99, local draft pending publication approval.
 
 ## Numerical methods
 

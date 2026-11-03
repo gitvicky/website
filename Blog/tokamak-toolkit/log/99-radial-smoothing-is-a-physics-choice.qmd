@@ -1,0 +1,54 @@
+---
+title: Narrower radial smoothing is not a monotone improvement
+date: '2026-11-01'
+categories:
+- measured
+entry: 99
+milestone: M5
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 99 · milestone M5
+:::
+
+**The validated numerical baseline stays unchanged.** New local controls show
+why choosing its radial smoothing policy needs a separate physics decision.
+The [primer](../primer.qmd) explains the guarded surrogate and fallback model.
+
+We evaluated the same retained plasma states with four radial smoothing widths.
+Transition widths, guards, clipping, floors, patches and profiles stayed fixed.
+The native operator includes the transport coefficients after processing, not
+only the surrogate's raw particle flux.
+
+At the particle-split boundary, smaller nonzero radii do not move the result
+steadily toward the raw target: [the selected particle rate is 0%, 6.76754%, 9.05578% and 5.76626% less inward than the raw target at radial HWHM 0, 0.025, 0.05 and 0.1 respectively]{.claim}[C-312](/Blog/tokamak-toolkit/claims.qmd#c-312){.cid .st-measured}. The selected response to a
+density perturbation also changes: [the target derivative is +39.9009; native values are +39.9009, +0.4076, −43.8378 and −38.8539 across the same widths; the +0.4076 value lacks strict finite-difference corroboration]{.claim}[C-313](/Blog/tokamak-toolkit/claims.qmd#c-313){.cid .st-measured}. A small AD value without
+the required finite-difference agreement remains unresolved.
+
+Zero radial width recovers the raw target at that particle state. It does not
+solve every mechanism. At the coefficient-cap context, the guarded served flux
+already differs before radial processing: [the selected cap rate is already 96.87350% less inward than the raw target without radial smoothing, compared with 81.44208%, 63.19414% and 65.09036% at the three nonzero widths]{.claim}[C-314](/Blog/tokamak-toolkit/claims.qmd#c-314){.cid .st-measured}. That raw-target
+difference is not a measured physical error, and it must not be attributed
+entirely to smoothing.
+
+The saved-state reconstructions retain the original baseline control and all
+derivative qualifications: [696 observations pass algebra/invariant reconstruction and 174 baseline observations reproduce the parent evidence; 996 of 1008 derivative components and 45 of 48 complete direction sets meet the strict rule]{.claim}[C-315](/Blog/tokamak-toolkit/claims.qmd#c-315){.cid .st-measured}. A failed cap process and a replay
+checker correction remain in the evidence history; the numerical equations and
+acceptance thresholds were not relaxed.
+
+These are local operator comparisons, not five-second density or fusion-power
+errors. They support a constrained particle-flux comparison through the full
+postprocessing operator before any trajectory policy changes. Valid-trajectory
+matched windows and an explicit density/flux accuracy requirement are still
+needed to judge accumulated effects.
+
+No production width was selected, no batch job was submitted and physicist
+sign-off remains pending.
+
+Technical details → [radial controls and limitations](../technical/uncertainty.qmd#radial-smoothing-controls).
+Milestone → [M5](../milestones/M5.qmd).
+
+::: {.entry-links}
+**Technical details →** [Uncertainty propagation and validation › radial smoothing controls](/Blog/tokamak-toolkit/technical/uncertainty.qmd#radial-smoothing-controls)  
+**Decisions →** [OQ-47](/Blog/tokamak-toolkit/decisions.qmd#oq-47)
+:::

@@ -59,11 +59,11 @@ working to a brief by a human owner who makes every physics, licence and publica
 | | |
 |---|---|
 | milestone | M5 |
-| log entries | 86 |
+| log entries | 88 |
 | tests passing | 1108 recorded full-mode results, 1108 with gated codes disabled |
 | source | 24560 lines + 14487 lines of tests |
-| baseline commit | `54ded90`; continuation source retained with its evidence |
-| updated | 2026-11-01 |
+| baseline commit | `14fcecb`; continuation source retained with its evidence |
+| updated | 2026-11-02 |
 
 Counts aggregate retained execution reports for the displayed code revision, with
 affected files rerun after code changes. The full suite has
@@ -908,7 +908,7 @@ human expert, not by the agent that built the code.
 ## The log
 
 <details class="tk-log">
-<summary>Show all 86 entries, newest first</summary>
+<summary>Show all 88 entries, newest first</summary>
 
 ::: {#log}
 :::

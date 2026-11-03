@@ -1,0 +1,57 @@
+---
+title: Flux preservation before smoothing is insufficient
+date: '2026-11-02'
+categories:
+- measured
+entry: 100
+milestone: M5
+---
+
+::: {.entry-meta}
+[measurement]{.chip .measured} Entry 100 · milestone M5
+:::
+
+**The first constrained particle-flux shadow does not justify trajectory
+windows.** The validated baseline and guard limits stay unchanged.
+The [primer](../primer.qmd) explains the guarded transport model.
+
+The trial changes the representation of admitted particle transport while
+preserving its local finite-volume flux before radial smoothing. Rejected
+faces keep their fallback coefficients. The alternative diffusion and velocity
+stay within the existing limits and receive the same complete native processing.
+The reference includes deliberate clipping, patches and fallback; it never
+restores an inadmissible raw surrogate just to improve agreement.
+
+That algebraic preservation survives the checks, but it does not make the
+postprocessed operator uniformly closer. [the selected particle-face difference falls from 5.76626% to 4.92144%, but complete-grid total rate L1 difference rises from 15.86765% to 16.23066% and divergence difference from 47.64620% to 49.04301%]{.claim}[C-316](/Blog/tokamak-toolkit/claims.qmd#c-316){.cid .st-measured}. A selected-face
+gain hides worse complete-grid flux and divergence differences.
+
+The cap context exposes another problem. Although the original served flux
+remains continuous across the sampled boundary, the trial switches its
+coefficient representation as soon as the binary guard admits the face.
+Velocity compensates locally before smoothing. Mixing that compensating pair
+into neighboring profiles exposes a persistent paired difference:
+[the shadow paired total-rate difference stays near 5.10177% across a hundredfold reduction in cap offset, while the baseline difference shrinks by approximately the same hundredfold factor]{.claim}[C-317](/Blog/tokamak-toolkit/claims.qmd#c-317){.cid .st-measured}. This belongs to the trial construction, not a relaxed guard
+or a change to the validated baseline.
+
+The derivative checks succeed within the tested branches:
+[174 observations pass bounds, algebra and baseline parity; all 48 new shadow derivative components pass strict corroboration; 368 of 372 combined components pass, with four inherited cap controls unresolved]{.claim}[C-318](/Blog/tokamak-toolkit/claims.qmd#c-318){.cid .st-measured}. That success does not establish continuity between branches.
+The failed software-test setup attempts remain in the evidence history; both
+scientific context runs complete under their fixed limits.
+
+The next local design must make the remapping itself continuous and assess
+feasibility against the fully postprocessed face-rate and divergence operator.
+Only a useful admissible candidate should advance to windows starting from
+valid current-baseline state and auxiliary checkpoints.
+
+These are historical fixed-state operator comparisons, not density errors,
+five-second fusion-power uncertainties or experimental validation. No matched
+window, batch job, production deployment or physics sign-off follows.
+
+Technical details → [construction and expansion screen](../technical/uncertainty.qmd#constrained-flux-shadow).
+Milestone → [M5](../milestones/M5.qmd).
+
+::: {.entry-links}
+**Technical details →** [Uncertainty propagation and validation › constrained flux shadow](/Blog/tokamak-toolkit/technical/uncertainty.qmd#constrained-flux-shadow)  
+**Decisions →** [OQ-47](/Blog/tokamak-toolkit/decisions.qmd#oq-47)
+:::

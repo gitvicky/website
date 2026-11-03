@@ -10,7 +10,7 @@ date-modified: '2026-10-28'
 What each category of test is there to prove, and which claims rest on it. The suite is run in
 full and again with every gated code disabled (`TKIT_TIER_A_ONLY=1`); at the last publish,
 1108 tests passed in the first mode and 1108 in the
-second, at commit `54ded90`. Tests that need an optional code (TORAX, FreeGSNKE,
+second, at commit `14fcecb`. Tests that need an optional code (TORAX, FreeGSNKE,
 ASCOT5, Aurora) or a downloaded file skip cleanly when it is absent.
 
 The code now has a private hosted repository and the continuous-integration workflow runs on
