@@ -170,8 +170,8 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>A whole tokamak.</strong> The full MAST-U structural model has 29.2 million nodes and 134.6 million tetrahedra, built from 3,938 CAD parts, with steel, copper and graphite meeting at over a million interface nodes. A single static solve costs more than 500 CPU-hours on 800 cores. L-SplineFNO, with a separate spline transfer per material and one shared FNO, learns the thermal-expansion displacement field from the expansion coefficient and wall temperature, and reaches 1.8% relative error trained on a single H100.</li>
 </ul>
 </section>
-<section id="the-bit-i-like-most" class="level3">
-<h3 class="anchored" data-anchor-id="the-bit-i-like-most">The bit I like most</h3>
+<section id="the-neat-part" class="level3">
+<h3 class="anchored" data-anchor-id="the-neat-part">The neat part</h3>
 <p>The spline decoder gives you rigorous bounds almost for free. On each cell, the prediction can be written in Bernstein form, and because the Bernstein basis is non-negative, the field is a convex combination of its coefficients. Their minimum and maximum enclose every point in the cell, including the points between mesh nodes. Subdivision tightens the enclosure. Propagate a second-order Taylor model of the operating parameters through the trained network and the same argument holds over a whole box of uncertain parameters. In FP64 with outward rounding, the enclosure is certified end to end.</p>
 <p>Mesh-native and attention-based operators have no continuous reconstruction, so they cannot offer a comparable guarantee.</p>
 <p>To be clear about the limitation: these bounds enclose the <em>surrogate</em>, not its error against the solver.</p>
@@ -619,7 +619,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"loop":false,"closeEffect":"zoom","selector":".lightbox","openEffect":"zoom","descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","descPosition":"bottom","openEffect":"zoom","loop":false});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

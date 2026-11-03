@@ -44,6 +44,7 @@
   {
     "listing": "/Blog/tokamak-toolkit/index.html",
     "items": [
+      "/Blog/tokamak-toolkit/log/99-radial-smoothing-is-a-physics-choice.html",
       "/Blog/tokamak-toolkit/log/98-full-iter-ensemble-passes-convergence.html",
       "/Blog/tokamak-toolkit/log/97-strict-physical-residuals-and-continuous-transport.html",
       "/Blog/tokamak-toolkit/log/84-ec-genray-reference-package.html",
@@ -120,6 +121,7 @@
       "/Blog/tokamak-toolkit/log/13-m1-physicist-review.html",
       "/Blog/tokamak-toolkit/log/12-ascot5-second-run.html",
       "/Blog/tokamak-toolkit/log/11-raptor-lmode-benchmark.html",
+      "/Blog/tokamak-toolkit/log/100-flux-preservation-before-smoothing-is-insufficient.html",
       "/Blog/tokamak-toolkit/log/10-ascot5-alpha-heating.html",
       "/Blog/tokamak-toolkit/log/09-run-tracking.html",
       "/Blog/tokamak-toolkit/log/08-energy-particle-balance.html",

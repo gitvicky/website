@@ -832,5 +832,11 @@
   },
   "Blog/tokamak-toolkit/technical/solver-learning.qmd": {
     "solver-learning.html": "bfd83377"
+  },
+  "Blog/tokamak-toolkit/log/99-radial-smoothing-is-a-physics-choice.qmd": {
+    "99-radial-smoothing-is-a-physics-choice.html": "73da05e5"
+  },
+  "Blog/tokamak-toolkit/log/100-flux-preservation-before-smoothing-is-insufficient.qmd": {
+    "100-flux-preservation-before-smoothing-is-insufficient.html": "76c2134c"
   }
 }
