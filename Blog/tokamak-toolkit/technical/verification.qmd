@@ -2,8 +2,15 @@
 title: Verification
 toc: true
 toc-depth: 3
-date-modified: '2026-10-25'
+date-modified: '2026-11-04'
 ---
+
+**Owner closeout, 4 Nov 2026 ([OQ-52](/Blog/tokamak-toolkit/decisions.qmd#oq-52)):** scoped M4 certification, frozen-closure
+acceptance and reduced-scope M5 physicist sign-off are recorded. Full current-baseline
+UQ remains incomplete. Earlier pending-gate wording below belongs to the dated
+research history; unresolved numerical properties retain their original status.
+
+# Verification
 
 ## Scope
 
@@ -948,3 +955,67 @@ Retained solver counters motivate a separate scheduling diagnosis: final output 
 The bounded follow-up gives each intermediate activation a separate clock and reserves a final clock after every output head contributes constraints. Deterministic activation ordering permits cross-process replay. Incremental artifacts retain sparse constraints, finite variable boxes, affine forms, signed objectives, usable inequality duals and explicit interval fallback for every skipped or unusable objective. The independent auditor reconstructs the original graph and activation constraints, then replays stationarity corrections rather than trusting solver objectives or producer summaries.
 
 All final objectives run, but the independently audited physical enclosures remain nonfinite ([both full-box pilots retain nonfinite physical enclosures after all final objectives run; independent graph, constraint and corrected-dual replay passes, with no finite physical candidate]{.claim}[C-297](/Blog/tokamak-toolkit/claims.qmd#c-297){.cid .st-preliminary}). Intersecting with the inherited enclosure preserves its endpoints exactly. Large relaxation terms dominate the small residual corrections; final-objective starvation alone does not explain the remaining looseness. Neither an identical retry nor an ensemble sweep follows from this result. The full-box property, stored models, guards and human acceptance gate remain unchanged.
+
+## Transport retraining for bounded verification (OQ-46 (b)) {#transport-retraining}
+
+The retraining was declared before any training: candidates, targets, evaluator and selection rule
+(`reviews/m4-transport-retrain-v1/README.md`). There were four variants per machine, each an
+ensemble of 20 members, using the monotone signed-log recipe of the current models. Only the
+network size and an input-Jacobian penalty changed. The variants were a width-64 trunk with one
+residual block of two layers, or a single width-128 layer, each with penalty 0 or 1e-2.
+
+- **Penalty.** Weight times the mean squared Frobenius norm of the member's input Jacobian,
+  in normalised units, on the first 256 rows of each batch. It is in the training loss only.
+  Validation and early stopping use the data loss.
+- **Targets.**
+  - (1) median relative error ≤ 0.30 on Q_e and Q_i on the v3 test split;
+  - (2a) every per-face operating box bounded for all members;
+  - (2b) every in-domain V6 box bounded for all members;
+  - (3) gradient sensitivity, reported only.
+- **What "bounded" means.** The training-space bound converts to a finite physical bound
+  through the served inverse signed-log.
+- **Evaluator.** CROWN on the direct ELU graph, then the default graph, then input splitting.
+  It is fail-fast: after the first failed (box, member), the remaining boxes are bounded for
+  member 0 only, without splitting, and those results are for information only.
+
+Round 1 found that the penalty is what makes V6 boxes boundable, and that it costs MAST-U
+accuracy ([none of 8 retrained candidates passes; with Jacobian penalty 1e-2 every in-domain V6 box is bounded, and without it the first V6 box fails]{.claim}[C-320](/Blog/tokamak-toolkit/claims.qmd#c-320){.cid .st-measured}). Round 2 raised the per-split time budget, after round 1 had been
+seen, and tried two smaller MAST-U penalties. It failed again ([12 of 20 ITER members bound every operating face; MAST-U Q_i error 0.345 and 0.370 against a 0.30 target]{.claim}[C-321](/Blog/tokamak-toolkit/claims.qmd#c-321){.cid .st-measured}). Its splits
+reached the 4096-leaf limit and gained about 1%. The partition halves the longest relative
+side of each leaf in turn, which is too slow to shrink any one leaf in 17 dimensions. A
+post-hoc sampling diagnostic showed the bounds were loose, not the networks
+([sampled outputs from -4.2 to 8.1 against CROWN bounds from -665 to 733]{.claim}[C-322](/Blog/tokamak-toolkit/claims.qmd#c-322){.cid .st-measured}).
+
+### Round 3: verifier change for ITER {#transport-retraining-round3}
+
+MAST-U stopped at round 2 by owner decision, because no MAST-U model meets the accuracy target.
+For ITER, round 3 adds two steps to the evaluator, used only when CROWN on the whole box fails.
+The steps were declared before any failing case was bounded (`round3/README.md`).
+
+1. **alpha-CROWN** on the whole box: 100 iterations, at most 120 s, intersected with CROWN
+   and interval bounds.
+2. **Targeted splitting** (`bounds.bound_partition_targeted`).
+   - The leaf with the largest |bound|, among those not yet finite, is halved next.
+   - The split axis maximises box width × |central-difference gradient| at the leaf centre,
+     for that leaf's worst output.
+   - Leaves use CROWN and are intersected with their parent.
+   - Splitting stops when every leaf is finite, or at 4096 leaves or 3600 s.
+
+All 20 members bound all 38 faces ([all 20 members on all 38 operating faces: 727 bounded directly, 17 by alpha-CROWN, 16 by targeted splitting of 3 to 161 leaves]{.claim}[C-323](/Blog/tokamak-toolkit/claims.qmd#c-323){.cid .st-measured}). The bounds are finite but very wide
+([median largest bound 148 and maximum 709.6 in signed-log units, against an overflow limit of 709.78]{.claim}[C-324](/Blog/tokamak-toolkit/claims.qmd#c-324){.cid .st-measured}): the targeted split stops as soon as every leaf is finite, so split
+cases end just under the overflow limit. The result shows that the bare network cannot overflow
+on any operating box. It does not give a useful flux range; the envelope bounds of [OQ-46](/Blog/tokamak-toolkit/decisions.qmd#oq-46) (a)
+do that for the served output. The candidate is less accurate than v1 ([median error 0.178 and 0.169 for Q_e and Q_i, against 0.072 and 0.108 for v1]{.claim}[C-325](/Blog/tokamak-toolkit/claims.qmd#c-325){.cid .st-measured}). It
+is now packaged as version 2 with separate property, envelope, calibration and integrity
+records. CI checks both versions; M5 keeps version 1.
+
+The fresh package audit binds exact operating boxes and selected local-state centres to
+source, model and data hashes. Its actual local-robustness rule compares the served ensemble's
+interval against the centre prediction: each heat-flux change must stay within 10% of the
+certified full-training-box served range when raw inputs vary by 1% of their training range.
+[12 states proved, three unknown and five outside domain under the actual local-robustness tolerance]{.claim}[C-326](/Blog/tokamak-toolkit/claims.qmd#c-326){.cid .st-measured}. Finite bounds alone do not satisfy this tolerance. Unknown cases are
+inconclusive enclosures, not observed violations, and the package does not claim full V6.
+Heavy bounds and dataset calibration are retained evidence rather than rerun in quick CI.
+Packaging itself does not confer owner certification. [OQ-52](/Blog/tokamak-toolkit/decisions.qmd#oq-52) separately records the
+owner’s certification within the stated limits; unknown and outside-domain cases
+remain unproved.

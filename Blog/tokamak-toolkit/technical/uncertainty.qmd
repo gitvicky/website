@@ -2,8 +2,15 @@
 title: Uncertainty propagation and validation
 toc: true
 toc-depth: 3
-date-modified: '2026-11-02'
+date-modified: '2026-11-04'
 ---
+
+**Owner closeout, 4 Nov 2026 ([OQ-52](/Blog/tokamak-toolkit/decisions.qmd#oq-52)):** scoped M4 certification, frozen-closure
+acceptance and reduced-scope M5 physicist sign-off are recorded. Full current-baseline
+UQ remains incomplete. Earlier pending-gate wording below belongs to the dated
+research history; unresolved numerical properties retain their original status.
+
+# Uncertainty propagation and validation
 
 ## Current continuous baseline: numerical convergence passed {#continuous-baseline}
 
@@ -218,3 +225,24 @@ Narrative companion: entry 95 (private draft pending publication).
 
 - 2026-10-28: retained native-solver diagnostic limits and unresolved paired refinement (entries 92–93, private drafts).
 - 2026-10-28: added domain/balance diagnosis and internal branch decomposition (entries 94–95, private drafts).
+
+### Current-baseline implementation and bounded pilot {#baseline-pilot-closeout}
+
+The new propagation driver binds the adopted continuous closure and [OQ-51](/Blog/tokamak-toolkit/decisions.qmd#oq-51) state-level
+transport calibration. It retains the complete sampling and sensitivity designs, invalid
+rows, accepted-state diagnostic denominators and member-specific derivative controls.
+The historical propagation remains evidence for its original discretization and calibration.
+
+[three selected five-second trajectories pass the raw audit; only one of ten finite-difference controls survives the derivative timeout]{.claim}[C-327](/Blog/tokamak-toolkit/claims.qmd#c-327){.cid .st-measured}. A finite automatic Jacobian is insufficient: central finite differences
+must complete before agreement can be assessed. Matching observed adaptive histories alone
+does not establish smoothness of every internal Newton branch. Conditional derivatives
+remain labelled conditional, and the development comparison failure is preserved.
+
+[the 18,432-trajectory design projects roughly 1,710–1,877 node-hours in the measured worker layout, before derivatives and recovery]{.claim}[C-328](/Blog/tokamak-toolkit/claims.qmd#c-328){.cid .st-preliminary}. These scenarios include complete trajectory-worker costs but cannot
+price the censored derivative work or unobserved prior tails. They motivate a throughput
+and scope decision before production, without changing sample counts or tolerances.
+No current-baseline Monte Carlo percentiles, Sobol rankings or linearised cross-check are
+claimed from this pilot. [OQ-52](/Blog/tokamak-toolkit/decisions.qmd#oq-52) records the owner’s frozen-closure acceptance, scoped
+M4 certification and M5 physicist sign-off for a bounded research deliverable.
+Full UQ and derivative agreement remain incomplete and are excluded from that
+accepted completion scope.

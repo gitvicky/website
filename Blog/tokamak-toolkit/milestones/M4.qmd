@@ -1,6 +1,6 @@
 ---
 title: M4 · Verification
-subtitle: Transport-bound investigation unresolved; certification pending
+subtitle: Certified within stated limits; unresolved properties retained
 toc: true
 disclosure:
   class: green
@@ -8,12 +8,19 @@ disclosure:
   approved_on: null
 ---
 
+## Current package
+
+ITER version 2 is packaged beside the original model, with fresh operating-box,
+local-state, calibration and integrity evidence. [12 states proved, three unknown and five outside domain under the actual local-robustness tolerance]{.claim}[C-326](/Blog/tokamak-toolkit/claims.qmd#c-326){.cid .st-measured}. Finite
+bounds do not establish full local robustness, and M5 keeps version 1. The served
+output envelope and bare-network bounds have different scopes. The owner grants certification within the stated limits under [OQ-52](/Blog/tokamak-toolkit/decisions.qmd#oq-52). The table below retains the historical v1 review.
+
 ## Goal and gate
 
 Prove the owner-selected properties over explicit input boxes, calibrate uncertainty intervals,
 compare coupled trajectories against Tier A physics and bind the guards to the certificates.
 The brief requires CI to re-prove properties on surrogate changes. The owner certification
-review is the human gate. Certification has not been granted; the owner requested further transport-bound work.
+review is the human gate. [OQ-52](/Blog/tokamak-toolkit/decisions.qmd#oq-52) records the owner’s scoped certification. The earlier request for further transport-bound work remains part of the review history; unresolved properties are not certified as proved.
 
 ## Current review package
 
@@ -35,7 +42,7 @@ The four verification records, guard integration and CI re-proof are assembled f
 | conformal calibration | completed ([90% intervals calibrated on the v1 validation split cover 0.887–0.907 on the v1 test and v2-random splits (6 outputs, ITER and MAST-U); 9 of 12 lie in the 0.893–0.907 range expected for exchangeable data, the other three miss it by at most 0.006]{.claim}[C-256](/Blog/tokamak-toolkit/claims.qmd#c-256){.cid .st-measured}, [90% intervals calibrated on 190 guard-accepted validation states (4 runs) cover 0.876–0.978 of 548 served test states (8 runs); all six outputs lie within or above the 0.856–0.938 range expected for exchangeable data; per-run coverage 0.78–1.00]{.claim}[C-258](/Blog/tokamak-toolkit/claims.qmd#c-258){.cid .st-measured}); loop-state limitations retained |
 | EC trajectory comparison | completed within the fixed-equilibrium convention ([40/40 cases pass the unchanged 10% power and signed-current limits, including 31/31 served states; maximum current error 9.606% EL and 7.393% UL, maximum power error 0.07483% EL and 0.02599% UL]{.claim}[C-281](/Blog/tokamak-toolkit/claims.qmd#c-281){.cid .st-measured}); [K-028](/Blog/tokamak-toolkit/ceilings.qmd#k-028) remains |
 | certificate-bound guards, per-surrogate reports and cheap CI re-proofs | implemented and checked; expensive unresolved properties remain separate |
-| certification review | pending |
+| certification review | owner-approved within stated limits ([OQ-52](/Blog/tokamak-toolkit/decisions.qmd#oq-52)) |
 
 **Historical position (26 Oct 2026).** The MAST-U remediation stopped at its reference step: no
 admissible TGLF reference trajectory exists for comparing the retrained candidate, and the

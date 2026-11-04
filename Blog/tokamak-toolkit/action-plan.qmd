@@ -1,7 +1,7 @@
 ---
 title: Action plan
-subtitle: Full ensemble numerical convergence passed; model review and uncertainty
-  design remain
+subtitle: Bounded research deliverable accepted; future extensions require a separate
+  decision
 toc: true
 disclosure:
   class: green
@@ -11,7 +11,7 @@ disclosure:
 
 ## Current position
 
-M4 has its four verification records, guard integration and cheap CI re-proof. The bounded transport-bound investigation closes scientifically unresolved ([both full-box pilots retain nonfinite physical enclosures after all final objectives run; independent graph, constraint and corrected-dual replay passes, with no finite physical candidate]{.claim}[C-297](/Blog/tokamak-toolkit/claims.qmd#c-297){.cid .st-preliminary}); certification remains pending. [OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42), [OQ-45](/Blog/tokamak-toolkit/decisions.qmd#oq-45) and [OQ-46](/Blog/tokamak-toolkit/decisions.qmd#oq-46) retain the stated limits. No failed proof or out-of-domain robustness box is relabelled as a pass. The guard artifact audit is [all four verified input boxes match the previous loaders; 48 of 48 retained pedestal states keep identical predictions and decisions; none of the 57 EC states is inside the exact proof boxes, so no EC certificate-based output check applies there]{.claim}[C-284](/Blog/tokamak-toolkit/claims.qmd#c-284){.cid .st-measured}.
+M4 has its verification records, guard integration and cheap CI re-proof. ITER version 2 is packaged separately; its actual local-robustness result is [12 states proved, three unknown and five outside domain under the actual local-robustness tolerance]{.claim}[C-326](/Blog/tokamak-toolkit/claims.qmd#c-326){.cid .st-measured}. The earlier negative proof investigation remains historical evidence ([both full-box pilots retain nonfinite physical enclosures after all final objectives run; independent graph, constraint and corrected-dual replay passes, with no finite physical candidate]{.claim}[C-297](/Blog/tokamak-toolkit/claims.qmd#c-297){.cid .st-preliminary}); the owner grants certification within the stated limits under [OQ-52](/Blog/tokamak-toolkit/decisions.qmd#oq-52). [OQ-42](/Blog/tokamak-toolkit/decisions.qmd#oq-42), [OQ-45](/Blog/tokamak-toolkit/decisions.qmd#oq-45) and [OQ-46](/Blog/tokamak-toolkit/decisions.qmd#oq-46) retain the stated limits. No failed proof or out-of-domain robustness box is relabelled as a pass. The guard artifact audit is [all four verified input boxes match the previous loaders; 48 of 48 retained pedestal states keep identical predictions and decisions; none of the 57 EC states is inside the exact proof boxes, so no EC certificate-based output check applies there]{.claim}[C-284](/Blog/tokamak-toolkit/claims.qmd#c-284){.cid .st-measured}.
 
 The full original ITER ensemble now passes the numerical convergence gate
 under a new continuous transport closure ([all 33 original cases reach five seconds at all three maximum-step settings: 99 of 99 valid trajectories and 264 of 264 passing endpoint comparisons]{.claim}[C-305](/Blog/tokamak-toolkit/claims.qmd#c-305){.cid .st-measured}, [the largest changes are 0.219% for coarse-to-middle and 0.0423% for middle-to-fine, both below the 1% acceptance limit]{.claim}[C-306](/Blog/tokamak-toolkit/claims.qmd#c-306){.cid .st-measured}).
@@ -23,23 +23,25 @@ state its limits. Historical hard-switch ladder failures ([C-295](/Blog/tokamak-
 remain historical results rather than being relabelled as passing.
 
 The earlier uncertainty study retains its prior definitions, nonlinear flags
-([C-287](/Blog/tokamak-toolkit/claims.qmd#c-287)) and calibration evidence ([C-285](/Blog/tokamak-toolkit/claims.qmd#c-285)). A new complete uncertainty/sensitivity
-design must explicitly adopt the successful baseline. Numerical convergence does
-not remove the unquantified pedestal/equilibrium discrepancy ([K-035](/Blog/tokamak-toolkit/ceilings.qmd#k-035)) or the
-physicist sign-off gate.
+([C-287](/Blog/tokamak-toolkit/claims.qmd#c-287)) and calibration evidence ([C-285](/Blog/tokamak-toolkit/claims.qmd#c-285)). The complete current-baseline design and
+driver now use [OQ-51](/Blog/tokamak-toolkit/decisions.qmd#oq-51). [three selected five-second trajectories pass the raw audit; only one of ten finite-difference controls survives the derivative timeout]{.claim}[C-327](/Blog/tokamak-toolkit/claims.qmd#c-327){.cid .st-measured}. [the 18,432-trajectory design projects roughly 1,710–1,877 node-hours in the measured worker layout, before derivatives and recovery]{.claim}[C-328](/Blog/tokamak-toolkit/claims.qmd#c-328){.cid .st-preliminary}. Full execution and
+complete derivative validation remain incomplete and are excluded from the accepted
+bounded completion scope. [OQ-52](/Blog/tokamak-toolkit/decisions.qmd#oq-52) records closure acceptance and reduced-scope M5
+physicist sign-off, retaining unquantified pedestal/equilibrium discrepancy ([K-035](/Blog/tokamak-toolkit/ceilings.qmd#k-035)).
+Any extension needs a separate scope/resource decision.
 
-## Review package and remaining decisions {#m4}
+## Accepted package and retained limitations {#m4}
 
 | work | state | next decision |
 |---|---|---|
-| M4 model-bound evidence and four records | bounded proof investigation unresolved; records assembled | certification remains pending |
+| M4 model-bound evidence and four records | v2 packaged; robustness limitations retained | owner-approved within stated limits ([OQ-52](/Blog/tokamak-toolkit/decisions.qmd#oq-52)) |
 | guard artifacts and fallback monitor | implemented; no proof box expanded; revised [OQ-50](/Blog/tokamak-toolkit/decisions.qmd#oq-50) alert policy adopted | no threshold decision is outstanding |
 | cheap CI re-proof | implemented and checked | no additional compute |
-| hybrid calibration and Bayesian reference-label audit | computed; conditional assumptions stated | review those assumptions |
-| ITER numerical baseline | full ensemble convergence passed ([C-305](/Blog/tokamak-toolkit/claims.qmd#c-305), [C-306](/Blog/tokamak-toolkit/claims.qmd#c-306)) | physicist review of the continuous closure; explicit next uncertainty design |
-| ITER Monte Carlo, linearisation and sensitivity | historical study retained | adopt the numerical baseline explicitly before a new complete propagation |
+| hybrid calibration and Bayesian reference-label audit | computed; conditional assumptions stated | conditional assumptions retained under reduced-scope acceptance |
+| ITER numerical baseline | full ensemble convergence passed ([C-305](/Blog/tokamak-toolkit/claims.qmd#c-305), [C-306](/Blog/tokamak-toolkit/claims.qmd#c-306)) | frozen closure accepted ([OQ-52](/Blog/tokamak-toolkit/decisions.qmd#oq-52)); full UQ excluded from bounded completion |
+| ITER Monte Carlo, linearisation and sensitivity | historical study retained | full current-baseline execution remains incomplete; separate future scope/resource decision |
 | internal predictor/corrector diagnosis | completed with parent-trajectory parity; internal branch mismatch and a local residual contribution established | historical checkpoint protocol superseded by the passing continuous baseline |
-| pedestal/equilibrium physical discrepancy | unquantified | further validation if required by the reviewer |
+| pedestal/equilibrium physical discrepancy | unquantified | accepted as unquantified within the reduced scope |
 | public draft entries | prepared locally | owner publication decision |
 
 ## JOREK: finish J5, then decide its role {#jorek}
@@ -63,11 +65,11 @@ physicist sign-off gate.
 |---|---|
 | guard alert policy | revised report-only thresholds already adopted under [OQ-50](/Blog/tokamak-toolkit/decisions.qmd#oq-50) |
 | end of J5 | JOREK's role: surrogate, reference runs, or neither |
-| end of M4 | the certification review |
+| M4 closeout | scoped certification granted under [OQ-52](/Blog/tokamak-toolkit/decisions.qmd#oq-52) |
 
-## M5 inputs and remaining gates {#m5}
+## M5 inputs and accepted scope {#m5}
 
-[OQ-47](/Blog/tokamak-toolkit/decisions.qmd#oq-47) fixes the minimal Tier A scenario, priors and quantities of interest; [OQ-48](/Blog/tokamak-toolkit/decisions.qmd#oq-48) fixes the selected transport-discrepancy calibration. Do not reopen those decisions to repair numerical failures. Retain the same cases and physics through temporal refinement. The new continuous baseline now supplies its declared numerical pass. A complete, explicitly adopted design is still required for subsequent uncertainty and sensitivity propagation. Pedestal and equilibrium discrepancy remain unquantified; marginal conformal intervals do not supply a validated final-power error bound. Physicist sign-off remains the human gate.
+[OQ-47](/Blog/tokamak-toolkit/decisions.qmd#oq-47) fixes the minimal Tier A scenario, priors and quantities of interest; [OQ-51](/Blog/tokamak-toolkit/decisions.qmd#oq-51) fixes current-baseline transport calibration, with [OQ-48](/Blog/tokamak-toolkit/decisions.qmd#oq-48) retained for historical results and as the conservative alternative. Do not reopen those decisions to repair numerical failures. Retain the same cases and physics through temporal refinement. The new continuous baseline now supplies its declared numerical pass. The complete adopted design is implemented; its full uncertainty and sensitivity execution remains unrun. Pedestal and equilibrium discrepancy remain unquantified; marginal conformal intervals do not supply a validated final-power error bound. [OQ-52](/Blog/tokamak-toolkit/decisions.qmd#oq-52) grants physicist sign-off for the bounded deliverable, with full UQ explicitly incomplete.
 
 ## M3 work record {#m3-record}
 

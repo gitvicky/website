@@ -11,15 +11,39 @@ that aren't explained by a bug. When the agent reaches one, it writes the questi
 context and a recommended answer, carries on with whatever isn't blocked, and waits. Numbers
 (OQ-*n*) match the project's internal record. Newest first within each group.
 
-## Awaiting a decision
+## Closeout accepted
 
-### OQ-50 · Fallback-rate alert thresholds {#v10-threshold}
-
-The guards will report when the share of states sent to the Tier A fallback rises above a
-configured threshold, which signals that the verified domain is too small. The owner sets
-one value per surrogate from the rates measured on the existing coupled runs. The requested proposals are 40% for ITER transport, 50% for MAST-U transport, 45% for EC and 10% for the pedestal. They remain unadopted. The wider M5 prior study exceeds the proposed ITER threshold; it is reported without retuning the proposal.
+[OQ-52](/Blog/tokamak-toolkit/decisions.qmd#oq-52) resolves the remaining human gates for the bounded research deliverable.
+No further approval is needed to close that reduced scope. Full UQ, further research
+and publication require separate decisions if requested.
 
 ## Settled
+
+### OQ-52 · Scoped certification and bounded project acceptance {#oq-52}
+
+*Decided 4 Nov 2026.* The owner approves M4 within its stated verification limits,
+accepts the exact frozen continuous closure, closes the project as a bounded research
+deliverable, and gives M5 physicist sign-off for that reduced scope. Full current-baseline
+UQ and derivative agreement remain incomplete. Unknown proofs, EC/MAST-U limits,
+unquantified closure and pedestal/equilibrium discrepancy, and incomplete JOREK grid
+evidence retain their dispositions. The decision does not establish experimental
+accuracy or authorize new compute, publication, uploads or model replacement.
+
+### OQ-51 · Current-baseline transport calibration {#oq-51}
+
+*Decided 3 Nov 2026.* The owner adopts the baseline-calibrated S1 transport half-widths
+as the state-level term, retaining [OQ-48](/Blog/tokamak-toolkit/decisions.qmd#oq-48) as the conservative alternative. Radial and
+particle-flux under-coverage remain limitations. Historical results keep their original
+calibration; no completed full current-baseline propagation is claimed.
+
+<span id="v10-threshold"></span>
+
+### OQ-50 · Fallback-rate alert thresholds {#oq-50}
+
+*Decided 27 Oct 2026.* The owner adopts report-only alerts strictly above 35% for ITER
+transport, 50% for MAST-U transport, 10% for the upper EC launcher, 45% for the equatorial
+EC launcher, and 5% for the pedestal. These alerts change neither guard decisions nor
+proof domains. The earlier proposed thresholds are superseded.
 
 ### OQ-49 · Compute for the minimal uncertainty study {#oq-49}
 

@@ -1,6 +1,6 @@
 ---
 title: M5 · Uncertainty and validation
-subtitle: Full ensemble numerical convergence passed; physicist sign-off pending
+subtitle: Bounded research deliverable accepted; full uncertainty campaign incomplete
 toc: true
 disclosure:
   class: green
@@ -16,8 +16,18 @@ closure and strict research acceptance protocol ([the new research baseline uses
 
 [Result narrative](../log/98-full-iter-ensemble-passes-convergence.qmd) ·
 [Technical protocol](../technical/solver-learning.qmd#full-ensemble-convergence).
-Physical-model acceptance and physicist sign-off remain separate gates.
+The owner accepts the frozen closure and grants physicist sign-off for the reduced
+bounded-research scope ([OQ-52](/Blog/tokamak-toolkit/decisions.qmd#oq-52)).
 :::
+
+## Current uncertainty implementation
+
+The source-bound driver uses the adopted continuous baseline and [OQ-51](/Blog/tokamak-toolkit/decisions.qmd#oq-51) calibration.
+[three selected five-second trajectories pass the raw audit; only one of ten finite-difference controls survives the derivative timeout]{.claim}[C-327](/Blog/tokamak-toolkit/claims.qmd#c-327){.cid .st-measured}. [the 18,432-trajectory design projects roughly 1,710–1,877 node-hours in the measured worker layout, before derivatives and recovery]{.claim}[C-328](/Blog/tokamak-toolkit/claims.qmd#c-328){.cid .st-preliminary}. Full sampling, sensitivity and derivative
+agreement remain unestablished. [OQ-52](/Blog/tokamak-toolkit/decisions.qmd#oq-52) closes and accepts the implementation, evidence
+and bounded pilot as the reduced research deliverable. Full UQ is excluded from
+that completion scope and requires a separate future decision.
+[Technical scope](../technical/uncertainty.qmd#baseline-pilot-closeout).
 
 ## Scope
 
@@ -49,7 +59,8 @@ attribute the endpoint power difference or support a remedy. See the
 
 At that historical stage, the extra-iterate checkpoint protocol was prepared but
 unimplemented and unsubmitted. The later continuous baseline now passes the complete
-comparison; a new full uncertainty/sensitivity design and physicist review remain open.
+comparison; full uncertainty/sensitivity execution remains incomplete; [OQ-52](/Blog/tokamak-toolkit/decisions.qmd#oq-52) subsequently grants
+physicist sign-off for the reduced scope.
 
 
 ## Current numerical baseline
