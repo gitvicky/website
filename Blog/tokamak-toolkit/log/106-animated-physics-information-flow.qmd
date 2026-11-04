@@ -1,0 +1,43 @@
+---
+title: Animated information flow follows a plasma update
+date: '2026-11-04'
+categories:
+- built
+entry: 106
+milestone: M5
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 106 · milestone M5
+:::
+
+The interactive explorer now walks through how physics modules exchange information.
+Readers can play, pause, move backward or forward, and restart the sequence. A moving packet
+highlights the active route while a nearby explanation names the variables being passed.
+
+The walkthrough follows magnetic geometry, heating, transport, guards and edge conditions
+into the plasma solve. It distinguishes the current trial from the accepted plasma: a trial
+does not advance time until the illustrated acceptance checks pass. The updated profiles then
+become inputs for the next step. This is a conceptual sequence, not a new simulation or a
+literal trace of solver calls.
+
+The machine-specific limits remain visible. ITER uses prescribed geometry and its current
+continuous transport closure. MAST-U retains static imported geometry, prescribed source and
+edge settings, and its recorded accuracy limitations. Stability stays outside the core loop.
+The colours now follow the owner's website: white, black and grey, with the theme's blue
+primary colour marking the current exchange.
+
+| interaction | check |
+|---|---|
+| Playback | pauses, restarts, ends, and resets on machine changes |
+| Plasma update | accepted state stays unchanged until the acceptance stage |
+| Reduced motion | static directional paths and manual controls remain available |
+| Reading progress | playback does not mark unopened topics as read |
+
+Browser checks exercise these paths alongside the existing mobile, keyboard and evidence
+checks. The disclosure scrub and export checks still apply. No physics result or acceptance
+claim changes; the owner approved publication of the explorer update.
+
+::: {.entry-links}
+**Technical details →** [Interactive modelling explorer](/Blog/tokamak-toolkit/technical/explorer.qmd)
+:::

@@ -23,6 +23,9 @@ now passes the complete ensemble ([all 33 original cases reach five seconds at a
 
 ## Sections
 
+The [interactive modelling explorer](explorer.qmd) describes the landing-page map,
+its graduate-level physics panels and the provenance of its visual evidence.
+
 In roughly the order you would build the system:
 
 1. [Invariants and environment](invariants.qmd): precision, units, coordinates, purity, the

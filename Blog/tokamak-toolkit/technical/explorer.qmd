@@ -1,0 +1,108 @@
+---
+title: Interactive modelling explorer
+toc: true
+toc-depth: 3
+date-modified: '2026-11-04'
+---
+
+The landing page uses the website typography, plain section headings and a machine choice and explains modelling through plain-language
+questions. Each module shows the information received, the problem solved, and the information
+passed onward. Module headings pair technical names with plain-language questions; recorded
+claims sit behind an expandable evidence panel.
+An additional physics panel provides the governing relation, exchanged quantities and units,
+and coupling assumptions for graduate readers. It starts expanded; its open state carries between modules.
+It separates schematic balance equations from the actual audited numerical protocol, and
+distinguishes the historical hard guard from the current continuous ITER closure.
+
+## Reading structure
+
+Each machine follows the same sequence: establish the scenario, follow a coupled time step,
+inspect a physics module, understand surrogate selection, and read the evidence. Section
+buttons move keyboard focus to the corresponding heading while retaining the machine/module
+URL. They also work in the portable preview, whose base URL points to the public reading links.
+
+The scenario summary distinguishes initial data, evolving quantities, prescribed inputs or
+coupled responses, and work outside the demonstrated scope. MAST refers here to the MAST-U
+modelling route. The MAST-U summary retains static imported geometry, prescribed sources and
+boundaries, and the failed transport accuracy comparison. The ITER summary distinguishes
+current-diffusion evolution from a new free-boundary equilibrium solve.
+
+An expandable reference defines symbols, units, cell/face locations, accepted-state and
+nonlinear-iteration notation, and model names. Equilibrium, heating and boundary interface
+descriptions change with the selected machine: reading prescribed CHEASE geometry is not
+described as computing a free-boundary solution, and prescribed MAST-U edge settings are not
+described as a predictive pedestal calculation. Shared physics panels retain the broader
+coupling explanation and link to technical methods.
+
+The guard demonstration labels its binary routing and assumed finite inputs explicitly.
+Its machine-specific note distinguishes the current ITER continuous closure from the
+hard-switch example. The evidence guide distinguishes numerical convergence, comparison
+against a reference, and formal local robustness; none substitutes for the other checks.
+
+## What the visuals mean
+
+The machine drawings and dependency map are schematic, not equilibria, device engineering
+drawings or evidence of completed coupling. The route labels distinguish implemented work,
+limited evidence and planned work. The topics-viewed count records reading progress only.
+The offline JOREK stability branch is hidden from the map and module traversal while it is
+outside the active coupling route. Its [technical documentation](jorek.qmd) remains available.
+Existing stability bookmarks open the selected machine's core solver instead.
+
+The guard switches demonstrate routing: acceptable inputs and outputs use a fast response;
+a failed check uses a fallback. They do not execute a surrogate, a plasma solver or a formal
+proof. The [guard contract](guard.qmd) describes the actual implementation.
+
+## Animated information flow
+
+Play/pause, previous/next and restart controls walk through a schematic time step. A moving
+packet and directional path identify the sender and receiver; a text panel names the exchanged
+variables. An accepted-state ledger remains unchanged while trial profiles are formed, then
+advances only at the illustrated acceptance stage. No synthetic temperature, density or power
+values are presented as simulation output.
+
+The sequence is an explanation of dependencies, not an instrumented solver call trace.
+Nonlinear iterations reevaluate modules; the displayed order does not prescribe their internal
+call order. The ITER path describes the continuous transport closure and its acceptance checks.
+The MAST-U path explicitly retains static imported geometry and prescribed sources and edge
+conditions. It does not animate a completed live equilibrium feedback or validated MAST-U
+trajectory. Stability is kept outside the animated core loop.
+
+Playback stops at the end, pauses on manual topic selection or a hidden page, and resets on
+machine changes. Reading progress is independent of playback. Reduced-motion settings remove
+packet motion while preserving directional paths, explanations and manual steps. The palette
+follows the owner's published website theme: white and neutral surfaces, black text and a blue
+primary accent for the active exchange.
+
+The ITER convergence chart reads the same public CSV as the existing convergence figure.
+It shows maximum endpoint change across the checked quantities for each original ensemble case,
+with adjacent maximum-step comparisons selectable. [C-305](/Blog/tokamak-toolkit/claims.qmd#c-305) and [C-306](/Blog/tokamak-toolkit/claims.qmd#c-306) define the result and scope.
+The proof tiles use [C-326](/Blog/tokamak-toolkit/claims.qmd#c-326) directly, including the unresolved and out-of-domain states.
+MAST-U's evidence route preserves the static equilibrium result ([C-019](/Blog/tokamak-toolkit/claims.qmd#c-019)), failed closed-loop
+comparison ([C-179](/Blog/tokamak-toolkit/claims.qmd#c-179)), and [later scope limitation](verification.qmd#mastu-scope).
+
+## Export and checks
+
+The exporter embeds the explorer in the home page and retains a standalone HTML version for
+preview. Styles are scoped to the explorer. Browser code needs no external libraries, network
+services, cookies or local storage. Hash links restore a selected machine and module.
+The remaining build log and technical pages stay accessible without JavaScript.
+
+The evidence asset is generated from an explicit allowlist of public claim fields and the
+public convergence CSV. Private evidence paths and reproduction commands are not exported
+into that asset. Missing claims or nonfinite chart values fail generation. The disclosure
+scrub covers browser scripts as well as prose; link checks cover literal HTML and script links.
+
+Focused export tests check source parity, missing claims, link handling and disclosure checks.
+The browser check exercises both machines, module traversal, guard fallback, chart controls,
+deep links, section focus without navigation away from the portable preview, machine-specific
+interfaces, persistent physics-panel state, per-machine reading progress and narrow-screen
+layout with the notation and evidence guides expanded. The preview does not replace
+the owner's Quarto render and publication review.
+The browser check also accepts a rendered landing-page path as its final argument. The
+explorer stylesheet lets that page fit Quarto's grid on narrow screens while older static
+diagrams keep their own horizontal scrolling.
+
+## Changelog
+
+- 2026-11-04: [Structured machine explorer](../log/107-structured-machine-explorer.qmd)
+  separates scenario scope, interfaces, guard policy and evidence interpretation.

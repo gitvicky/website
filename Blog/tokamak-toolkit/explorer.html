@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Integrated modelling · Tokamak Toolkit</title>
+  <link rel="stylesheet" href="explorer.css">
+</head>
+<body>
+<!-- explorer:start -->
+<section id="tk-explorer" aria-label="Interactive integrated modelling explorer">
+  <div class="ex-intro">
+    <h2>Integrated modelling for MAST-U and ITER</h2>
+    <p>A tokamak confines a hot, electrically charged gas called plasma using magnetic fields. To calculate how that plasma changes, we need models for its magnetic shape, heating, transport of heat and particles, and edge conditions. Each model depends on quantities calculated by the others.</p>
+    <p>Choose a machine, establish the scenario assumptions, then follow a plasma update. Each module explains its role, inputs, outputs, governing relation and implementation limits. The evidence section separates numerical checks from physical validation.</p>
+    <p class="ex-caption"><a href="primer.html">An introduction to the plasma physics</a></p>
+  </div>
+  <div class="ex-choices" role="group" aria-label="Choose a tokamak">
+    <button type="button" class="ex-machine" data-machine="mastu" aria-pressed="false"><span class="ex-machine-art" data-art="mastu" aria-hidden="true"></span><span class="ex-machine-copy"><strong>MAST-U</strong><span>Equilibrium and transport in a spherical tokamak geometry.</span><span class="ex-enter">Explore MAST-U</span></span></button>
+    <button type="button" class="ex-machine" data-machine="iter" aria-pressed="false"><span class="ex-machine-art" data-art="iter" aria-hidden="true"></span><span class="ex-machine-copy"><strong>ITER</strong><span>Coupled heating, transport and edge models in an ITER benchmark.</span><span class="ex-enter">Explore ITER</span></span></button>
+  </div>
+  <p class="ex-caption">MAST here refers to the MAST Upgrade (MAST-U) modelling route. The drawings are schematic. The MAST-U cases use simulated MAST-U-like geometry; the ITER cases are modelling benchmarks.</p>
+  <noscript><p>Enable JavaScript for the interactive map. Read the <a href="technical/backends.html">machine backends</a>, <a href="technical/verification.html">verification results</a>, or <a href="technical/index.html">technical guide</a> without it.</p></noscript>
+  <div id="ex-mission" hidden>
+    <div class="ex-mission-head"><div><p class="ex-caption" id="ex-machine-label"></p><h3 id="ex-mission-title" tabindex="-1">How the models fit together</h3></div><div class="ex-progress"><span id="ex-progress-text" role="status"></span><button type="button" id="ex-reset">Start again</button></div></div>
+    <p id="ex-machine-summary"></p>
+    <nav class="ex-section-nav" aria-label="Explorer sections">
+      <button type="button" data-section="ex-scope-title">1. Scenario</button>
+      <button type="button" data-section="ex-coupling-title">2. Coupling</button>
+      <button type="button" data-section="ex-module-title">3. Modules</button>
+      <button type="button" data-section="ex-lab-title">4. Guard</button>
+      <button type="button" data-section="ex-evidence-heading">5. Evidence</button>
+    </nav>
+    <section class="ex-scope" aria-labelledby="ex-scope-title">
+      <h3 id="ex-scope-title" tabindex="-1">1. Establish the scenario</h3>
+      <dl id="ex-scope-content" class="ex-scope-grid"></dl>
+      <details class="ex-notation"><summary>Notation, units and model names</summary>
+        <p>These are toolkit interface conventions. Backend adapters must convert native units and coordinates before exchanging quantities.</p>
+        <table class="ex-data-table"><caption>Quantities used in the map and physics panels</caption><thead><tr><th scope="col">Quantity</th><th scope="col">Meaning and location</th><th scope="col">Unit</th></tr></thead><tbody>
+          <tr><th scope="row">ρ</th><td>Normalised toroidal-flux radius; axis 0, boundary 1. Not a geometric distance.</td><td>Dimensionless</td></tr>
+          <tr><th scope="row">T<sub>e</sub>, T<sub>i</sub>; n<sub>e</sub></th><td>Electron/ion temperatures and electron density, on cell centres.</td><td>eV; m⁻³</td></tr>
+          <tr><th scope="row">ψ; q; V′</th><td>Poloidal flux, safety factor, and dV/dρ from the geometry interface.</td><td>Wb; dimensionless; m³</td></tr>
+          <tr><th scope="row">Q<sub>e</sub>, Q<sub>i</sub>; s<sub>n</sub></th><td>Volumetric heating and particle source, on cell centres.</td><td>W m⁻³; m⁻³ s⁻¹</td></tr>
+          <tr><th scope="row">χ<sub>e</sub>, χ<sub>i</sub>, D<sub>e</sub>; v<sub>e</sub></th><td>Heat/particle diffusivities and particle convection, on cell faces. Negative convection is inward.</td><td>m² s⁻¹; m s⁻¹</td></tr>
+          <tr><th scope="row">uⁿ; u⁽ᵏ⁾; Δt</th><td>Accepted state at time index n; trial at nonlinear iteration k; proposed time step.</td><td>State variables; s for Δt</td></tr>
+        </tbody></table>
+        <p><strong>Model names:</strong> TORAX advances core profiles; CHEASE supplies the ITER equilibrium; FreeGSNKE computes the MAST-U-like equilibrium; IMAS provides the data interface. TGLF supplies turbulence responses used to train a surrogate, EPEDNN supplies a learned pedestal response, and JOREK supports the offline stability branch. EC means electron-cyclotron heating and current drive.</p>
+        <a href="technical/index.html#notation">Full notation and technical guide</a>
+      </details>
+    </section>
+    <h3 id="ex-coupling-title" tabindex="-1">2. Follow a coupled time step</h3>
+    <div class="ex-system-flow" aria-label="How an integrated model advances"><div><b>Describe the plasma</b><span>Shape, temperature, density</span></div><i aria-hidden="true">→</i><div><b>Evaluate the models</b><span>Heating, losses, edge conditions</span></div><i aria-hidden="true">→</i><div><b>Update the profiles</b><span>Updated plasma, balance, model limits</span></div></div>
+    <p class="ex-return">The updated plasma becomes the input to the next time step.</p>
+    <div class="ex-workbench">
+      <div class="ex-map-panel">
+        <div class="ex-playback"><p class="ex-eyebrow">Data exchange during a time step</p><div class="ex-playback-controls" role="group" aria-label="Information flow playback"><button type="button" id="ex-flow-back" aria-label="Previous exchange">← Back</button><button type="button" id="ex-flow-play" aria-pressed="false">Play exchanges</button><button type="button" id="ex-flow-next" aria-label="Next exchange">Next →</button><button type="button" id="ex-flow-restart">Restart</button></div><p id="ex-flow-position" class="ex-caption"></p></div>
+        <div class="ex-map" id="ex-map"><svg class="ex-connectors" viewBox="0 0 600 560" aria-hidden="true"><defs><marker id="ex-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10" fill="none" stroke="currentColor"/></marker><marker id="ex-transfer-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10" fill="none"/></marker></defs><path d="M300 85 L300 215 M145 185 L245 250 M455 185 L355 250 M145 365 L245 310 M455 365 L355 310"/><g id="ex-transfer-layer"><path id="ex-transfer-path"/><circle id="ex-transfer-dot" r="5"/></g></svg><div class="ex-map-core" aria-hidden="true"><span id="ex-core-art"></span><span>INTEGRATED<br>MODELLING</span></div></div>
+        <div class="ex-exchange" role="status" aria-live="polite" aria-atomic="true"><p class="ex-eyebrow" id="ex-flow-route"></p><h4 id="ex-flow-title"></h4><p id="ex-flow-explanation"></p><p class="ex-payload"><strong>Data in transit</strong><span id="ex-flow-payload"></span></p><div class="ex-state-ledger"><div><small>Accepted plasma</small><strong id="ex-flow-accepted"></strong></div><div><small>Trial profiles</small><strong id="ex-flow-trial"></strong></div></div></div>
+        <p class="ex-caption" id="ex-flow-scope"></p>
+        <p class="ex-caption">An explanatory sequence, not a numerical run or a literal solver call trace. Modules may be reevaluated during each nonlinear solve. Stability remains a separate offline branch.</p>
+        <p class="ex-caption">Select a module to read about its inputs, outputs and current implementation.</p><div class="ex-legend"><span>● Implemented / measured</span><span>◐ Limited / incomplete</span><span>○ Planned / outside scope</span></div></div>
+      <article class="ex-detail" id="ex-detail" aria-labelledby="ex-module-title"><h3 id="ex-module-title" tabindex="-1">3. Inspect a physics module</h3><p class="ex-caption">Select a map node or use Previous / Next. Equations describe the model; implementation status describes the selected machine.</p><h4 id="ex-detail-title" tabindex="-1">Choose a module</h4><div id="ex-detail-content"></div><div class="ex-step-nav"><button type="button" id="ex-prev">← Previous</button><button type="button" id="ex-next">Next module →</button></div></article>
+    </div>
+    <section class="ex-lab" aria-labelledby="ex-lab-title"><div><h3 id="ex-lab-title" tabindex="-1">4. Understand surrogate selection</h3><p>A surrogate is a model trained to approximate a more expensive calculation. Before using its prediction, the guard checks the inputs and outputs against specified limits. Change a check below to see when the fallback is used.</p><p id="ex-guard-scope" class="ex-limit"></p><p class="ex-caption">Conceptual hard-switch demonstration only; finite values are assumed. These switches do not run a physics model or reproduce a certified domain. Ensemble agreement is not a calibrated uncertainty interval.</p></div><div class="ex-guard-demo"><div class="ex-toggles"><label><input type="checkbox" id="ex-domain" checked> Input inside the model domain</label><label><input type="checkbox" id="ex-agreement" checked> Ensemble agreement acceptable</label><label><input type="checkbox" id="ex-physical" checked> Output passes physical checks</label></div><div class="ex-guard-route" aria-hidden="true"><span>Plasma state</span><b>→</b><span>Guard</span><b>→</b><span id="ex-route">Surrogate</span></div><p id="ex-guard-result" role="status"></p><a href="technical/guard.html">How the guard is implemented</a></div></section>
+    <section class="ex-evidence" aria-labelledby="ex-evidence-heading"><h3 id="ex-evidence-heading" tabindex="-1">5. Read the evidence and its limits</h3><p>Implementation status is not a validation verdict. Read each result with its recorded scenario, acceptance criterion and claim status.</p><details class="ex-evidence-guide"><summary>What the different checks establish</summary><dl class="ex-scope-grid"><div><dt>Numerical convergence</dt><dd>Refining the time step tests sensitivity to the numerical protocol. It does not establish agreement with an experiment or remove model bias.</dd></div><div><dt>Reference comparison</dt><dd>Comparing profiles with a declared reference tests accuracy in that case. A failed or non-evaluable comparison cannot support a validation claim.</dd></div><div><dt>Formal local robustness</dt><dd>A proof bounds a stated property inside a specified input region. An unresolved proof is not a counterexample; an out-of-domain input is outside that contract.</dd></div></dl></details><div class="ex-evidence-head"><div><h4 id="ex-evidence-title"></h4></div></div><div id="ex-evidence-content"></div></section>
+    <section class="ex-impact"><h3 id="ex-impact-title"></h3><p id="ex-impact-text"></p><div class="ex-reading"><a href="technical/index.html">Technical notes</a><a href="claims.html">Results and evidence</a><a href="action-plan.html">Remaining work</a></div></section>
+  </div>
+  <footer class="ex-footer"><a href="about.html">Methods and authorship</a></footer>
+</section>
+<script src="explorer-data.js"></script>
+<script src="explorer.js"></script>
+<!-- explorer:end -->
+<p style="max-width:1440px;margin:1rem auto;font:13px/1.6 system-ui,sans-serif">Code and first draft by Claude (Anthropic) and Codex, working to a brief by Vignesh Gopakumar. The owner approved publication of this explorer. Full blog navigation requires the rendered website.</p>
+</body>
+</html>

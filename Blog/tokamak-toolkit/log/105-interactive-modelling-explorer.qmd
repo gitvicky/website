@@ -1,0 +1,46 @@
+---
+title: Interactive machine map explains the integrated modelling workflow
+date: '2026-11-04'
+categories:
+- built
+entry: 105
+milestone: M5
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 105 · milestone M5
+:::
+
+The blog now starts with a choice of MAST-U or ITER. The aim is to explain what integrated
+modelling solves to readers who have not studied fusion. Instead of starting with code names,
+each station asks a question: what holds the plasma, what heats it, where energy goes, and
+how those answers become a connected simulation.
+
+Each station shows information in, the problem to solve, and information out. The machine
+drawings are schematic. Status labels keep the implemented links distinct from planned
+coupling and incomplete evidence. A small guard demonstration lets the reader change the
+conditions under which a fast model is used, without pretending to run a plasma simulation.
+Expandable physics panels give graduate readers the governing relations, exchanged variables,
+units and numerical assumptions without putting those details ahead of the overview.
+
+The ITER evidence chart reads the existing public convergence CSV rather than drawing an
+invented trend. Its claim links retain the scope of [C-305](/Blog/tokamak-toolkit/claims.qmd#c-305) and [C-306](/Blog/tokamak-toolkit/claims.qmd#c-306). MAST-U keeps its computed
+equilibrium and its transport accuracy limitation visible together ([C-019](/Blog/tokamak-toolkit/claims.qmd#c-019) and [C-179](/Blog/tokamak-toolkit/claims.qmd#c-179)).
+
+| visual | evidence or scope |
+|---|---|
+| Machine map | schematic information flow |
+| Guard switches | conceptual routing demonstration |
+| ITER convergence chart | existing public CSV; [C-305](/Blog/tokamak-toolkit/claims.qmd#c-305) and [C-306](/Blog/tokamak-toolkit/claims.qmd#c-306) |
+| Verification tiles | proved, unknown and outside-domain counts from [C-326](/Blog/tokamak-toolkit/claims.qmd#c-326) |
+
+The exporter generates chart evidence from the claim register, checks links, and scrubs the
+browser scripts for disclosure patterns. Focused checks cover evidence consistency and the
+interaction paths. These are software checks, not new physics validation.
+
+The bounded research scope is unchanged. The owner approved publication of the landing-page update; the scientific limitations
+and detailed build log remain available.
+
+::: {.entry-links}
+**Technical details →** [Interactive modelling explorer](/Blog/tokamak-toolkit/technical/explorer.qmd)
+:::

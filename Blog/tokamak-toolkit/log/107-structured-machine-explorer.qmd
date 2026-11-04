@@ -1,0 +1,51 @@
+---
+title: Machine explorer separates scenario, coupling and evidence
+date: '2026-11-04'
+categories:
+- built
+entry: 107
+milestone: M5
+---
+
+::: {.entry-meta}
+[new component]{.chip .built} Entry 107 · milestone M5
+:::
+
+We reorganised the ITER and MAST-U explorer so readers can establish the scenario before
+interpreting the module map. Both machine routes now follow the same reading sequence:
+scenario assumptions, coupled time step, module interfaces, surrogate selection, and evidence.
+Section controls move keyboard focus without replacing the selected machine/module link.
+
+The scenario summary distinguishes evolving profiles from fixed inputs and work outside the
+demonstrated scope. A notation reference defines units, radial locations, model names and the
+difference between accepted states and nonlinear trials. Physics panels start open and retain
+the reader's expanded or collapsed preference when changing modules.
+
+Equilibrium, heating and boundary descriptions now use the selected machine's actual route.
+The ITER equilibrium panel describes reading prescribed CHEASE geometry. The MAST-U heating
+and edge panels describe prescribed sources and boundaries. The guard example states that
+binary routing is conceptual; a separate note identifies ITER's continuous transport closure.
+The offline JOREK stability branch is hidden from the flowchart and module navigation for now;
+its technical documentation remains available. Existing stability bookmarks open the core solver.
+
+| Reader question | Where to look |
+|---|---|
+| What changes, and what stays prescribed? | Scenario summary |
+| What does this module receive and return? | Machine-specific interface |
+| What does a successful check establish? | Evidence guide and recorded claims |
+
+The browser checks cover section focus, retained deep links, machine-specific interfaces,
+physics-panel preferences and narrow layouts with the reference panels open. Existing checks
+still exercise playback, guard routing and evidence controls. These are interface checks from
+the same implementation workflow, not independent physics validation.
+The publication check also exercises the rendered Quarto landing page, with a page-specific
+width correction so the explorer fits phone screens alongside the older scrollable diagrams.
+
+No numerical result, claim value or generated scientific test statistic changes. Existing
+evidence and unresolved MAST-U accuracy limits remain visible. The owner approved publication of this presentation update.
+
+Technical details: [Interactive modelling explorer](../technical/explorer.qmd).
+
+::: {.entry-links}
+**Technical details →** [Interactive modelling explorer](/Blog/tokamak-toolkit/technical/explorer.qmd)
+:::
