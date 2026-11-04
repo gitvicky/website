@@ -126,7 +126,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#continuous-baseline" id="toc-continuous-baseline" class="nav-link active" data-scroll-target="#continuous-baseline">Current continuous baseline: numerical convergence passed</a></li>
+  <li><a href="#uncertainty-propagation-and-validation" id="toc-uncertainty-propagation-and-validation" class="nav-link active" data-scroll-target="#uncertainty-propagation-and-validation">Uncertainty propagation and validation</a>
+  <ul class="collapse">
+  <li><a href="#continuous-baseline" id="toc-continuous-baseline" class="nav-link" data-scroll-target="#continuous-baseline">Current continuous baseline: numerical convergence passed</a></li>
   <li><a href="#constrained-flux-shadow" id="toc-constrained-flux-shadow" class="nav-link" data-scroll-target="#constrained-flux-shadow">Constrained flux representation through full processing</a></li>
   <li><a href="#radial-smoothing-controls" id="toc-radial-smoothing-controls" class="nav-link" data-scroll-target="#radial-smoothing-controls">Identical-state radial-smoothing controls</a></li>
   <li><a href="#numerical-methods" id="toc-numerical-methods" class="nav-link" data-scroll-target="#numerical-methods">Numerical methods</a></li>
@@ -136,7 +138,11 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#paired-refinement" id="toc-paired-refinement" class="nav-link" data-scroll-target="#paired-refinement">Historical paired temporal refinement</a></li>
   <li><a href="#domain-balance-diagnostic" id="toc-domain-balance-diagnostic" class="nav-link" data-scroll-target="#domain-balance-diagnostic">Domain and discrete-balance diagnosis</a></li>
   <li><a href="#internal-branch-diagnostic" id="toc-internal-branch-diagnostic" class="nav-link" data-scroll-target="#internal-branch-diagnostic">Internal branches and local residual decomposition</a></li>
-  <li><a href="#changelog" id="toc-changelog" class="nav-link" data-scroll-target="#changelog">Changelog</a></li>
+  <li><a href="#changelog" id="toc-changelog" class="nav-link" data-scroll-target="#changelog">Changelog</a>
+  <ul class="collapse">
+  <li><a href="#baseline-pilot-closeout" id="toc-baseline-pilot-closeout" class="nav-link" data-scroll-target="#baseline-pilot-closeout">Current-baseline implementation and bounded pilot</a></li>
+  </ul></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -157,7 +163,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">November 2, 2026</p>
+      <p class="date-modified">November 4, 2026</p>
     </div>
   </div>
     
@@ -168,6 +174,9 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p><strong>Owner closeout, 4 Nov 2026 (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-52">OQ-52</a>):</strong> scoped M4 certification, frozen-closure acceptance and reduced-scope M5 physicist sign-off are recorded. Full current-baseline UQ remains incomplete. Earlier pending-gate wording below belongs to the dated research history; unresolved numerical properties retain their original status.</p>
+<section id="uncertainty-propagation-and-validation" class="level1">
+<h1>Uncertainty propagation and validation</h1>
 <section id="continuous-baseline" class="level2">
 <h2 class="anchored" data-anchor-id="continuous-baseline">Current continuous baseline: numerical convergence passed</h2>
 <p><span class="claim">all 33 original cases reach five seconds at all three maximum-step settings: 99 of 99 valid trajectories and 264 of 264 passing endpoint comparisons</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-305" class="cid st-measured">C-305</a>. <span class="claim">the largest changes are 0.219% for coarse-to-middle and 0.0423% for middle-to-fine, both below the 1% acceptance limit</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-306" class="cid st-measured">C-306</a>. The successful research integration combines a changed continuous guarded closure, strict Newton acceptance and rejected-step rollback (<span class="claim">the new research baseline uses a continuous guarded closure, Newton trials accepted only after residual decrease, and adaptive rollback of the complete state and auxiliary data</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-304" class="cid st-measured">C-304</a>), with independently reconstructed physical residuals (<span class="claim">maximum accepted physical-channel L1 is 1.76 × 10<sup>−9</sup> against a 10<sup>−8</sup> gate, and native mean L1 is 1.01 × 10<sup>−14</sup> against 10<sup>−10</sup>; no crash occurs</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-307" class="cid st-measured">C-307</a>).</p>
@@ -246,8 +255,15 @@ ul.task-list li input[type="checkbox"] {
 <li>2026-10-28: retained native-solver diagnostic limits and unresolved paired refinement (entries 92–93, private drafts).</li>
 <li>2026-10-28: added domain/balance diagnosis and internal branch decomposition (entries 94–95, private drafts).</li>
 </ul>
+<section id="baseline-pilot-closeout" class="level3">
+<h3 class="anchored" data-anchor-id="baseline-pilot-closeout">Current-baseline implementation and bounded pilot</h3>
+<p>The new propagation driver binds the adopted continuous closure and <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-51">OQ-51</a> state-level transport calibration. It retains the complete sampling and sensitivity designs, invalid rows, accepted-state diagnostic denominators and member-specific derivative controls. The historical propagation remains evidence for its original discretization and calibration.</p>
+<p><span class="claim">three selected five-second trajectories pass the raw audit; only one of ten finite-difference controls survives the derivative timeout</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-327" class="cid st-measured">C-327</a>. A finite automatic Jacobian is insufficient: central finite differences must complete before agreement can be assessed. Matching observed adaptive histories alone does not establish smoothness of every internal Newton branch. Conditional derivatives remain labelled conditional, and the development comparison failure is preserved.</p>
+<p><span class="claim">the 18,432-trajectory design projects roughly 1,710–1,877 node-hours in the measured worker layout, before derivatives and recovery</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-328" class="cid st-preliminary">C-328</a>. These scenarios include complete trajectory-worker costs but cannot price the censored derivative work or unobserved prior tails. They motivate a throughput and scope decision before production, without changing sample counts or tolerances. No current-baseline Monte Carlo percentiles, Sobol rankings or linearised cross-check are claimed from this pilot. <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-52">OQ-52</a> records the owner’s frozen-closure acceptance, scoped M4 certification and M5 physicist sign-off for a bounded research deliverable. Full UQ and derivative agreement remain incomplete and are excluded from that accepted completion scope.</p>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->

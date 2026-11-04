@@ -155,7 +155,9 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#scope" id="toc-scope" class="nav-link active" data-scroll-target="#scope">Scope</a></li>
+  <li><a href="#verification" id="toc-verification" class="nav-link active" data-scroll-target="#verification">Verification</a>
+  <ul class="collapse">
+  <li><a href="#scope" id="toc-scope" class="nav-link" data-scroll-target="#scope">Scope</a></li>
   <li><a href="#exports" id="toc-exports" class="nav-link" data-scroll-target="#exports">Checked exports</a></li>
   <li><a href="#properties" id="toc-properties" class="nav-link" data-scroll-target="#properties">Property contracts</a></li>
   <li><a href="#closed-loop" id="toc-closed-loop" class="nav-link" data-scroll-target="#closed-loop">Closed-loop comparison</a>
@@ -201,6 +203,11 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#reserved-final-objectives" id="toc-reserved-final-objectives" class="nav-link" data-scroll-target="#reserved-final-objectives">Reserved final-objective result</a></li>
   </ul></li>
+  <li><a href="#transport-retraining" id="toc-transport-retraining" class="nav-link" data-scroll-target="#transport-retraining">Transport retraining for bounded verification (OQ-46 (b))</a>
+  <ul class="collapse">
+  <li><a href="#transport-retraining-round3" id="toc-transport-retraining-round3" class="nav-link" data-scroll-target="#transport-retraining-round3">Round 3: verifier change for ITER</a></li>
+  </ul></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -221,7 +228,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">October 25, 2026</p>
+      <p class="date-modified">November 4, 2026</p>
     </div>
   </div>
     
@@ -232,6 +239,9 @@ window.Quarto = {
 </header>
 
 
+<p><strong>Owner closeout, 4 Nov 2026 (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-52">OQ-52</a>):</strong> scoped M4 certification, frozen-closure acceptance and reduced-scope M5 physicist sign-off are recorded. Full current-baseline UQ remains incomplete. Earlier pending-gate wording below belongs to the dated research history; unresolved numerical properties retain their original status.</p>
+<section id="verification" class="level1">
+<h1>Verification</h1>
 <section id="scope" class="level2">
 <h2 class="anchored" data-anchor-id="scope">Scope</h2>
 <p>M4 separates formal properties over declared domains, statistical calibration and closed-loop comparisons. The owner-selected scope is <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-22">OQ-22</a>. No M4 certification review has occurred. The transport monotonicity property now has the certificates described below.</p>
@@ -510,8 +520,46 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="reserved-final-objectives">Reserved final-objective result</h3>
 <p>The bounded follow-up gives each intermediate activation a separate clock and reserves a final clock after every output head contributes constraints. Deterministic activation ordering permits cross-process replay. Incremental artifacts retain sparse constraints, finite variable boxes, affine forms, signed objectives, usable inequality duals and explicit interval fallback for every skipped or unusable objective. The independent auditor reconstructs the original graph and activation constraints, then replays stationarity corrections rather than trusting solver objectives or producer summaries.</p>
 <p>All final objectives run, but the independently audited physical enclosures remain nonfinite (<span class="claim">both full-box pilots retain nonfinite physical enclosures after all final objectives run; independent graph, constraint and corrected-dual replay passes, with no finite physical candidate</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-297" class="cid st-preliminary">C-297</a>). Intersecting with the inherited enclosure preserves its endpoints exactly. Large relaxation terms dominate the small residual corrections; final-objective starvation alone does not explain the remaining looseness. Neither an identical retry nor an ensemble sweep follows from this result. The full-box property, stored models, guards and human acceptance gate remain unchanged.</p>
+</section>
+</section>
+<section id="transport-retraining" class="level2">
+<h2 class="anchored" data-anchor-id="transport-retraining">Transport retraining for bounded verification (OQ-46 (b))</h2>
+<p>The retraining was declared before any training: candidates, targets, evaluator and selection rule (<code>reviews/m4-transport-retrain-v1/README.md</code>). There were four variants per machine, each an ensemble of 20 members, using the monotone signed-log recipe of the current models. Only the network size and an input-Jacobian penalty changed. The variants were a width-64 trunk with one residual block of two layers, or a single width-128 layer, each with penalty 0 or 1e-2.</p>
+<ul>
+<li><strong>Penalty.</strong> Weight times the mean squared Frobenius norm of the member’s input Jacobian, in normalised units, on the first 256 rows of each batch. It is in the training loss only. Validation and early stopping use the data loss.</li>
+<li><strong>Targets.</strong>
+<ul>
+<li><ol type="1">
+<li>median relative error ≤ 0.30 on Q_e and Q_i on the v3 test split;</li>
+</ol></li>
+<li>(2a) every per-face operating box bounded for all members;</li>
+<li>(2b) every in-domain V6 box bounded for all members;</li>
+<li><ol start="3" type="1">
+<li>gradient sensitivity, reported only.</li>
+</ol></li>
+</ul></li>
+<li><strong>What “bounded” means.</strong> The training-space bound converts to a finite physical bound through the served inverse signed-log.</li>
+<li><strong>Evaluator.</strong> CROWN on the direct ELU graph, then the default graph, then input splitting. It is fail-fast: after the first failed (box, member), the remaining boxes are bounded for member 0 only, without splitting, and those results are for information only.</li>
+</ul>
+<p>Round 1 found that the penalty is what makes V6 boxes boundable, and that it costs MAST-U accuracy (<span class="claim">none of 8 retrained candidates passes; with Jacobian penalty 1e-2 every in-domain V6 box is bounded, and without it the first V6 box fails</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-320" class="cid st-measured">C-320</a>). Round 2 raised the per-split time budget, after round 1 had been seen, and tried two smaller MAST-U penalties. It failed again (<span class="claim">12 of 20 ITER members bound every operating face; MAST-U Q_i error 0.345 and 0.370 against a 0.30 target</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-321" class="cid st-measured">C-321</a>). Its splits reached the 4096-leaf limit and gained about 1%. The partition halves the longest relative side of each leaf in turn, which is too slow to shrink any one leaf in 17 dimensions. A post-hoc sampling diagnostic showed the bounds were loose, not the networks (<span class="claim">sampled outputs from -4.2 to 8.1 against CROWN bounds from -665 to 733</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-322" class="cid st-measured">C-322</a>).</p>
+<section id="transport-retraining-round3" class="level3">
+<h3 class="anchored" data-anchor-id="transport-retraining-round3">Round 3: verifier change for ITER</h3>
+<p>MAST-U stopped at round 2 by owner decision, because no MAST-U model meets the accuracy target. For ITER, round 3 adds two steps to the evaluator, used only when CROWN on the whole box fails. The steps were declared before any failing case was bounded (<code>round3/README.md</code>).</p>
+<ol type="1">
+<li><strong>alpha-CROWN</strong> on the whole box: 100 iterations, at most 120 s, intersected with CROWN and interval bounds.</li>
+<li><strong>Targeted splitting</strong> (<code>bounds.bound_partition_targeted</code>).
+<ul>
+<li>The leaf with the largest |bound|, among those not yet finite, is halved next.</li>
+<li>The split axis maximises box width × |central-difference gradient| at the leaf centre, for that leaf’s worst output.</li>
+<li>Leaves use CROWN and are intersected with their parent.</li>
+<li>Splitting stops when every leaf is finite, or at 4096 leaves or 3600 s.</li>
+</ul></li>
+</ol>
+<p>All 20 members bound all 38 faces (<span class="claim">all 20 members on all 38 operating faces: 727 bounded directly, 17 by alpha-CROWN, 16 by targeted splitting of 3 to 161 leaves</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-323" class="cid st-measured">C-323</a>). The bounds are finite but very wide (<span class="claim">median largest bound 148 and maximum 709.6 in signed-log units, against an overflow limit of 709.78</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-324" class="cid st-measured">C-324</a>): the targeted split stops as soon as every leaf is finite, so split cases end just under the overflow limit. The result shows that the bare network cannot overflow on any operating box. It does not give a useful flux range; the envelope bounds of <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-46">OQ-46</a> (a) do that for the served output. The candidate is less accurate than v1 (<span class="claim">median error 0.178 and 0.169 for Q_e and Q_i, against 0.072 and 0.108 for v1</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-325" class="cid st-measured">C-325</a>). It is now packaged as version 2 with separate property, envelope, calibration and integrity records. CI checks both versions; M5 keeps version 1.</p>
+<p>The fresh package audit binds exact operating boxes and selected local-state centres to source, model and data hashes. Its actual local-robustness rule compares the served ensemble’s interval against the centre prediction: each heat-flux change must stay within 10% of the certified full-training-box served range when raw inputs vary by 1% of their training range. <span class="claim">12 states proved, three unknown and five outside domain under the actual local-robustness tolerance</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-326" class="cid st-measured">C-326</a>. Finite bounds alone do not satisfy this tolerance. Unknown cases are inconclusive enclosures, not observed violations, and the package does not claim full V6. Heavy bounds and dataset calibration are retained evidence rather than rerun in quick CI. Packaging itself does not confer owner certification. <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-52">OQ-52</a> separately records the owner’s certification within the stated limits; unknown and outside-domain cases remain unproved.</p>
 
 
+</section>
 </section>
 </section>
 

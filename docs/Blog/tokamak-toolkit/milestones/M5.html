@@ -126,7 +126,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#scope" id="toc-scope" class="nav-link active" data-scroll-target="#scope">Scope</a></li>
+  <li><a href="#current-uncertainty-implementation" id="toc-current-uncertainty-implementation" class="nav-link active" data-scroll-target="#current-uncertainty-implementation">Current uncertainty implementation</a></li>
+  <li><a href="#scope" id="toc-scope" class="nav-link" data-scroll-target="#scope">Scope</a></li>
   <li><a href="#historical-uncertainty-result-and-gate" id="toc-historical-uncertainty-result-and-gate" class="nav-link" data-scroll-target="#historical-uncertainty-result-and-gate">Historical uncertainty result and gate</a></li>
   <li><a href="#earlier-numerical-diagnostics" id="toc-earlier-numerical-diagnostics" class="nav-link" data-scroll-target="#earlier-numerical-diagnostics">Earlier numerical diagnostics</a></li>
   <li><a href="#current-numerical-baseline" id="toc-current-numerical-baseline" class="nav-link" data-scroll-target="#current-numerical-baseline">Current numerical baseline</a></li>
@@ -139,7 +140,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">M5 · Uncertainty and validation</h1>
-<p class="subtitle lead">Full ensemble numerical convergence passed; physicist sign-off pending</p>
+<p class="subtitle lead">Bounded research deliverable accepted; full uncertainty campaign incomplete</p>
 </div>
 
 
@@ -167,9 +168,13 @@ Full ensemble numerical gate: passed
 </div>
 <div class="callout-body-container callout-body">
 <p><span class="claim">all 33 original cases reach five seconds at all three maximum-step settings: 99 of 99 valid trajectories and 264 of 264 passing endpoint comparisons</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-305" class="cid st-measured">C-305</a>. <span class="claim">the largest changes are 0.219% for coarse-to-middle and 0.0423% for middle-to-fine, both below the 1% acceptance limit</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-306" class="cid st-measured">C-306</a>. The result uses the new continuous closure and strict research acceptance protocol (<span class="claim">the new research baseline uses a continuous guarded closure, Newton trials accepted only after residual decrease, and adaptive rollback of the complete state and auxiliary data</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-304" class="cid st-measured">C-304</a>).</p>
-<p><a href="../../../Blog/tokamak-toolkit/log/98-full-iter-ensemble-passes-convergence.html">Result narrative</a> · <a href="../../../Blog/tokamak-toolkit/technical/solver-learning.html#full-ensemble-convergence">Technical protocol</a>. Physical-model acceptance and physicist sign-off remain separate gates.</p>
+<p><a href="../../../Blog/tokamak-toolkit/log/98-full-iter-ensemble-passes-convergence.html">Result narrative</a> · <a href="../../../Blog/tokamak-toolkit/technical/solver-learning.html#full-ensemble-convergence">Technical protocol</a>. The owner accepts the frozen closure and grants physicist sign-off for the reduced bounded-research scope (<a href="../../../Blog/tokamak-toolkit/decisions.html#oq-52">OQ-52</a>).</p>
 </div>
 </div>
+<section id="current-uncertainty-implementation" class="level2">
+<h2 class="anchored" data-anchor-id="current-uncertainty-implementation">Current uncertainty implementation</h2>
+<p>The source-bound driver uses the adopted continuous baseline and <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-51">OQ-51</a> calibration. <span class="claim">three selected five-second trajectories pass the raw audit; only one of ten finite-difference controls survives the derivative timeout</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-327" class="cid st-measured">C-327</a>. <span class="claim">the 18,432-trajectory design projects roughly 1,710–1,877 node-hours in the measured worker layout, before derivatives and recovery</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-328" class="cid st-preliminary">C-328</a>. Full sampling, sensitivity and derivative agreement remain unestablished. <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-52">OQ-52</a> closes and accepts the implementation, evidence and bounded pilot as the reduced research deliverable. Full UQ is excluded from that completion scope and requires a separate future decision. <a href="../../../Blog/tokamak-toolkit/technical/uncertainty.html#baseline-pilot-closeout">Technical scope</a>.</p>
+</section>
 <section id="scope" class="level2">
 <h2 class="anchored" data-anchor-id="scope">Scope</h2>
 <p><a href="../../../Blog/tokamak-toolkit/decisions.html#oq-47">OQ-47</a> selects one ITER hybrid scenario, independent declared input priors, the transport member and a coherent transport-discrepancy factor. The three surrogate modules stay behind their Tier A fallbacks. This is sensitivity analysis under stated priors, not experimentally validated prediction uncertainty.</p>
@@ -185,7 +190,7 @@ Full ensemble numerical gate: passed
 <section id="earlier-numerical-diagnostics" class="level2">
 <h2 class="anchored" data-anchor-id="earlier-numerical-diagnostics">Earlier numerical diagnostics</h2>
 <p>The three-case domain/balance observer identifies sustained fallback occupancy and late coefficient-lag residuals in the failing case ([the failing case rejects face seven on 24.766% of coarse and 82.539% of fine accepted states over (3,5] seconds; its median normalized global electron balance residual rises from 0.031813% to 0.962581%]{.claim}<a href="../../../Blog/tokamak-toolkit/claims.html#c-299" class="cid st-measured">C-299</a>). A separately frozen internal observer preserves the original trajectory and establishes different last-guess and accepted-state guard choices ([the failing case has different last-guess and accepted-state branches on 39.453% of coarse and 73.145% of fine steps over (3,5] seconds; during (3.5,4.5] seconds all fine accepted states fall back while 84.961% of last guesses select the surrogate]{.claim}<a href="../../../Blog/tokamak-toolkit/claims.html#c-300" class="cid st-measured">C-300</a>). Its fixed-state branch term is substantial locally but cancels in the signed global residual (<span class="claim">the fine failing case has branch-term norm ratios of 0.723 for electron temperature and 0.982 for ion temperature; the signed global branch term cancels and the remaining coefficient lag carries the net defect</span><a href="../../../Blog/tokamak-toolkit/claims.html#c-301" class="cid st-measured">C-301</a>). These diagnostics do not establish a persistent iteration cycle, attribute the endpoint power difference or support a remedy. See the <a href="../../../Blog/tokamak-toolkit/technical/uncertainty.html#internal-branch-diagnostic">technical explanation</a>.</p>
-<p>At that historical stage, the extra-iterate checkpoint protocol was prepared but unimplemented and unsubmitted. The later continuous baseline now passes the complete comparison; a new full uncertainty/sensitivity design and physicist review remain open.</p>
+<p>At that historical stage, the extra-iterate checkpoint protocol was prepared but unimplemented and unsubmitted. The later continuous baseline now passes the complete comparison; full uncertainty/sensitivity execution remains incomplete; <a href="../../../Blog/tokamak-toolkit/decisions.html#oq-52">OQ-52</a> subsequently grants physicist sign-off for the reduced scope.</p>
 </section>
 <section id="current-numerical-baseline" class="level2">
 <h2 class="anchored" data-anchor-id="current-numerical-baseline">Current numerical baseline</h2>

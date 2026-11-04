@@ -155,12 +155,12 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#awaiting-a-decision" id="toc-awaiting-a-decision" class="nav-link active" data-scroll-target="#awaiting-a-decision">Awaiting a decision</a>
-  <ul class="collapse">
-  <li><a href="#v10-threshold" id="toc-v10-threshold" class="nav-link" data-scroll-target="#v10-threshold">OQ-50 · Fallback-rate alert thresholds</a></li>
-  </ul></li>
+  <li><a href="#closeout-accepted" id="toc-closeout-accepted" class="nav-link active" data-scroll-target="#closeout-accepted">Closeout accepted</a></li>
   <li><a href="#settled" id="toc-settled" class="nav-link" data-scroll-target="#settled">Settled</a>
   <ul class="collapse">
+  <li><a href="#oq-52" id="toc-oq-52" class="nav-link" data-scroll-target="#oq-52">OQ-52 · Scoped certification and bounded project acceptance</a></li>
+  <li><a href="#oq-51" id="toc-oq-51" class="nav-link" data-scroll-target="#oq-51">OQ-51 · Current-baseline transport calibration</a></li>
+  <li><a href="#oq-50" id="toc-oq-50" class="nav-link" data-scroll-target="#oq-50">OQ-50 · Fallback-rate alert thresholds</a></li>
   <li><a href="#oq-49" id="toc-oq-49" class="nav-link" data-scroll-target="#oq-49">OQ-49 · Compute for the minimal uncertainty study</a></li>
   <li><a href="#oq-48" id="toc-oq-48" class="nav-link" data-scroll-target="#oq-48">OQ-48 · Hybrid transport error term</a></li>
   <li><a href="#oq-47" id="toc-oq-47" class="nav-link" data-scroll-target="#oq-47">OQ-47 · Scope of the uncertainty and validation milestone</a></li>
@@ -239,15 +239,25 @@ window.Quarto = {
 
 
 <p>The brief lists the decisions that belong to a human: physics modelling choices, licence and data questions, which properties to prove, use of the compute cluster, and benchmark failures that aren’t explained by a bug. When the agent reaches one, it writes the question down with context and a recommended answer, carries on with whatever isn’t blocked, and waits. Numbers (OQ-<em>n</em>) match the project’s internal record. Newest first within each group.</p>
-<section id="awaiting-a-decision" class="level2">
-<h2 class="anchored" data-anchor-id="awaiting-a-decision">Awaiting a decision</h2>
-<section id="v10-threshold" class="level3">
-<h3 class="anchored" data-anchor-id="v10-threshold">OQ-50 · Fallback-rate alert thresholds</h3>
-<p>The guards will report when the share of states sent to the Tier A fallback rises above a configured threshold, which signals that the verified domain is too small. The owner sets one value per surrogate from the rates measured on the existing coupled runs. The requested proposals are 40% for ITER transport, 50% for MAST-U transport, 45% for EC and 10% for the pedestal. They remain unadopted. The wider M5 prior study exceeds the proposed ITER threshold; it is reported without retuning the proposal.</p>
-</section>
+<section id="closeout-accepted" class="level2">
+<h2 class="anchored" data-anchor-id="closeout-accepted">Closeout accepted</h2>
+<p><a href="../../Blog/tokamak-toolkit/decisions.html#oq-52">OQ-52</a> resolves the remaining human gates for the bounded research deliverable. No further approval is needed to close that reduced scope. Full UQ, further research and publication require separate decisions if requested.</p>
 </section>
 <section id="settled" class="level2">
 <h2 class="anchored" data-anchor-id="settled">Settled</h2>
+<section id="oq-52" class="level3">
+<h3 class="anchored" data-anchor-id="oq-52">OQ-52 · Scoped certification and bounded project acceptance</h3>
+<p><em>Decided 4 Nov 2026.</em> The owner approves M4 within its stated verification limits, accepts the exact frozen continuous closure, closes the project as a bounded research deliverable, and gives M5 physicist sign-off for that reduced scope. Full current-baseline UQ and derivative agreement remain incomplete. Unknown proofs, EC/MAST-U limits, unquantified closure and pedestal/equilibrium discrepancy, and incomplete JOREK grid evidence retain their dispositions. The decision does not establish experimental accuracy or authorize new compute, publication, uploads or model replacement.</p>
+</section>
+<section id="oq-51" class="level3">
+<h3 class="anchored" data-anchor-id="oq-51">OQ-51 · Current-baseline transport calibration</h3>
+<p><em>Decided 3 Nov 2026.</em> The owner adopts the baseline-calibrated S1 transport half-widths as the state-level term, retaining <a href="../../Blog/tokamak-toolkit/decisions.html#oq-48">OQ-48</a> as the conservative alternative. Radial and particle-flux under-coverage remain limitations. Historical results keep their original calibration; no completed full current-baseline propagation is claimed.</p>
+<p><span id="v10-threshold"></span></p>
+</section>
+<section id="oq-50" class="level3">
+<h3 class="anchored" data-anchor-id="oq-50">OQ-50 · Fallback-rate alert thresholds</h3>
+<p><em>Decided 27 Oct 2026.</em> The owner adopts report-only alerts strictly above 35% for ITER transport, 50% for MAST-U transport, 10% for the upper EC launcher, 45% for the equatorial EC launcher, and 5% for the pedestal. These alerts change neither guard decisions nor proof domains. The earlier proposed thresholds are superseded.</p>
+</section>
 <section id="oq-49" class="level3">
 <h3 class="anchored" data-anchor-id="oq-49">OQ-49 · Compute for the minimal uncertainty study</h3>
 <p>The owner approved frozen, announced batch propagation for the minimal ITER study and the built-in pure-JAX Bayesian sampler. The numerical work completes (<span class="claim">256 of 256 Monte Carlo trajectories are finite and fine-converged; 2048 sensitivity evaluations drop no rows; fusion-power mean 165.8 MW with standard deviation 102.4 MW, thermal-energy mean 189.5 MJ with standard deviation 44.3 MJ</span><a href="../../Blog/tokamak-toolkit/claims.html#c-286" class="cid st-superseded">C-286</a>); physicist sign-off remains separate.</p>
